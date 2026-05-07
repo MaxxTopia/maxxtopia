@@ -1,0 +1,59 @@
+---
+import Logo from './Logo.astro';
+import { products } from '../data/products';
+const year = new Date().getFullYear();
+---
+
+<footer class="relative border-t border-[var(--color-line)] mt-32">
+  <div class="ambient-glow" style="opacity:0.4"></div>
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8 py-16">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div class="col-span-2">
+        <Logo />
+        <p class="mt-4 max-w-xs text-[14px] text-[var(--color-muted)] leading-relaxed">
+          A suite of gaming utilities engineered to push your PC, your game, and your content to maximum.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono mb-4">Suite</h4>
+        <ul class="space-y-2.5 text-[14px]">
+          {products.slice(0, 4).map((p) => (
+            <li>
+              <a href={`/${p.slug}`} class="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
+                {p.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono mb-4">More</h4>
+        <ul class="space-y-2.5 text-[14px]">
+          {products.slice(4).map((p) => (
+            <li>
+              <a href={`/${p.slug}`} class="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
+                {p.name}
+              </a>
+            </li>
+          ))}
+          <li class="pt-2 border-t border-[var(--color-line)] mt-3">
+            <a href="/manifesto" class="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
+              Manifesto
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 pt-6 border-t border-[var(--color-line)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <p class="text-[12.5px] text-[var(--color-subtle)] font-mono">
+        © {year} Maxxtopia. Built for gamers who measure.
+      </p>
+      <p class="text-[12.5px] text-[var(--color-subtle)] font-mono">
+        v0.1.0 — shell
+      </p>
+    </div>
+  </div>
+</footer>

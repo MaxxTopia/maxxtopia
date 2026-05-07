@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 — Maxxtopia" noindex>
+  <section class="relative overflow-hidden">
+    <div class="ambient-glow"></div>
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+    <div class="relative mx-auto max-w-2xl px-5 sm:px-8 pt-32 pb-32 text-center">
+      <p class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-accent)] font-mono">
+        404 · Off the bus path
+      </p>
+      <h1 class="mt-4 text-[60px] sm:text-[80px] font-semibold tracking-[-0.03em] leading-[1] gradient-text">
+        That page doesn't exist.
+      </h1>
+      <p class="mt-6 text-[16.5px] text-[var(--color-muted)] leading-relaxed max-w-md mx-auto">
+        Maybe it shipped. Maybe it's still in the lab. Either way, it's not here.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+        <a href="/" class="btn-primary">
+          Back to home
+        </a>
+        <a href="/#suite" class="btn-secondary">
+          Browse suite
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

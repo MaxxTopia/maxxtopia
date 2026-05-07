@@ -1,0 +1,19 @@
+---
+import type { ProductStatus } from '../data/products';
+import { statusLabel } from '../data/products';
+
+type Props = { status: ProductStatus };
+const { status } = Astro.props;
+
+const cls =
+  status === 'live'
+    ? 'pill pill-live'
+    : status === 'beta'
+    ? 'pill pill-beta'
+    : 'pill pill-soon';
+---
+
+<span class={cls}>
+  {(status === 'live' || status === 'beta') && <span class="dot"></span>}
+  {statusLabel(status)}
+</span>

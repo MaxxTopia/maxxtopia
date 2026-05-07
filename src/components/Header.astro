@@ -1,0 +1,46 @@
+---
+import Logo from './Logo.astro';
+const path = Astro.url.pathname;
+const isActive = (p: string) => path === p || path.startsWith(p + '/');
+---
+
+<header class="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[rgba(5,5,5,0.72)] backdrop-blur-xl">
+  <div class="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
+    <div class="flex items-center gap-7">
+      <Logo />
+      <nav class="hidden md:flex items-center gap-5 text-[13.5px] text-[var(--color-muted)]">
+        <a
+          href="/#suite"
+          class={`transition-colors hover:text-[var(--color-text)] ${path === '/' ? 'text-[var(--color-text)]' : ''}`}
+        >Suite</a>
+        <a
+          href="/manifesto"
+          class={`transition-colors hover:text-[var(--color-text)] ${isActive('/manifesto') ? 'text-[var(--color-text)]' : ''}`}
+        >Manifesto</a>
+        <a
+          href="/#changelog"
+          class="transition-colors hover:text-[var(--color-text)]"
+        >Changelog</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-2.5">
+      <a
+        href="https://github.com/lucidcobra"
+        target="_blank"
+        rel="noopener"
+        class="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full border border-[var(--color-line-strong)] text-[var(--color-muted)] hover:text-[var(--color-text)] hover:border-[var(--color-muted)] transition-colors"
+        aria-label="GitHub"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.16c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56C20.21 21.39 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5Z"/>
+        </svg>
+      </a>
+      <a href="/#suite" class="btn-primary !h-9 !px-4 !text-[13.5px]">
+        Browse suite
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>

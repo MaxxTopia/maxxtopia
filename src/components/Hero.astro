@@ -1,0 +1,63 @@
+---
+import { liveProducts, products } from '../data/products';
+const liveCount = liveProducts.length;
+const totalCount = products.length;
+---
+
+<section class="relative overflow-hidden">
+  <div class="ambient-glow"></div>
+  <div class="absolute inset-0 bg-grid opacity-50"></div>
+
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8 pt-20 sm:pt-28 pb-20 sm:pb-28">
+    <div class="reveal reveal-1 inline-flex items-center gap-2 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] px-3 py-1.5 mb-8 backdrop-blur">
+      <span class="flex h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" style="box-shadow: 0 0 8px var(--color-accent)"></span>
+      <span class="text-[12.5px] text-[var(--color-muted)] font-mono">
+        <span class="text-[var(--color-text)]">{liveCount}</span>
+        <span class="text-[var(--color-subtle)]">/{totalCount}</span> live · v0.1.0
+      </span>
+    </div>
+
+    <h1 class="reveal reveal-2 max-w-4xl text-[44px] sm:text-[64px] md:text-[80px] font-semibold tracking-[-0.035em] leading-[0.98]">
+      <span class="gradient-text">Where gamers</span><br />
+      <span class="gradient-text">go to </span><span class="accent-text">peak</span><span class="text-[var(--color-text)]">.</span>
+    </h1>
+
+    <p class="reveal reveal-3 mt-7 max-w-xl text-[16.5px] sm:text-[18px] leading-relaxed text-[var(--color-muted)]">
+      A suite of native tools that tune your PC, sharpen your aim, clip your VODs, and ship your stream.
+      Built by one player. Engineered like enterprise.
+    </p>
+
+    <div class="reveal reveal-4 mt-9 flex flex-wrap items-center gap-3">
+      <a href="#suite" class="btn-primary">
+        Browse the suite
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="/manifesto" class="btn-secondary">
+        Read the manifesto
+      </a>
+    </div>
+
+    <div class="reveal reveal-5 mt-16 grid grid-cols-2 sm:grid-cols-4 gap-px rounded-xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)] max-w-3xl">
+      <div class="bg-[var(--color-bg)] px-5 py-5">
+        <p class="text-[11px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">Tweaks shipped</p>
+        <p class="mt-1.5 text-[24px] font-semibold tracking-tight">87</p>
+      </div>
+      <div class="bg-[var(--color-bg)] px-5 py-5">
+        <p class="text-[11px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">Discord RAM cut</p>
+        <p class="mt-1.5 text-[24px] font-semibold tracking-tight">72%</p>
+      </div>
+      <div class="bg-[var(--color-bg)] px-5 py-5">
+        <p class="text-[11px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">Tuner installer</p>
+        <p class="mt-1.5 text-[24px] font-semibold tracking-tight">3.6 <span class="text-[14px] font-normal text-[var(--color-muted)]">MB</span></p>
+      </div>
+      <div class="bg-[var(--color-bg)] px-5 py-5">
+        <p class="text-[11px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">Telemetry</p>
+        <p class="mt-1.5 text-[24px] font-semibold tracking-tight text-[var(--color-accent)]">None</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--color-line-strong)] to-transparent"></div>
+</section>
