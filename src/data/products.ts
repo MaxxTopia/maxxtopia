@@ -1,7 +1,8 @@
-// Auto-synced from the discordmaxxer release CI via repository_dispatch.
-// See .github/workflows/sync-discordmaxxer-release.yml — every time a new
-// rcN tag publishes there, this JSON gets rewritten and committed.
+// Auto-synced from each product's release CI via repository_dispatch.
+// See .github/workflows/sync-*-release.yml — every time a new tag
+// publishes upstream, the matching JSON gets rewritten and committed.
 import dmRelease from './discordmaxxer-release.json';
+import omRelease from './optimizationmaxxing-release.json';
 
 export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon';
 
@@ -38,7 +39,7 @@ export const products: Product[] = [
     name: 'Optimizationmaxxing',
     category: 'PC Tuning',
     status: 'live',
-    version: 'v0.1.35',
+    version: omRelease.version,
     tagline: 'Eighty-seven tweaks. Zero placebos.',
     description:
       'The only Windows tuner that shows its work. Every tweak traced to a Microsoft Learn doc or a vendor whitepaper. One UAC prompt applies the whole preset. Snapshot-backed revert, any tweak, any time.',
@@ -76,8 +77,12 @@ export const products: Product[] = [
       { label: 'Installer', value: '3.6 MB' },
       { label: 'Idle RAM', value: '~30 MB' },
     ],
-    primaryCta: { label: 'Get it. Free.', href: '#download' },
-    secondaryCta: { label: "What's new", href: '/changelog' },
+    primaryCta: omRelease.installerUrl
+        ? { label: 'Download for Windows', href: omRelease.installerUrl, external: true }
+        : { label: 'Get it. Free.', href: '#download' },
+    secondaryCta: omRelease.releasePageUrl
+        ? { label: 'Release notes', href: omRelease.releasePageUrl, external: true }
+        : { label: "What's new", href: '/changelog' },
     glyph: '⚡',
     logo: '/logos/optimizationmaxxing.svg',
     accentHex: '#e25bff',
