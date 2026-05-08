@@ -221,11 +221,10 @@ export const products: Product[] = [
     slug: 'aimmaxxer',
     name: 'Aimmaxxer',
     category: 'Training',
-    status: 'dev',
+    status: 'soon',
     version: amRelease.version ?? undefined,
     tagline: 'Aim is four metrics. Not one.',
-    description:
-      "Sensitivity. Prediction. Anchor. Trigger. We measure all four. Other trainers throw bots and call it data.",
+    description: 'In development.',
     longDescription:
       "KovaaK's hands you 200 scenarios. We hand you the 4 that fix what's actually broken.",
     features: [
@@ -252,11 +251,10 @@ export const products: Product[] = [
     slug: 'viewmaxxing',
     name: 'Viewmaxxing',
     category: 'Streamer Tools',
-    status: 'dev',
+    status: 'soon',
     version: vmRelease.version ?? undefined,
     tagline: 'A tool for streamers.',
-    description:
-      "Streamer-side tooling. Direction in flux while we figure out which problem deserves the slot.",
+    description: 'In development.',
     longDescription:
       "A streamer toolkit in scope research. The framing will land when we lock the angle worth shipping.",
     features: [
@@ -283,11 +281,10 @@ export const products: Product[] = [
     slug: 'editmaxxing',
     name: 'Editmaxxing',
     category: 'Fortnite',
-    status: 'dev',
+    status: 'soon',
     version: emRelease.version ?? undefined,
     tagline: 'On research hold.',
-    description:
-      "Build-edit tile-selector was the plan. Current research suggests it likely needs a hardware path we don't ship. Slot reserved while we figure it out.",
+    description: 'In development.',
     longDescription:
       "On hold. The hover-to-select build-edit feature looks like it needs a microcontroller layer to land cleanly inside Epic's tolerated lane. We don't ship hardware yet. We'd rather hold the slot than ship a half-feature.",
     features: [
