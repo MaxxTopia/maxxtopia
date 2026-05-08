@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import StatusPill from '../components/StatusPill.astro';
 import ProductCard from '../components/ProductCard.astro';
+import Aurora from '../components/Aurora.astro';
 import { products } from '../data/products';
 
 export async function getStaticPaths() {
@@ -18,6 +19,8 @@ if (!product) {
 
 const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
 const isLive = product.status === 'live';
+const root = product.name.replace(/maxx(er|ing)$/i, '');
+const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
 ---
 
 <Layout
@@ -26,10 +29,10 @@ const isLive = product.status === 'live';
 >
   <!-- Product hero -->
   <section class="relative overflow-hidden">
-    <div class="ambient-glow"></div>
-    <div class="absolute inset-0 bg-grid opacity-40"></div>
-    <div class="relative mx-auto max-w-6xl px-5 sm:px-8 pt-16 sm:pt-20 pb-16">
-      <a href="/#suite" class="inline-flex items-center gap-1.5 text-[13px] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors mb-10">
+    <Aurora intensity="med" />
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+    <div class="relative mx-auto max-w-7xl px-5 sm:px-8 pt-20 sm:pt-24 pb-20">
+      <a href="/#suite" class="inline-flex items-center gap-1.5 text-[13px] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors mb-12">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
@@ -38,18 +41,15 @@ const isLive = product.status === 'live';
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
         <div class="md:col-span-8">
-          <div class="reveal reveal-1 flex items-center gap-3 mb-6">
-            <span
-              class="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] text-[var(--color-accent)] text-[22px]"
-              aria-hidden="true"
-            >
-              {product.glyph}
-            </span>
+          <div class="reveal reveal-1 flex items-center gap-3.5 mb-8">
+            <span class="glyph-badge !w-12 !h-12 !text-[22px]" aria-hidden="true">{product.glyph}</span>
             <div>
-              <p class="text-[11px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">
+              <p class="text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
                 {product.category}
               </p>
-              <h1 class="text-[28px] font-semibold tracking-tight">{product.name}</h1>
+              <h1 class="text-[24px] font-semibold tracking-tight">
+                <span class="text-[var(--color-text)]">{root}</span><span class="brand-shimmer">{suffix}</span>
+              </h1>
             </div>
             <div class="ml-auto flex items-center gap-2">
               <StatusPill status={product.status} />
@@ -59,27 +59,21 @@ const isLive = product.status === 'live';
             </div>
           </div>
 
-          <h2 class="reveal reveal-2 text-[36px] sm:text-[52px] font-semibold tracking-[-0.03em] leading-[1.02] gradient-text max-w-2xl">
+          <h2 class="reveal reveal-2 text-[40px] sm:text-[60px] md:text-[76px] font-semibold tracking-[-0.035em] leading-[0.99] gradient-text max-w-2xl">
             {product.tagline}
           </h2>
 
-          <p class="reveal reveal-3 mt-6 text-[16.5px] leading-relaxed text-[var(--color-muted)] max-w-2xl">
+          <p class="reveal reveal-3 mt-7 text-[16.5px] leading-[1.55] text-[var(--color-text-mid)] max-w-2xl">
             {product.longDescription}
           </p>
 
-          <div class="reveal reveal-4 mt-8 flex flex-wrap items-center gap-3">
-            {isLive ? (
-              <a href={product.primaryCta.href} class="btn-primary">
-                {product.primaryCta.label}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M5 12h14M13 5l7 7-7 7"/>
-                </svg>
-              </a>
-            ) : (
-              <a href={product.primaryCta.href} class="btn-primary">
-                {product.primaryCta.label}
-              </a>
-            )}
+          <div class="reveal reveal-4 mt-9 flex flex-wrap items-center gap-3">
+            <a href={product.primaryCta.href} class="btn-primary">
+              {product.primaryCta.label}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
+            </a>
             {product.secondaryCta && (
               <a href={product.secondaryCta.href} class="btn-secondary">
                 {product.secondaryCta.label}
@@ -89,13 +83,13 @@ const isLive = product.status === 'live';
         </div>
 
         {product.stats && product.stats.length > 0 && (
-          <aside class="reveal reveal-5 md:col-span-4 grid grid-cols-2 gap-px rounded-xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
+          <aside class="reveal reveal-5 md:col-span-4 grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
             {product.stats.map((s) => (
-              <div class="bg-[var(--color-bg)] p-5">
-                <p class="text-[11px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">
+              <div class="bg-[var(--color-bg-card)]/80 backdrop-blur p-5">
+                <p class="text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
                   {s.label}
                 </p>
-                <p class="mt-1.5 text-[22px] font-semibold tracking-tight">
+                <p class="mt-2 text-[22px] font-semibold tracking-tight gradient-suite">
                   {s.value}
                 </p>
               </div>
@@ -104,29 +98,28 @@ const isLive = product.status === 'live';
         )}
       </div>
     </div>
-    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--color-line-strong)] to-transparent"></div>
   </section>
 
   <!-- Features -->
   <section class="relative">
-    <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20">
-      <div class="mb-10">
-        <p class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24">
+      <div class="reveal-on-scroll mb-12">
+        <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
           What's inside
         </p>
-        <h2 class="mt-2 text-[28px] sm:text-[36px] font-semibold tracking-tight gradient-text leading-tight">
-          Built for the player who measures.
+        <h2 class="mt-3 text-[32px] sm:text-[44px] font-semibold tracking-[-0.025em] leading-[1.04]">
+          <span class="gradient-text">Built for the player</span> <span class="serif-accent gradient-suite">who measures.</span>
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
         {product.features.map((f, i) => (
-          <div class="bg-[var(--color-bg)] p-6 sm:p-7">
-            <div class="text-[var(--color-accent)] text-[13px] font-mono mb-3">
+          <div class={`reveal-on-scroll reveal-delay-${(i % 5) + 1} bg-[var(--color-bg-card)] p-7 sm:p-8 group hover:bg-[var(--color-bg-card-hover)] transition-colors`}>
+            <div class="text-[var(--color-magenta)] text-[13px] font-mono mb-3.5 group-hover:text-[var(--color-cyan)] transition-colors">
               {String(i + 1).padStart(2, '0')}
             </div>
             <h3 class="text-[17px] font-semibold tracking-tight">{f.title}</h3>
-            <p class="mt-2.5 text-[14.5px] text-[var(--color-muted)] leading-relaxed">
+            <p class="mt-2.5 text-[14.5px] text-[var(--color-text-mid)] leading-relaxed">
               {f.body}
             </p>
           </div>
@@ -135,22 +128,29 @@ const isLive = product.status === 'live';
     </div>
   </section>
 
-  <!-- Status / waitlist banner for non-live -->
+  <!-- Status banner for non-live -->
   {!isLive && (
     <section class="relative">
-      <div class="mx-auto max-w-6xl px-5 sm:px-8 pb-16">
-        <div class="rounded-2xl border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div>
-            <h3 class="text-[20px] font-semibold tracking-tight">
-              {product.status === 'beta' ? 'In active beta.' : "We're building this now."}
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 pb-16">
+        <div class="reveal-on-scroll rounded-[24px] border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] p-9 sm:p-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 overflow-hidden relative">
+          <div class="aurora" aria-hidden="true">
+            <div class="aurora-blob aurora-blob--cyan" style="opacity: 0.18; width: 50%"></div>
+          </div>
+          <div class="relative">
+            <h3 class="text-[22px] font-semibold tracking-tight">
+              {product.status === 'beta' ? (
+                <span><span class="gradient-text">In active</span> <span class="serif-accent gradient-suite">beta.</span></span>
+              ) : (
+                <span><span class="gradient-text">We're building</span> <span class="serif-accent gradient-suite">this now.</span></span>
+              )}
             </h3>
-            <p class="mt-2 text-[14.5px] text-[var(--color-muted)] max-w-md leading-relaxed">
+            <p class="mt-2.5 text-[14.5px] text-[var(--color-text-mid)] max-w-md leading-relaxed">
               {product.status === 'beta'
-                ? 'Join the early-access list. First spots will open as the suite hits v1.0.'
+                ? 'Join the early-access list. First spots open as the suite hits v1.0.'
                 : "Get notified the day it ships. No spam — just one email when it's ready."}
             </p>
           </div>
-          <a href="#waitlist" class="btn-primary shrink-0">
+          <a href="#waitlist" class="relative btn-primary shrink-0">
             Join waitlist
           </a>
         </div>
@@ -160,14 +160,14 @@ const isLive = product.status === 'live';
 
   <!-- Related -->
   <section class="relative">
-    <div class="mx-auto max-w-6xl px-5 sm:px-8 py-20 border-t border-[var(--color-line)]">
-      <div class="flex items-end justify-between mb-8">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24 border-t border-[var(--color-line)]">
+      <div class="reveal-on-scroll flex items-end justify-between mb-10">
         <div>
-          <p class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">
+          <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono">
             Also in the suite
           </p>
-          <h2 class="mt-2 text-[24px] sm:text-[32px] font-semibold tracking-tight gradient-text">
-            Different surface. Same standard.
+          <h2 class="mt-3 text-[28px] sm:text-[36px] font-semibold tracking-[-0.025em] leading-[1.04]">
+            <span class="gradient-text">Different surface.</span> <span class="serif-accent gradient-suite">Same standard.</span>
           </h2>
         </div>
         <a href="/#suite" class="hidden sm:inline-flex btn-secondary">

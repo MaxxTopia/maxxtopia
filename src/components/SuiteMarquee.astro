@@ -1,0 +1,18 @@
+---
+import { products } from '../data/products';
+const items = [...products, ...products]; // duplicate for seamless loop
+---
+
+<div class="marquee py-6 border-y border-[var(--color-line)] bg-[var(--color-bg-raised)]/50 backdrop-blur">
+  <div class="marquee-track">
+    {items.map((p) => (
+      <span class="flex items-center gap-6 px-6 text-[15px] font-medium text-[var(--color-muted)] whitespace-nowrap">
+        <span class="text-[18px] text-[var(--color-magenta)]">{p.glyph}</span>
+        <span>
+          <span class="text-[var(--color-text-mid)]">{p.name.replace(/maxx(er|ing)$/i, '')}</span><span class="brand-shimmer">{p.name.match(/maxx(er|ing)$/i)?.[0] ?? ''}</span>
+        </span>
+        <span class="text-[var(--color-subtle)]">✦</span>
+      </span>
+    ))}
+  </div>
+</div>

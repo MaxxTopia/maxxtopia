@@ -1,0 +1,57 @@
+---
+type Props = {
+  value: number;
+  suffix?: string;
+  prefix?: string;
+  duration?: number;
+};
+const { value, suffix = '', prefix = '', duration = 1800 } = Astro.props;
+---
+
+<span
+  class="count-up"
+  data-target={value}
+  data-suffix={suffix}
+  data-prefix={prefix}
+  data-duration={duration}
+>{prefix}0{suffix}</span>
+
+<script is:inline>
+  (() => {
+    const els = document.querySelectorAll('.count-up');
+    if (!els.length) return;
+
+    const ease = (t) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+
+    const animate = (el) => {
+      const target = parseFloat(el.getAttribute('data-target') || '0');
+      const suffix = el.getAttribute('data-suffix') || '';
+      const prefix = el.getAttribute('data-prefix') || '';
+      const duration = parseInt(el.getAttribute('data-duration') || '1800', 10);
+      const isInt = Number.isInteger(target);
+
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const v = target * ease(t);
+        const display = isInt ? Math.round(v).toString() : v.toFixed(1);
+        el.textContent = `${prefix}${display}${suffix}`;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animate(entry.target);
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    els.forEach((el) => obs.observe(el));
+  })();
+</script>

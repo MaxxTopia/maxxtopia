@@ -1,0 +1,56 @@
+---
+type Props = { words: string[]; interval?: number };
+const { words, interval = 2400 } = Astro.props;
+const initial = words[0] ?? '';
+const longest = words.reduce((a, b) => (b.length > a.length ? b : a), '');
+---
+
+<span
+  class="word-rotator"
+  data-words={JSON.stringify(words)}
+  data-interval={interval}
+  aria-label={words.join(', ')}
+>
+  <span class="word-rotator__measure invisible absolute" aria-hidden="true">{longest}</span>
+  <span class="word-rotator__slot">
+    <span class="word-rotator__word">{initial}</span>
+  </span>
+</span>
+
+<script is:inline>
+  (() => {
+    const rotators = document.querySelectorAll('.word-rotator');
+    rotators.forEach((root) => {
+      const words = JSON.parse(root.getAttribute('data-words') || '[]');
+      const interval = parseInt(root.getAttribute('data-interval') || '2400', 10);
+      if (!words.length) return;
+
+      // Lock width to longest word so layout doesn't jump
+      const measure = root.querySelector('.word-rotator__measure');
+      const slot = root.querySelector('.word-rotator__slot');
+      if (measure && slot) {
+        // Force layout once so we can measure
+        const rect = measure.getBoundingClientRect();
+        slot.style.minWidth = rect.width + 'px';
+      }
+
+      let i = 0;
+      const wordEl = root.querySelector('.word-rotator__word');
+      if (!wordEl) return;
+
+      setInterval(() => {
+        wordEl.classList.add('is-leaving');
+        setTimeout(() => {
+          i = (i + 1) % words.length;
+          wordEl.textContent = words[i];
+          wordEl.classList.remove('is-leaving');
+          wordEl.classList.add('is-entering');
+          // Force reflow
+          // eslint-disable-next-line no-unused-expressions
+          wordEl.offsetWidth;
+          wordEl.classList.remove('is-entering');
+        }, 360);
+      }, interval);
+    });
+  })();
+</script>

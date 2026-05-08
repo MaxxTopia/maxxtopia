@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Aurora from '../components/Aurora.astro';
 ---
 
 <Layout
@@ -7,26 +8,28 @@ import Layout from '../layouts/Layout.astro';
   description="Why Maxxtopia exists. The principles behind the suite."
 >
   <article class="relative">
-    <div class="ambient-glow" style="opacity: 0.4"></div>
+    <Aurora intensity="low" />
+    <div class="absolute inset-0 bg-grid opacity-30"></div>
+
     <div class="relative mx-auto max-w-2xl px-5 sm:px-8 pt-24 pb-12">
-      <p class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">
+      <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono reveal reveal-1">
         Manifesto · v0.1
       </p>
-      <h1 class="mt-3 text-[44px] sm:text-[60px] font-semibold tracking-[-0.03em] leading-[1] gradient-text">
-        We're tired of bad gaming software.
+      <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[68px] font-semibold tracking-[-0.03em] leading-[1] gradient-text">
+        We're tired of <span class="serif-accent gradient-suite">bad gaming software.</span>
       </h1>
     </div>
 
     <div class="relative mx-auto max-w-2xl px-5 sm:px-8 pb-32">
-      <div class="space-y-7 text-[16.5px] leading-[1.75] text-[var(--color-muted)]">
-        <p>
+      <div class="space-y-7 text-[16.5px] leading-[1.78] text-[var(--color-text-mid)]">
+        <p class="reveal-on-scroll">
           The tools competitive gamers actually use weren't built by anyone competitive.
           They were built by Discord scripters who slapped a paywall on a registry batch file,
           by Electron studios shipping 200 MB of Chromium for a settings panel,
           by analytics-funded SaaS that treats your inputs as inventory.
         </p>
 
-        <p>
+        <p class="reveal-on-scroll">
           Maxxtopia is a refusal to accept that.
           We think gaming utilities should be designed with the care Apple gives a music app.
           That a tuner should cite its sources. That a Discord client should idle at 0% CPU.
@@ -34,57 +37,31 @@ import Layout from '../layouts/Layout.astro';
           That nothing in your gaming stack should call home unless you tell it to.
         </p>
 
-        <h2 class="text-[var(--color-text)] text-[24px] font-semibold tracking-tight pt-6 leading-tight">
+        <h2 class="reveal-on-scroll text-[var(--color-text)] text-[28px] font-semibold tracking-[-0.02em] pt-6 leading-tight">
           Principles
         </h2>
 
         <div class="space-y-5">
-          <div class="border-l-2 border-[var(--color-accent)] pl-5">
-            <h3 class="text-[var(--color-text)] text-[18px] font-semibold mb-1.5">Sourced, not vibed.</h3>
-            <p class="text-[15.5px] leading-[1.7]">
-              Every tweak we ship traces to Microsoft Learn, a vendor doc, or a verified community source.
-              If it can't be cited, it doesn't ship. Placebo tweaks erode trust — we cut ten of them in v0.1.32.
-            </p>
-          </div>
-
-          <div class="border-l-2 border-[var(--color-accent)] pl-5">
-            <h3 class="text-[var(--color-text)] text-[18px] font-semibold mb-1.5">Native or nothing.</h3>
-            <p class="text-[15.5px] leading-[1.7]">
-              The tuner is 3.6 MB. The Discord client is 288 MB at idle versus 1041 MB on stock.
-              Bundle size is a moral position.
-            </p>
-          </div>
-
-          <div class="border-l-2 border-[var(--color-accent)] pl-5">
-            <h3 class="text-[var(--color-text)] text-[18px] font-semibold mb-1.5">Reversible by default.</h3>
-            <p class="text-[15.5px] leading-[1.7]">
-              Every change is snapshot-backed. Every preset is undoable. One-click restore.
-              Software you can experiment with because the door is never locked.
-            </p>
-          </div>
-
-          <div class="border-l-2 border-[var(--color-accent)] pl-5">
-            <h3 class="text-[var(--color-text)] text-[18px] font-semibold mb-1.5">No telemetry. Ever.</h3>
-            <p class="text-[15.5px] leading-[1.7]">
-              We don't analytics you. We don't error-log you. We don't &ldquo;help us improve our product&rdquo; you.
-              Gaming software has a long history of betraying that trust. We won't.
-            </p>
-          </div>
-
-          <div class="border-l-2 border-[var(--color-accent)] pl-5">
-            <h3 class="text-[var(--color-text)] text-[18px] font-semibold mb-1.5">Measure, don't just modify.</h3>
-            <p class="text-[15.5px] leading-[1.7]">
-              Every tuner applies tweaks. Maxxtopia&apos;s ships live DPC graphs, latency probes, and PCIe diagnostics
-              so you can verify the change worked. Trust, then verify.
-            </p>
-          </div>
+          {[
+            { t: 'Sourced, not vibed.', b: "Every tweak we ship traces to Microsoft Learn, a vendor doc, or a verified community source. If it can't be cited, it doesn't ship. Placebo tweaks erode trust — we cut ten of them in v0.1.32." },
+            { t: 'Native or nothing.', b: 'The tuner is 3.6 MB. The Discord client is 288 MB at idle versus 1041 MB on stock. Bundle size is a moral position.' },
+            { t: 'Reversible by default.', b: 'Every change is snapshot-backed. Every preset is undoable. One-click restore. Software you can experiment with because the door is never locked.' },
+            { t: 'No telemetry. Ever.', b: "We don't analytics you. We don't error-log you. We don't “help us improve our product” you. Gaming software has a long history of betraying that trust. We won't." },
+            { t: "Measure, don't just modify.", b: "Every tuner applies tweaks. Maxxtopia's ships live DPC graphs, latency probes, and PCIe diagnostics so you can verify the change worked. Trust, then verify." },
+          ].map((p) => (
+            <div class="reveal-on-scroll relative pl-6">
+              <span class="absolute left-0 top-1.5 bottom-1.5 w-px bg-gradient-to-b from-[var(--color-magenta)] via-[var(--color-cyan)] to-transparent"></span>
+              <h3 class="text-[var(--color-text)] text-[19px] font-semibold mb-2 tracking-[-0.01em]">{p.t}</h3>
+              <p class="text-[15.5px] leading-[1.7] text-[var(--color-text-mid)]">{p.b}</p>
+            </div>
+          ))}
         </div>
 
-        <h2 class="text-[var(--color-text)] text-[24px] font-semibold tracking-tight pt-6 leading-tight">
+        <h2 class="reveal-on-scroll text-[var(--color-text)] text-[28px] font-semibold tracking-[-0.02em] pt-6 leading-tight">
           The suite
         </h2>
 
-        <p>
+        <p class="reveal-on-scroll">
           Optimizationmaxxing tunes your PC.
           Discordmaxxer tunes your comms.
           Clipmaxxer cuts your VODs.
@@ -94,17 +71,17 @@ import Layout from '../layouts/Layout.astro';
           Editmacros assists your edits.
         </p>
 
-        <p>
-          Different surfaces. Same standard.
+        <p class="reveal-on-scroll">
+          Different surfaces. <span class="serif-accent text-[var(--color-text)]">Same standard.</span>
           Built by a single player for the players who care about the millisecond.
         </p>
 
-        <p class="pt-4 text-[var(--color-text)] font-mono text-[14px]">
-          — The Maxxtopia team
+        <p class="reveal-on-scroll pt-6">
+          <span class="slogan">made by diggy</span>
         </p>
       </div>
 
-      <div class="mt-16 pt-10 border-t border-[var(--color-line)]">
+      <div class="reveal-on-scroll mt-16 pt-10 border-t border-[var(--color-line)]">
         <a href="/#suite" class="btn-primary">
           Browse the suite
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

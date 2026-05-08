@@ -2,60 +2,58 @@
 import type { Product } from '../data/products';
 import StatusPill from './StatusPill.astro';
 
-type Props = { product: Product; index?: number };
-const { product, index = 0 } = Astro.props;
+type Props = { product: Product; index?: number; large?: boolean };
+const { product, index = 0, large = false } = Astro.props;
 const isLive = product.status === 'live';
+const root = product.name.replace(/maxx(er|ing)$/i, '');
+const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
 ---
 
 <a
   href={`/${product.slug}`}
-  class={`card group relative block p-6 sm:p-7 reveal reveal-${Math.min(index + 1, 5)} ${isLive ? 'card-live' : ''}`}
+  class={`card group relative block ${large ? 'p-7 sm:p-9' : 'p-6 sm:p-7'} reveal-on-scroll reveal-delay-${Math.min(index + 1, 5)} ${isLive ? 'card-live' : ''}`}
 >
-  <div class="flex items-start justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <span
-        class="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-bg)] text-[var(--color-accent)] text-[18px] font-medium"
-        aria-hidden="true"
-      >
-        {product.glyph}
-      </span>
+  <!-- Top row: glyph + meta + status -->
+  <div class="relative flex items-start justify-between gap-4">
+    <div class="flex items-center gap-3.5">
+      <span class="glyph-badge" aria-hidden="true">{product.glyph}</span>
       <div>
-        <p class="text-[11px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono">
+        <p class="text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
           {product.category}
         </p>
-        <h3 class="text-[18px] font-semibold tracking-tight text-[var(--color-text)] mt-0.5">
-          {product.name}
+        <h3 class={`${large ? 'text-[22px]' : 'text-[19px]'} font-semibold tracking-tight mt-0.5`}>
+          <span class="text-[var(--color-text)]">{root}</span><span class="brand-shimmer">{suffix}</span>
         </h3>
       </div>
     </div>
     <StatusPill status={product.status} />
   </div>
 
-  <p class="mt-5 text-[14.5px] leading-relaxed text-[var(--color-muted)]">
+  <!-- Description -->
+  <p class={`relative ${large ? 'mt-7 text-[15px]' : 'mt-6 text-[14.5px]'} leading-relaxed text-[var(--color-text-mid)]`}>
     {product.description}
   </p>
 
-  {product.version && (
-    <p class="mt-5 text-[12px] font-mono text-[var(--color-subtle)]">
-      {product.version}
-    </p>
-  )}
-
-  <div class="mt-6 flex items-center text-[13.5px] font-medium text-[var(--color-text)] opacity-70 group-hover:opacity-100 transition-opacity">
-    <span>{isLive ? 'Open product' : 'Read more'}</span>
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="ml-1.5 transition-transform group-hover:translate-x-1"
-      aria-hidden="true"
-    >
-      <path d="M5 12h14M13 5l7 7-7 7"/>
-    </svg>
+  <!-- Bottom row -->
+  <div class="relative mt-6 flex items-center justify-between">
+    {product.version ? (
+      <span class="text-[11.5px] font-mono text-[var(--color-subtle)]">
+        {product.version}
+      </span>
+    ) : (
+      <span class="text-[11.5px] font-mono text-[var(--color-subtle)]">—</span>
+    )}
+    <span class="flex items-center text-[13px] font-medium text-[var(--color-text-mid)] group-hover:text-[var(--color-text)] transition-colors">
+      <span>{isLive ? 'Open' : 'Read more'}</span>
+      <svg
+        width="14" height="14"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+        class="ml-1.5 transition-transform group-hover:translate-x-1.5"
+        aria-hidden="true"
+      >
+        <path d="M5 12h14M13 5l7 7-7 7"/>
+      </svg>
+    </span>
   </div>
 </a>

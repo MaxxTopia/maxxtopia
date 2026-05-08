@@ -2,6 +2,9 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CustomCursor from '../components/CustomCursor.astro';
+import RevealOnScroll from '../components/RevealOnScroll.astro';
+import MagneticAndTilt from '../components/MagneticAndTilt.astro';
 
 type Props = {
   title?: string;
@@ -46,20 +49,23 @@ const ogImage = new URL(image, Astro.site);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <meta name="theme-color" content="#050505" />
+    <meta name="theme-color" content="#0a0612" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
       rel="stylesheet"
     />
   </head>
   <body class="bg-noise">
+    <CustomCursor />
     <Header />
     <main>
       <slot />
     </main>
     <Footer />
+    <RevealOnScroll />
+    <MagneticAndTilt />
   </body>
 </html>

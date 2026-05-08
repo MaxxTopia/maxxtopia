@@ -1,0 +1,57 @@
+---
+// Magnetic primary CTAs + 3D tilt cards + spotlight tracking.
+// Place once in the layout.
+---
+
+<script is:inline>
+  (() => {
+    const isCoarse =
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(hover: none)').matches;
+    if (isCoarse) return;
+
+    // Magnetic primary buttons
+    const magnetic = document.querySelectorAll('.btn-primary, [data-magnetic]');
+    magnetic.forEach((el) => {
+      const strength = 0.28;
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - (r.left + r.width / 2);
+        const y = e.clientY - (r.top + r.height / 2);
+        el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = '';
+      });
+    });
+
+    // 3D tilt + spotlight on cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card) => {
+      const max = 6; // max tilt degrees
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--mx', `${px * 100}%`);
+        card.style.setProperty('--my', `${py * 100}%`);
+        const ry = (px - 0.5) * max;
+        const rx = -(py - 0.5) * max;
+        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // Spotlight section tracking
+    const spotlights = document.querySelectorAll('.spotlight');
+    spotlights.forEach((s) => {
+      s.addEventListener('mousemove', (e) => {
+        const r = s.getBoundingClientRect();
+        s.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        s.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+  })();
+</script>

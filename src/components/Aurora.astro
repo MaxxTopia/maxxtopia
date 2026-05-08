@@ -1,0 +1,11 @@
+---
+type Props = { intensity?: 'high' | 'med' | 'low' };
+const { intensity = 'med' } = Astro.props;
+const opacity = intensity === 'high' ? 1 : intensity === 'low' ? 0.4 : 0.7;
+---
+
+<div class="aurora" style={`--aurora-opacity:${opacity}`} aria-hidden="true">
+  <div class="aurora-blob aurora-blob--magenta" style={`opacity:${0.45 * opacity}`}></div>
+  <div class="aurora-blob aurora-blob--cyan" style={`opacity:${0.40 * opacity}`}></div>
+  <div class="aurora-blob aurora-blob--indigo" style={`opacity:${0.40 * opacity}`}></div>
+</div>
