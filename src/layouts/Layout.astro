@@ -5,19 +5,23 @@ import Footer from '../components/Footer.astro';
 import CustomCursor from '../components/CustomCursor.astro';
 import RevealOnScroll from '../components/RevealOnScroll.astro';
 import MagneticAndTilt from '../components/MagneticAndTilt.astro';
+import MaxxerSidebar from '../components/MaxxerSidebar.astro';
 
 type Props = {
   title?: string;
   description?: string;
   image?: string;
   noindex?: boolean;
+  /** Hide the cross-suite sidebar (e.g., on 404). */
+  hideSidebar?: boolean;
 };
 
 const {
-  title = 'Maxxtopia — Where gamers go to peak',
+  title = 'Maxxtopia — Where gamers go to maxx',
   description = 'A suite of native gaming utilities engineered to push your PC, your game, and your content to maximum.',
   image = '/og.png',
   noindex = false,
+  hideSidebar = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -58,9 +62,10 @@ const ogImage = new URL(image, Astro.site);
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class={hideSidebar ? '' : 'has-sidebar'}>
     <CustomCursor />
     <Header />
+    {!hideSidebar && <MaxxerSidebar />}
     <main>
       <slot />
     </main>
@@ -69,3 +74,12 @@ const ogImage = new URL(image, Astro.site);
     <MagneticAndTilt />
   </body>
 </html>
+
+<style is:global>
+  @media (min-width: 1024px) {
+    body.has-sidebar > main,
+    body.has-sidebar > footer {
+      padding-left: 64px;
+    }
+  }
+</style>

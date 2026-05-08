@@ -1,0 +1,256 @@
+---
+type Props = {
+  /** Words to cycle through before locking. */
+  rotation?: string[];
+  /** Final word that locks into place with a flash + sound. */
+  lockWord?: string;
+  /** ms between word swaps during the rotation. */
+  interval?: number;
+};
+
+const {
+  rotation = ['peak', 'cook', 'lock in', 'pop off', 'cracked'],
+  lockWord = 'maxx',
+  interval = 900,
+} = Astro.props;
+
+const allWords = [...rotation, lockWord];
+const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
+---
+
+<span
+  class="hero-word"
+  data-rotation={JSON.stringify(rotation)}
+  data-lock={lockWord}
+  data-interval={interval}
+  aria-label={`go to ${lockWord}`}
+>
+  <!-- Width-locking ghost (visibility:hidden, position:absolute, takes up width but invisible) -->
+  <span class="hero-word__measure" aria-hidden="true">{longest}</span>
+
+  <!-- Live slot -->
+  <span class="hero-word__slot">
+    <span class="hero-word__current">{rotation[0]}</span>
+    <span class="hero-word__pulse" aria-hidden="true"></span>
+  </span>
+</span>
+
+<style>
+  .hero-word {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    white-space: nowrap;
+  }
+  .hero-word__measure {
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    /* This element only exists to lock the width to the longest word. */
+  }
+  .hero-word__slot {
+    position: relative;
+    display: inline-block;
+  }
+  .hero-word__current {
+    display: inline-block;
+    background: linear-gradient(120deg, #e25bff 0%, #c084fc 30%, #00d4ff 75%, #4c51f7 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: hero-word-shimmer 6s ease-in-out infinite;
+    transition: opacity 320ms cubic-bezier(0.5, 0, 0.5, 1),
+                transform 320ms cubic-bezier(0.5, 0, 0.5, 1),
+                filter 320ms ease;
+  }
+  .hero-word__current.is-leaving {
+    opacity: 0;
+    transform: translateY(-12%) skewY(-2deg);
+    filter: blur(6px);
+  }
+  .hero-word__current.is-entering {
+    opacity: 0;
+    transform: translateY(20%) skewY(2deg);
+    filter: blur(10px);
+  }
+  /* Lock state — when the final word lands */
+  .hero-word__current.is-locked {
+    animation: hero-word-shimmer 4s ease-in-out infinite, hero-word-lock 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-shadow:
+      0 0 24px rgba(226, 91, 255, 0.5),
+      0 0 64px rgba(0, 212, 255, 0.3);
+  }
+  /* Chromatic aberration RGB-split flash on lock */
+  .hero-word__current.is-flashing::before,
+  .hero-word__current.is-flashing::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    background: inherit;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    pointer-events: none;
+    animation: chromatic-flash 280ms ease-out forwards;
+  }
+  .hero-word__current.is-flashing::before {
+    color: #ff3d8b;
+    transform: translateX(-3px);
+    mix-blend-mode: screen;
+  }
+  .hero-word__current.is-flashing::after {
+    color: #00ffea;
+    transform: translateX(3px);
+    mix-blend-mode: screen;
+  }
+  @keyframes chromatic-flash {
+    0% { opacity: 0.9; }
+    100% { opacity: 0; transform: translateX(0); }
+  }
+
+  /* Radial pulse ring expanding from behind the word on lock */
+  .hero-word__pulse {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 12px; height: 12px;
+    border-radius: 999px;
+    border: 2px solid rgba(226, 91, 255, 0.7);
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+  }
+  .hero-word__pulse.is-firing {
+    animation: hero-word-pulse 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes hero-word-pulse {
+    0%   { transform: translate(-50%, -50%) scale(0);  opacity: 1; border-color: rgba(226, 91, 255, 0.9); }
+    60%  { transform: translate(-50%, -50%) scale(14); opacity: 0.5; border-color: rgba(0, 212, 255, 0.5); }
+    100% { transform: translate(-50%, -50%) scale(22); opacity: 0; border-color: rgba(0, 212, 255, 0); }
+  }
+
+  @keyframes hero-word-lock {
+    0% { transform: scale(0.92); }
+    35% { transform: scale(1.06); }
+    70% { transform: scale(0.99); }
+    100% { transform: scale(1); }
+  }
+  @keyframes hero-word-shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-word__current,
+    .hero-word__current.is-leaving,
+    .hero-word__current.is-entering,
+    .hero-word__current.is-locked {
+      animation: none !important;
+      transform: none !important;
+      filter: none !important;
+      opacity: 1 !important;
+    }
+    .hero-word__pulse { display: none; }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector('.hero-word');
+    if (!root) return;
+
+    const rotation = JSON.parse(root.getAttribute('data-rotation') || '[]');
+    const lockWord = root.getAttribute('data-lock') || 'maxx';
+    const interval = parseInt(root.getAttribute('data-interval') || '900', 10);
+    const current = root.querySelector('.hero-word__current');
+    const pulse = root.querySelector('.hero-word__pulse');
+    if (!current || !pulse) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const STORAGE_KEY = 'maxxtopia_hero_played';
+    const sessionPlayed = sessionStorage.getItem(STORAGE_KEY) === '1';
+
+    // ── Web Audio synth tone on lock ────────────────────────────────
+    let audioCtx = null;
+    let userInteracted = false;
+    const armAudio = () => { userInteracted = true; };
+    window.addEventListener('pointerdown', armAudio, { once: true, passive: true });
+    window.addEventListener('keydown', armAudio, { once: true });
+    window.addEventListener('touchstart', armAudio, { once: true, passive: true });
+
+    const playLockTone = () => {
+      if (reduced) return;
+      if (!userInteracted) return;
+      if (sessionPlayed) return;
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        const t0 = audioCtx.currentTime;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        // Glide C5 → G5 over 180ms
+        osc.frequency.setValueAtTime(523.25, t0);
+        osc.frequency.exponentialRampToValueAtTime(783.99, t0 + 0.18);
+
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.exponentialRampToValueAtTime(0.3, t0 + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.5);
+
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(t0);
+        osc.stop(t0 + 0.55);
+        sessionStorage.setItem(STORAGE_KEY, '1');
+      } catch (_) { /* no-op */ }
+    };
+
+    // ── Word swap ────────────────────────────────────────────────────
+    const swap = (next, opts = {}) => new Promise((resolve) => {
+      current.classList.add('is-leaving');
+      setTimeout(() => {
+        current.textContent = next;
+        current.setAttribute('data-text', next);
+        current.classList.remove('is-leaving');
+        current.classList.add('is-entering');
+        // Force reflow
+        // eslint-disable-next-line no-unused-expressions
+        current.offsetWidth;
+        current.classList.remove('is-entering');
+        if (opts.lock) {
+          current.classList.add('is-locked', 'is-flashing');
+          pulse.classList.add('is-firing');
+          playLockTone();
+          setTimeout(() => current.classList.remove('is-flashing'), 320);
+        }
+        resolve();
+      }, 320);
+    });
+
+    // ── Sequence ─────────────────────────────────────────────────────
+    let i = 0;
+    const tick = async () => {
+      i++;
+      if (i < rotation.length) {
+        await swap(rotation[i]);
+        setTimeout(tick, interval);
+      } else {
+        // Final lock on the maxx word
+        await swap(lockWord, { lock: true });
+      }
+    };
+
+    if (reduced) {
+      // Reduced motion: jump straight to the lock word, no animation
+      current.textContent = lockWord;
+      current.setAttribute('data-text', lockWord);
+      current.classList.add('is-locked');
+      return;
+    }
+
+    setTimeout(tick, interval);
+  })();
+</script>

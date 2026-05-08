@@ -1,0 +1,40 @@
+---
+// Small pill that surfaces "made by diggy" earlier than the footer.
+// Hover reveals attribution.
+---
+
+<a
+  href="https://github.com/dtman-gif"
+  target="_blank"
+  rel="noopener"
+  class="diggy-pill"
+  aria-label="Made by Diggy — opens GitHub"
+>
+  <span class="diggy-pill__dot" aria-hidden="true"></span>
+  <span class="slogan">made by diggy</span>
+</a>
+
+<style>
+  .diggy-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px 5px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-bg-card);
+    transition: border-color 220ms ease, transform 220ms ease;
+  }
+  .diggy-pill:hover {
+    border-color: rgba(226, 91, 255, 0.5);
+    transform: translateY(-1px);
+  }
+  .diggy-pill__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--color-magenta);
+    box-shadow: 0 0 6px rgba(226, 91, 255, 0.7);
+    flex-shrink: 0;
+  }
+</style>

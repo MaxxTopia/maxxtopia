@@ -14,7 +14,14 @@ export type Product = {
   primaryCta: { label: string; href: string; external?: boolean };
   secondaryCta?: { label: string; href: string; external?: boolean };
   glyph: string;
-  accentHex?: string;
+  /** SVG mark path under /logos/. If absent, ProductCard falls back to wordmark-only. */
+  logo?: string;
+  /** Suite-canon accent for sidebar + per-product highlights. */
+  accentHex: string;
+  /** Hero shot images under /screenshots/<slug>/. */
+  screenshots?: string[];
+  /** External live build URL — for beta products that have a working site outside maxxtopia. */
+  deployedUrl?: string;
 };
 
 export const products: Product[] = [
@@ -62,8 +69,11 @@ export const products: Product[] = [
       { label: 'RAM at idle', value: '~30 MB' },
     ],
     primaryCta: { label: 'Download for Windows', href: '#download' },
-    secondaryCta: { label: 'See changelog', href: '#changelog' },
+    secondaryCta: { label: 'See changelog', href: '/changelog' },
     glyph: '⚡',
+    logo: '/logos/optimizationmaxxing.svg',
+    accentHex: '#e25bff',
+    screenshots: ['/screenshots/optimizationmaxxing/og.png'],
   },
   {
     slug: 'discordmaxxer',
@@ -103,6 +113,9 @@ export const products: Product[] = [
     primaryCta: { label: 'Download v0.1', href: '#download' },
     secondaryCta: { label: 'See benchmarks', href: '#benchmarks' },
     glyph: '◆',
+    logo: '/logos/discordmaxxer.svg',
+    accentHex: '#5865F2',
+    screenshots: ['/screenshots/discordmaxxer/hub-panel.png'],
   },
   {
     slug: 'clipmaxxer',
@@ -135,6 +148,12 @@ export const products: Product[] = [
     primaryCta: { label: 'Join the waitlist', href: '#waitlist' },
     secondaryCta: { label: 'See sample clips', href: '#samples' },
     glyph: '✂',
+    accentHex: '#00d4ff',
+    screenshots: [
+      '/screenshots/clipmaxxer/01.jpg',
+      '/screenshots/clipmaxxer/02.jpg',
+      '/screenshots/clipmaxxer/03.jpg',
+    ],
   },
   {
     slug: 'dropmaxxer',
@@ -162,6 +181,8 @@ export const products: Product[] = [
     ],
     primaryCta: { label: 'Join the waitlist', href: '#waitlist' },
     glyph: '◇',
+    accentHex: '#4c51f7',
+    screenshots: ['/screenshots/dropmaxxer/preview.png'],
   },
   {
     slug: 'aimmaxxer',
@@ -185,6 +206,7 @@ export const products: Product[] = [
     ],
     primaryCta: { label: 'Join the waitlist', href: '#waitlist' },
     glyph: '◎',
+    accentHex: '#f3af19',
   },
   {
     slug: 'viewmaxxing',
@@ -208,17 +230,18 @@ export const products: Product[] = [
     ],
     primaryCta: { label: 'Join the waitlist', href: '#waitlist' },
     glyph: '◐',
+    accentHex: '#10b981',
   },
   {
-    slug: 'editmacros',
-    name: 'Editmacros',
+    slug: 'editmaxxing',
+    name: 'Editmaxxing',
     category: 'Fortnite',
     status: 'soon',
     tagline: 'Build editing assistant for Fortnite.',
     description:
-      'Auto-selects tiles under crosshair during build edits. Inspired by Blurred.gg.',
+      'A focused build-edit assistant for one mechanic. Pros use macros openly; we made one that respects the game.',
     longDescription:
-      "Pros use macros openly — Epic stated they're not bannable, and pros have been caught on stream with no action taken. Editmacros is a personal-use tile-selector for build edits, scoped tightly to a single mechanic. Ship-status tentative.",
+      "Pros use macros openly — Epic stated they're not bannable, and pros have been caught on stream with no action taken. Editmaxxing is a personal-use tile-selector for build edits, scoped tightly to a single mechanic.",
     features: [
       {
         title: 'Tile selection on hover',
@@ -231,6 +254,7 @@ export const products: Product[] = [
     ],
     primaryCta: { label: 'Join the waitlist', href: '#waitlist' },
     glyph: '◈',
+    accentHex: '#ff6b8b',
   },
 ];
 
@@ -252,4 +276,10 @@ export function statusLabel(status: ProductStatus): string {
     case 'soon':
       return 'Coming soon';
   }
+}
+
+/** Two-letter monogram from product name (e.g., "Optimizationmaxxing" → "OM"). */
+export function monogram(name: string): string {
+  const root = name.replace(/maxx(er|ing)$/i, '');
+  return (root[0] + 'M').toUpperCase();
 }

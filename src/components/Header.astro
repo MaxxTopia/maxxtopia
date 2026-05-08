@@ -18,9 +18,9 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
           class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/manifesto') ? 'text-[var(--color-text)]' : ''}`}
         >Manifesto</a>
         <a
-          href="/#principles"
-          class="transition-colors hover:text-[var(--color-text)]"
-        >Principles</a>
+          href="/changelog"
+          class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/changelog') ? 'text-[var(--color-text)]' : ''}`}
+        >Changelog</a>
       </nav>
     </div>
     <div class="flex items-center gap-2.5">

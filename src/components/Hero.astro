@@ -1,7 +1,8 @@
 ---
 import Aurora from './Aurora.astro';
-import WordRotator from './WordRotator.astro';
+import HeroWordReveal from './HeroWordReveal.astro';
 import CountUp from './CountUp.astro';
+import MadeByDiggyPill from './MadeByDiggyPill.astro';
 import { liveProducts, products } from '../data/products';
 const liveCount = liveProducts.length;
 const totalCount = products.length;
@@ -11,35 +12,41 @@ const totalCount = products.length;
   <Aurora intensity="high" />
   <div class="absolute inset-0 bg-grid opacity-60"></div>
 
-  <div class="relative mx-auto max-w-7xl px-5 sm:px-8 pt-24 sm:pt-32 pb-24 sm:pb-32">
-    <!-- Eyebrow -->
-    <div class="reveal reveal-1 inline-flex items-center gap-2 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] px-3.5 py-1.5 mb-10">
-      <span class="flex h-2 w-2 rounded-full bg-[#4ade80]" style="box-shadow: 0 0 12px #4ade80; animation: pulse 2s ease-in-out infinite"></span>
-      <span class="text-[12.5px] text-[var(--color-muted)] font-mono">
-        <span class="text-[var(--color-text)]">{liveCount}</span><span class="text-[var(--color-subtle)]">/{totalCount}</span> live
-        <span class="mx-2 text-[var(--color-subtle)]">·</span>
-        suite v0.1.0
-      </span>
+  <div class="relative mx-auto max-w-7xl px-5 sm:px-8 pt-20 sm:pt-24 pb-24 sm:pb-32">
+    <!-- Eyebrow row -->
+    <div class="reveal reveal-1 flex flex-wrap items-center gap-3 mb-9">
+      <div class="inline-flex items-center gap-2 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] px-3.5 py-1.5">
+        <span class="flex h-2 w-2 rounded-full bg-[#4ade80]" style="box-shadow: 0 0 12px #4ade80; animation: pulse 2s ease-in-out infinite"></span>
+        <span class="text-[12.5px] text-[var(--color-muted)] font-mono">
+          <span class="text-[var(--color-text)]">{liveCount}</span><span class="text-[var(--color-subtle)]">/{totalCount}</span> live
+          <span class="mx-2 text-[var(--color-subtle)]">·</span>
+          suite v0.1.0
+        </span>
+      </div>
+      <MadeByDiggyPill />
     </div>
 
-    <!-- Headline -->
+    <!-- Headline with finite-rotate-then-lock -->
     <h1 class="reveal reveal-2 text-[44px] sm:text-[72px] md:text-[96px] lg:text-[112px] font-semibold tracking-[-0.04em] leading-[0.96] max-w-[14ch]">
       <span class="block gradient-text">Where gamers</span>
-      <span class="block gradient-text">go to <WordRotator words={["peak", "cook", "lock in", "pop off", "cracked"]} interval={2400} /></span><span class="text-[var(--color-text)]">.</span>
+      <span class="block gradient-text">go to <HeroWordReveal lockWord="maxx." /></span>
     </h1>
 
-    <!-- Subhead with serif accent -->
-    <p class="reveal reveal-3 mt-8 max-w-xl text-[17px] sm:text-[19px] leading-[1.55] text-[var(--color-text-mid)]">
+    <!-- Subhead -->
+    <p class="reveal reveal-3 mt-7 max-w-xl text-[17px] sm:text-[19px] leading-[1.55] text-[var(--color-text-mid)]">
       A suite of native tools that tune your PC, sharpen your aim, clip your VODs, and ship your stream — <span class="serif-accent text-[var(--color-text)]">built like the tools we wished existed.</span>
     </p>
 
-    <!-- CTAs -->
-    <div class="reveal reveal-4 mt-10 flex flex-wrap items-center gap-3">
-      <a href="#suite" class="btn-primary">
-        Browse the suite
+    <!-- CTAs — primary now drives to the live tuner -->
+    <div class="reveal reveal-4 mt-9 flex flex-wrap items-center gap-3">
+      <a href="/optimizationmaxxing" class="btn-primary">
+        Get the tuner
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h14M13 5l7 7-7 7"/>
         </svg>
+      </a>
+      <a href="#suite" class="btn-secondary">
+        Browse the suite
       </a>
       <a href="/manifesto" class="btn-secondary">
         Read the manifesto

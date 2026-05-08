@@ -1,0 +1,121 @@
+---
+type Props = { variant: 'beta' | 'soon' };
+const { variant } = Astro.props;
+const text = variant === 'beta' ? 'BETA' : 'COMING SOON';
+const repeated = Array(8).fill(text);
+---
+
+{variant === 'soon' && (
+  <div class="status-tape status-tape--soon" aria-hidden="true">
+    <div class="status-tape__band">
+      {repeated.map((t, i) => (
+        <span class="status-tape__token">
+          {t}
+          {i < repeated.length - 1 && <span class="status-tape__sep">✦</span>}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
+
+{variant === 'beta' && (
+  <div class="status-tape status-tape--beta" aria-hidden="true">
+    <span class="status-tape__beta-mark">BETA</span>
+  </div>
+)}
+
+<style>
+  /* ── COMING SOON: full-width diagonal striped band ────────────── */
+  .status-tape--soon {
+    position: absolute;
+    top: 50%;
+    left: -10vw;
+    right: -10vw;
+    height: 88px;
+    z-index: 4;
+    pointer-events: none;
+    transform: translateY(-50%) rotate(-6deg);
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(226, 91, 255, 0.95) 0px,
+        rgba(226, 91, 255, 0.95) 24px,
+        rgba(0, 212, 255, 0.95) 24px,
+        rgba(0, 212, 255, 0.95) 48px
+      );
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+      0 12px 40px rgba(0, 0, 0, 0.5),
+      0 0 60px rgba(226, 91, 255, 0.25);
+  }
+  .status-tape__band {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 24px;
+    padding: 0 32px;
+    animation: status-tape-marquee 40s linear infinite;
+    width: max-content;
+  }
+  .status-tape__token {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: 0.08em;
+    color: #0a0612;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .status-tape__sep {
+    color: #fff;
+    font-size: 28px;
+    opacity: 0.7;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+  @keyframes status-tape-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── BETA: hero corner mark ───────────────────────────────────── */
+  .status-tape--beta {
+    position: absolute;
+    top: 38px;
+    right: -64px;
+    z-index: 5;
+    pointer-events: none;
+    transform: rotate(30deg);
+    background: linear-gradient(135deg, #e25bff 0%, #b146d8 100%);
+    color: #fff;
+    padding: 8px 80px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+      0 4px 14px rgba(226, 91, 255, 0.4);
+  }
+  .status-tape__beta-mark {
+    display: inline-block;
+  }
+
+  @media (max-width: 768px) {
+    .status-tape--soon {
+      top: 180px;
+      transform: rotate(-4deg);
+      height: 64px;
+    }
+    .status-tape__token {
+      font-size: 24px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-tape__band { animation: none; }
+  }
+</style>

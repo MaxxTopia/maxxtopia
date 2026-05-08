@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import StatusPill from '../components/StatusPill.astro';
 import ProductCard from '../components/ProductCard.astro';
 import Aurora from '../components/Aurora.astro';
+import StatusTape from '../components/StatusTape.astro';
+import NotifyMeCard from '../components/NotifyMeCard.astro';
+import ProductScreenshot from '../components/ProductScreenshot.astro';
 import { products } from '../data/products';
 
 export async function getStaticPaths() {
@@ -19,8 +22,12 @@ if (!product) {
 
 const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
 const isLive = product.status === 'live';
+const isBeta = product.status === 'beta';
+const isSoon = product.status === 'soon';
 const root = product.name.replace(/maxx(er|ing)$/i, '');
 const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
+const screenshotMain = product.screenshots?.[0];
+const screenshotExtras = product.screenshots?.slice(1) ?? [];
 ---
 
 <Layout
@@ -31,7 +38,9 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
-    <div class="relative mx-auto max-w-7xl px-5 sm:px-8 pt-20 sm:pt-24 pb-20">
+    {isBeta && <StatusTape variant="beta" />}
+
+    <div class="relative mx-auto max-w-7xl px-5 sm:px-8 pt-20 sm:pt-24 pb-16">
       <a href="/#suite" class="inline-flex items-center gap-1.5 text-[13px] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors mb-12">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -42,7 +51,13 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
       <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
         <div class="md:col-span-8">
           <div class="reveal reveal-1 flex items-center gap-3.5 mb-8">
-            <span class="glyph-badge !w-12 !h-12 !text-[22px]" aria-hidden="true">{product.glyph}</span>
+            <span class="glyph-badge !w-12 !h-12" style={`--accent: ${product.accentHex}; ${product.logo ? 'padding: 4px;' : ''}`} aria-hidden="true">
+              {product.logo ? (
+                <img src={product.logo} alt="" width="40" height="40" style="width: 100%; height: 100%; object-fit: contain;" />
+              ) : (
+                <span style={`color: ${product.accentHex}; font-size: 22px;`}>{product.glyph}</span>
+              )}
+            </span>
             <div>
               <p class="text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
                 {product.category}
@@ -53,9 +68,7 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
             </div>
             <div class="ml-auto flex items-center gap-2">
               <StatusPill status={product.status} />
-              {product.version && (
-                <span class="pill">{product.version}</span>
-              )}
+              {product.version && <span class="pill">{product.version}</span>}
             </div>
           </div>
 
@@ -68,12 +81,32 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
           </p>
 
           <div class="reveal reveal-4 mt-9 flex flex-wrap items-center gap-3">
-            <a href={product.primaryCta.href} class="btn-primary">
-              {product.primaryCta.label}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14M13 5l7 7-7 7"/>
-              </svg>
-            </a>
+            {isLive ? (
+              <a href={product.primaryCta.href} class="btn-primary">
+                {product.primaryCta.label}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 5l7 7-7 7"/>
+                </svg>
+              </a>
+            ) : isBeta ? (
+              <>
+                <a href={product.primaryCta.href} class="btn-primary">
+                  {product.primaryCta.label}
+                </a>
+                {product.deployedUrl && (
+                  <a href={product.deployedUrl} target="_blank" rel="noopener" class="btn-secondary">
+                    Open the live build
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+                    </svg>
+                  </a>
+                )}
+              </>
+            ) : (
+              <a href={product.primaryCta.href} class="btn-primary">
+                {product.primaryCta.label}
+              </a>
+            )}
             {product.secondaryCta && (
               <a href={product.secondaryCta.href} class="btn-secondary">
                 {product.secondaryCta.label}
@@ -97,11 +130,21 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
           </aside>
         )}
       </div>
+
+      <!-- Apple-style hero shot for live + beta products -->
+      {screenshotMain && (
+        <ProductScreenshot
+          src={screenshotMain}
+          alt={`${product.name} screenshot`}
+          extras={screenshotExtras}
+        />
+      )}
     </div>
   </section>
 
   <!-- Features -->
-  <section class="relative">
+  <section class="relative overflow-hidden">
+    {isSoon && <StatusTape variant="soon" />}
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24">
       <div class="reveal-on-scroll mb-12">
         <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
@@ -128,36 +171,6 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
     </div>
   </section>
 
-  <!-- Status banner for non-live -->
-  {!isLive && (
-    <section class="relative">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8 pb-16">
-        <div class="reveal-on-scroll rounded-[24px] border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] p-9 sm:p-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 overflow-hidden relative">
-          <div class="aurora" aria-hidden="true">
-            <div class="aurora-blob aurora-blob--cyan" style="opacity: 0.18; width: 50%"></div>
-          </div>
-          <div class="relative">
-            <h3 class="text-[22px] font-semibold tracking-tight">
-              {product.status === 'beta' ? (
-                <span><span class="gradient-text">In active</span> <span class="serif-accent gradient-suite">beta.</span></span>
-              ) : (
-                <span><span class="gradient-text">We're building</span> <span class="serif-accent gradient-suite">this now.</span></span>
-              )}
-            </h3>
-            <p class="mt-2.5 text-[14.5px] text-[var(--color-text-mid)] max-w-md leading-relaxed">
-              {product.status === 'beta'
-                ? 'Join the early-access list. First spots open as the suite hits v1.0.'
-                : "Get notified the day it ships. No spam — just one email when it's ready."}
-            </p>
-          </div>
-          <a href="#waitlist" class="relative btn-primary shrink-0">
-            Join waitlist
-          </a>
-        </div>
-      </div>
-    </section>
-  )}
-
   <!-- Related -->
   <section class="relative">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24 border-t border-[var(--color-line)]">
@@ -179,4 +192,7 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
       </div>
     </div>
   </section>
+
+  <!-- Floating Notify-me CTA on coming-soon products -->
+  {isSoon && <NotifyMeCard productName={product.name} />}
 </Layout>

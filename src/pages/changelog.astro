@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Aurora from '../components/Aurora.astro';
+import { changelog } from '../data/changelog';
+---
+
+<Layout title="Changelog — Maxxtopia" description="What we've shipped across the maxxer suite.">
+  <article class="relative">
+    <Aurora intensity="low" />
+    <div class="absolute inset-0 bg-grid opacity-30"></div>
+
+    <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-20 pb-12">
+      <p class="reveal reveal-1 text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
+        Changelog · suite-wide
+      </p>
+      <h1 class="reveal reveal-2 mt-3 text-[44px] sm:text-[64px] font-semibold tracking-[-0.03em] leading-[1] gradient-text">
+        Everything we've <span class="serif-accent gradient-suite">shipped.</span>
+      </h1>
+      <p class="reveal reveal-3 mt-5 max-w-xl text-[15.5px] text-[var(--color-text-mid)] leading-relaxed">
+        One page across all seven products. Newest first. Updated every release.
+      </p>
+    </div>
+
+    <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-32">
+      <div class="space-y-7">
+        {changelog.map((entry) => (
+          <div class="reveal-on-scroll relative flex gap-5 pb-7 border-b border-[var(--color-line)] last:border-b-0">
+            <div class="shrink-0 w-28 pt-1">
+              <p class="text-[12.5px] font-mono text-[var(--color-subtle)]">{entry.date}</p>
+              {entry.version && (
+                <p class="mt-1 text-[11px] font-mono text-[var(--color-magenta)]">{entry.version}</p>
+              )}
+            </div>
+            <div class="flex-1">
+              {entry.productSlug ? (
+                <a href={`/${entry.productSlug}`} class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono hover:text-[var(--color-magenta)] transition-colors">
+                  {entry.product}
+                </a>
+              ) : (
+                <span class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono">
+                  {entry.product}
+                </span>
+              )}
+              <h2 class="mt-1.5 text-[20px] font-semibold tracking-tight">{entry.title}</h2>
+              <p class="mt-2 text-[14.5px] text-[var(--color-text-mid)] leading-relaxed">{entry.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="reveal-on-scroll mt-14 pt-10 border-t border-[var(--color-line)]">
+        <a href="/#suite" class="btn-primary">
+          Browse the suite
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>

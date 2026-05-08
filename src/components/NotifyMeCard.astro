@@ -1,0 +1,177 @@
+---
+type Props = { productName: string };
+const { productName } = Astro.props;
+---
+
+<div class="notify-card" data-product={productName}>
+  <button class="notify-card__trigger" aria-expanded="false" aria-controls="notify-form">
+    <span class="notify-card__pulse" aria-hidden="true"></span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+    <span>Notify me when {productName} ships</span>
+  </button>
+
+  <form class="notify-card__form" id="notify-form" hidden>
+    <input
+      type="email"
+      class="notify-card__input"
+      placeholder="you@gmail.com"
+      required
+      aria-label="Your email"
+    />
+    <button type="submit" class="notify-card__submit">
+      <span>Notify me</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 5l7 7-7 7"/>
+      </svg>
+    </button>
+    <p class="notify-card__hint">No spam. One email when it ships.</p>
+  </form>
+
+  <p class="notify-card__success" hidden>
+    Got it — we'll email you the moment {productName} is ready.
+  </p>
+</div>
+
+<style>
+  .notify-card {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 35;
+    padding: 12px 14px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(226, 91, 255, 0.2);
+    max-width: 320px;
+  }
+  .notify-card__trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    color: var(--color-text);
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+  }
+  .notify-card__pulse {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-magenta);
+    box-shadow: 0 0 0 0 rgba(226, 91, 255, 0.8);
+    animation: notify-pulse 2.4s ease-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes notify-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(226, 91, 255, 0.6);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(226, 91, 255, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(226, 91, 255, 0);
+    }
+  }
+
+  .notify-card__form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-line);
+  }
+  .notify-card__input {
+    background: var(--color-bg);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: var(--color-text);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 200ms ease;
+  }
+  .notify-card__input:focus {
+    border-color: var(--color-magenta);
+  }
+  .notify-card__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #e25bff, #4c51f7);
+    color: #fff;
+    border: 0;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .notify-card__hint {
+    font-size: 11px;
+    color: var(--color-subtle);
+    text-align: center;
+    margin: 0;
+  }
+  .notify-card__success {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: var(--color-magenta);
+  }
+
+  @media (max-width: 640px) {
+    .notify-card {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      max-width: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const card = document.querySelector('.notify-card');
+    if (!card) return;
+    const trigger = card.querySelector('.notify-card__trigger');
+    const form = card.querySelector('.notify-card__form');
+    const input = card.querySelector('.notify-card__input');
+    const success = card.querySelector('.notify-card__success');
+    if (!trigger || !form || !input || !success) return;
+
+    let open = false;
+    trigger.addEventListener('click', () => {
+      open = !open;
+      form.hidden = !open;
+      trigger.setAttribute('aria-expanded', String(open));
+      if (open) input.focus();
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const product = card.getAttribute('data-product') || '';
+      const email = input.value.trim();
+      if (!email) return;
+      // TODO: wire to actual capture endpoint
+      try {
+        const list = JSON.parse(localStorage.getItem('maxxtopia_waitlist') || '[]');
+        list.push({ product, email, ts: Date.now() });
+        localStorage.setItem('maxxtopia_waitlist', JSON.stringify(list));
+      } catch (_) { /* no-op */ }
+      form.hidden = true;
+      success.hidden = false;
+    });
+  })();
+</script>
