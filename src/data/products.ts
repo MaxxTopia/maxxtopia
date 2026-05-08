@@ -124,7 +124,7 @@ export const products: Product[] = [
       },
       {
         title: '10 plugins. Native.',
-        body: 'Cursor. Privacy. Trim. Plus 7 more, written as first-class code. No Vencord runtime tax.',
+        body: 'Cursor. Privacy. Trim. Plus 7 more, written as first-class code. Native plugin engine, no third-party runtime tax.',
       },
       {
         title: '5 themes. 5 sound packs.',
