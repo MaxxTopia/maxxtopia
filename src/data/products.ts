@@ -3,6 +3,11 @@
 // publishes upstream, the matching JSON gets rewritten and committed.
 import dmRelease from './discordmaxxer-release.json';
 import omRelease from './optimizationmaxxing-release.json';
+import cmRelease from './clipmaxxer-release.json';
+import dpRelease from './dropmaxxer-release.json';
+import amRelease from './aimmaxxer-release.json';
+import vmRelease from './viewmaxxing-release.json';
+import emRelease from './editmaxxing-release.json';
 
 export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon';
 
@@ -137,6 +142,7 @@ export const products: Product[] = [
     name: 'Clipmaxxer',
     category: 'Content',
     status: 'soon',
+    version: cmRelease.version ?? undefined,
     tagline: 'Stream. Sleep. Wake up posted.',
     description:
       "Eklipse cuts on volume. OpusClip cuts on sentiment. Neither watches today's TikTok. We do.",
@@ -160,8 +166,12 @@ export const products: Product[] = [
         body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound. Tap to publish from your couch.',
       },
     ],
-    primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
-    secondaryCta: { label: 'See sample clips', href: '#samples' },
+    primaryCta: cmRelease.installerUrl
+        ? { label: 'Download for Windows', href: cmRelease.installerUrl, external: true }
+        : { label: 'Get on the waitlist', href: '#waitlist' },
+    secondaryCta: cmRelease.releasePageUrl
+        ? { label: 'Release notes', href: cmRelease.releasePageUrl, external: true }
+        : { label: 'See sample clips', href: '#samples' },
     glyph: '✂',
     accentHex: '#00d4ff',
     screenshots: [
@@ -176,6 +186,7 @@ export const products: Product[] = [
     name: 'Dropmaxxer',
     category: 'Fortnite',
     status: 'beta',
+    version: dpRelease.version ?? undefined,
     tagline: 'Stop guessing your drop.',
     description:
       "Other tools: last-season's loot map with arrows. Ours: a calculator with cited physics.",
@@ -195,7 +206,12 @@ export const products: Product[] = [
         body: 'Bus speed: 830 m/s. Auto-deploy: 100 m. Glide and nosedive constants — all sourced. Other tools won\'t print theirs.',
       },
     ],
-    primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
+    primaryCta: dpRelease.installerUrl
+        ? { label: 'Download for Windows', href: dpRelease.installerUrl, external: true }
+        : { label: 'Get on the waitlist', href: '#waitlist' },
+    secondaryCta: dpRelease.releasePageUrl
+        ? { label: 'Release notes', href: dpRelease.releasePageUrl, external: true }
+        : undefined,
     glyph: '◇',
     accentHex: '#4c51f7',
     screenshots: ['/screenshots/dropmaxxer/preview.png'],
@@ -206,6 +222,7 @@ export const products: Product[] = [
     name: 'Aimmaxxer',
     category: 'Training',
     status: 'soon',
+    version: amRelease.version ?? undefined,
     tagline: 'Aim is four metrics. Not one.',
     description:
       "Sensitivity. Prediction. Anchor. Trigger. We measure all four. Other trainers throw bots and call it data.",
@@ -221,7 +238,12 @@ export const products: Product[] = [
         body: 'Routine adapts to your DPI, sensitivity, and play style. Not the other way around.',
       },
     ],
-    primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
+    primaryCta: amRelease.installerUrl
+        ? { label: 'Download for Windows', href: amRelease.installerUrl, external: true }
+        : { label: 'Get on the waitlist', href: '#waitlist' },
+    secondaryCta: amRelease.releasePageUrl
+        ? { label: 'Release notes', href: amRelease.releasePageUrl, external: true }
+        : undefined,
     glyph: '◎',
     accentHex: '#f3af19',
     heroStat: { value: '4', label: 'metrics · not one' },
@@ -231,6 +253,7 @@ export const products: Product[] = [
     name: 'Viewmaxxing',
     category: 'Streamer Tools',
     status: 'soon',
+    version: vmRelease.version ?? undefined,
     tagline: 'Stream presence. Under your control.',
     description:
       "Controlled-deployment toolkit. Ratio sentinels live. IP-cluster monitoring real-time. Observation as a first-class feature.",
@@ -246,7 +269,12 @@ export const products: Product[] = [
         body: 'Lifecycle management — start, monitor, retry, scale, stop. One daemon. Restart-safe.',
       },
     ],
-    primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
+    primaryCta: vmRelease.installerUrl
+        ? { label: 'Download for Windows', href: vmRelease.installerUrl, external: true }
+        : { label: 'Get on the waitlist', href: '#waitlist' },
+    secondaryCta: vmRelease.releasePageUrl
+        ? { label: 'Release notes', href: vmRelease.releasePageUrl, external: true }
+        : undefined,
     glyph: '◐',
     accentHex: '#10b981',
     heroStat: { value: 'LIVE', label: 'sentinels · real-time' },
@@ -256,6 +284,7 @@ export const products: Product[] = [
     name: 'Editmaxxing',
     category: 'Fortnite',
     status: 'soon',
+    version: emRelease.version ?? undefined,
     tagline: 'One mechanic. Done right.',
     description:
       "Scoped tile-selector for build edits. Crosshair on tile, tile selects. No fire automation. No build sequencing.",
@@ -271,7 +300,12 @@ export const products: Product[] = [
         body: 'No fire automation. No build sequencing. No combos. Stays in the lane Epic publicly tolerated.',
       },
     ],
-    primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
+    primaryCta: emRelease.installerUrl
+        ? { label: 'Download for Windows', href: emRelease.installerUrl, external: true }
+        : { label: 'Get on the waitlist', href: '#waitlist' },
+    secondaryCta: emRelease.releasePageUrl
+        ? { label: 'Release notes', href: emRelease.releasePageUrl, external: true }
+        : undefined,
     glyph: '◈',
     accentHex: '#ff6b8b',
     heroStat: { value: '1', label: 'mechanic · done right' },

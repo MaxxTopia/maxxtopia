@@ -1,0 +1,73 @@
+name: Sync Aimmaxxer release
+
+# Listens for the `aimmaxxer-released` repository_dispatch event from
+# dtman-gif/aimmaxxer's release CI. Rewrites src/data/aimmaxxer-release.json
+# with the new payload, commits, pushes — Cloudflare Pages auto-deploys.
+
+on:
+    repository_dispatch:
+        types: [aimmaxxer-released]
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Tag (e.g. v0.1.0)"
+                required: true
+            installer_url:
+                description: "Direct installer download URL"
+                required: true
+            release_page_url:
+                description: "Release page URL"
+                required: true
+
+permissions:
+    contents: write
+
+jobs:
+    sync:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Resolve payload
+              id: payload
+              run: |
+                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                      echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+                      echo "installer_url=${{ github.event.inputs.installer_url }}" >> "$GITHUB_OUTPUT"
+                      echo "release_page_url=${{ github.event.inputs.release_page_url }}" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "version=${{ github.event.client_payload.version }}" >> "$GITHUB_OUTPUT"
+                      echo "installer_url=${{ github.event.client_payload.installerUrl }}" >> "$GITHUB_OUTPUT"
+                      echo "release_page_url=${{ github.event.client_payload.releasePageUrl }}" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Rewrite release JSON
+              env:
+                  VERSION: ${{ steps.payload.outputs.version }}
+                  INSTALLER_URL: ${{ steps.payload.outputs.installer_url }}
+                  RELEASE_PAGE_URL: ${{ steps.payload.outputs.release_page_url }}
+              run: |
+                  node -e '
+                    const fs = require("fs");
+                    const path = "src/data/aimmaxxer-release.json";
+                    const data = {
+                        version: process.env.VERSION,
+                        installerUrl: process.env.INSTALLER_URL,
+                        releasePageUrl: process.env.RELEASE_PAGE_URL,
+                        publishedAt: new Date().toISOString()
+                    };
+                    fs.writeFileSync(path, JSON.stringify(data, null, 4) + "\n");
+                    console.log("wrote", path, JSON.stringify(data));
+                  '
+
+            - name: Commit + push
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git add src/data/aimmaxxer-release.json
+                  if git diff --cached --quiet; then
+                      echo "No changes — already at latest version."
+                  else
+                      git commit -m "sync: aimmaxxer ${{ steps.payload.outputs.version }}"
+                      git push
+                  fi
