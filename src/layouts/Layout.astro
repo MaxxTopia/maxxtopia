@@ -27,6 +27,16 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
+
+// Cloudflare Web Analytics — paste the beacon token in PUBLIC_CF_ANALYTICS_TOKEN
+// (.env.local or Cloudflare Pages env vars). Beacon does nothing if unset, so
+// dev/preview environments stay unmeasured automatically.
+const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+
+// Sentry DSN — paste the project DSN in PUBLIC_SENTRY_DSN to enable error
+// reporting. Same pattern: nothing loads if unset, so the site has zero
+// Sentry weight when you haven't turned it on.
+const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN;
 ---
 
 <!doctype html>
@@ -75,6 +85,45 @@ const ogImage = new URL(image, Astro.site);
     <MagneticAndTilt />
     <!-- Floating quote-of-the-day widget — always visible across every page. -->
     <DailyQuote />
+
+    {/* Cloudflare Web Analytics — only renders when the token env var is set. */}
+    {cfAnalyticsToken && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={`{"token": "${cfAnalyticsToken}"}`}
+      ></script>
+    )}
+
+    {/* Sentry browser SDK — same pattern, only loads when DSN is configured. */}
+    {sentryDsn && (
+      <>
+        <script is:inline src="https://browser.sentry-cdn.com/8.49.0/bundle.tracing.min.js" crossorigin="anonymous"></script>
+        <script is:inline define:vars={{ sentryDsn, env: import.meta.env.MODE }}>
+          {`
+            if (typeof Sentry !== 'undefined') {
+              Sentry.init({
+                dsn: sentryDsn,
+                environment: env,
+                integrations: [Sentry.browserTracingIntegration()],
+                tracesSampleRate: 0.1,
+                // Don't ship sensitive URLs / search params to Sentry.
+                beforeSend(event) {
+                  if (event.request && event.request.url) {
+                    try {
+                      const u = new URL(event.request.url);
+                      event.request.url = u.origin + u.pathname;
+                    } catch (_) {}
+                  }
+                  return event;
+                },
+              });
+            }
+          `}
+        </script>
+      </>
+    )}
   </body>
 </html>
 

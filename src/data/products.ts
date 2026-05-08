@@ -9,6 +9,13 @@ import amRelease from './aimmaxxer-release.json';
 import vmRelease from './viewmaxxing-release.json';
 import emRelease from './editmaxxing-release.json';
 
+// Single shared waitlist URL. Drop a Tally / ConvertKit / MailerLite
+// link in PUBLIC_WAITLIST_URL (Cloudflare Pages env vars) and every
+// "Get on the waitlist" button across the site flips to it instantly.
+// Default is the in-page anchor so the site doesn't break before the
+// real form is wired.
+const WAITLIST_URL = import.meta.env.PUBLIC_WAITLIST_URL || '#waitlist';
+
 export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon' | 'dev';
 
 export type Product = {
@@ -168,7 +175,7 @@ export const products: Product[] = [
     ],
     primaryCta: cmRelease.installerUrl
         ? { label: 'Download for Windows', href: cmRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: '#waitlist' },
+        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
     secondaryCta: cmRelease.releasePageUrl
         ? { label: 'Release notes', href: cmRelease.releasePageUrl, external: true }
         : { label: 'See sample clips', href: '#samples' },
@@ -208,7 +215,7 @@ export const products: Product[] = [
     ],
     primaryCta: dpRelease.installerUrl
         ? { label: 'Download for Windows', href: dpRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: '#waitlist' },
+        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
     secondaryCta: dpRelease.releasePageUrl
         ? { label: 'Release notes', href: dpRelease.releasePageUrl, external: true }
         : undefined,
@@ -239,7 +246,7 @@ export const products: Product[] = [
     ],
     primaryCta: amRelease.installerUrl
         ? { label: 'Download for Windows', href: amRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: '#waitlist' },
+        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
     secondaryCta: amRelease.releasePageUrl
         ? { label: 'Release notes', href: amRelease.releasePageUrl, external: true }
         : undefined,
@@ -269,7 +276,7 @@ export const products: Product[] = [
     ],
     primaryCta: vmRelease.installerUrl
         ? { label: 'Download for Windows', href: vmRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: '#waitlist' },
+        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
     secondaryCta: vmRelease.releasePageUrl
         ? { label: 'Release notes', href: vmRelease.releasePageUrl, external: true }
         : undefined,
@@ -299,7 +306,7 @@ export const products: Product[] = [
     ],
     primaryCta: emRelease.installerUrl
         ? { label: 'Download for Windows', href: emRelease.installerUrl, external: true }
-        : { label: 'Notify me if it ships', href: '#waitlist' },
+        : { label: 'Notify me if it ships', href: WAITLIST_URL, external: true },
     secondaryCta: emRelease.releasePageUrl
         ? { label: 'Release notes', href: emRelease.releasePageUrl, external: true }
         : undefined,
