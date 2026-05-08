@@ -1,5 +1,6 @@
 ---
-// Custom cursor — accent dot + magnetic ring. Hides on touch / coarse pointer.
+// Custom cursor — accent dot + ring. Skipped on touch / coarse pointer.
+// Only animates while the mouse is actually moving (idle frames are paused).
 ---
 
 <div class="custom-cursor" id="custom-cursor" aria-hidden="true">
@@ -17,35 +18,48 @@
       window.matchMedia('(hover: none)').matches;
     if (isCoarse) {
       cursor.style.display = 'none';
-      document.body.style.cursor = 'auto';
       return;
     }
 
+    // Only hide native cursor once we've confirmed we have a fine pointer
+    // and the custom cursor is mounted. Avoids "no cursor at all" on no-JS.
+    document.documentElement.style.cursor = 'none';
+
     const dot = cursor.querySelector('.custom-cursor__dot');
     const ring = cursor.querySelector('.custom-cursor__ring');
+    if (!dot || !ring) return;
 
     let mx = window.innerWidth / 2;
     let my = window.innerHeight / 2;
     let dx = mx, dy = my;
     let rx = mx, ry = my;
+    let raf = 0;
 
     const tick = () => {
-      // Dot follows fast, ring follows slower for satisfying lag
-      dx += (mx - dx) * 0.55;
-      dy += (my - dy) * 0.55;
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      if (dot) dot.style.transform = `translate(${dx}px, ${dy}px) translate(-50%, -50%)`;
-      if (ring) ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
-      requestAnimationFrame(tick);
+      // Lerp the ring; dot follows the cursor 1:1 with no smoothing
+      rx += (mx - rx) * 0.22;
+      ry += (my - ry) * 0.22;
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+
+      // Stop the loop once the ring has caught up — restart on next move
+      const dxr = Math.abs(mx - rx);
+      const dyr = Math.abs(my - ry);
+      if (dxr < 0.4 && dyr < 0.4) {
+        raf = 0;
+        return;
+      }
+      raf = requestAnimationFrame(tick);
     };
-    requestAnimationFrame(tick);
+
+    const start = () => { if (!raf) raf = requestAnimationFrame(tick); };
 
     window.addEventListener('mousemove', (e) => {
       mx = e.clientX; my = e.clientY;
+      start();
     }, { passive: true });
 
-    // Hover state on interactive elements
+    // Hover state
     const isInteractive = (el) =>
       el && (el.tagName === 'A' || el.tagName === 'BUTTON' ||
              el.closest('a, button, [role="button"], .card, [data-cursor="hover"]'));
@@ -57,7 +71,7 @@
       if (isInteractive(e.target)) cursor.classList.remove('is-over-link');
     });
 
-    // Hide cursor on window blur
+    // Hide on blur / when mouse leaves window
     window.addEventListener('blur', () => cursor.style.opacity = '0');
     window.addEventListener('focus', () => cursor.style.opacity = '1');
     document.addEventListener('mouseleave', () => cursor.style.opacity = '0');

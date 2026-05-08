@@ -1,6 +1,8 @@
 ---
 // Magnetic primary CTAs + 3D tilt cards + spotlight tracking.
-// Place once in the layout.
+// All mousemove handlers are rAF-coalesced (one update per frame, max).
+// Tilt only attaches mousemove on enter, detaches on leave — no work for cards
+// the user isn't interacting with.
 ---
 
 <script is:inline>
@@ -10,48 +12,88 @@
       window.matchMedia('(hover: none)').matches;
     if (isCoarse) return;
 
-    // Magnetic primary buttons
+    // ── Magnetic primary buttons ─────────────────────────────────────
     const magnetic = document.querySelectorAll('.btn-primary, [data-magnetic]');
     magnetic.forEach((el) => {
-      const strength = 0.28;
-      el.addEventListener('mousemove', (e) => {
-        const r = el.getBoundingClientRect();
-        const x = e.clientX - (r.left + r.width / 2);
-        const y = e.clientY - (r.top + r.height / 2);
-        el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
-      });
-      el.addEventListener('mouseleave', () => {
-        el.style.transform = '';
+      const strength = 0.22;
+      let frame = 0;
+      let pendingX = 0, pendingY = 0;
+
+      const apply = () => {
+        frame = 0;
+        el.style.transform = `translate3d(${pendingX}px, ${pendingY}px, 0)`;
+      };
+
+      el.addEventListener('mouseenter', () => {
+        const onMove = (e) => {
+          const r = el.getBoundingClientRect();
+          pendingX = (e.clientX - (r.left + r.width / 2)) * strength;
+          pendingY = (e.clientY - (r.top + r.height / 2)) * strength;
+          if (!frame) frame = requestAnimationFrame(apply);
+        };
+        const onLeave = () => {
+          el.removeEventListener('mousemove', onMove);
+          el.removeEventListener('mouseleave', onLeave);
+          if (frame) { cancelAnimationFrame(frame); frame = 0; }
+          el.style.transform = '';
+        };
+        el.addEventListener('mousemove', onMove, { passive: true });
+        el.addEventListener('mouseleave', onLeave);
       });
     });
 
-    // 3D tilt + spotlight on cards
+    // ── 3D tilt + spotlight on cards ────────────────────────────────
+    // Only one card has a live mousemove handler at any moment (the one
+    // currently hovered). Massive perf win vs N global handlers.
     const cards = document.querySelectorAll('.card');
     cards.forEach((card) => {
-      const max = 6; // max tilt degrees
-      card.addEventListener('mousemove', (e) => {
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        card.style.setProperty('--mx', `${px * 100}%`);
-        card.style.setProperty('--my', `${py * 100}%`);
+      const max = 5; // tilt degrees
+      let frame = 0;
+      let px = 0.5, py = 0.5;
+
+      const apply = () => {
+        frame = 0;
         const ry = (px - 0.5) * max;
         const rx = -(py - 0.5) * max;
-        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
+        card.style.setProperty('--mx', `${px * 100}%`);
+        card.style.setProperty('--my', `${py * 100}%`);
+        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      };
+
+      card.addEventListener('mouseenter', () => {
+        const onMove = (e) => {
+          const r = card.getBoundingClientRect();
+          px = (e.clientX - r.left) / r.width;
+          py = (e.clientY - r.top) / r.height;
+          if (!frame) frame = requestAnimationFrame(apply);
+        };
+        const onLeave = () => {
+          card.removeEventListener('mousemove', onMove);
+          card.removeEventListener('mouseleave', onLeave);
+          if (frame) { cancelAnimationFrame(frame); frame = 0; }
+          card.style.transform = '';
+        };
+        card.addEventListener('mousemove', onMove, { passive: true });
+        card.addEventListener('mouseleave', onLeave);
       });
     });
 
-    // Spotlight section tracking
+    // ── Section spotlight (rAF-coalesced) ───────────────────────────
     const spotlights = document.querySelectorAll('.spotlight');
     spotlights.forEach((s) => {
+      let frame = 0;
+      let cx = 0, cy = 0;
+      const apply = () => {
+        frame = 0;
+        s.style.setProperty('--mx', `${cx}px`);
+        s.style.setProperty('--my', `${cy}px`);
+      };
       s.addEventListener('mousemove', (e) => {
         const r = s.getBoundingClientRect();
-        s.style.setProperty('--mx', `${e.clientX - r.left}px`);
-        s.style.setProperty('--my', `${e.clientY - r.top}px`);
-      });
+        cx = e.clientX - r.left;
+        cy = e.clientY - r.top;
+        if (!frame) frame = requestAnimationFrame(apply);
+      }, { passive: true });
     });
   })();
 </script>

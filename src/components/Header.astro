@@ -4,7 +4,7 @@ const path = Astro.url.pathname;
 const isActive = (p: string) => path === p || path.startsWith(p + '/');
 ---
 
-<header class="sticky top-0 z-40 border-b border-[var(--color-line)]/80 bg-[rgba(10,6,18,0.72)] backdrop-blur-2xl">
+<header class="sticky top-0 z-40 border-b border-[var(--color-line)]/80 bg-[rgba(10,6,18,0.85)] backdrop-blur-md">
   <div class="mx-auto flex h-15 max-w-7xl items-center justify-between px-5 sm:px-8 py-3">
     <div class="flex items-center gap-8">
       <Logo />
