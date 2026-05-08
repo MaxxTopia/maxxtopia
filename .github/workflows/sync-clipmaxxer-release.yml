@@ -1,7 +1,7 @@
 name: Sync Clipmaxxer release
 
 # Listens for the `clipmaxxer-released` repository_dispatch event from
-# dtman-gif/clipmaxxer's release CI. Rewrites src/data/clipmaxxer-release.json
+# MaxxTopia/clipmaxxer's release CI. Rewrites src/data/clipmaxxer-release.json
 # with the new payload, commits, pushes — Cloudflare Pages auto-deploys.
 
 on:

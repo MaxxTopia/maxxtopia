@@ -2,7 +2,7 @@ name: Sync Optimizationmaxxing release
 
 # Mirror of sync-discordmaxxer-release.yml but for optimizationmaxxing.
 # Listens for the `optimizationmaxxing-released` repository_dispatch event
-# fired by dtman-gif/optimizationmaxxing's release CI after a new tag
+# fired by MaxxTopia/optimizationmaxxing's release CI after a new tag
 # publishes. Rewrites src/data/optimizationmaxxing-release.json with the
 # new payload, commits, pushes — Cloudflare Pages auto-deploys main.
 

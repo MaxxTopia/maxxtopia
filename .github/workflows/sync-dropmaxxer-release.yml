@@ -1,7 +1,7 @@
 name: Sync Dropmaxxer release
 
 # Listens for the `dropmaxxer-released` repository_dispatch event from
-# dtman-gif/dropmaxxer's release CI. Rewrites src/data/dropmaxxer-release.json
+# MaxxTopia/dropmaxxer's release CI. Rewrites src/data/dropmaxxer-release.json
 # with the new payload, commits, pushes — Cloudflare Pages auto-deploys.
 
 on:

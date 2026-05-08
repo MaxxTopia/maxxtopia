@@ -1,7 +1,7 @@
 name: Sync Viewmaxxing release
 
 # Listens for the `viewmaxxing-released` repository_dispatch event from
-# dtman-gif/viewmaxxing's release CI. Rewrites src/data/viewmaxxing-release.json
+# MaxxTopia/viewmaxxing's release CI. Rewrites src/data/viewmaxxing-release.json
 # with the new payload, commits, pushes — Cloudflare Pages auto-deploys.
 
 on:

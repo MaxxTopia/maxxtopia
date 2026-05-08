@@ -1,7 +1,7 @@
 name: Sync Discordmaxxer release
 
 # Listens for the `discordmaxxer-released` repository_dispatch event fired
-# by dtman-gif/discordmaxxer's release.yml after a new rcN tag publishes.
+# by MaxxTopia/discordmaxxer's release.yml after a new rcN tag publishes.
 # Rewrites src/data/discordmaxxer-release.json with the new version +
 # download URL, commits, pushes — and Cloudflare Pages auto-deploys main.
 
