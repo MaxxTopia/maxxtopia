@@ -1,3 +1,8 @@
+// Auto-synced from the discordmaxxer release CI via repository_dispatch.
+// See .github/workflows/sync-discordmaxxer-release.yml — every time a new
+// rcN tag publishes there, this JSON gets rewritten and committed.
+import dmRelease from './discordmaxxer-release.json';
+
 export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon';
 
 export type Product = {
@@ -84,7 +89,7 @@ export const products: Product[] = [
     name: 'Discordmaxxer',
     category: 'Communication',
     status: 'live',
-    version: 'v0.1',
+    version: dmRelease.version,
     tagline: 'Discord. Minus 753 MB.',
     description:
       "Stock Discord uses 1,041 MB on this machine. Ours uses 288. Same servers, same friends, same pings — we just stripped the part where it pretended to be a browser running a chat app.",
@@ -114,8 +119,8 @@ export const products: Product[] = [
       { label: 'Native plugins', value: '10' },
       { label: 'Themes', value: '5' },
     ],
-    primaryCta: { label: 'Get it. Free.', href: '#download' },
-    secondaryCta: { label: 'See the bench', href: '#benchmarks' },
+    primaryCta: { label: 'Download for Windows', href: dmRelease.installerUrl, external: true },
+    secondaryCta: { label: 'Release notes', href: dmRelease.releasePageUrl, external: true },
     glyph: '◆',
     logo: '/logos/discordmaxxer.svg',
     accentHex: '#5865F2',
