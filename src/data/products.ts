@@ -11,6 +11,9 @@ export type Product = {
   longDescription: string;
   features: { title: string; body: string }[];
   stats?: { label: string; value: string }[];
+  /** Massive headline number / phrase shown in display font above the
+   *  tagline on the product hero. The "scroll-stopper" stat. */
+  heroStat?: { value: string; label: string };
   primaryCta: { label: string; href: string; external?: boolean };
   secondaryCta?: { label: string; href: string; external?: boolean };
   glyph: string;
@@ -74,6 +77,7 @@ export const products: Product[] = [
     logo: '/logos/optimizationmaxxing.svg',
     accentHex: '#e25bff',
     screenshots: ['/screenshots/optimizationmaxxing/og.png'],
+    heroStat: { value: '87', label: 'tweaks · zero placebos' },
   },
   {
     slug: 'discordmaxxer',
@@ -116,6 +120,7 @@ export const products: Product[] = [
     logo: '/logos/discordmaxxer.svg',
     accentHex: '#5865F2',
     screenshots: ['/screenshots/discordmaxxer/hub-panel.png'],
+    heroStat: { value: '−753 MB', label: 'vs stock Discord' },
   },
   {
     slug: 'clipmaxxer',
@@ -154,6 +159,7 @@ export const products: Product[] = [
       '/screenshots/clipmaxxer/login-queue.png',
       '/screenshots/clipmaxxer/pricing.png',
     ],
+    heroStat: { value: '3 clips', label: 'on your phone by morning' },
   },
   {
     slug: 'dropmaxxer',
@@ -183,6 +189,7 @@ export const products: Product[] = [
     glyph: '◇',
     accentHex: '#4c51f7',
     screenshots: ['/screenshots/dropmaxxer/preview.png'],
+    heroStat: { value: '830 m/s', label: 'bus speed · cited' },
   },
   {
     slug: 'aimmaxxer',
@@ -207,6 +214,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
     glyph: '◎',
     accentHex: '#f3af19',
+    heroStat: { value: '4', label: 'metrics · not one' },
   },
   {
     slug: 'viewmaxxing',
@@ -231,6 +239,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
     glyph: '◐',
     accentHex: '#10b981',
+    heroStat: { value: 'LIVE', label: 'sentinels · real-time' },
   },
   {
     slug: 'editmaxxing',
@@ -255,6 +264,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
     glyph: '◈',
     accentHex: '#ff6b8b',
+    heroStat: { value: '1', label: 'mechanic · done right' },
   },
 ];
 
