@@ -1,82 +1,68 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- Dark squircle backdrop -->
+  <rect width="24" height="24" rx="5.5" fill="#0a0612"/>
+  <rect width="24" height="24" rx="5.5" fill="url(#mx-bg)" opacity="0.6"/>
+
   <defs>
-    <!-- Discord-blurple radial — matches the discordmaxxer Slice for
-         suite cohesion. Bottom-left bright, top-right shadowed. -->
-    <radialGradient id="ut-bg" cx="32%" cy="30%" r="80%">
-      <stop offset="0%"   stop-color="#8a98ff"/>
-      <stop offset="35%"  stop-color="#5865F2"/>
-      <stop offset="75%"  stop-color="#404eed"/>
-      <stop offset="100%" stop-color="#2c34c4"/>
+    <radialGradient id="mx-bg" cx="50%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#3a2871"/>
+      <stop offset="100%" stop-color="#0a0612" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="ut-hi" x1="50%" y1="0%" x2="50%" y2="55%">
-      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.34"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="ut-shade" x1="50%" y1="60%" x2="50%" y2="100%">
-      <stop offset="0%"   stop-color="#000000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000000" stop-opacity="0.22"/>
-    </linearGradient>
-    <!-- Sun gradient — bright cyan-to-white, pops on the dark face. -->
-    <radialGradient id="ut-sun" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"   stop-color="#ffffff"/>
-      <stop offset="55%"  stop-color="#fde68a"/>
-      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
-    </radialGradient>
-    <!-- Maxxer brand seam — magenta plasma echo of the Discordmaxxer slice. -->
-    <linearGradient id="ut-seam" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="mx-seam" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%"  stop-color="#ff86ff"/>
       <stop offset="50%" stop-color="#ff5dff"/>
       <stop offset="100%" stop-color="#c026ff"/>
     </linearGradient>
-    <clipPath id="ut-clip">
-      <circle cx="12" cy="12" r="10.5"/>
-    </clipPath>
+    <filter id="mx-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="0.4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Round badge — the "utopia" civic-crest silhouette. -->
-  <circle cx="12" cy="12" r="10.5" fill="url(#ut-bg)"/>
-  <g clip-path="url(#ut-clip)">
-    <rect width="24" height="24" fill="url(#ut-hi)"/>
-    <rect width="24" height="24" fill="url(#ut-shade)"/>
-  </g>
-  <!-- Inner crisp ring -->
-  <circle cx="12" cy="12" r="10.4" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="0.4"/>
-  <!-- Outer maxxer-magenta hairline (suite signature) -->
-  <circle cx="12" cy="12" r="11.1" fill="none" stroke="url(#ut-seam)" stroke-opacity="0.85" stroke-width="0.4"/>
+  <!--
+    CLAVICULAR M — looksmaxx-coded redraw.
+    - Outer top corners angled inward: subtle V-taper (5,4) and (19,4)
+    - Inner V apex pushed down to y=15.5: deeper notch
+    - Outer bottom terminals flared: bone end-caps
+    - Stroke caps square, not round — brutalist precision
+    - Magenta plasma dot at the apex echoes the discordmaxxer Slice seam
+  -->
 
-  <!-- Radiant SUN above the M's valley — the "utopia" core symbol.
-       Big soft halo + crisp white core. -->
-  <circle cx="12" cy="6.4" r="2.6" fill="url(#ut-sun)" opacity="0.9"/>
-  <circle cx="12" cy="6.4" r="0.9" fill="#ffffff"/>
+  <!-- Cyan back layer, tight chromatic offset right + down -->
+  <path
+    d="M 3.6 20 L 5 4 L 12 15.5 L 19 4 L 20.4 20"
+    stroke="#00d4ff" stroke-width="3.4"
+    stroke-linecap="square" stroke-linejoin="miter"
+    stroke-miterlimit="4"
+    fill="none" opacity="0.95"
+    transform="translate(0.7 0.25)"
+  />
 
-  <!-- TWO MOUNTAIN PEAKS forming the M. The shape literally encodes
-       "where gamers go to peak" — two summits with a valley between. -->
-  <!-- Cyan back layer, chromatic offset right + down -->
+  <!-- Magenta middle layer, tight chromatic offset left + up -->
   <path
-    d="M 4 19 L 8 5 L 12 14 L 16 5 L 20 19"
-    stroke="#00d4ff" stroke-width="2.6"
-    stroke-linecap="round" stroke-linejoin="round"
-    fill="none" opacity="0.9"
-    transform="translate(0.7 0.3)"
+    d="M 3.6 20 L 5 4 L 12 15.5 L 19 4 L 20.4 20"
+    stroke="#e25bff" stroke-width="3.4"
+    stroke-linecap="square" stroke-linejoin="miter"
+    stroke-miterlimit="4"
+    fill="none" opacity="0.95"
+    transform="translate(-0.7 -0.25)"
   />
-  <!-- Magenta middle layer, chromatic offset left + up -->
+
+  <!-- White core layer (crisp center, brutalist) -->
   <path
-    d="M 4 19 L 8 5 L 12 14 L 16 5 L 20 19"
-    stroke="#e25bff" stroke-width="2.6"
-    stroke-linecap="round" stroke-linejoin="round"
-    fill="none" opacity="0.9"
-    transform="translate(-0.7 -0.3)"
-  />
-  <!-- White core peaks layer (crisp, brutalist) -->
-  <path
-    d="M 4 19 L 8 5 L 12 14 L 16 5 L 20 19"
-    stroke="#ffffff" stroke-width="1.8"
-    stroke-linecap="round" stroke-linejoin="round"
+    d="M 3.6 20 L 5 4 L 12 15.5 L 19 4 L 20.4 20"
+    stroke="#ffffff" stroke-width="1.9"
+    stroke-linecap="square" stroke-linejoin="miter"
+    stroke-miterlimit="4"
     fill="none"
   />
 
-  <!-- Magenta plasma dot at the valley floor — echoes the Slice glow.
-       The "geothermal core" of the utopia. -->
-  <circle cx="12" cy="14" r="0.9" fill="url(#ut-seam)"/>
-  <circle cx="12" cy="14" r="0.45" fill="#ffe0ff"/>
+  <!-- Plasma seam at the V apex — the clavicular notch hot point. -->
+  <g filter="url(#mx-glow)">
+    <circle cx="12" cy="15.5" r="0.95" fill="url(#mx-seam)"/>
+  </g>
+  <circle cx="12" cy="15.5" r="0.5" fill="#ffe0ff"/>
 </svg>

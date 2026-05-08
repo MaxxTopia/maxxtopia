@@ -6,6 +6,7 @@ import CustomCursor from '../components/CustomCursor.astro';
 import RevealOnScroll from '../components/RevealOnScroll.astro';
 import MagneticAndTilt from '../components/MagneticAndTilt.astro';
 import MaxxerSidebar from '../components/MaxxerSidebar.astro';
+import DailyQuote from '../components/DailyQuote.astro';
 
 type Props = {
   title?: string;
@@ -72,6 +73,8 @@ const ogImage = new URL(image, Astro.site);
     <Footer />
     <RevealOnScroll />
     <MagneticAndTilt />
+    <!-- Floating quote-of-the-day widget — always visible across every page. -->
+    <DailyQuote />
   </body>
 </html>
 

@@ -95,7 +95,7 @@ const quotes = [
 ];
 ---
 
-<aside class="daily-quote" aria-label="Daily quote">
+<aside class="daily-quote" id="daily-quote" aria-label="Quote of the day">
   <!-- Hidden seed list — JS picks one based on the day. -->
   <ul class="daily-quote__source" hidden>
     {quotes.map((q) => (
@@ -107,13 +107,38 @@ const quotes = [
     ))}
   </ul>
 
-  <div class="daily-quote__inner">
-    <p class="daily-quote__eyebrow">
-      <span class="daily-quote__dot" aria-hidden="true"></span>
-      QUOTE OF THE DAY
-    </p>
+  <!-- Collapsed pill — visible when widget is minimized. -->
+  <button
+    type="button"
+    class="daily-quote__pill"
+    id="daily-quote-pill"
+    aria-label="Show quote of the day"
+    aria-expanded="false"
+    hidden
+  >
+    <span class="daily-quote__dot" aria-hidden="true"></span>
+    <span class="daily-quote__pill-label">QOTD</span>
+  </button>
+
+  <!-- Expanded card -->
+  <div class="daily-quote__card" id="daily-quote-card">
+    <div class="daily-quote__topbar">
+      <p class="daily-quote__eyebrow">
+        <span class="daily-quote__dot" aria-hidden="true"></span>
+        QUOTE OF THE DAY
+      </p>
+      <button
+        type="button"
+        class="daily-quote__close"
+        id="daily-quote-close"
+        aria-label="Minimize quote of the day"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14"/>
+        </svg>
+      </button>
+    </div>
     <blockquote class="daily-quote__text" data-quote-text>
-      {/* Default first quote — JS replaces on load. */}
       {quotes[0].text}
     </blockquote>
     <footer class="daily-quote__cite">
@@ -125,7 +150,7 @@ const quotes = [
 
 <script is:inline>
   (function () {
-    const root = document.querySelector('.daily-quote');
+    const root = document.getElementById('daily-quote');
     if (!root) return;
     const items = root.querySelectorAll('.daily-quote__source li');
     if (items.length === 0) return;
@@ -147,53 +172,158 @@ const quotes = [
     if ($author) $author.textContent = author;
     if ($source) $source.textContent = source;
     if ($source && !source) $source.style.display = 'none';
+
+    // ── Collapse / expand ────────────────────────────────────────
+    const STORAGE_KEY = 'maxxtopia_qotd_collapsed';
+    const card  = document.getElementById('daily-quote-card');
+    const pill  = document.getElementById('daily-quote-pill');
+    const close = document.getElementById('daily-quote-close');
+    if (!card || !pill || !close) return;
+
+    const setCollapsed = (collapsed) => {
+      if (collapsed) {
+        card.setAttribute('hidden', '');
+        pill.removeAttribute('hidden');
+        pill.setAttribute('aria-expanded', 'false');
+      } else {
+        card.removeAttribute('hidden');
+        pill.setAttribute('hidden', '');
+        pill.setAttribute('aria-expanded', 'true');
+      }
+      sessionStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
+    };
+
+    setCollapsed(sessionStorage.getItem(STORAGE_KEY) === '1');
+
+    close.addEventListener('click', () => setCollapsed(true));
+    pill.addEventListener('click',  () => setCollapsed(false));
   })();
 </script>
 
 <style>
+  /* ── Floating QOTD widget ─────────────────────────────────────────
+     Fixed bottom-right, always visible across every page during
+     scroll. Collapses to a small "QOTD" pill via the close button;
+     pill expands back to the card on click. State persists in
+     sessionStorage. ──────────────────────────────────────────────── */
   .daily-quote {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 50;
+    pointer-events: none;
+  }
+  .daily-quote > * { pointer-events: auto; }
+
+  /* Pill (collapsed state) */
+  .daily-quote__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background:
+      radial-gradient(ellipse at 30% 30%, rgba(226, 91, 255, 0.22), transparent 60%),
+      linear-gradient(180deg, rgba(20, 12, 36, 0.92), rgba(10, 6, 18, 0.96));
+    border: 1px solid rgba(226, 91, 255, 0.55);
+    color: #fbe7ff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 14px 40px rgba(0, 0, 0, 0.5),
+      0 0 24px rgba(226, 91, 255, 0.25);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+  .daily-quote__pill:hover {
+    transform: translateY(-2px);
+    border-color: #e25bff;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 18px 50px rgba(0, 0, 0, 0.55),
+      0 0 32px rgba(226, 91, 255, 0.45);
+  }
+  .daily-quote__pill-label {
+    font-weight: 600;
+  }
+  .daily-quote__pill[hidden] { display: none !important; }
+
+  /* Card (expanded state) */
+  .daily-quote__card {
     position: relative;
-    display: block;
-    margin: 0 auto;
-    max-width: 56rem;
-    padding: 26px 28px 28px;
-    border-radius: 22px;
+    width: min(360px, calc(100vw - 40px));
+    padding: 16px 18px 18px;
+    border-radius: 16px;
     border: 1px solid var(--color-line-strong);
     background:
-      radial-gradient(ellipse at 0% 0%, rgba(226, 91, 255, 0.10), transparent 55%),
-      radial-gradient(ellipse at 100% 100%, rgba(76, 81, 247, 0.10), transparent 55%),
-      linear-gradient(180deg, rgba(20, 12, 36, 0.85), rgba(10, 6, 18, 0.92));
+      radial-gradient(ellipse at 0% 0%, rgba(226, 91, 255, 0.14), transparent 55%),
+      radial-gradient(ellipse at 100% 100%, rgba(76, 81, 247, 0.14), transparent 55%),
+      linear-gradient(180deg, rgba(20, 12, 36, 0.94), rgba(10, 6, 18, 0.97));
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 24px 60px rgba(0, 0, 0, 0.45);
+      0 24px 60px rgba(0, 0, 0, 0.55),
+      0 0 40px rgba(226, 91, 255, 0.10);
     overflow: hidden;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: qotd-card-in 240ms ease-out;
+  }
+  .daily-quote__card[hidden] { display: none !important; }
+  @keyframes qotd-card-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
   }
   /* Magenta accent edge on the left — quote-block bar */
-  .daily-quote::before {
+  .daily-quote__card::before {
     content: '';
     position: absolute;
-    left: 0; top: 18px; bottom: 18px;
-    width: 4px;
+    left: 0; top: 12px; bottom: 12px;
+    width: 3px;
     border-radius: 2px;
     background: linear-gradient(180deg, #e25bff 0%, #4c51f7 60%, #00d4ff 100%);
-    box-shadow: 0 0 18px rgba(226, 91, 255, 0.5);
+    box-shadow: 0 0 14px rgba(226, 91, 255, 0.5);
   }
-  .daily-quote__inner {
-    position: relative;
-    padding-left: 12px;
+
+  /* Top bar — eyebrow + close */
+  .daily-quote__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .daily-quote__close {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid var(--color-line);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+  }
+  .daily-quote__close:hover {
+    background: rgba(226, 91, 255, 0.14);
+    border-color: rgba(226, 91, 255, 0.55);
+    color: var(--color-text);
   }
 
   /* Eyebrow */
   .daily-quote__eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.18em;
+    font-size: 10px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-cyan);
-    margin-bottom: 14px;
+    margin: 0;
   }
   .daily-quote__dot {
     width: 6px;
@@ -202,36 +332,39 @@ const quotes = [
     background: #e25bff;
     box-shadow: 0 0 10px #e25bff;
     animation: quote-dot 2s ease-in-out infinite;
+    flex-shrink: 0;
   }
   @keyframes quote-dot {
     0%, 100% { opacity: 1; transform: scale(1); }
     50%      { opacity: 0.6; transform: scale(0.85); }
   }
 
-  /* Quote text — chunky italic Bowlby for energy. */
+  /* Quote text — chunky italic Bowlby, sized for the floating widget. */
   .daily-quote__text {
     font-family: var(--font-accent);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(20px, 2.6vw, 30px);
-    line-height: 1.25;
+    font-size: 14.5px;
+    line-height: 1.28;
     letter-spacing: -0.012em;
     color: var(--color-text);
     margin: 0;
+    padding-left: 10px;
     text-wrap: balance;
   }
-  .daily-quote__text::before { content: '“'; opacity: 0.6; margin-right: 4px; color: var(--color-magenta); }
-  .daily-quote__text::after  { content: '”'; opacity: 0.6; margin-left: 4px;  color: var(--color-cyan); }
+  .daily-quote__text::before { content: '“'; opacity: 0.6; margin-right: 3px; color: var(--color-magenta); }
+  .daily-quote__text::after  { content: '”'; opacity: 0.6; margin-left: 3px;  color: var(--color-cyan); }
 
   /* Citation */
   .daily-quote__cite {
-    margin-top: 18px;
+    margin-top: 12px;
+    padding-left: 10px;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 10px;
+    gap: 8px;
     font-family: var(--font-mono);
-    font-size: 12.5px;
+    font-size: 10.5px;
     letter-spacing: 0.04em;
     color: var(--color-muted);
   }
@@ -245,7 +378,21 @@ const quotes = [
   }
   .daily-quote__source-name:not(:empty)::before { content: '· '; }
 
+  /* Mobile — keep it visible but tuck slightly out of the way */
+  @media (max-width: 640px) {
+    .daily-quote {
+      bottom: 14px;
+      right: 14px;
+    }
+    .daily-quote__card {
+      width: min(300px, calc(100vw - 28px));
+      padding: 14px 14px 16px;
+    }
+    .daily-quote__text { font-size: 13.5px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .daily-quote__dot { animation: none; }
+    .daily-quote__dot,
+    .daily-quote__card { animation: none !important; }
   }
 </style>
