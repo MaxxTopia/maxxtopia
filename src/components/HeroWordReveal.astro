@@ -190,20 +190,53 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
         if (!audioCtx) audioCtx = new Ctx();
         const t0 = audioCtx.currentTime;
 
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        // Glide C5 → G5 over 180ms
-        osc.frequency.setValueAtTime(523.25, t0);
-        osc.frequency.exponentialRampToValueAtTime(783.99, t0 + 0.18);
+        // Master bus
+        const master = audioCtx.createGain();
+        master.gain.value = 0.55;
+        master.connect(audioCtx.destination);
 
-        gain.gain.setValueAtTime(0.0001, t0);
-        gain.gain.exponentialRampToValueAtTime(0.3, t0 + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.5);
+        // Apex/Halo-style achievement chime — 3-note ascending arpeggio
+        // E5 → A5 → E6: perfect-4th then octave, the "you earned it" shape.
+        // Each note is a detuned sine pair for a clean bell timbre with
+        // micro-beating shimmer; attacks snap, tails ring out for ~0.5s.
+        const notes = [
+          { freq: 659.25,  t: 0.00, dur: 0.55, peak: 0.20 }, // E5
+          { freq: 880.00,  t: 0.07, dur: 0.60, peak: 0.22 }, // A5
+          { freq: 1318.51, t: 0.14, dur: 0.70, peak: 0.26 }, // E6
+        ];
+        notes.forEach(({ freq, t, dur, peak }) => {
+          const start = t0 + t;
+          const oscA = audioCtx.createOscillator();
+          const oscB = audioCtx.createOscillator();
+          oscA.type = 'sine';
+          oscB.type = 'sine';
+          oscA.frequency.value = freq;
+          oscB.frequency.value = freq * 1.005; // 5-cent detune for shimmer
+          const g = audioCtx.createGain();
+          g.gain.setValueAtTime(0.0001, start);
+          g.gain.exponentialRampToValueAtTime(peak, start + 0.012);
+          g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+          oscA.connect(g);
+          oscB.connect(g);
+          g.connect(master);
+          oscA.start(start);
+          oscB.start(start);
+          oscA.stop(start + dur + 0.05);
+          oscB.stop(start + dur + 0.05);
+        });
 
-        osc.connect(gain).connect(audioCtx.destination);
-        osc.start(t0);
-        osc.stop(t0 + 0.55);
+        // High-octave sparkle layer — adds the "earned a tier" brightness
+        const sparkle = audioCtx.createOscillator();
+        sparkle.type = 'sine';
+        sparkle.frequency.value = 2637.02; // E7
+        const sg = audioCtx.createGain();
+        sg.gain.setValueAtTime(0.0001, t0 + 0.10);
+        sg.gain.exponentialRampToValueAtTime(0.07, t0 + 0.14);
+        sg.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.62);
+        sparkle.connect(sg).connect(master);
+        sparkle.start(t0 + 0.10);
+        sparkle.stop(t0 + 0.70);
+
         sessionStorage.setItem(STORAGE_KEY, '1');
       } catch (_) { /* no-op */ }
     };
