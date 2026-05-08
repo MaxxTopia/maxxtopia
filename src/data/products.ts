@@ -35,31 +35,31 @@ export const products: Product[] = [
     description:
       'The only Windows tuner that shows its work. Every tweak traced to a Microsoft Learn doc or a vendor whitepaper. One UAC prompt applies the whole preset. Snapshot-backed revert, any tweak, any time.',
     longDescription:
-      "Most Windows tuners are batch scripts in a UI costume — Hone is a 200 MB Electron app, Paragon is 81 MB, half of them are someone's Discord script with a Stripe button taped on. Ours is 3.6 MB of native Rust running on Tauri 2. Opens in 200 ms. Idles at 30 MB. Eighty-seven tweaks, every one cited from Microsoft Learn or a vendor whitepaper, every one rig-targeted and snapshot-backed in SQLite. Apply a whole preset behind a single UAC prompt. Roll any tweak back the second you don't like the feel. Built for the people who count their frame times.",
+      "87 sourced tweaks. 3.6 MB native. One UAC prompt. Full undo. Built for the players who count their frame times.",
     features: [
       {
-        title: 'Sourced — or it\'s not in here.',
-        body: "Every tweak traced to a Microsoft Learn doc, a vendor whitepaper, or a published kernel reference. If we couldn't find a primary source, we didn't ship it. The average tuner is a YouTuber-tier list of registry edits with zero citations, half of which contradict each other.",
+        title: 'Sourced or it doesn\'t ship.',
+        body: 'Every tweak cites a Microsoft Learn doc or vendor whitepaper. The other tuners don\'t print sources because they don\'t have any.',
       },
       {
-        title: 'Ten presets. Or build your own.',
-        body: "Esports. BR. Streamer. Frame Pacing. Calm Mode. Tournament FPS. Clean State Gaming. Plus three more. Don't like the curated picks? Open the custom builder and toggle the other seventy-seven tweaks one at a time. Your machine, your call.",
+        title: '10 presets. Or roll your own.',
+        body: 'Esports, BR, Streamer, Frame Pacing, Tournament FPS — plus five more. Custom builder for the rest.',
       },
       {
-        title: 'One UAC. Full undo.',
-        body: "Whole preset goes on behind a single elevation prompt — not the eight most tuners ask for. Every change snapshot-backed in SQLite. Undo any single tweak the second you don't like how it feels. Undo isn't gated behind a paid tier here.",
+        title: 'One prompt. Full undo.',
+        body: 'Whole preset behind one UAC. Snapshot-backed. Roll any tweak back, anytime. Undo isn\'t a paid tier.',
       },
       {
-        title: 'Measure first. Then tune.',
-        body: 'Live per-CPU DPC sparkline. Scheduled latency probes. VBS / HVCI detection. PCIe link diagnostics. The other tuners flip registry keys and call it done. We show you the before, the after, and exactly what changed.',
+        title: 'Measure, then tune.',
+        body: 'Live DPC sparkline. Latency probes. PCIe diagnostics. We show the before, the after, and what changed.',
       },
       {
-        title: 'Knows your rig. Knows what to skip.',
-        body: "Detects CPU vendor, RAM type, OS build, laptop or desktop. Hides every tweak that doesn't apply. You'll never have to ask whether something's for AMD or Intel — it already filtered.",
+        title: 'Knows your rig.',
+        body: 'Detects CPU, RAM, OS, laptop or desktop. Hides everything that doesn\'t apply. No more squinting at irrelevant options.',
       },
       {
-        title: '3.6 MB. Native. Not Electron.',
-        body: 'Hone is 200 MB. Paragon is 81 MB. We are 3.6 MB of Rust on Tauri 2, idling at 30 MB of RAM, opening in 200 ms. The tool is fast because we wrote the tool to be fast.',
+        title: '3.6 MB. Native.',
+        body: 'Hone is 200 MB. Paragon is 81. Ours is 3.6 MB of Rust on Tauri 2. Opens in 200 ms.',
       },
     ],
     stats: [
@@ -85,23 +85,23 @@ export const products: Product[] = [
     description:
       "Stock Discord uses 1,041 MB on this machine. Ours uses 288. Same servers, same friends, same pings — we just stripped the part where it pretended to be a browser running a chat app.",
     longDescription:
-      "Discord ships as an Electron app cosplaying as a chat client — 1,041 MB resident on a fresh boot, 30–50% CPU at idle, and an animation budget that reminds you the app exists. We forked Vesktop, took the bloat off the bone, and rebuilt the perf profile around Tournament Mode v3: zero idle CPU, 288 MB resident, lazy-loaded guilds, no telemetry. Ten plugins written native, five themes with their own sound packs, and a privacy posture that doesn't phone home. Same Discord. Same servers. Same friends. Half the weight, none of the leash.",
+      "Stock: 1,041 MB. Ours: 288. Same servers, same pings — minus the bloat.",
     features: [
       {
-        title: 'Tournament Mode v3 — 0% CPU. 288 MB.',
-        body: "Idle CPU drops to flat zero. Resident RAM lands at 288 MB versus stock Discord's 1,041 on the same machine. Animations stripped. Guild list lazy-loaded. Perf-profile shipped after nine production commits, benched on real hardware. The before-chart and the after-chart aren't on the same scale.",
+        title: 'Tournament Mode v3.',
+        body: '0% idle CPU. 288 MB resident. 753 MB lighter than stock. Same machine, same servers.',
       },
       {
-        title: 'Ten plugins. Built native.',
-        body: "Cursor. Privacy. Trim. Plus seven more — written as first-class native code, not Vencord scripts bolted on at runtime. They load with the app, never break on Discord's next API shift, and don't add a Discord-DOM tax.",
+        title: '10 plugins. Native.',
+        body: 'Cursor. Privacy. Trim. Plus 7 more, written as first-class code. No Vencord runtime tax.',
       },
       {
-        title: 'Five themes. Five sound packs.',
-        body: "Hand-tuned palettes. Each one ships with its own sound pack. Your Discord, your aesthetic — not a beige skin engine that ate three Vencord plugins to render.",
+        title: '5 themes. 5 sound packs.',
+        body: 'Hand-tuned palettes, each with its own sound. Your Discord, your aesthetic.',
       },
       {
-        title: 'No telemetry. No phone-home.',
-        body: "Zero remote calls outside the conversation traffic you opt into. Local-only logging. Source available. The official client opens 14 connections to 6 domains on launch — ours opens what your messages need, and nothing else.",
+        title: 'No phone-home.',
+        body: 'Zero outbound calls outside your messages. Stock Discord opens 14 to 6 domains. Ours opens what you sent.',
       },
     ],
     stats: [
@@ -124,25 +124,25 @@ export const products: Product[] = [
     status: 'soon',
     tagline: 'Stream. Sleep. Wake up posted.',
     description:
-      "Eklipse cuts on volume spikes. OpusClip cuts on sentiment. Neither one watches what's trending on TikTok today. We do. Stream tonight, queue runs while you sleep, drafts on your phone by morning.",
+      "Eklipse cuts on volume. OpusClip cuts on sentiment. Neither watches today's TikTok. We do.",
     longDescription:
-      "Every other clipper detects the loud moment and stops there. The loud moment is table stakes — every clipper gets the kill. The hard problem is which kill the algorithm wants today, on which platform, set to which sound, with which hook. That's a matchmaker problem, not a detector problem. Five stages: candidate surfacing → semantic understanding → today's trend snapshot → matchmaker LLM → format-aware render. Per-game playbooks calibrated to your streamer archetype. Multi-game from day one. Face-aware 9:16 reframe so your eyebrow doesn't end up cropped at the worst frame. Stream the VOD, the queue runs overnight on a 2070, and you wake up to three drafts already pushed to your phone — captions written, sound matched, hashtags chosen. Tap to publish from the couch.",
+      "Stream tonight. Queue runs overnight. 3 drafts on your phone by morning — captions, sound, hashtags, ready to post.",
     features: [
       {
-        title: 'Cascade. Not cascade-fail.',
-        body: "Audio peaks → chat spikes → Whisper transcripts → LLM virality → today's trending sounds → HUD events. Each layer narrows the candidates before the expensive ones run. If the top stage misses, the floor is the best audio-scored clip — never zero. The other tools either run one signal and miss, or run all of them and hand you thirty mediocre clips.",
+        title: 'Cascade scoring.',
+        body: 'Audio → chat → transcript → virality → trends → HUD. Five layers. Floor is never zero.',
       },
       {
-        title: 'Trained on what actually went viral.',
-        body: "Per-game playbooks calibrated from the clips that actually hit, sourced from creators in your niche, refreshed weekly. Your Fortnite VOD doesn't get cut like a Valorant VOD. Your VOD doesn't get cut like Tarik's. The matchmaker calibrates to your archetype, not the average streamer.",
+        title: 'Trained on what hit.',
+        body: 'Per-game playbooks from clips that actually went viral. Calibrated to your archetype, not the average streamer.',
       },
       {
-        title: 'Your face stays in the frame.',
-        body: "OpenCV DNN face detection running per-frame, face-tight 9:16 reframe. The thing you cared about ends up centered every cut, every time. None of the 'reframe failed, your eyebrow's in the corner' nonsense the bigger names ship.",
+        title: 'Face stays in frame.',
+        body: 'Per-frame OpenCV DNN face-tight reframe. Your eyebrow never ends up cropped.',
       },
       {
-        title: 'One VOD. Three drafts. Three platforms.',
-        body: "TikTok, Shorts, Reels — each rendered with its own length, hook structure, caption style, and trending sound. Same VOD, three intent-driven cuts. Drafts pushed to your phone via each platform's own inbox. You tap-to-publish from the couch.",
+        title: '1 VOD. 3 platforms.',
+        body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound. Tap to publish from your couch.',
       },
     ],
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
@@ -162,21 +162,21 @@ export const products: Product[] = [
     status: 'beta',
     tagline: 'Stop guessing your drop.',
     description:
-      "Most drop calculators are last-season's loot map with arrows drawn on it. Ours is a hybrid LT model: IDW-interpolated community data on known paths, server-side physics simulator on novel ones. Bus speed, glide constants, the 100 m auto-deploy — all source-cited.",
+      "Other tools: last-season's loot map with arrows. Ours: a calculator with cited physics.",
     longDescription:
-      "The average drop tool is a static screenshot of someone's gut feeling. Ours is a calculator. Hybrid model: community drop corpus IDW-interpolated against verified routes for paths that have been logged, server-side physics simulator running on the rest. Bus speed (830 m/s). Auto-deploy (100 m). Glide and nosedive constants — every number cited from a real source, not the comments under a YouTube guide. Current-season POIs only, refreshed the day each season ships. Pick a path, see the math, drop the right spot.",
+      "Bus 830 m/s. Auto-deploy 100 m. Cited constants. Current-season POIs only. Pick a path, see the math, drop the right spot.",
     features: [
       {
         title: 'IDW corpus + physics fallback.',
-        body: "Community drop data IDW-interpolated against verified routes for paths that have been logged. Server-side physics simulator runs when you ask about a path nobody's measured yet. The lookup is fast and right; the simulator is slow and right; nobody else does both.",
+        body: 'Community-data lookup on known paths. Server-side simulator on novel ones. Fast and right, every time.',
       },
       {
-        title: 'Current-season POIs. Always.',
-        body: "POI list refreshed the day each season ships. Reality Falls isn't suggested anymore because Reality Falls isn't a thing anymore. The other tools tell you to drop somewhere that hasn't existed for a year.",
+        title: 'Current-season POIs.',
+        body: 'Refreshed the day each season ships. Reality Falls isn\'t suggested because Reality Falls isn\'t a thing.',
       },
       {
-        title: 'Cited physics. Show your work.',
-        body: 'Bus speed 830 m/s. Auto-deploy 100 m. Glide constant. Nosedive constant. Every number sourced from a real reference, not vibes. The other tools won\'t print their numbers because they\'re guessing them.',
+        title: 'Cited physics.',
+        body: 'Bus speed: 830 m/s. Auto-deploy: 100 m. Glide and nosedive constants — all sourced. Other tools won\'t print theirs.',
       },
     ],
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
@@ -191,17 +191,17 @@ export const products: Product[] = [
     status: 'soon',
     tagline: 'Aim is four metrics. Not one.',
     description:
-      "Sensitivity calibration. Prediction error. Anchor offset. Trigger discipline. Other aim trainers throw bots at you and call it data. We measure each axis separately and drill the one that's costing you frags.",
+      "Sensitivity. Prediction. Anchor. Trigger. We measure all four. Other trainers throw bots and call it data.",
     longDescription:
-      "Aim isn't a single skill. Aim is sensitivity calibration plus prediction error plus anchor offset plus trigger discipline — four independent metrics that diagnose four different mistakes. Throwing thirty scenarios at you doesn't isolate any of them; KovaaK's hands you a 200-scenario library and lets you guess. We measure each axis on its own bench, profile your specific gap, and build the routine from the gap up. Sensitivity calibration and 3D-rotation control loop are live in internal testing — calibration ships first, drills follow.",
+      "KovaaK's hands you 200 scenarios. We hand you the 4 that fix what's actually broken.",
     features: [
       {
-        title: 'Four metrics. Four drills.',
-        body: "Sensitivity, prediction, anchor, trigger — each measured independently, each drilled independently. KovaaK's hands you 200 scenarios. We hand you the four that fix what's actually broken.",
+        title: '4 metrics. 4 drills.',
+        body: 'Sensitivity, prediction, anchor, trigger — measured separately, drilled separately.',
       },
       {
-        title: 'Your sens. Your DPI. Your routine.',
-        body: "The routine adapts to your DPI, sensitivity, mouse, and play style — not the other way around. The default 'beginner pack' the other trainers ship is a fast track to grooving the wrong muscle memory.",
+        title: 'Your sens. Your routine.',
+        body: 'Routine adapts to your DPI, sensitivity, and play style. Not the other way around.',
       },
     ],
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
@@ -215,17 +215,17 @@ export const products: Product[] = [
     status: 'soon',
     tagline: 'Stream presence. Under your control.',
     description:
-      "A controlled-deployment toolkit for stream operators. Ratio sentinels and IP-cluster monitoring run real-time. JobRunner orchestrates session lifecycles. Built for operators who treat their audience graph as something to monitor, not pretend doesn't exist.",
+      "Controlled-deployment toolkit. Ratio sentinels live. IP-cluster monitoring real-time. Observation as a first-class feature.",
     longDescription:
-      "A toolkit for stream operators who take their audience-side composition seriously. Ratio and IP-cluster sentinels closed in Phase 4+5 and run live, with real-time visibility into session distribution. JobRunner manages session lifecycles end-to-end — start, monitor, retry, scale, stop — from one daemon. The product is currently in supervised end-to-end validation; this entry holds the slot until v1 is hardened. The first toolkit in this category that treats observation as a first-class feature, not an afterthought.",
+      "Ratio and IP-cluster sentinels live. JobRunner orchestrates session lifecycles. Supervised v1 in flight.",
     features: [
       {
         title: 'Sentinels. Live.',
-        body: "Ratio and IP-cluster sentinels closed in Phase 4+5 and run real-time. Live visibility into how your sessions are distributed. The first toolkit in this space that treats observation as a feature, not an afterthought.",
+        body: 'Ratio + IP-cluster monitoring real-time. Live visibility into session distribution.',
       },
       {
-        title: 'JobRunner. One daemon.',
-        body: 'Lifecycle management for ViewerSession runs — start, monitor, retry, scale, stop. Orchestrated from one process. Restart-safe. State persisted on disk.',
+        title: 'JobRunner.',
+        body: 'Lifecycle management — start, monitor, retry, scale, stop. One daemon. Restart-safe.',
       },
     ],
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
@@ -239,17 +239,17 @@ export const products: Product[] = [
     status: 'soon',
     tagline: 'One mechanic. Done right.',
     description:
-      "A scoped tile-selector for the Fortnite build-edit phase. Crosshair lands on a tile, the tile selects. No fire automation, no build sequencing — one mechanic, scoped tight, intentionally inside the lane Epic has publicly tolerated.",
+      "Scoped tile-selector for build edits. Crosshair on tile, tile selects. No fire automation. No build sequencing.",
     longDescription:
-      "Pros use macros openly. Epic has stated, on the record, that build-mechanic macros aren't bannable, and pros stream them on camera with no consequences. Editmaxxing is a tightly scoped tile-selector for the build-edit phase: when you're editing a wall, the right tile gets selected on hover. That's the entire feature surface. No fire automation. No build sequencing. No 'build a 90 in three keystrokes' shortcut. One mechanic, done right, kept inside the lane Epic has publicly drawn.",
+      "Pros use macros on stream. Epic has tolerated build-mechanic macros publicly. We do that one mechanic, tight.",
     features: [
       {
         title: 'Tile selects on hover.',
-        body: "Crosshair lands on a tile during the edit phase, the tile selects. The half-frame your hand was going to fumble for it doesn't happen anymore. The mechanic gets cleaner; nothing else changes.",
+        body: 'Crosshair lands on a tile, the tile selects. The half-frame fumble disappears.',
       },
       {
-        title: 'One mechanic. Nothing else.',
-        body: "No macro sequencing. No fire automation. No 'instant 90' or 'edit-reset combo' shortcuts. One mechanic, scoped tight, intentionally limited so it stays in the lane Epic has publicly tolerated.",
+        title: '1 mechanic. Nothing else.',
+        body: 'No fire automation. No build sequencing. No combos. Stays in the lane Epic publicly tolerated.',
       },
     ],
     primaryCta: { label: 'Get on the waitlist', href: '#waitlist' },
