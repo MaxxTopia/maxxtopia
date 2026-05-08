@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import ProductCard from '../components/ProductCard.astro';
 import SuiteMarquee from '../components/SuiteMarquee.astro';
+import DailyQuote from '../components/DailyQuote.astro';
 import { liveProducts, upcomingProducts } from '../data/products';
 ---
 
@@ -10,6 +11,13 @@ import { liveProducts, upcomingProducts } from '../data/products';
   <Hero />
 
   <SuiteMarquee />
+
+  <!-- Daily quote — rotates one curated quote per calendar day. -->
+  <section class="relative">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-14">
+      <DailyQuote />
+    </div>
+  </section>
 
   <!-- Suite -->
   <section id="suite" class="relative spotlight">

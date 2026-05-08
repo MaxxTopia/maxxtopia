@@ -254,19 +254,19 @@ export const products: Product[] = [
     category: 'Streamer Tools',
     status: 'soon',
     version: vmRelease.version ?? undefined,
-    tagline: 'Stream presence. Under your control.',
+    tagline: 'A tool for streamers.',
     description:
-      "Controlled-deployment toolkit. Ratio sentinels live. IP-cluster monitoring real-time. Observation as a first-class feature.",
+      "Streamer-side tooling. Direction in flux while we figure out which problem deserves the slot.",
     longDescription:
-      "Ratio and IP-cluster sentinels live. JobRunner orchestrates session lifecycles. Supervised v1 in flight.",
+      "A streamer toolkit in scope research. The framing will land when we lock the angle worth shipping.",
     features: [
       {
-        title: 'Sentinels. Live.',
-        body: 'Ratio + IP-cluster monitoring real-time. Live visibility into session distribution.',
+        title: 'Streamer-side.',
+        body: 'Built for the operator, not the viewer. Past that — the framing is in flux.',
       },
       {
-        title: 'JobRunner.',
-        body: 'Lifecycle management — start, monitor, retry, scale, stop. One daemon. Restart-safe.',
+        title: 'Slot reserved.',
+        body: 'We hold the slot until the direction is worth shipping. We don\'t ship to fill space.',
       },
     ],
     primaryCta: vmRelease.installerUrl
@@ -277,7 +277,7 @@ export const products: Product[] = [
         : undefined,
     glyph: '◐',
     accentHex: '#10b981',
-    heroStat: { value: 'LIVE', label: 'sentinels · real-time' },
+    heroStat: { value: 'TBD', label: 'direction in flux' },
   },
   {
     slug: 'editmaxxing',
@@ -285,30 +285,30 @@ export const products: Product[] = [
     category: 'Fortnite',
     status: 'soon',
     version: emRelease.version ?? undefined,
-    tagline: 'One mechanic. Done right.',
+    tagline: 'On research hold.',
     description:
-      "Scoped tile-selector for build edits. Crosshair on tile, tile selects. No fire automation. No build sequencing.",
+      "Build-edit tile-selector was the plan. Current research suggests it likely needs a hardware path we don't ship. Slot reserved while we figure it out.",
     longDescription:
-      "Pros use macros on stream. Epic has tolerated build-mechanic macros publicly. We do that one mechanic, tight.",
+      "On hold. The hover-to-select build-edit feature looks like it needs a microcontroller layer to land cleanly inside Epic's tolerated lane. We don't ship hardware yet. We'd rather hold the slot than ship a half-feature.",
     features: [
       {
-        title: 'Tile selects on hover.',
-        body: 'Crosshair lands on a tile, the tile selects. The half-frame fumble disappears.',
+        title: 'In feasibility research.',
+        body: 'We don\'t ship hardware yet. The clean software-only path here isn\'t obvious. Holding for now.',
       },
       {
-        title: '1 mechanic. Nothing else.',
-        body: 'No fire automation. No build sequencing. No combos. Stays in the lane Epic publicly tolerated.',
+        title: 'Slot reserved.',
+        body: 'Better to leave the slot than fill it with a worse version. If the research lands, this turns on.',
       },
     ],
     primaryCta: emRelease.installerUrl
         ? { label: 'Download for Windows', href: emRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: '#waitlist' },
+        : { label: 'Notify me if it ships', href: '#waitlist' },
     secondaryCta: emRelease.releasePageUrl
         ? { label: 'Release notes', href: emRelease.releasePageUrl, external: true }
         : undefined,
     glyph: '◈',
     accentHex: '#ff6b8b',
-    heroStat: { value: '1', label: 'mechanic · done right' },
+    heroStat: { value: '✕', label: 'on research hold' },
   },
 ];
 

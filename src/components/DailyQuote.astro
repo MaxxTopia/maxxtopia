@@ -1,0 +1,251 @@
+---
+/**
+ * Daily Quote — rotates one curated quote per calendar day. Same quote
+ * shown all day, fresh tomorrow. Date-seeded client-side so it works
+ * with the static build.
+ *
+ * Curated from the user's list: Ayanokoji, anime/anonymous lines, Diggy
+ * originals, Luke Belmar, Greg Plitt, Bill Beswick, Andrew Tate, Isagi.
+ */
+
+const quotes = [
+  // ── Ayanokoji ──────────────────────────────────────────────
+  {
+    text: "The greater the ability, the humbler the person. The lower it is, the more arrogant he is.",
+    author: 'Ayanokoji Kiyotaka',
+    source: 'Classroom of the Elite',
+  },
+  {
+    text: "All people are nothing but tools. It doesn't matter how it's done. It doesn't matter what needs to be sacrificed. In this world, winning is everything.",
+    author: 'Ayanokoji Kiyotaka',
+    source: 'Classroom of the Elite',
+  },
+
+  // ── Diggy originals ───────────────────────────────────────
+  {
+    text: "Everyone plays not to lose. You have to play to dominate.",
+    author: 'Diggy',
+    source: 'maxxtopia',
+  },
+
+  // ── Anime / anonymous lines from the brief ────────────────
+  {
+    text: "Show me results and I'll overlook your failure. If you're not a prodigy amongst prodigies, you're just wasting my time.",
+    author: 'unknown',
+  },
+  {
+    text: "See the enemy you should respect — not the enemy you despise.",
+    author: 'unknown',
+  },
+  {
+    text: "But don't the mediocre surpass naturals in the end?",
+    author: 'unknown',
+  },
+  {
+    text: "You talk a big game, but I know you don't wanna give up. Most people would've tossed it. You're still holding on.",
+    author: 'unknown',
+  },
+  {
+    text: "You can't know your strength until you know your weakness. Do with that what you will. Maybe I'll see you around. I would love to see you prove my point.",
+    author: 'unknown',
+  },
+  {
+    text: "If it ends here, that just means this is how far I was meant to go.",
+    author: 'unknown',
+  },
+
+  // ── Luke Belmar ────────────────────────────────────────────
+  {
+    text: "Be obsessed with the path you've chosen. Not the outcome.",
+    author: 'Luke Belmar',
+  },
+  {
+    text: "Take massive action. The market doesn't care about your feelings.",
+    author: 'Luke Belmar',
+  },
+
+  // ── Greg Plitt ─────────────────────────────────────────────
+  {
+    text: "Set the standard high. Then exceed it.",
+    author: 'Greg Plitt',
+  },
+  {
+    text: "Don't be the average person doing the average thing.",
+    author: 'Greg Plitt',
+  },
+
+  // ── Bill Beswick ───────────────────────────────────────────
+  {
+    text: "How you think determines how you feel. How you feel determines how you act. How you act determines what happens.",
+    author: 'Bill Beswick',
+  },
+
+  // ── Andrew Tate ────────────────────────────────────────────
+  {
+    text: "Stress is the gym for the mind.",
+    author: 'Andrew Tate',
+  },
+
+  // ── Yoichi Isagi (Blue Lock) ───────────────────────────────
+  {
+    text: "I will become the world's number-one striker. I'll devour them all.",
+    author: 'Yoichi Isagi',
+    source: 'Blue Lock',
+  },
+];
+---
+
+<aside class="daily-quote" aria-label="Daily quote">
+  <!-- Hidden seed list — JS picks one based on the day. -->
+  <ul class="daily-quote__source" hidden>
+    {quotes.map((q) => (
+      <li
+        data-text={q.text}
+        data-author={q.author}
+        data-source={q.source ?? ''}
+      ></li>
+    ))}
+  </ul>
+
+  <div class="daily-quote__inner">
+    <p class="daily-quote__eyebrow">
+      <span class="daily-quote__dot" aria-hidden="true"></span>
+      QUOTE OF THE DAY
+    </p>
+    <blockquote class="daily-quote__text" data-quote-text>
+      {/* Default first quote — JS replaces on load. */}
+      {quotes[0].text}
+    </blockquote>
+    <footer class="daily-quote__cite">
+      <span class="daily-quote__author" data-quote-author>{quotes[0].author}</span>
+      <span class="daily-quote__source-name" data-quote-source>{quotes[0].source ?? ''}</span>
+    </footer>
+  </div>
+</aside>
+
+<script is:inline>
+  (function () {
+    const root = document.querySelector('.daily-quote');
+    if (!root) return;
+    const items = root.querySelectorAll('.daily-quote__source li');
+    if (items.length === 0) return;
+
+    // Stable per-day index — same quote shown all day, rotates at midnight.
+    const day = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+    const idx = day % items.length;
+    const pick = items[idx];
+
+    const text   = pick.getAttribute('data-text')   || '';
+    const author = pick.getAttribute('data-author') || '';
+    const source = pick.getAttribute('data-source') || '';
+
+    const $text   = root.querySelector('[data-quote-text]');
+    const $author = root.querySelector('[data-quote-author]');
+    const $source = root.querySelector('[data-quote-source]');
+
+    if ($text)   $text.textContent   = text;
+    if ($author) $author.textContent = author;
+    if ($source) $source.textContent = source;
+    if ($source && !source) $source.style.display = 'none';
+  })();
+</script>
+
+<style>
+  .daily-quote {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    max-width: 56rem;
+    padding: 26px 28px 28px;
+    border-radius: 22px;
+    border: 1px solid var(--color-line-strong);
+    background:
+      radial-gradient(ellipse at 0% 0%, rgba(226, 91, 255, 0.10), transparent 55%),
+      radial-gradient(ellipse at 100% 100%, rgba(76, 81, 247, 0.10), transparent 55%),
+      linear-gradient(180deg, rgba(20, 12, 36, 0.85), rgba(10, 6, 18, 0.92));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 24px 60px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+  }
+  /* Magenta accent edge on the left — quote-block bar */
+  .daily-quote::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 18px; bottom: 18px;
+    width: 4px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #e25bff 0%, #4c51f7 60%, #00d4ff 100%);
+    box-shadow: 0 0 18px rgba(226, 91, 255, 0.5);
+  }
+  .daily-quote__inner {
+    position: relative;
+    padding-left: 12px;
+  }
+
+  /* Eyebrow */
+  .daily-quote__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-cyan);
+    margin-bottom: 14px;
+  }
+  .daily-quote__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #e25bff;
+    box-shadow: 0 0 10px #e25bff;
+    animation: quote-dot 2s ease-in-out infinite;
+  }
+  @keyframes quote-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  /* Quote text — chunky italic Bowlby for energy. */
+  .daily-quote__text {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(20px, 2.6vw, 30px);
+    line-height: 1.25;
+    letter-spacing: -0.012em;
+    color: var(--color-text);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .daily-quote__text::before { content: '“'; opacity: 0.6; margin-right: 4px; color: var(--color-magenta); }
+  .daily-quote__text::after  { content: '”'; opacity: 0.6; margin-left: 4px;  color: var(--color-cyan); }
+
+  /* Citation */
+  .daily-quote__cite {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+  }
+  .daily-quote__author::before { content: '— '; color: var(--color-subtle); }
+  .daily-quote__author {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+  .daily-quote__source-name {
+    color: var(--color-subtle);
+  }
+  .daily-quote__source-name:not(:empty)::before { content: '· '; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .daily-quote__dot { animation: none; }
+  }
+</style>
