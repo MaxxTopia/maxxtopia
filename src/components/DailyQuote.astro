@@ -197,6 +197,37 @@ const quotes = [
 
     close.addEventListener('click', () => setCollapsed(true));
     pill.addEventListener('click',  () => setCollapsed(false));
+
+    // ── Idle fade ────────────────────────────────────────────────
+    // After 60s without hover, the widget fades to ~25% opacity.
+    // Hovering anywhere on it cancels the fade; mouseleave restarts
+    // the timer. Applies to both card and pill states.
+    const FADE_AFTER_MS = 60_000;
+    let fadeTimer = null;
+
+    const armFade = () => {
+      if (fadeTimer) clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(() => {
+        root.classList.add('is-faded');
+      }, FADE_AFTER_MS);
+    };
+    const wakeUp = () => {
+      if (fadeTimer) clearTimeout(fadeTimer);
+      root.classList.remove('is-faded');
+    };
+
+    root.addEventListener('mouseenter', wakeUp);
+    root.addEventListener('focusin',    wakeUp);
+    root.addEventListener('mouseleave', armFade);
+    root.addEventListener('focusout',   armFade);
+
+    // Also wake up + re-arm when expand/collapse happens, so the
+    // newly-visible state gets a fresh 60s window before fading.
+    [pill, close].forEach((el) =>
+      el.addEventListener('click', () => { wakeUp(); armFade(); })
+    );
+
+    armFade();
   })();
 </script>
 
@@ -212,8 +243,17 @@ const quotes = [
     right: 20px;
     z-index: 50;
     pointer-events: none;
+    transition: opacity 700ms cubic-bezier(0.5, 0, 0.5, 1);
   }
   .daily-quote > * { pointer-events: auto; }
+  /* Idle fade — kicks in 60s after last hover/focus.
+     Wakes back up to 1 instantly on mouseenter (no transition delay
+     on the wake-up; the transition above only runs on the fade-out).
+     Faded state stays clickable: pill is still visible enough to find,
+     and hovering it brings the card right back. */
+  .daily-quote.is-faded { opacity: 0.22; }
+  .daily-quote.is-faded:hover,
+  .daily-quote.is-faded:focus-within { opacity: 1; }
 
   /* Pill (collapsed state) */
   .daily-quote__pill {
