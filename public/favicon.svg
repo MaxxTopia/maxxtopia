@@ -1,38 +1,72 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
   <!-- Dark squircle backdrop -->
   <rect width="24" height="24" rx="5.5" fill="#0a0612"/>
-  <rect width="24" height="24" rx="5.5" fill="url(#mx-bg)" opacity="0.55"/>
+  <rect width="24" height="24" rx="5.5" fill="url(#mx-bg)" opacity="0.6"/>
 
   <defs>
-    <radialGradient id="mx-bg" cx="50%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#322361"/>
+    <radialGradient id="mx-bg" cx="50%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#3a2871"/>
       <stop offset="100%" stop-color="#0a0612" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="mx-seam" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"  stop-color="#ff86ff"/>
+      <stop offset="50%" stop-color="#ff5dff"/>
+      <stop offset="100%" stop-color="#c026ff"/>
+    </linearGradient>
+    <filter id="mx-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="0.4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Cyan back layer, offset right + down -->
+  <!--
+    CLAVICULAR M — looksmaxx-coded redraw.
+    - Outer top corners angled inward: subtle V-taper (5,4) and (19,4)
+      vs the old straight verticals at (4,4.5) and (20,4.5)
+    - Inner V apex pushed down to y=15.5: deeper notch, like the
+      suprasternal notch between two defined clavicles
+    - Outer bottom terminals flared out slightly: bone end-caps
+    - Stroke caps square, not round — brutalist precision, no softness
+    - 30° outer slope = the "ideal masculine jaw" angle
+    - Magenta plasma dot at the apex echoes the discordmaxxer Slice seam
+  -->
+
+  <!-- Cyan back layer, tight chromatic offset right + down -->
   <path
-    d="M 4 19.5 L 4 4.5 L 12 13.5 L 20 4.5 L 20 19.5"
-    stroke="#00d4ff" stroke-width="3.2"
-    stroke-linecap="round" stroke-linejoin="round"
-    fill="none" opacity="0.9"
-    transform="translate(1.1 0.4)"
+    d="M 3.6 20 L 5 4 L 12 15.5 L 19 4 L 20.4 20"
+    stroke="#00d4ff" stroke-width="3.4"
+    stroke-linecap="square" stroke-linejoin="miter"
+    stroke-miterlimit="4"
+    fill="none" opacity="0.95"
+    transform="translate(0.7 0.25)"
   />
 
-  <!-- Magenta middle layer, offset left + up -->
+  <!-- Magenta middle layer, tight chromatic offset left + up -->
   <path
-    d="M 4 19.5 L 4 4.5 L 12 13.5 L 20 4.5 L 20 19.5"
-    stroke="#e25bff" stroke-width="3.2"
-    stroke-linecap="round" stroke-linejoin="round"
-    fill="none" opacity="0.9"
-    transform="translate(-1.1 -0.4)"
+    d="M 3.6 20 L 5 4 L 12 15.5 L 19 4 L 20.4 20"
+    stroke="#e25bff" stroke-width="3.4"
+    stroke-linecap="square" stroke-linejoin="miter"
+    stroke-miterlimit="4"
+    fill="none" opacity="0.95"
+    transform="translate(-0.7 -0.25)"
   />
 
-  <!-- White core front layer (crisp center) -->
+  <!-- White core layer (crisp center, brutalist) -->
   <path
-    d="M 4 19.5 L 4 4.5 L 12 13.5 L 20 4.5 L 20 19.5"
+    d="M 3.6 20 L 5 4 L 12 15.5 L 19 4 L 20.4 20"
     stroke="#ffffff" stroke-width="1.9"
-    stroke-linecap="round" stroke-linejoin="round"
+    stroke-linecap="square" stroke-linejoin="miter"
+    stroke-miterlimit="4"
     fill="none"
   />
+
+  <!-- Plasma seam at the V apex — the "clavicular notch" hot point.
+       Echoes the discordmaxxer Slice glow at suite scale. -->
+  <g filter="url(#mx-glow)">
+    <circle cx="12" cy="15.5" r="0.95" fill="url(#mx-seam)"/>
+  </g>
+  <circle cx="12" cy="15.5" r="0.5" fill="#ffe0ff"/>
 </svg>

@@ -27,7 +27,13 @@
 
   --font-sans: 'Geist', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
-  --font-serif: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  /* Display: Bebas Neue — esports-iconic heavy condensed all-caps. */
+  --font-display: 'Bebas Neue', 'Geist', 'Impact', sans-serif;
+  /* Accent (replaces the elegant Instrument Serif): Bowlby One — chunky
+     friendly-aggressive, energy-drink-coded. Used italic for inline punch. */
+  --font-accent: 'Bowlby One', 'Geist', sans-serif;
+  /* Backwards-compat alias — old code refs --font-serif. */
+  --font-serif: var(--font-accent);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -600,12 +606,29 @@
   font-feature-settings: 'tnum';
 }
 
-/* Italic serif accent (Apple-style) */
+/* Italic accent — Bowlby One synthetic italic. Energy-drink-coded
+   chunky display, swap-in for the old elegant Instrument Serif. */
 .serif-accent {
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  /* Bowlby One needs slightly tighter line-height + a small downshift
+     so it doesn't visually float above the Geist body baseline. */
+  line-height: 0.95;
+  display: inline-block;
+  transform: translateY(0.02em);
+}
+
+/* Display utility — Bebas Neue, all-caps, esports-iconic.
+   Use on big stat numbers, hero h1, principle headers — the moments
+   that should hit like a sticker, not a paragraph. */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 0.92;
+  text-transform: uppercase;
 }
 
 /* Reduce motion respect */
