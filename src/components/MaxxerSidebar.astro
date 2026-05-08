@@ -51,7 +51,7 @@ const activeSlug = products.find((p) =>
     {products.map((p) => {
       const isActive = activeSlug === p.slug;
       const isLive = p.status === 'live';
-      const isComingSoon = p.status === 'soon';
+      const isComingSoon = p.status === 'soon' || p.status === 'dev';
       return (
         <a
           href={`/${p.slug}`}
@@ -75,7 +75,7 @@ const activeSlug = products.find((p) =>
             </span>
           )}
           <span class="maxxer-sidebar__tooltip">
-            {p.name}{isComingSoon ? ' · coming soon' : ''}
+            {p.name}{p.status === 'soon' ? ' · coming soon' : p.status === 'dev' ? ' · in development' : ''}
           </span>
         </a>
       );

@@ -9,7 +9,7 @@ import amRelease from './aimmaxxer-release.json';
 import vmRelease from './viewmaxxing-release.json';
 import emRelease from './editmaxxing-release.json';
 
-export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon';
+export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon' | 'dev';
 
 export type Product = {
   slug: string;
@@ -221,7 +221,7 @@ export const products: Product[] = [
     slug: 'aimmaxxer',
     name: 'Aimmaxxer',
     category: 'Training',
-    status: 'soon',
+    status: 'dev',
     version: amRelease.version ?? undefined,
     tagline: 'Aim is four metrics. Not one.',
     description:
@@ -252,7 +252,7 @@ export const products: Product[] = [
     slug: 'viewmaxxing',
     name: 'Viewmaxxing',
     category: 'Streamer Tools',
-    status: 'soon',
+    status: 'dev',
     version: vmRelease.version ?? undefined,
     tagline: 'A tool for streamers.',
     description:
@@ -283,7 +283,7 @@ export const products: Product[] = [
     slug: 'editmaxxing',
     name: 'Editmaxxing',
     category: 'Fortnite',
-    status: 'soon',
+    status: 'dev',
     version: emRelease.version ?? undefined,
     tagline: 'On research hold.',
     description:
@@ -329,6 +329,8 @@ export function statusLabel(status: ProductStatus): string {
       return 'Waitlist';
     case 'soon':
       return 'Coming soon';
+    case 'dev':
+      return 'In development';
   }
 }
 

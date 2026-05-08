@@ -33,7 +33,7 @@ if (!product) {
 const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
 const isLive = product.status === 'live';
 const isBeta = product.status === 'beta';
-const isSoon = product.status === 'soon';
+const isSoon = product.status === 'soon' || product.status === 'dev';
 const root = product.name.replace(/maxx(er|ing)$/i, '');
 const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
 const screenshotMain = product.screenshots?.[0];
