@@ -3,31 +3,48 @@ type Props = {
   size?: number;
   showWord?: boolean;
 };
-const { size = 30, showWord = true } = Astro.props;
+const { size = 32, showWord = true } = Astro.props;
+const glyphSize = Math.round(size * 0.66);
 ---
 
-<a href="/" class="inline-flex items-center gap-2.5 group" aria-label="Maxxtopia home">
+<a href="/" class="logo group" aria-label="Maxxtopia home">
   <span
-    class="relative flex items-center justify-center rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line-strong)] transition-colors group-hover:border-[var(--color-magenta)]/60 overflow-hidden"
+    class="logo__container"
     style={`width:${size}px;height:${size}px`}
   >
-    <span
-      class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-      style="background: radial-gradient(circle at center, rgba(226,91,255,0.3), transparent 70%)"
+    <span class="logo__glow" aria-hidden="true"></span>
+    <svg
+      width={glyphSize}
+      height={glyphSize}
+      viewBox="0 0 24 24"
+      fill="none"
+      class="logo__glyph"
       aria-hidden="true"
-    ></span>
-    <svg width={size * 0.62} height={size * 0.62} viewBox="0 0 24 24" fill="none" aria-hidden="true" class="relative">
-      <defs>
-        <linearGradient id={`m-grad-${size}`} x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stop-color="#e25bff"/>
-          <stop offset="50%" stop-color="#c084fc"/>
-          <stop offset="100%" stop-color="#00d4ff"/>
-        </linearGradient>
-      </defs>
+    >
+      <!-- Cyan back layer, offset right -->
       <path
-        d="M3 20 L8 4 L12 14 L16 4 L21 20"
-        stroke={`url(#m-grad-${size})`}
-        stroke-width="2.6"
+        class="logo__layer logo__layer--cyan"
+        d="M 4 19.5 L 4 4.5 L 12 13.5 L 20 4.5 L 20 19.5"
+        stroke="#00d4ff"
+        stroke-width="3.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <!-- Magenta middle layer, offset left -->
+      <path
+        class="logo__layer logo__layer--magenta"
+        d="M 4 19.5 L 4 4.5 L 12 13.5 L 20 4.5 L 20 19.5"
+        stroke="#e25bff"
+        stroke-width="3.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <!-- White core -->
+      <path
+        class="logo__layer logo__layer--core"
+        d="M 4 19.5 L 4 4.5 L 12 13.5 L 20 4.5 L 20 19.5"
+        stroke="#ffffff"
+        stroke-width="1.9"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
@@ -39,3 +56,59 @@ const { size = 30, showWord = true } = Astro.props;
     </span>
   )}
 </a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo__container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-line-strong);
+    overflow: hidden;
+    transition: border-color 240ms ease, transform 240ms ease;
+  }
+  .logo:hover .logo__container {
+    border-color: rgba(226, 91, 255, 0.6);
+    transform: scale(1.04);
+  }
+  .logo__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 35%, rgba(50, 35, 97, 0.65), transparent 70%);
+    opacity: 1;
+    pointer-events: none;
+  }
+  .logo__glyph {
+    position: relative;
+    overflow: visible;
+  }
+  .logo__layer {
+    fill: none;
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  /* Permanent chromatic split offset */
+  .logo__layer--cyan    { transform: translate(1.1px, 0.4px); opacity: 0.9; }
+  .logo__layer--magenta { transform: translate(-1.1px, -0.4px); opacity: 0.9; }
+  .logo__layer--core    { transform: translate(0, 0); }
+
+  /* Hover: intensify the glitch */
+  .logo:hover .logo__layer--cyan    { transform: translate(2.2px, 0.7px); }
+  .logo:hover .logo__layer--magenta { transform: translate(-2.2px, -0.7px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo:hover .logo__layer--cyan,
+    .logo:hover .logo__layer--magenta {
+      transform: translate(1.1px, 0.4px);
+    }
+    .logo:hover .logo__layer--magenta {
+      transform: translate(-1.1px, -0.4px);
+    }
+  }
+</style>
