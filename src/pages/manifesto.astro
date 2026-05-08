@@ -5,7 +5,7 @@ import Aurora from '../components/Aurora.astro';
 
 <Layout
   title="Manifesto — Maxxtopia"
-  description="Why Maxxtopia exists. The principles behind the suite."
+  description="Why Maxxtopia exists. The principles behind the suite — sourced, native, reversible, no telemetry, and built like the tools we wished existed."
 >
   <article class="relative">
     <Aurora intensity="low" />
@@ -16,25 +16,41 @@ import Aurora from '../components/Aurora.astro';
         Manifesto · v0.1
       </p>
       <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[68px] font-semibold tracking-[-0.03em] leading-[1] gradient-text">
-        We're tired of <span class="serif-accent gradient-suite">bad gaming software.</span>
+        Built like the tools <span class="serif-accent gradient-suite">we wished existed.</span>
       </h1>
+      <p class="reveal reveal-3 mt-6 text-[18px] leading-[1.55] text-[var(--color-text-mid)] max-w-xl">
+        Six years of gaming software has been a contest in who can ship a Chromium browser pretending to be an application. We're done.
+      </p>
     </div>
 
     <div class="relative mx-auto max-w-2xl px-5 sm:px-8 pb-32">
       <div class="space-y-7 text-[16.5px] leading-[1.78] text-[var(--color-text-mid)]">
         <p class="reveal-on-scroll">
           The tools competitive gamers actually use weren't built by anyone competitive.
-          They were built by Discord scripters who slapped a paywall on a registry batch file,
-          by Electron studios shipping 200 MB of Chromium for a settings panel,
-          by analytics-funded SaaS that treats your inputs as inventory.
+          They were built by Discord scripters who taped a Stripe button onto a registry batch file.
+          By Electron studios shipping 200 MB of Chromium for a settings panel.
+          By analytics-funded SaaS that treats your inputs as inventory.
+          <span class="text-[var(--color-text)]">Hone is 200 MB.</span>
+          <span class="text-[var(--color-text)]">Paragon is 81 MB.</span>
+          The official Discord client opens fourteen connections to six domains the second you launch it.
         </p>
 
         <p class="reveal-on-scroll">
-          Maxxtopia is a refusal to accept that.
-          We think gaming utilities should be designed with the care Apple gives a music app.
-          That a tuner should cite its sources. That a Discord client should idle at 0% CPU.
-          That a clip tool should measure what actually goes viral, not just spike on volume.
-          That nothing in your gaming stack should call home unless you tell it to.
+          Maxxtopia is a refusal.
+          The position is simple: gaming utilities should be designed with the care Apple gives a music app.
+          A tuner should cite its sources.
+          A Discord client should idle at 0% CPU.
+          A clip tool should know what actually went viral on TikTok today — not just spike on volume.
+          Nothing in your gaming stack should call home unless you told it to.
+        </p>
+
+        <p class="reveal-on-scroll">
+          And we try until it's right.
+          The discordmaxxer logo took five passes to land — chat bubble, headset, monogram, broadcast wave, then the Slice with a magenta plasma seam through the cut.
+          Five tries because the first four were generic.
+          The fifth wasn't.
+          <span class="text-[var(--color-text)]">That's the operating principle.</span>
+          Ship the version you'd defend, not the first one that loaded.
         </p>
 
         <h2 class="reveal-on-scroll text-[var(--color-text)] text-[28px] font-semibold tracking-[-0.02em] pt-6 leading-tight">
@@ -43,11 +59,12 @@ import Aurora from '../components/Aurora.astro';
 
         <div class="space-y-5">
           {[
-            { t: 'Sourced, not guessed.', b: "Every tweak we ship traces to Microsoft Learn, a vendor doc, or a verified community source. If it can't be cited, it doesn't ship. Placebo tweaks erode trust — we cut ten of them in v0.1.32." },
-            { t: 'Native or nothing.', b: 'The tuner is 3.6 MB. The Discord client is 288 MB at idle versus 1041 MB on stock. Bundle size is a moral position.' },
-            { t: 'Reversible by default.', b: 'Every change is snapshot-backed. Every preset is undoable. One-click restore. Software you can experiment with because the door is never locked.' },
-            { t: 'No telemetry. Ever.', b: "We don't analytics you. We don't error-log you. We don't “help us improve our product” you. Gaming software has a long history of betraying that trust. We won't." },
-            { t: "Measure, don't just modify.", b: "Every tuner applies tweaks. Maxxtopia's ships live DPC graphs, latency probes, and PCIe diagnostics so you can verify the change worked. Trust, then verify." },
+            { t: 'Sourced. Or it doesn\'t ship.', b: "Every tweak ships with a primary source — Microsoft Learn, vendor whitepaper, published kernel reference. If we can't cite it, it doesn't make the build. We cut ten placebo tweaks in v0.1.32 alone for failing this rule." },
+            { t: 'Native or nothing.', b: 'The tuner is 3.6 MB. Discordmaxxer idles at 288 MB versus 1,041 MB on stock. Bundle size is a moral position. Electron is 200 MB of Chromium pretending to be an application — we don\'t ship that to you to make our build easier.' },
+            { t: 'Reversible by default.', b: 'Every change is snapshot-backed. Every preset is undoable. One-click full restore. Software you can experiment with because the door is never locked behind a paid tier.' },
+            { t: 'No telemetry. Ever.', b: "We don't analytics you. We don't error-report you. We don't 'help us improve' you. Gaming software has a long history of betraying that trust — Razer, Logitech, half the AIO control panels. We won't." },
+            { t: "Measure. Don't just modify.", b: "Every tuner flips registry keys. Ours ships live DPC sparklines, latency probes, PCIe diagnostics. The 'after' chart isn't taken on faith. Trust, then verify." },
+            { t: 'Iterate until you\'d defend it.', b: 'No version one ever ships first try. The fifth attempt is the one that earns the spot. The discount on conviction is what made every other tool in this category mediocre — we don\'t take it.' },
           ].map((p) => (
             <div class="reveal-on-scroll relative pl-6">
               <span class="absolute left-0 top-1.5 bottom-1.5 w-px bg-gradient-to-b from-[var(--color-magenta)] via-[var(--color-cyan)] to-transparent"></span>
@@ -63,17 +80,17 @@ import Aurora from '../components/Aurora.astro';
 
         <p class="reveal-on-scroll">
           Optimizationmaxxing tunes your PC.
-          Discordmaxxer tunes your comms.
-          Clipmaxxer cuts your VODs.
+          Discordmaxxer cuts the comms client down to a chat client.
+          Clipmaxxer matches your VOD to today's TikTok.
           Dropmaxxer picks your spots.
           Aimmaxxer drills your gap.
-          Viewmaxxing handles your stream.
-          Editmaxxing assists your edits.
+          Viewmaxxing watches your stream's audience graph.
+          Editmaxxing handles one mechanic, scoped tight.
         </p>
 
         <p class="reveal-on-scroll">
           Different surfaces. <span class="serif-accent text-[var(--color-text)]">Same standard.</span>
-          Built by a single player for the players who care about the millisecond.
+          Built by a single player for the players who count their frame times.
         </p>
 
         <p class="reveal-on-scroll pt-6">

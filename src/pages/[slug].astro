@@ -28,12 +28,33 @@ const root = product.name.replace(/maxx(er|ing)$/i, '');
 const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
 const screenshotMain = product.screenshots?.[0];
 const screenshotExtras = product.screenshots?.slice(1) ?? [];
+
+// SoftwareApplication JSON-LD — rich results in Google for live products.
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: product.name,
+  description: product.description,
+  applicationCategory: product.category === 'PC Tuning' ? 'UtilitiesApplication'
+    : product.category === 'Communication' ? 'CommunicationApplication'
+    : 'GameApplication',
+  operatingSystem: 'Windows',
+  ...(product.version && { softwareVersion: product.version }),
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  aggregateRating: undefined, // wire when we have real review counts
+  url: `https://maxxtopia.com/${product.slug}`,
+};
 ---
 
 <Layout
-  title={`${product.name} — Maxxtopia`}
-  description={product.tagline}
+  title={`${product.name} — ${product.tagline}`}
+  description={product.description}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
   <!-- Product hero -->
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
