@@ -341,8 +341,10 @@
 }
 .card:hover::before { opacity: 1; }
 .card-live:hover {
-  border-color: rgba(226, 91, 255, 0.45);
-  box-shadow: var(--shadow-card), var(--shadow-magenta);
+  border-color: color-mix(in oklab, var(--accent, #e25bff) 45%, transparent);
+  box-shadow:
+    var(--shadow-card),
+    0 0 60px color-mix(in oklab, var(--accent, #e25bff) 22%, transparent);
 }
 
 /* ────────────────────────────────────────────────────────────────────
@@ -518,9 +520,27 @@
   color: var(--color-text);
   transition: border-color 240ms ease, transform 240ms ease;
 }
+.card .glyph-badge {
+  transition:
+    transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 240ms ease,
+    box-shadow 280ms ease;
+}
 .card:hover .glyph-badge {
-  border-color: rgba(226, 91, 255, 0.5);
-  transform: scale(1.05);
+  border-color: color-mix(in oklab, var(--accent, #e25bff) 55%, transparent);
+  transform: scale(1.08) rotate(-2deg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--accent, #e25bff) 35%, transparent),
+    0 8px 28px color-mix(in oklab, var(--accent, #e25bff) 35%, transparent);
+}
+.card:hover .glyph-badge img {
+  animation: glyph-pop 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes glyph-pop {
+  0%   { transform: scale(1)    rotate(0deg); }
+  35%  { transform: scale(1.12) rotate(3deg); }
+  60%  { transform: scale(0.98) rotate(-2deg); }
+  100% { transform: scale(1)    rotate(0deg); }
 }
 
 /* "made by diggy" slogan (ported from clipmaxxer for suite canon) */
