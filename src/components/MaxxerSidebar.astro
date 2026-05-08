@@ -7,6 +7,20 @@ const activeSlug = products.find((p) =>
 ---
 
 <aside class="maxxer-sidebar" id="maxxer-sidebar" aria-label="Maxxer suite">
+  <!-- Fidget-orb minimizer — pinned to top-right of the rail -->
+  <button
+    type="button"
+    id="maxxer-sidebar-close"
+    class="fidget-orb fidget-orb--minimize has-dmc-tooltip"
+    aria-label="hide suite navigation"
+    aria-controls="maxxer-sidebar"
+  >
+    <span class="aura-smoke" aria-hidden="true"></span>
+    <span class="aura-smoke-3" aria-hidden="true"></span>
+    <span class="fidget-orb__arrow">▶</span>
+    <span class="dmc-tooltip">Banish the Menu</span>
+  </button>
+
   <!-- Suite root logo (chromatic glitch M) -->
   <a href="/" class="maxxer-sidebar__root group" aria-label="Maxxtopia home">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="sidebar-logo__glyph">
@@ -60,12 +74,59 @@ const activeSlug = products.find((p) =>
               </svg>
             </span>
           )}
-          <span class="maxxer-sidebar__tooltip">{p.name}</span>
+          <span class="maxxer-sidebar__tooltip">
+            {p.name}{isComingSoon ? ' · coming soon' : ''}
+          </span>
         </a>
       );
     })}
   </nav>
 </aside>
+
+<!-- Re-open orb (visible only when sidebar is hidden) -->
+<button
+  type="button"
+  id="maxxer-sidebar-open"
+  class="fidget-orb fidget-orb--expand has-dmc-tooltip maxxer-sidebar-opener"
+  aria-label="open suite navigation"
+  aria-controls="maxxer-sidebar"
+  hidden
+>
+  <span class="aura-smoke" aria-hidden="true"></span>
+  <span class="aura-smoke-3" aria-hidden="true"></span>
+  <span class="fidget-orb__arrow">◀</span>
+  <span class="dmc-tooltip">Unleash the Menu</span>
+</button>
+
+<script is:inline>
+  (function () {
+    const KEY = 'maxxer_sidebar_open';
+    const sidebar = document.getElementById('maxxer-sidebar');
+    const closeBtn = document.getElementById('maxxer-sidebar-close');
+    const openBtn = document.getElementById('maxxer-sidebar-open');
+    if (!sidebar || !closeBtn || !openBtn) return;
+
+    const stored = localStorage.getItem(KEY);
+    const initial = stored === null ? true : stored === '1';
+
+    const apply = (open) => {
+      document.body.classList.toggle('sidebar-collapsed', !open);
+      if (open) {
+        sidebar.removeAttribute('hidden');
+        openBtn.setAttribute('hidden', '');
+      } else {
+        sidebar.setAttribute('hidden', '');
+        openBtn.removeAttribute('hidden');
+      }
+      localStorage.setItem(KEY, open ? '1' : '0');
+    };
+
+    apply(initial);
+
+    closeBtn.addEventListener('click', () => apply(false));
+    openBtn.addEventListener('click', () => apply(true));
+  })();
+</script>
 
 <style>
   .maxxer-sidebar {
@@ -85,6 +146,27 @@ const activeSlug = products.find((p) =>
   @media (min-width: 1024px) {
     .maxxer-sidebar { display: flex; }
   }
+  .maxxer-sidebar[hidden] { display: none !important; }
+
+  /* Re-open orb appears only when sidebar is collapsed and only on desktop */
+  .maxxer-sidebar-opener {
+    position: fixed;
+    left: 14px;
+    top: 70px;
+    z-index: 31;
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .maxxer-sidebar-opener:not([hidden]) { display: inline-flex; }
+  }
+
+  /* Close orb pinned to the rail, slightly outside its right edge */
+  #maxxer-sidebar-close {
+    position: absolute;
+    right: -16px;
+    top: 10px;
+    z-index: 32;
+  }
 
   .maxxer-sidebar__root {
     width: 40px;
@@ -96,6 +178,7 @@ const activeSlug = products.find((p) =>
     align-items: center;
     justify-content: center;
     transition: border-color 220ms ease, transform 220ms ease;
+    margin-top: 36px;
   }
   .maxxer-sidebar__root:hover {
     border-color: var(--color-magenta);
@@ -219,5 +302,228 @@ const activeSlug = products.find((p) =>
   .has-tooltip:hover .maxxer-sidebar__tooltip {
     opacity: 1;
     transform: translateY(-50%) translateX(0);
+  }
+</style>
+
+<style is:global>
+  /* ────────────────────────────────────────────────────────────────────
+     Fidget-orb minimize/expand button — ported from clipmaxxer.
+     Indigo radial gem with breathing pulse, spinning arrow on hover,
+     directional smoke trail behind the arrow.
+     ──────────────────────────────────────────────────────────────────── */
+  .fidget-orb {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid rgba(129, 140, 248, 0.6);
+    background: radial-gradient(
+      circle at 30% 30%,
+      #6366f1 0%,
+      #3b1d8e 45%,
+      #14042a 100%
+    );
+    box-shadow:
+      0 0 16px rgba(99, 102, 241, 0.55),
+      0 2px 10px rgba(0, 0, 0, 0.8),
+      inset 0 0 6px rgba(199, 210, 254, 0.35);
+    animation: fidget-breathe 5s ease-in-out infinite;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+    overflow: visible;
+    padding: 0;
+  }
+  .fidget-orb::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 999px;
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba(129, 140, 248, 0.4),
+      rgba(10, 5, 30, 0.9) 65%
+    );
+    z-index: 0;
+  }
+  .fidget-orb:hover {
+    box-shadow:
+      0 0 24px rgba(129, 140, 248, 0.95),
+      0 4px 18px rgba(0, 0, 0, 0.85),
+      inset 0 0 10px rgba(199, 210, 254, 0.6);
+  }
+  .fidget-orb:active { transform: scale(0.92); }
+
+  .fidget-orb__arrow {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 900;
+    color: #e0e7ff;
+    text-shadow:
+      0 0 6px #c7d2fe,
+      0 0 12px rgba(129, 140, 248, 0.9),
+      0 0 20px rgba(99, 102, 241, 0.7);
+    filter: drop-shadow(0 0 3px rgba(165, 180, 252, 0.8));
+    transition: transform 180ms ease;
+  }
+  .fidget-orb:hover .fidget-orb__arrow {
+    animation: fidget-spin 1.6s cubic-bezier(0.3, 0, 0.4, 1) infinite;
+  }
+  .fidget-orb:active .fidget-orb__arrow {
+    animation: fidget-spin 0.6s cubic-bezier(0.3, 0, 0.4, 1) infinite;
+  }
+
+  @keyframes fidget-spin {
+    0%   { transform: rotate(0deg);    animation-timing-function: cubic-bezier(0.3, 0, 0.4, 1); }
+    30%  { transform: rotate(540deg);  animation-timing-function: cubic-bezier(0.2, 0, 0.7, 1); }
+    60%  { transform: rotate(900deg);  animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1); }
+    100% { transform: rotate(1080deg); }
+  }
+  @keyframes fidget-breathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+  }
+
+  /* Aura smoke particles — pseudo-elements emit behind the orb */
+  .aura-smoke,
+  .aura-smoke-3 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .aura-smoke::before,
+  .aura-smoke::after,
+  .aura-smoke-3::before,
+  .aura-smoke-3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    margin-top: -4px;
+    border-radius: 999px;
+    background: radial-gradient(
+      circle at 35% 35%,
+      rgba(199, 210, 254, 1),
+      rgba(129, 140, 248, 0.95) 40%,
+      rgba(67, 56, 202, 0.7) 75%
+    );
+    filter: blur(1.5px);
+    box-shadow: 0 0 6px rgba(129, 140, 248, 0.8);
+  }
+  .aura-smoke-3::before,
+  .aura-smoke-3::after {
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    margin-top: -3px;
+  }
+
+  .fidget-orb--minimize .aura-smoke::before   { animation: trail-left-1 2.2s ease-out infinite; }
+  .fidget-orb--minimize .aura-smoke::after    { animation: trail-left-2 2.2s ease-out infinite 0.7s; }
+  .fidget-orb--minimize .aura-smoke-3::before { animation: trail-left-3 2.2s ease-out infinite 1.1s; }
+  .fidget-orb--minimize .aura-smoke-3::after  { animation: trail-left-1 2.2s ease-out infinite 1.5s; }
+
+  .fidget-orb--expand .aura-smoke::before   { animation: trail-right-1 2.2s ease-out infinite; }
+  .fidget-orb--expand .aura-smoke::after    { animation: trail-right-2 2.2s ease-out infinite 0.7s; }
+  .fidget-orb--expand .aura-smoke-3::before { animation: trail-right-3 2.2s ease-out infinite 1.1s; }
+  .fidget-orb--expand .aura-smoke-3::after  { animation: trail-right-1 2.2s ease-out infinite 1.5s; }
+
+  @keyframes trail-left-1 {
+    0%   { transform: translate(-50%, -50%) scale(0.6);   opacity: 0; }
+    10%  { opacity: 1; }
+    80%  { opacity: 0.9; }
+    100% { transform: translate(-340%, -80%) scale(0.35); opacity: 0; }
+  }
+  @keyframes trail-left-2 {
+    0%   { transform: translate(-50%, -50%) scale(0.55);  opacity: 0; }
+    12%  { opacity: 0.95; }
+    80%  { opacity: 0.8; }
+    100% { transform: translate(-380%, -20%) scale(0.3);  opacity: 0; }
+  }
+  @keyframes trail-left-3 {
+    0%   { transform: translate(-50%, -50%) scale(0.7);   opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translate(-300%, -140%) scale(0.3); opacity: 0; }
+  }
+  @keyframes trail-right-1 {
+    0%   { transform: translate(-50%, -50%) scale(0.6);   opacity: 0; }
+    10%  { opacity: 1; }
+    80%  { opacity: 0.9; }
+    100% { transform: translate(240%, -80%) scale(0.35);  opacity: 0; }
+  }
+  @keyframes trail-right-2 {
+    0%   { transform: translate(-50%, -50%) scale(0.55);  opacity: 0; }
+    12%  { opacity: 0.95; }
+    80%  { opacity: 0.8; }
+    100% { transform: translate(280%, -20%) scale(0.3);   opacity: 0; }
+  }
+  @keyframes trail-right-3 {
+    0%   { transform: translate(-50%, -50%) scale(0.7);   opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translate(200%, -140%) scale(0.3);  opacity: 0; }
+  }
+
+  /* DMC-3 tooltip — gothic Metal Mania, blood-red glow.
+     Show via .has-dmc-tooltip:hover .dmc-tooltip { opacity: 1 } */
+  .dmc-tooltip {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    transform: translateY(-4px);
+    white-space: nowrap;
+    padding: 4px 9px;
+    background: linear-gradient(180deg, rgba(20, 0, 0, 0.96) 0%, rgba(40, 4, 4, 0.96) 100%);
+    color: #ffe9e0;
+    border: 1px solid rgba(220, 40, 40, 0.55);
+    border-radius: 4px;
+    font-family: 'Metal Mania', 'Pirata One', 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-shadow:
+      0 0 5px rgba(255, 60, 60, 0.8),
+      0 0 10px rgba(160, 0, 0, 0.5);
+    box-shadow:
+      0 0 12px rgba(220, 40, 40, 0.4),
+      0 4px 14px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+    z-index: 1500;
+  }
+  .dmc-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 12px;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+    border-top: 1px solid rgba(220, 40, 40, 0.55);
+    border-left: 1px solid rgba(220, 40, 40, 0.55);
+    transform: rotate(45deg);
+  }
+  .has-dmc-tooltip:hover .dmc-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Drop the body padding-left when sidebar is collapsed */
+  @media (min-width: 1024px) {
+    body.sidebar-collapsed > main,
+    body.sidebar-collapsed > footer {
+      padding-left: 0 !important;
+    }
   }
 </style>

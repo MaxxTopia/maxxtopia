@@ -121,7 +121,7 @@ export const products: Product[] = [
     slug: 'clipmaxxer',
     name: 'Clipmaxxer',
     category: 'Content',
-    status: 'beta',
+    status: 'soon',
     tagline: 'Auto-clip viral moments from your VODs.',
     description:
       'A 5-stage matchmaker that finds the moments worth posting and renders them for TikTok, Shorts, and Reels.',
@@ -150,9 +150,9 @@ export const products: Product[] = [
     glyph: '✂',
     accentHex: '#00d4ff',
     screenshots: [
-      '/screenshots/clipmaxxer/01.jpg',
-      '/screenshots/clipmaxxer/02.jpg',
-      '/screenshots/clipmaxxer/03.jpg',
+      '/screenshots/clipmaxxer/queue-vod.png',
+      '/screenshots/clipmaxxer/login-queue.png',
+      '/screenshots/clipmaxxer/pricing.png',
     ],
   },
   {
