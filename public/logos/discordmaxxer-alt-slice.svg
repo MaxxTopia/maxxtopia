@@ -174,16 +174,53 @@
     <circle cx="772" cy="200" r="3" fill="#ffffff" opacity="0.45"/>
   </g>
 
-  <!-- I-BEAM CURSOR — top serif now in maxxer magenta, stem + bottom in
-       Discord blurple. The cursor itself is the brand handoff: magenta
-       (maxxer) flows down into blurple (Discord) just like the wordmark. -->
-  <!-- Bottom serif: blurple -->
-  <rect x="416" y="616" width="60" height="12" rx="3" fill="#5865F2"/>
-  <!-- Vertical stem: blurple -->
-  <rect x="438" y="450" width="16" height="178" rx="3" fill="#5865F2"/>
-  <!-- Top serif: maxxer magenta with glow -->
+  <!-- THE CENTER MARK — 4 ascending signal bars.
+       Reads as: audio equalizer (comms-app fit) + signal-strength meter
+       (universal "max performance") + optimization arc (magenta bloat on
+       the left → Discord blurple on the right, the brand journey drawn
+       into a bar chart). Tallest bar gets a magenta plasma cap that
+       visually rhymes with the slice glow above. -->
+
+  <!-- Per-bar gradient defs — top-to-bottom dimensional shading. -->
+  <defs>
+    <linearGradient id="sl-bar1" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%"   stop-color="#ff86ff"/>
+      <stop offset="100%" stop-color="#e25bff"/>
+    </linearGradient>
+    <linearGradient id="sl-bar2" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%"   stop-color="#c977ff"/>
+      <stop offset="100%" stop-color="#9a5fff"/>
+    </linearGradient>
+    <linearGradient id="sl-bar3" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%"   stop-color="#8a98ff"/>
+      <stop offset="100%" stop-color="#5865F2"/>
+    </linearGradient>
+    <linearGradient id="sl-bar4" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%"   stop-color="#5865F2"/>
+      <stop offset="100%" stop-color="#3640c4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Faint baseline floor — the "ground" the bars stand on. -->
+  <line x1="385" y1="624" x2="495" y2="624"
+        stroke="#5865F2" stroke-opacity="0.30" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Bar 1 — shortest, hot magenta. "The bloat / starting state." -->
+  <rect x="395" y="552" width="16" height="68" rx="4" fill="url(#sl-bar1)"/>
+
+  <!-- Bar 2 — short-mid, transitional violet. -->
+  <rect x="421" y="510" width="16" height="110" rx="4" fill="url(#sl-bar2)"/>
+
+  <!-- Bar 3 — tall, blurple-light. -->
+  <rect x="447" y="466" width="16" height="154" rx="4" fill="url(#sl-bar3)"/>
+
+  <!-- Bar 4 — tallest, deep Discord blurple. "Max signal achieved." -->
+  <rect x="473" y="416" width="16" height="204" rx="4" fill="url(#sl-bar4)"/>
+
+  <!-- Plasma cap on the tallest bar — magenta dot with a halo glow.
+       Rhymes with the slice seam above; says "peak signal, hot." -->
   <g filter="url(#sl-glow)">
-    <rect x="416" y="450" width="60" height="12" rx="3" fill="url(#sl-maxxer)"/>
+    <circle cx="481" cy="414" r="11" fill="url(#sl-seam)"/>
   </g>
-  <rect x="416" y="450" width="60" height="12" rx="3" fill="url(#sl-maxxer)"/>
+  <circle cx="481" cy="414" r="6" fill="#ffe0ff"/>
 </svg>
