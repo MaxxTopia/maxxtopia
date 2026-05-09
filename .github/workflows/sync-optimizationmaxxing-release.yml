@@ -23,6 +23,7 @@ on:
 
 permissions:
     contents: write
+    actions: write
 
 jobs:
     sync:
@@ -63,13 +64,27 @@ jobs:
                   '
 
             - name: Commit + push
+              id: commit
               run: |
                   git config user.name "github-actions[bot]"
                   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
                   git add src/data/optimizationmaxxing-release.json
                   if git diff --cached --quiet; then
                       echo "No changes — already at latest version."
+                      echo "changed=false" >> "$GITHUB_OUTPUT"
                   else
                       git commit -m "sync: optimizationmaxxing ${{ steps.payload.outputs.version }}"
                       git push
+                      echo "changed=true" >> "$GITHUB_OUTPUT"
                   fi
+
+            # GitHub Actions does NOT trigger workflows from a GITHUB_TOKEN
+            # push (security measure to prevent loops). So our git push
+            # above won't fire deploy.yml on its own — we have to fire
+            # the workflow explicitly. `gh workflow run` uses the
+            # ambient GITHUB_TOKEN with `actions: write` permission.
+            - name: Trigger deploy.yml
+              if: steps.commit.outputs.changed == 'true'
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: gh workflow run deploy.yml --ref main
