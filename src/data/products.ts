@@ -46,6 +46,12 @@ export type Product = {
   accentHex: string;
   /** Hero shot images under /screenshots/<slug>/. */
   screenshots?: string[];
+  /** Optional demo video that replaces the static hero shot. */
+  demoVideo?: {
+    src: string;       // 1080p mp4
+    src720?: string;   // smaller mp4 served on mobile
+    poster: string;    // still frame shown while loading + fallback
+  };
   /** External live build URL — for beta products that have a working site outside maxxtopia. */
   deployedUrl?: string;
 };
@@ -104,6 +110,11 @@ export const products: Product[] = [
     logo: '/logos/optimizationmaxxing.svg',
     accentHex: '#e25bff',
     screenshots: ['/screenshots/optimizationmaxxing/og.png'],
+    demoVideo: {
+      src: '/screenshots/optimizationmaxxing/demo.mp4',
+      src720: '/screenshots/optimizationmaxxing/demo-720.mp4',
+      poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+    },
     heroStat: { value: '87', label: 'tweaks · zero placebos' },
   },
   {
@@ -144,7 +155,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Download for Windows', href: dmRelease.installerUrl, external: true },
     secondaryCta: { label: 'Release notes', href: dmRelease.releasePageUrl, external: true },
     glyph: '◆',
-    logo: '/logos/discordmaxxer.svg',
+    logo: '/logos/discordmaxxer.png',
     accentHex: '#5865F2',
     screenshots: ['/screenshots/discordmaxxer/hub-panel.png'],
     heroStat: { value: '−753 MB', label: 'vs stock Discord' },
@@ -290,25 +301,15 @@ export const products: Product[] = [
     heroStat: { value: 'TBD', label: 'direction in flux' },
   },
   {
-    slug: 'editmaxxing',
-    name: 'Editmaxxing',
-    category: 'Fortnite',
+    slug: 'extentionmaxxing',
+    name: 'Extentionmaxxing',
+    category: 'Extensions',
     status: 'soon',
     version: emRelease.version ?? undefined,
-    tagline: 'On research hold.',
-    description: 'In development.',
-    longDescription:
-      "On hold. The hover-to-select build-edit feature looks like it needs a microcontroller layer to land cleanly inside Epic's tolerated lane. We don't ship hardware yet. We'd rather hold the slot than ship a half-feature.",
-    features: [
-      {
-        title: 'In feasibility research.',
-        body: 'We don\'t ship hardware yet. The clean software-only path here isn\'t obvious. Holding for now.',
-      },
-      {
-        title: 'Slot reserved.',
-        body: 'Better to leave the slot than fill it with a worse version. If the research lands, this turns on.',
-      },
-    ],
+    tagline: '',
+    description: '',
+    longDescription: '',
+    features: [],
     primaryCta: emRelease.installerUrl
         ? { label: 'Download for Windows', href: emRelease.installerUrl, external: true }
         : { label: 'Notify me if it ships', href: WAITLIST_URL, external: true },
