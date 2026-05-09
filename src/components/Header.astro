@@ -7,26 +7,47 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
 <style>
   /* Header discordmaxxer entry — subtle blurple ring on hover, scale,
      plus a magenta plasma halo to echo the Slice logo aesthetic. */
+  /* Wordmark pill — secondary nav presence, doesn't compete with the
+     primary CTA next to it. Subtle border + dim text, brightens on hover.
+     Mark on the left, "Discordmaxxer" wordmark in Geist Mono. */
   .header-dm-btn {
     position: relative;
-    border: 1px solid rgba(88, 101, 242, 0.45);
-    background: linear-gradient(135deg, #e25bff 0%, #4c51f7 100%);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 40px;
+    padding: 0 14px 0 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+    color: var(--color-text-dim, #a8acb8);
+    font-family: var(--font-mono, ui-monospace), monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
     transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 220ms ease, box-shadow 220ms ease,
-                filter 220ms ease;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset,
-                0 0 12px rgba(88, 101, 242, 0.18);
+                border-color 220ms ease, color 220ms ease,
+                background 220ms ease, box-shadow 220ms ease;
   }
   .header-dm-btn:hover {
-    transform: scale(1.06);
-    border-color: rgba(255, 93, 255, 0.65);
-    filter: brightness(1.08);
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-      0 0 18px rgba(88, 101, 242, 0.55),
-      0 0 32px rgba(226, 91, 255, 0.45);
+    transform: translateY(-1px);
+    color: #fff;
+    border-color: rgba(226, 91, 255, 0.35);
+    background: rgba(226, 91, 255, 0.05);
+    box-shadow: 0 0 18px rgba(226, 91, 255, 0.18);
   }
-  .header-dm-btn img {
+  .header-dm-btn .dm-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e25bff 0%, #4c51f7 100%);
+    flex-shrink: 0;
+  }
+  .header-dm-btn .dm-mark img {
     width: 60%;
     height: 60%;
     object-fit: contain;
@@ -56,11 +77,12 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     <div class="flex items-center gap-2.5">
       <a
         href="/discordmaxxer"
-        class="header-dm-btn hidden sm:inline-flex items-center justify-center w-10 h-10 rounded-full overflow-hidden"
+        class="header-dm-btn hidden sm:inline-flex"
         aria-label="Discordmaxxer — Discord, optimized."
         title="Discordmaxxer"
       >
-        <img src="/logos/discordmaxxer-icon.png" alt="" width="40" height="40" />
+        <span class="dm-mark"><img src="/logos/discordmaxxer-icon.png" alt="" width="24" height="24" /></span>
+        <span>Discordmaxxer</span>
       </a>
       <a href="/optimizationmaxxing" class="btn-primary !h-10 !px-4 !text-[13.5px]">
         Get the tuner
