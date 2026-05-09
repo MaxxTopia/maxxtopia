@@ -10,22 +10,25 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
   .header-dm-btn {
     position: relative;
     border: 1px solid rgba(88, 101, 242, 0.45);
+    background: linear-gradient(135deg, #e25bff 0%, #4c51f7 100%);
     transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 220ms ease, box-shadow 220ms ease;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+                border-color 220ms ease, box-shadow 220ms ease,
+                filter 220ms ease;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset,
                 0 0 12px rgba(88, 101, 242, 0.18);
   }
   .header-dm-btn:hover {
     transform: scale(1.06);
     border-color: rgba(255, 93, 255, 0.65);
+    filter: brightness(1.08);
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.06) inset,
-      0 0 18px rgba(88, 101, 242, 0.45),
-      0 0 32px rgba(226, 91, 255, 0.35);
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      0 0 18px rgba(88, 101, 242, 0.55),
+      0 0 32px rgba(226, 91, 255, 0.45);
   }
   .header-dm-btn img {
-    width: 100%;
-    height: 100%;
+    width: 60%;
+    height: 60%;
     object-fit: contain;
     pointer-events: none;
   }
@@ -57,7 +60,7 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
         aria-label="Discordmaxxer — Discord, optimized."
         title="Discordmaxxer"
       >
-        <img src="/logos/discordmaxxer.svg" alt="" width="40" height="40" />
+        <img src="/logos/discordmaxxer-icon.png" alt="" width="40" height="40" />
       </a>
       <a href="/optimizationmaxxing" class="btn-primary !h-10 !px-4 !text-[13.5px]">
         Get the tuner
