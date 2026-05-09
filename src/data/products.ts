@@ -301,8 +301,8 @@ export const products: Product[] = [
     heroStat: { value: 'TBD', label: 'direction in flux' },
   },
   {
-    slug: 'extentionmaxxing',
-    name: 'Extentionmaxxing',
+    slug: 'extensionmaxxing',
+    name: 'Extensionmaxxing',
     category: 'Extensions',
     status: 'soon',
     version: emRelease.version ?? undefined,
