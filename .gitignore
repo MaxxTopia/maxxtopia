@@ -3,7 +3,15 @@ dist
 .astro
 .env
 .env.local
+*.local.env
 .DS_Store
 *.log
 .vscode
 .idea
+
+# Local-only demo / scratch artifacts (videos, frames, build scripts)
+_demo_work/
+*.mp4
+*.mov
+public/screenshots/**/demo*.mp4
+public/screenshots/**/demo*.jpg

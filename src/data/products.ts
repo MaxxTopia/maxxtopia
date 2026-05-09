@@ -105,7 +105,7 @@ export const products: Product[] = [
         : { label: 'Get it. Free.', href: '#download' },
     secondaryCta: omRelease.releasePageUrl
         ? { label: 'Release notes', href: omRelease.releasePageUrl, external: true }
-        : { label: "What's new", href: '/changelog' },
+        : { label: "What's new", href: '/updates' },
     glyph: '⚡',
     logo: '/logos/optimizationmaxxing.svg',
     accentHex: '#e25bff',

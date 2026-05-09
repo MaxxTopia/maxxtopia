@@ -5,53 +5,70 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
 ---
 
 <style>
-  /* Header discordmaxxer entry — subtle blurple ring on hover, scale,
-     plus a magenta plasma halo to echo the Slice logo aesthetic. */
-  /* Wordmark pill — secondary nav presence, doesn't compete with the
-     primary CTA next to it. Subtle border + dim text, brightens on hover.
-     Mark on the left, "Discordmaxxer" wordmark in Geist Mono. */
-  .header-dm-btn {
+  /* Per-product icon button — small circular brand shortcut. Energy
+     matches `.btn-primary` (the "Get the tuner" CTA): magenta-to-blurple
+     gradient base, glow shadow, scale-on-hover. As more products ship,
+     each gets its own icon in this row. */
+  .header-product-btn {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    justify-content: center;
+    width: 40px;
     height: 40px;
-    padding: 0 14px 0 8px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.025);
-    color: var(--color-text-dim, #a8acb8);
-    font-family: var(--font-mono, ui-monospace), monospace;
-    font-size: 12.5px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    text-decoration: none;
+    border-radius: 50%;
+    overflow: hidden;
     transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 220ms ease, color 220ms ease,
-                background 220ms ease, box-shadow 220ms ease;
+                box-shadow 220ms ease, filter 220ms ease;
+    will-change: transform;
+  }
+  .header-product-btn:hover {
+    transform: translateY(-1px) scale(1.05);
+    filter: brightness(1.1);
+  }
+  .header-product-btn img,
+  .header-product-btn svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  /* Discordmaxxer — magenta+blurple gradient base, glowing magenta halo. */
+  .header-dm-btn {
+    background: linear-gradient(135deg, #e25bff 0%, #4c51f7 100%);
+    box-shadow:
+      0 0 0 1px rgba(226, 91, 255, 0.4),
+      0 8px 24px rgba(226, 91, 255, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   .header-dm-btn:hover {
-    transform: translateY(-1px);
-    color: #fff;
-    border-color: rgba(226, 91, 255, 0.35);
-    background: rgba(226, 91, 255, 0.05);
-    box-shadow: 0 0 18px rgba(226, 91, 255, 0.18);
+    box-shadow:
+      0 0 0 1px rgba(226, 91, 255, 0.6),
+      0 12px 36px rgba(226, 91, 255, 0.45),
+      0 0 50px rgba(0, 212, 255, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
-  .header-dm-btn .dm-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #e25bff 0%, #4c51f7 100%);
-    flex-shrink: 0;
+
+  /* Optimizationmaxxing — sits AFTER "Get the tuner →" so the arrow
+     visually points at it. Uses the existing OM SVG which has its own
+     dark base + bolt gradient, so we just add a glow ring on hover. */
+  .header-om-btn {
+    background: transparent;
+    box-shadow:
+      0 0 0 1px rgba(192, 132, 252, 0.25),
+      0 8px 24px rgba(192, 132, 252, 0.15);
   }
-  .header-dm-btn .dm-mark img {
-    width: 60%;
-    height: 60%;
-    object-fit: contain;
-    pointer-events: none;
+  .header-om-btn:hover {
+    box-shadow:
+      0 0 0 1px rgba(192, 132, 252, 0.55),
+      0 12px 36px rgba(192, 132, 252, 0.4),
+      0 0 50px rgba(0, 212, 255, 0.18);
+  }
+
+  /* CTA button — neutral the bottom margin so the OM icon sits flush. */
+  .header-cta {
+    margin-right: 2px;
   }
 </style>
 
@@ -61,34 +78,41 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       <Logo />
       <nav class="hidden md:flex items-center gap-6 text-[13.5px] text-[var(--color-muted)]">
         <a
-          href="/#suite"
+          href="/#apps"
           class={`relative transition-colors hover:text-[var(--color-text)] ${path === '/' ? 'text-[var(--color-text)]' : ''}`}
-        >Suite</a>
+        >Apps</a>
         <a
-          href="/manifesto"
-          class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/manifesto') ? 'text-[var(--color-text)]' : ''}`}
-        >Manifesto</a>
+          href="/why"
+          class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/why') ? 'text-[var(--color-text)]' : ''}`}
+        >Why</a>
         <a
-          href="/changelog"
-          class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/changelog') ? 'text-[var(--color-text)]' : ''}`}
-        >Changelog</a>
+          href="/updates"
+          class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/updates') ? 'text-[var(--color-text)]' : ''}`}
+        >Updates</a>
       </nav>
     </div>
     <div class="flex items-center gap-2.5">
       <a
         href="/discordmaxxer"
-        class="header-dm-btn hidden sm:inline-flex"
+        class="header-product-btn header-dm-btn hidden sm:inline-flex"
         aria-label="Discordmaxxer — Discord, optimized."
         title="Discordmaxxer"
       >
-        <span class="dm-mark"><img src="/logos/discordmaxxer-icon.png" alt="" width="24" height="24" /></span>
-        <span>Discordmaxxer</span>
+        <img src="/logos/discordmaxxer.png" alt="" width="40" height="40" />
       </a>
-      <a href="/optimizationmaxxing" class="btn-primary !h-10 !px-4 !text-[13.5px]">
+      <a href="/optimizationmaxxing" class="btn-primary header-cta !h-10 !px-4 !text-[13.5px]">
         Get the tuner
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h14M13 5l7 7-7 7"/>
         </svg>
+      </a>
+      <a
+        href="/optimizationmaxxing"
+        class="header-product-btn header-om-btn hidden sm:inline-flex"
+        aria-label="Optimizationmaxxing — 87 sourced Windows tweaks."
+        title="Optimizationmaxxing"
+      >
+        <img src="/logos/optimizationmaxxing.svg" alt="" width="40" height="40" />
       </a>
     </div>
   </div>

@@ -13,7 +13,7 @@ export const changelog: ChangelogEntry[] = [
     product: 'Maxxtopia',
     version: 'v0.1.0',
     title: 'The shell is live.',
-    body: 'maxxtopia.com goes online — hub for the maxxer suite. Cross-product sidebar, finite-rotate hero with sound, status-tape coming-soon treatment, per-product logos for opt + discord.',
+    body: 'maxxtopia.com goes online — hub for the maxxer apps. Cross-product sidebar, finite-rotate hero with sound, status-tape coming-soon treatment, per-product logos for opt + discord.',
   },
   {
     date: '2026-05-07',
