@@ -1,0 +1,49 @@
+name: Deploy to Cloudflare Pages
+
+# Auto-deploys maxxtopia.com on every push to main + every workflow_dispatch.
+# Pairs with the per-product sync-*-release.yml workflows: when a sibling
+# product cuts a release, it fires a repository_dispatch → that sync
+# workflow rewrites the matching `src/data/<slug>-release.json` + commits
+# to main → THIS workflow picks up the push and ships the new build to
+# Cloudflare Pages.
+#
+# Required GitHub repo secrets (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN — token with `Account → Cloudflare Pages → Edit`
+#                          permission. Create at:
+#                          https://dash.cloudflare.com/profile/api-tokens
+#                          → Create Token → "Edit Cloudflare Workers" template
+#                          (it covers Pages too) OR custom token.
+#   CLOUDFLARE_ACCOUNT_ID — see https://dash.cloudflare.com/?to=/:account/
+#                           workers-and-pages — copy the Account ID from the
+#                           right sidebar.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=maxxtopia --branch=main
