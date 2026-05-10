@@ -1,42 +1,47 @@
 ---
+type DemoVariant = {
+  /** 1080p mp4 (highest quality). */
+  src: string;
+  /** Optional 720p mp4 served first to mobile / slow connections via media query. */
+  src720?: string;
+  /** Poster frame shown until the video starts playing. */
+  poster: string;
+};
 type Props = {
   src: string;
   alt: string;
   /** Multiple screenshots → grid layout. */
   extras?: string[];
-  /** Optional demo video. When set, replaces the static screenshot with an
-   *  autoplay-muted-loop video. The poster is shown while loading and as a
-   *  fallback for users with `prefers-reduced-motion: reduce`. */
-  video?: {
-    /** 1080p mp4 (highest quality). */
-    src: string;
-    /** Optional 720p mp4 served first to mobile / slow connections via media query. */
-    src720?: string;
-    /** Poster frame shown until the video starts playing. */
-    poster: string;
-  };
+  /** Optional demo video. Single object renders that video.
+   *  Array enables per-visit random variant selection (one is picked
+   *  client-side on each page load and swapped into the <video> element). */
+  video?: DemoVariant | DemoVariant[];
 };
 const { src, alt, extras = [], video } = Astro.props;
 const all = [src, ...extras];
-const isGrid = all.length > 1 && !video;
+const variants: DemoVariant[] = video ? (Array.isArray(video) ? video : [video]) : [];
+const initialVideo: DemoVariant | undefined = variants[0];
+const variantsJson = variants.length > 1 ? JSON.stringify(variants) : '';
+const isGrid = all.length > 1 && !initialVideo;
 ---
 
 <figure class={`product-screenshot ${isGrid ? 'product-screenshot--grid' : ''}`}>
   <div class="product-screenshot__frame">
-    {video ? (
+    {initialVideo ? (
       <video
         class="product-screenshot__img product-screenshot__video"
-        poster={video.poster}
+        poster={initialVideo.poster}
         autoplay
         muted
         loop
         playsinline
         preload="metadata"
         aria-label={alt}
+        data-variants={variantsJson}
       >
-        {video.src720 && <source src={video.src720} type="video/mp4" media="(max-width: 768px)" />}
-        <source src={video.src} type="video/mp4" />
-        <img src={video.poster} alt={alt} class="product-screenshot__img" />
+        {initialVideo.src720 && <source src={initialVideo.src720} type="video/mp4" media="(max-width: 768px)" />}
+        <source src={initialVideo.src} type="video/mp4" />
+        <img src={initialVideo.poster} alt={alt} class="product-screenshot__img" />
       </video>
     ) : !isGrid ? (
       <img
@@ -60,7 +65,7 @@ const isGrid = all.length > 1 && !video;
       </div>
     )}
     <div class="product-screenshot__shimmer" aria-hidden="true"></div>
-    {video && (
+    {initialVideo && (
       <div class="product-screenshot__sound-wrap">
         <input
           type="range"
@@ -89,8 +94,47 @@ const isGrid = all.length > 1 && !video;
   </div>
 </figure>
 
-{video && (
+{initialVideo && (
   <script>
+    // Per-visit random variant selection: if the video has data-variants
+    // populated (multi-edit demoVideo), pick one at random and swap
+    // sources before the IntersectionObserver / sound-toggle logic binds.
+    document.querySelectorAll<HTMLVideoElement>('.product-screenshot__video[data-variants]').forEach((v) => {
+      const raw = v.dataset.variants;
+      if (!raw) return;
+      try {
+        const variants = JSON.parse(raw) as Array<{src: string; src720?: string; poster: string}>;
+        if (!Array.isArray(variants) || variants.length <= 1) return;
+        const pick = variants[Math.floor(Math.random() * variants.length)];
+        // Strip existing <source> + <img> children (img is inside video as fallback).
+        const kids = Array.from(v.children);
+        for (const k of kids) {
+          if (k.tagName === 'SOURCE' || k.tagName === 'IMG') v.removeChild(k);
+        }
+        v.poster = pick.poster;
+        if (pick.src720) {
+          const s720 = document.createElement('source');
+          s720.src = pick.src720;
+          s720.type = 'video/mp4';
+          s720.media = '(max-width: 768px)';
+          v.appendChild(s720);
+        }
+        const s1080 = document.createElement('source');
+        s1080.src = pick.src;
+        s1080.type = 'video/mp4';
+        v.appendChild(s1080);
+        const fallback = document.createElement('img');
+        fallback.src = pick.poster;
+        fallback.alt = v.getAttribute('aria-label') || '';
+        fallback.className = 'product-screenshot__img';
+        v.appendChild(fallback);
+        v.load();
+        v.play().catch(() => {});
+      } catch (_e) {
+        // Bad JSON — leave server-rendered first variant in place.
+      }
+    });
+
     // Pause demo video when scrolled offscreen (saves CPU + battery).
     // Also honor prefers-reduced-motion: reduce by pausing entirely + showing poster.
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

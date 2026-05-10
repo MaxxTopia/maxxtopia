@@ -22,3 +22,5 @@ public/screenshots/**/demo*.jpg
 !public/screenshots/**/demo-tiktok.mp4
 !public/screenshots/**/demo-poster.jpg
 !public/screenshots/**/demo-tiktok-poster.jpg
+!public/screenshots/**/demo-cut*.mp4
+!public/screenshots/**/demo-cut*.jpg

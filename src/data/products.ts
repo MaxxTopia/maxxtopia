@@ -23,6 +23,12 @@ const WAITLIST_URL =
 
 export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon' | 'dev';
 
+export type DemoVariant = {
+  src: string;       // 1080p mp4
+  src720?: string;   // smaller mp4 served on mobile
+  poster: string;    // still frame shown while loading + fallback
+};
+
 export type Product = {
   slug: string;
   name: string;
@@ -46,12 +52,10 @@ export type Product = {
   accentHex: string;
   /** Hero shot images under /screenshots/<slug>/. */
   screenshots?: string[];
-  /** Optional demo video that replaces the static hero shot. */
-  demoVideo?: {
-    src: string;       // 1080p mp4
-    src720?: string;   // smaller mp4 served on mobile
-    poster: string;    // still frame shown while loading + fallback
-  };
+  /** Optional demo video that replaces the static hero shot.
+   *  If an array is provided, a random variant is picked client-side
+   *  on each page load (rotates through edits). */
+  demoVideo?: DemoVariant | DemoVariant[];
   /** External live build URL — for beta products that have a working site outside maxxtopia. */
   deployedUrl?: string;
 };
@@ -110,11 +114,23 @@ export const products: Product[] = [
     logo: '/logos/optimizationmaxxing.svg',
     accentHex: '#e25bff',
     screenshots: ['/screenshots/optimizationmaxxing/og.png'],
-    demoVideo: {
-      src: '/screenshots/optimizationmaxxing/demo.mp4',
-      src720: '/screenshots/optimizationmaxxing/demo-720.mp4',
-      poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
-    },
+    demoVideo: [
+      {
+        src: '/screenshots/optimizationmaxxing/demo.mp4',
+        src720: '/screenshots/optimizationmaxxing/demo-720.mp4',
+        poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+      },
+      {
+        src: '/screenshots/optimizationmaxxing/demo-cut2.mp4',
+        src720: '/screenshots/optimizationmaxxing/demo-cut2-720.mp4',
+        poster: '/screenshots/optimizationmaxxing/demo-cut2-poster.jpg',
+      },
+      {
+        src: '/screenshots/optimizationmaxxing/demo-cut3.mp4',
+        src720: '/screenshots/optimizationmaxxing/demo-cut3-720.mp4',
+        poster: '/screenshots/optimizationmaxxing/demo-cut3-poster.jpg',
+      },
+    ],
     heroStat: { value: '87', label: 'tweaks · zero placebos' },
   },
   {

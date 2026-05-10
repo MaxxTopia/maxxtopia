@@ -200,7 +200,7 @@ const softwareSchema = {
       <!-- Apple-style hero shot (or demo video) for live + beta products -->
       {(screenshotMain || product.demoVideo) && (
         <ProductScreenshot
-          src={screenshotMain ?? product.demoVideo!.poster}
+          src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
           alt={`${product.name} demo`}
           extras={product.demoVideo ? [] : screenshotExtras}
           video={product.demoVideo}

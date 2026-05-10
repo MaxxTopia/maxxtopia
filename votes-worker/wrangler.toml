@@ -1,0 +1,34 @@
+name = "discordmaxxer-votes"
+main = "worker.js"
+compatibility_date = "2026-05-10"
+compatibility_flags = ["nodejs_compat"]
+
+# Plugin-votes worker — backs the DiscordmaxxerVotes panel inside the
+# discordmaxxer Electron client. MAXXER++ subscribers POST a vote
+# anchored to their HWID; results aggregate into a public /tally
+# endpoint the panel polls on mount + on submit.
+#
+# HWID dedup: one vote per HWID per feature_id. Re-voting same HWID +
+# feature_id is idempotent (returns alreadyVoted: true). Different HWIDs
+# count separately even if the same human owns them — that's fine for an
+# MVP-style poll.
+
+[vars]
+# Static guardrails. Voting is gated MAXXER++ on the CLIENT side via the
+# in-app roster check; this worker doesn't independently re-verify tier
+# (would require ferrying claim signatures every request, overkill for
+# polls). The MAX_FEATURE_LEN + MAX_HWID_LEN bounds are belt-and-
+# suspenders against gibberish payloads.
+MAX_FEATURE_LEN = "64"
+MAX_HWID_LEN = "128"
+
+# KV namespace for vote counts + per-HWID dedup. Two key shapes:
+#   count:<feature_id>           — integer count (string-encoded)
+#   voted:<hwid>:<feature_id>    — "1" if this HWID has voted
+#
+# Create with:
+#   wrangler kv namespace create "VOTES"
+# then paste the returned id below.
+[[kv_namespaces]]
+binding = "VOTES"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
