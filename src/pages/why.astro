@@ -1,11 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
+import { liveProducts, products } from '../data/products';
 
+const liveCount = liveProducts.length;
+const totalCount = products.length;
+
+// Category villains, not named competitors. Stock Discord stays — it's the
+// platform we improve, not a rival product.
 const villains = [
-  { name: 'Hone',           stat: '200 MB',  body: 'Electron app for a settings panel.' },
-  { name: 'Paragon',        stat: '81 MB',   body: 'Heavier than the OS feature it tunes.' },
-  { name: 'Stock Discord',  stat: '1,041 MB', body: '14 outbound connections on launch.' },
+  { name: 'PC tuners',       stat: '200 MB',  body: 'Electron settings panel.' },
+  { name: 'Driver utilities', stat: '81 MB',   body: 'Heavier than what they tune.' },
+  { name: 'Stock Discord',    stat: '1,041 MB', body: '14 outbound calls on launch.' },
+];
+
+// Receipts. Real numbers we can defend.
+const receipts = [
+  { stat: '87',         label: 'Tweaks shipped', body: 'Each cited. Each reversible.' },
+  { stat: '−753 MB',    label: 'Discord RAM cut', body: 'Native rewrite. Shipping now.' },
+  { stat: `${liveCount}/${totalCount}`, label: 'Apps live',       body: 'The rest are cooking.' },
+  { stat: '0',          label: 'Trackers',        body: 'Forever.' },
 ];
 
 const principles = [
@@ -19,27 +33,27 @@ const principles = [
 ---
 
 <Layout
-  title="Why — Built like the tools we wished existed"
-  description="Why Maxxtopia exists. Six principles. One refusal. Built for the players who count their frame times."
+  title="Why — Built to actually work"
+  description="Most gaming software is Chromium pretending to be an app. Ours isn't. Receipts, principles, and a refusal."
 >
   <article class="relative">
     <Aurora intensity="low" />
     <div class="absolute inset-0 bg-grid opacity-30"></div>
 
-    <!-- Hero — one declaration, one subhead, no prose. -->
+    <!-- Hero — declaration first. No prose. -->
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-24 pb-20">
       <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono reveal reveal-1">
         Why · v0.1
       </p>
       <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[80px] font-semibold tracking-[-0.035em] leading-[0.95] gradient-text">
-        Built like the tools <span class="serif-accent gradient-suite">we wished existed.</span>
+        Built to <span class="serif-accent gradient-suite">actually work.</span>
       </h1>
       <p class="reveal reveal-3 mt-7 text-[20px] sm:text-[24px] leading-[1.35] text-[var(--color-text-mid)] max-w-xl">
-        Six years of gaming software has been a contest in who can ship Chromium pretending to be an app. We're done.
+        Most gaming software is Chromium pretending to be an app. Ours isn't.
       </p>
     </div>
 
-    <!-- The villains — three stat cards, no prose. -->
+    <!-- The status quo — three category villains, no name-drops. -->
     <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
       <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-6">
         ◇ The status quo
@@ -61,17 +75,39 @@ const principles = [
       </div>
     </section>
 
-    <!-- The refusal — single line, full bleed type. -->
+    <!-- The refusal — single line, full bleed. -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 py-16">
       <h2 class="reveal-on-scroll text-[40px] sm:text-[60px] font-semibold tracking-[-0.03em] leading-[1] text-[var(--color-text)]">
-        Maxxtopia is a <span class="serif-accent gradient-suite">refusal.</span>
+        We don't ship that. <span class="serif-accent gradient-suite">Period.</span>
       </h2>
     </section>
 
-    <!-- Principles — one-line headers + one-line bodies, no prose. -->
+    <!-- Receipts — four real numbers we can defend. -->
+    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
+      <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono mb-6">
+        ✦ Receipts
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
+        {receipts.map((r, i) => (
+          <div class={`reveal-on-scroll reveal-delay-${(i % 4) + 1} bg-[var(--color-bg-card)] p-6 sm:p-7`}>
+            <p class="text-[11px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
+              {r.label}
+            </p>
+            <p class="font-display mt-2 text-[44px] sm:text-[60px] gradient-suite leading-none">
+              {r.stat}
+            </p>
+            <p class="mt-3 text-[13px] leading-[1.5] text-[var(--color-text-mid)]">
+              {r.body}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Principles — six rules, one-line each. -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-20">
-      <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono mb-8">
-        ✦ Six principles
+      <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-8">
+        ✶ Six rules
       </p>
       <div class="space-y-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
         {principles.map((p, i) => (
@@ -94,27 +130,27 @@ const principles = [
 
     <!-- The apps — one-liners stacked. -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 py-16">
-      <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-6">
-        ✶ The apps
+      <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono mb-6">
+        ✶ The suite
       </p>
       <ul class="space-y-3 text-[18px] sm:text-[22px] font-medium tracking-[-0.01em] text-[var(--color-text-mid)]">
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Optimizationmaxxing.</span> Tunes the PC.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Discordmaxxer.</span> Cuts the comms client to a chat client.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Clipmaxxer.</span> Matches your VOD to today's TikTok.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Dropmaxxer.</span> Picks your spots.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Aimmaxxer.</span> Drills your gap.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Viewmaxxing.</span> Watches the audience graph.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Editmaxxing.</span> One mechanic, scoped tight.</li>
+        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Optimizationmaxxing.</span> Tunes the rig.</li>
+        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Discordmaxxer.</span> −753 MB. Same Discord.</li>
+        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Clipmaxxer.</span> Stream tonight. Posted by morning.</li>
+        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Dropmaxxer.</span> The drop, picked.</li>
+        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Aimmaxxer.</span> Drill the gap.</li>
+        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Viewmaxxing.</span> The audience graph, watched.</li>
+        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Editmaxxing.</span> One mechanic. Tight.</li>
       </ul>
     </section>
 
-    <!-- Closing — one slogan, one CTA. -->
+    <!-- Closing — slogan, CTA. -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-32">
       <h2 class="reveal-on-scroll text-[36px] sm:text-[52px] font-semibold tracking-[-0.025em] leading-[1.05]">
-        Different surfaces. <span class="serif-accent gradient-suite">Same standard.</span>
+        Different tools. <span class="serif-accent gradient-suite">Same standard.</span>
       </h2>
       <p class="reveal-on-scroll mt-6 text-[16px] text-[var(--color-text-mid)]">
-        Built by a single player for the players who count frame times.
+        Built by a player who counts ms. For everyone else who does too.
       </p>
       <p class="reveal-on-scroll mt-10">
         <span class="slogan">made by diggy</span>
