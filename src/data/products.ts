@@ -174,18 +174,11 @@ export const products: Product[] = [
     logo: '/logos/discordmaxxer.png',
     accentHex: '#5865F2',
     screenshots: ['/screenshots/discordmaxxer/hub-panel.png'],
-    demoVideo: [
-      {
-        src: '/screenshots/discordmaxxer/demo.mp4',
-        src720: '/screenshots/discordmaxxer/demo-720.mp4',
-        poster: '/screenshots/discordmaxxer/demo-poster.jpg',
-      },
-      {
-        src: '/screenshots/discordmaxxer/demo-cut3.mp4',
-        src720: '/screenshots/discordmaxxer/demo-cut3-720.mp4',
-        poster: '/screenshots/discordmaxxer/demo-cut3-poster.jpg',
-      },
-    ],
+    demoVideo: {
+      src: '/screenshots/discordmaxxer/demo.mp4',
+      src720: '/screenshots/discordmaxxer/demo-720.mp4',
+      poster: '/screenshots/discordmaxxer/demo-poster.jpg',
+    },
     heroStat: { value: '−753 MB', label: 'vs stock Discord' },
   },
   {
