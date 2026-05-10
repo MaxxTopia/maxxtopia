@@ -104,8 +104,11 @@ const STRUCTURE = [
     {
         category: '— purchase —',
         channels: [
-            { name: 'open-ticket',       type: 'text',         topic: 'Buy any paid tier here. Click the TicketTool button → private thread spawns → Diggy DMs back the activation code after payment. PayPal / BTC / Venmo / Cash App accepted.' },
+            { name: 'open-ticket',       type: 'text',         topic: 'Buy any paid tier here. Click the button → private thread spawns → Diggy DMs back the activation code after payment. PayPal / BTC / Venmo / Cash App accepted.' },
             { name: 'vip-claim-help',    type: 'text',         topic: 'Stuck redeeming a code? Code not activating? HWID conflict? Post here, Diggy reissues / debugs.' },
+            // Mod-only — closed-ticket transcripts get archived here by
+            // the maxxtopia-tickets Worker. Hidden from @everyone + @VIP.
+            { name: 'ticket-archive',    type: 'text',         topic: 'Closed-ticket transcripts. Mod-only by perm overwrite.', modOnly: true },
         ],
     },
     {
@@ -362,6 +365,11 @@ client.once('clientReady', async () => {
             }
         }
 
+        // Resolve mod role for any modOnly: true channels in this category.
+        // Currently @MAXXER++ doubles as the mod role; if that ever splits,
+        // change here.
+        const modRole = guild.roles.cache.find((r) => r.name === 'MAXXER++');
+
         for (const ch of cat.channels) {
             const existing = guild.channels.cache.find(
                 (c) => c.name === ch.name && c.parent?.id === categoryChannel?.id
@@ -369,6 +377,17 @@ client.once('clientReady', async () => {
             if (existing) {
                 console.log(`[skip] channel #${ch.name} already exists in category`);
                 createdChannels[ch.name] = existing;
+                // Reapply modOnly overwrites to existing channels in case the
+                // perms drifted (e.g. created without the flag originally).
+                if (ch.modOnly && modRole && !DRY) {
+                    try {
+                        await existing.permissionOverwrites.set([
+                            { id: guild.roles.everyone.id, deny: [PermissionsBitField.Flags.ViewChannel] },
+                            { id: modRole.id, allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ReadMessageHistory] },
+                        ], 'reapply mod-only lock');
+                        console.log(`[do]   reapplied mod-only lock on #${ch.name}`);
+                    } catch (e) { console.warn(`[warn] could not reapply mod-only lock on #${ch.name}: ${e.message}`); }
+                }
                 continue;
             }
             const typeMap = {
@@ -376,23 +395,31 @@ client.once('clientReady', async () => {
                 announcement: ChannelType.GuildAnnouncement,
                 forum:        ChannelType.GuildForum,
             };
-            plan(`create channel #${ch.name} (${ch.type}) in "${cat.category}"`);
+            plan(`create channel #${ch.name} (${ch.type}) in "${cat.category}"${ch.modOnly ? ' (MOD-ONLY — locked from @everyone + @VIP)' : ''}`);
             if (!DRY && categoryChannel) {
-                // Per-channel overwrite: just match the category's policy.
-                // Discord defaults to inheriting the parent category, so
-                // explicitly omitting overwrites (rather than passing the
-                // permissive everyone-view rule) means VIP-only categories
-                // properly hide their channels from @everyone.
+                // Permission strategy:
+                //   - vipOnly category: inherit (handled at category level)
+                //   - modOnly channel: deny @everyone, allow @MAXXER++ explicitly
+                //   - default: explicit @everyone view (matches public-server convention)
+                let permissionOverwrites;
+                if (ch.modOnly && modRole) {
+                    permissionOverwrites = [
+                        { id: guild.roles.everyone.id, deny: [PermissionsBitField.Flags.ViewChannel] },
+                        { id: modRole.id, allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ReadMessageHistory] },
+                    ];
+                } else if (cat.vipOnly) {
+                    permissionOverwrites = undefined; // inherit category
+                } else {
+                    permissionOverwrites = [
+                        { id: guild.roles.everyone.id, allow: [PermissionsBitField.Flags.ViewChannel] },
+                    ];
+                }
                 const newCh = await guild.channels.create({
                     name: ch.name,
                     type: typeMap[ch.type] ?? ChannelType.GuildText,
                     parent: categoryChannel.id,
                     topic: ch.topic,
-                    ...(cat.vipOnly ? {} : {
-                        permissionOverwrites: [
-                            { id: guild.roles.everyone.id, allow: [PermissionsBitField.Flags.ViewChannel] },
-                        ],
-                    }),
+                    ...(permissionOverwrites ? { permissionOverwrites } : {}),
                 });
                 createdChannels[ch.name] = newCh;
             }

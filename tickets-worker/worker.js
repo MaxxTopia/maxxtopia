@@ -90,6 +90,15 @@ export default {
           data: { flags: MSG_FLAG_EPHEMERAL },
         })
       }
+      // Mod-only "Grant VIP" button — encodes buyer_user_id in the
+      // custom_id so we know who to grant without prompting.
+      if (customId.startsWith('grant-vip:')) {
+        ctx.waitUntil(handleGrantVip(env, interaction, customId))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
     }
 
     // Anything else — not implemented in v1.
@@ -163,7 +172,9 @@ async function handleBuyTicket(env, interaction, customId) {
     await discordFetch(env, `/channels/${thread.id}/thread-members/${uid}`, { method: 'PUT' })
   }
 
-  // Post the welcome message inside the thread, with a Close button.
+  // Post the welcome message inside the thread, with a row of action
+  // buttons. Order: green Grant VIP (mod 1-click after payment lands)
+  // then red Close (final step after grant).
   const welcomeBody = buildWelcomeMessage(product, productLabel, userId, env.DIGGY_USER_ID)
   await discordFetch(env, `/channels/${thread.id}/messages`, {
     method: 'POST',
@@ -173,6 +184,13 @@ async function handleBuyTicket(env, interaction, customId) {
         {
           type: 1, // action row
           components: [
+            {
+              type: 2, // button
+              style: 3, // success / green
+              label: 'Grant VIP (mod-only)',
+              custom_id: `grant-vip:${userId}`,
+              emoji: { name: '💎' },
+            },
             {
               type: 2, // button
               style: 4, // danger / red
@@ -237,6 +255,65 @@ async function handleCloseTicket(env, interaction) {
 
   await editFollowup(appId, interactionToken, {
     content: '✓ Ticket closed + transcript archived.',
+    flags: MSG_FLAG_EPHEMERAL,
+  })
+}
+
+async function handleGrantVip(env, interaction, customId) {
+  const channelId = interaction.channel_id
+  const interactionToken = interaction.token
+  const appId = interaction.application_id
+  const clickerId = interaction.member?.user?.id ?? interaction.user?.id
+  const clickerRoles = interaction.member?.roles ?? []
+
+  // Authorization: clicker must be the SUPPORT_ROLE_ID holder (default
+  // @MAXXER++) OR Diggy himself. Anyone else clicking gets bounced.
+  const isMod = clickerRoles.includes(env.SUPPORT_ROLE_ID) || clickerId === env.DIGGY_USER_ID
+  if (!isMod) {
+    await editFollowup(appId, interactionToken, {
+      content: '⛔ Only mods can grant VIP. If you bought VIP, you should already have the role granted automatically — if not, ping <@' + env.DIGGY_USER_ID + '>.',
+    })
+    return
+  }
+
+  // Extract buyer id from custom_id ("grant-vip:<id>")
+  const buyerId = customId.split(':')[1] ?? ''
+  if (!/^\d+$/.test(buyerId)) {
+    await editFollowup(appId, interactionToken, {
+      content: '⚠ Could not extract buyer id from button. Re-spawn the ticket?',
+    })
+    return
+  }
+
+  // Grant @VIP role. Discord PUT is idempotent (no-op if already has it).
+  const grantResult = await discordFetch(
+    env,
+    `/guilds/${env.DISCORD_GUILD_ID}/members/${buyerId}/roles/${env.VIP_ROLE_ID}`,
+    {
+      method: 'PUT',
+      headers: { 'X-Audit-Log-Reason': `granted by mod ${clickerId} via tickets-worker` },
+    },
+  )
+
+  if (grantResult === null) {
+    await editFollowup(appId, interactionToken, {
+      content: '⚠ Discord rejected the role grant. Likely missing perms — bot needs MANAGE_ROLES + the @VIP role must sit BELOW @Maxx in the role list. Try again after fixing.',
+    })
+    return
+  }
+
+  // Visible confirmation in the thread (not ephemeral — we want the
+  // buyer to see it land).
+  await discordFetch(env, `/channels/${channelId}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({
+      content: `✓ <@${buyerId}> just got <@&${env.VIP_ROLE_ID}> — welcome to the lounge. <#1502870742826618880> + <#1502870743543971901> are now visible.`,
+      allowed_mentions: { users: [buyerId], roles: [] }, // ping the buyer, don't fan-mention @VIP
+    }),
+  })
+
+  await editFollowup(appId, interactionToken, {
+    content: '✓ Granted. Buyer now sees the VIP lounge.',
     flags: MSG_FLAG_EPHEMERAL,
   })
 }

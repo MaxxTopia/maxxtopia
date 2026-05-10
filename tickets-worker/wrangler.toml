@@ -15,9 +15,12 @@ OPEN_TICKET_CHANNEL_ID = "1502870740360368148"
 DIGGY_USER_ID = "426146621424664586"
 SUPPORT_ROLE_ID = "1502864513022558290"  # @MAXXER++
 DISCORD_PUBLIC_KEY = "5e02ffe270cee8d4599190288eb2c216066ba2f9048d31dcb4dc0849bebcb508"
-# Optional — leave unset to skip transcript archival. Set after creating
-# a private #ticket-archive channel.
-# TICKET_ARCHIVE_CHANNEL_ID = ""
+# Closed-ticket transcripts get archived here (mod-only channel created
+# 2026-05-10 by maxxtopia-server-setup.mjs).
+TICKET_ARCHIVE_CHANNEL_ID = "1502881819522236527"
+# Role granted by the "Grant VIP" button. Defaults to the @VIP role
+# created in v1; if we ever split per-product VIP roles, add that here.
+VIP_ROLE_ID = "1502870738313674954"
 
 # Per-user click rate-limit (1 ticket per 60s). Without this, click-spam
 # could DoS our Discord REST budget. KV is dirt-cheap for this.
