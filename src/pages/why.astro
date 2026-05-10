@@ -15,18 +15,18 @@ const villains = [
 
 // Real numbers we can defend.
 const receipts = [
-  { stat: '87',         label: 'Tweaks shipped', body: 'Tested. Reversible. Real.' },
+  { stat: '97',         label: 'Tweaks shipped',  body: 'Tested. Reversible. Real.' },
   { stat: '−753 MB',    label: 'Discord RAM cut', body: 'Native rewrite. Shipping now.' },
-  { stat: `${liveCount}/${totalCount}`, label: 'Apps live',       body: 'The rest are cooking.' },
-  { stat: '0',          label: 'Trackers',        body: 'Forever.' },
+  { stat: `${liveCount}/${totalCount}`, label: 'Apps live', body: 'The rest are cooking.' },
+  { stat: '0',          label: 'Trackers (default)', body: 'Off by default. Anonymous if you opt in.' },
 ];
 
 const rules = [
-  { t: 'Native or nothing.', b: '3.6 MB tuner. 288 MB Discord. Bundle size is a flex.' },
-  { t: 'Free. Forever.',     b: 'No upsells. No premium tier. No paywalled features.' },
-  { t: 'No telemetry.',      b: "Zero tracking. Zero 'help us improve'. Zero phone-home." },
-  { t: 'Open source.',       b: 'Read every line. Ship from main. No lockboxes.' },
-  { t: "Measure. Don't guess.", b: 'Live DPC. Latency probes. PCIe diagnostics. Numbers, not vibes.' },
+  { t: 'Native or nothing.',     b: '3.6 MB tuner. 288 MB Discord. Bundle size is a flex.' },
+  { t: 'No subscriptions.',      b: "Core tier is free. VIP unlock is one-time, lifetime. We don't rent you software." },
+  { t: "Nobody's watching.",     b: "Telemetry off by default. Anonymous if you opt in. No 'help us improve' nags." },
+  { t: 'Source on GitHub.',      b: 'Read every line. Discordmaxxer is GPL-3. Optmaxxing repo is public.' },
+  { t: "Measure. Don't guess.",  b: 'Live DPC. Latency probes. PCIe diagnostics. Numbers, not vibes.' },
 ];
 ---
 
