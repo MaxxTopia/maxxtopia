@@ -58,7 +58,13 @@ if (DRY) console.log('[setup] DRY RUN — no changes will be made. Pass --execut
 
 // ─── Plan ─────────────────────────────────────────────────────────────────
 const SERVER_NAME = 'Maxxtopia';
-const ICON_PATH = join(ROOT, '..', 'discordmaxxer', 'branding', 'discordmaxxer-mark-secondary.png');
+// Clavicular M — same mark as the website favicon (square stroke caps,
+// V-taper, deeper notch, plasma dot at apex, dark squircle backdrop).
+// Rendered at 512px from public/favicon.svg via render-maxxer-m-icon.mjs
+// counterpart logic. Picked over the discordmaxxer-mark because the
+// discordmaxxer mark is the *child* product mark — Maxxtopia is the
+// parent suite, so the suite-M (M for maxxer) is the right server icon.
+const ICON_PATH = join(ROOT, 'public', 'maxxtopia-clavicular-512.png');
 
 const ROLES = [
     { name: 'MAXXER',   color: 0x55ff55, hoist: true,  mentionable: false },
@@ -176,7 +182,8 @@ const SHOWCASE_POSTS = [
     },
 ];
 
-// Welcome message to post in #welcome.
+// Welcome message to post in #welcome. Copy mirrors the v0.6.0 VipCard
+// ladder — keep these in sync when the in-app card copy changes.
 const WELCOME_MESSAGE = [
     '**Welcome to Maxxtopia.**',
     '',
@@ -189,11 +196,14 @@ const WELCOME_MESSAGE = [
     '— **#general** — chat about anything.',
     '',
     '**Tier ladder (Hypixel-style):**',
-    '— **MAXXER** — supporter badge, theme sound packs, custom cursor skins.',
-    '— **MAXXER+** — video backgrounds, custom theme upload, priority support.',
-    '— **MAXXER++** — everything, beta features, founders\' channel access.',
+    '— **FREE** — all plugins · all themes · Tournament Mode · Hub panel · 1 active video bg',
+    '— **MAXXER** ($4/mo) — typing prefix · avatar ring · cursor skins · sound packs · 5 saved video bg slots',
+    '— **MAXXER+** ($9/mo) — video backgrounds · 3 exclusive themes · member list name glow · custom mention chime · popout banner',
+    '— **MAXXER++** ($17/mo) — animated badge · custom presence text · voice channel name color · beta builds · plugin votes · About credit',
     '',
-    'See https://maxxtopia.com/discordmaxxer to grab the desktop client and unlock the in-app tier system.',
+    '**Founder #N** — first 33 ever, never reissued · $67 one-time · numbered # badge + 1mo MAXXER++ free + 1-mo gift code for a friend + MAXXER++ at $12/mo for life.',
+    '',
+    'Grab the desktop client at https://maxxtopia.com/discordmaxxer to unlock the in-app tier system + redeem a code.',
 ].join('\n');
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -217,6 +227,34 @@ client.once('clientReady', async () => {
     }
 
     console.log(`[setup] Target guild: ${guild.name} (${guild.id}) — ${guild.memberCount} members\n`);
+
+    // Existing-state inventory — a punch list for Diggy to manually clean
+    // up after the new Maxxtopia structure lands. Script only creates,
+    // never deletes; destructive moves on a server with members belong to
+    // human eyes.
+    console.log('[inventory] Existing roles (excluding @everyone + integration roles):');
+    const existingRoles = guild.roles.cache
+        .filter(r => r.name !== '@everyone' && !r.managed)
+        .sort((a, b) => b.position - a.position);
+    for (const r of existingRoles.values()) {
+        const willCreate = ROLES.some(want => want.name === r.name);
+        console.log(`    ${willCreate ? '[keep]' : '[review]'} @${r.name}  (${r.members.size} members)  id=${r.id}`);
+    }
+    console.log();
+    console.log('[inventory] Existing channels (excluding ones we will reuse by name):');
+    const wantedChannelNames = new Set(STRUCTURE.flatMap(c => c.channels.map(ch => ch.name)));
+    const wantedCategoryNames = new Set(STRUCTURE.map(c => c.category));
+    for (const ch of guild.channels.cache.values()) {
+        if (ch.type === ChannelType.GuildCategory) {
+            const reuse = wantedCategoryNames.has(ch.name);
+            console.log(`    ${reuse ? '[reuse]' : '[review]'} category "${ch.name}"  id=${ch.id}`);
+            continue;
+        }
+        const reuse = wantedChannelNames.has(ch.name);
+        const typeLabel = ChannelType[ch.type] || `type${ch.type}`;
+        console.log(`    ${reuse ? '[reuse]' : '[review]'} #${ch.name}  (${typeLabel})  id=${ch.id}`);
+    }
+    console.log();
 
     // 1. Server rename
     if (guild.name !== SERVER_NAME) {
@@ -289,50 +327,55 @@ client.once('clientReady', async () => {
         }
     }
 
-    // 5. Welcome message in #welcome
+    // SuppressNotifications flag (4096) — Discord's "silent message" bit.
+    // Existing members don't get a ping or notification badge for any
+    // message we post. The message still appears in channel as normal.
+    const SUPPRESS_NOTIFICATIONS = 1 << 12;
+
+    // 5. Welcome message in #welcome (silent)
+    plan(`post welcome message in #welcome (silent — no member notifications)`);
     const welcomeCh = createdChannels.welcome;
-    if (welcomeCh && welcomeCh.type === ChannelType.GuildText) {
-        plan(`post welcome message in #welcome`);
-        if (!DRY) {
-            try { await welcomeCh.send({ content: WELCOME_MESSAGE }); } catch (e) { console.warn(`[warn] welcome post: ${e.message}`); }
-        }
+    if (!DRY && welcomeCh && welcomeCh.type === ChannelType.GuildText) {
+        try {
+            await welcomeCh.send({ content: WELCOME_MESSAGE, flags: SUPPRESS_NOTIFICATIONS });
+        } catch (e) { console.warn(`[warn] welcome post: ${e.message}`); }
     }
 
-    // 6. Forum-OPs in #showcase
+    // 6. Forum-OPs in #showcase (silent)
     const showcaseCh = createdChannels.showcase;
-    if (showcaseCh && showcaseCh.type === ChannelType.GuildForum) {
-        for (const post of SHOWCASE_POSTS) {
-            plan(`create showcase thread "${post.title}"`);
-            if (!DRY) {
-                try {
-                    await showcaseCh.threads.create({
-                        name: post.title,
-                        message: { content: post.body },
-                    });
-                } catch (e) {
-                    console.warn(`[warn] showcase post "${post.title}": ${e.message}`);
-                }
+    for (const post of SHOWCASE_POSTS) {
+        plan(`create showcase thread "${post.title}" (silent)`);
+        if (!DRY && showcaseCh && showcaseCh.type === ChannelType.GuildForum) {
+            try {
+                await showcaseCh.threads.create({
+                    name: post.title,
+                    message: { content: post.body, flags: SUPPRESS_NOTIFICATIONS },
+                });
+            } catch (e) {
+                console.warn(`[warn] showcase post "${post.title}": ${e.message}`);
             }
         }
     }
 
     // 7. Permanent invite from #welcome
-    if (welcomeCh && welcomeCh.type === ChannelType.GuildText) {
-        plan(`generate permanent invite from #welcome`);
-        if (!DRY) {
-            try {
-                const invite = await welcomeCh.createInvite({ maxAge: 0, maxUses: 0, unique: false, reason: 'Maxxtopia public hub invite' });
-                console.log(`\n[setup] Permanent invite: ${invite.url}\n`);
-                console.log('[setup] Add this to maxxtopia.com somewhere prominent.');
-            } catch (e) {
-                console.warn(`[warn] invite: ${e.message}`);
-            }
+    plan(`generate permanent invite from #welcome (no expiration, no use cap)`);
+    if (!DRY && welcomeCh && welcomeCh.type === ChannelType.GuildText) {
+        try {
+            const invite = await welcomeCh.createInvite({ maxAge: 0, maxUses: 0, unique: false, reason: 'Maxxtopia public hub invite' });
+            console.log(`\n[setup] Permanent invite: ${invite.url}\n`);
+            console.log('[setup] Add this to maxxtopia.com somewhere prominent.');
+        } catch (e) {
+            console.warn(`[warn] invite: ${e.message}`);
         }
     }
 
     console.log('\n[setup] Done.');
-    if (DRY) console.log('[setup] Re-run with --execute to apply.');
-    else console.log('[setup] Now revoke the bot token in the Discord dev portal -> Bot tab -> Reset Token.');
+    if (DRY) {
+        console.log('[setup] Re-run with --execute to apply.');
+    } else {
+        console.log('[setup] Bot stays in the server. Token stays valid — the optimizationmaxxing repo will reuse the same bot for follow-up automation.');
+        console.log('[setup] Cleanup: review the [review] entries from the inventory at the top of this output and delete the ones you don\'t want anymore (Discord UI -> Server Settings).');
+    }
 
     await client.destroy();
     process.exit(0);
