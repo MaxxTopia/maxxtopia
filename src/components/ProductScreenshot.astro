@@ -61,19 +61,30 @@ const isGrid = all.length > 1 && !video;
     )}
     <div class="product-screenshot__shimmer" aria-hidden="true"></div>
     {video && (
-      <button
-        type="button"
-        class="product-screenshot__sound"
-        aria-label="Toggle sound"
-        data-state="muted"
-      >
-        <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-        </svg>
-        <svg class="icon-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-        </svg>
-      </button>
+      <div class="product-screenshot__sound-wrap">
+        <input
+          type="range"
+          class="product-screenshot__volume"
+          min="0"
+          max="100"
+          value="0"
+          step="1"
+          aria-label="Volume"
+        />
+        <button
+          type="button"
+          class="product-screenshot__sound"
+          aria-label="Toggle sound"
+          data-state="muted"
+        >
+          <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+          <svg class="icon-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+        </button>
+      </div>
     )}
   </div>
 </figure>
@@ -103,15 +114,45 @@ const isGrid = all.length > 1 && !video;
       io.observe(v);
     });
 
-    // Sound toggle: pairs each .product-screenshot__sound with the nearest video.
-    document.querySelectorAll<HTMLButtonElement>('.product-screenshot__sound').forEach((btn) => {
-      const frame = btn.closest('.product-screenshot__frame');
+    // Sound toggle + volume slider: pairs button + slider with the nearest video.
+    document.querySelectorAll<HTMLDivElement>('.product-screenshot__sound-wrap').forEach((wrap) => {
+      const frame = wrap.closest('.product-screenshot__frame');
       const v = frame?.querySelector<HTMLVideoElement>('.product-screenshot__video');
-      if (!v) return;
+      const btn = wrap.querySelector<HTMLButtonElement>('.product-screenshot__sound');
+      const slider = wrap.querySelector<HTMLInputElement>('.product-screenshot__volume');
+      if (!v || !btn || !slider) return;
+      // Last non-zero volume the user dialed in. Restored when un-muting.
+      let lastVolume = 1;
+      const paint = (pct: number) => slider.style.setProperty('--vol', pct + '%');
+      paint(0);
+      slider.addEventListener('input', () => {
+        const pct = Number(slider.value);
+        v.volume = pct / 100;
+        if (pct > 0) {
+          if (v.muted) v.muted = false;
+          btn.dataset.state = 'on';
+          lastVolume = pct / 100;
+          v.play().catch(() => {});
+        } else {
+          v.muted = true;
+          btn.dataset.state = 'muted';
+        }
+        paint(pct);
+      });
       btn.addEventListener('click', () => {
-        v.muted = !v.muted;
-        btn.dataset.state = v.muted ? 'muted' : 'on';
-        if (!v.muted) v.play().catch(() => {});
+        if (v.muted || v.volume === 0) {
+          v.muted = false;
+          v.volume = lastVolume > 0 ? lastVolume : 1;
+          btn.dataset.state = 'on';
+          slider.value = String(Math.round(v.volume * 100));
+          paint(Number(slider.value));
+          v.play().catch(() => {});
+        } else {
+          v.muted = true;
+          btn.dataset.state = 'muted';
+          slider.value = '0';
+          paint(0);
+        }
       });
     });
   </script>
@@ -181,12 +222,24 @@ const isGrid = all.length > 1 && !video;
     }
   }
 
-  .product-screenshot__sound {
+  .product-screenshot__sound-wrap {
     position: absolute;
     top: 14px;
     right: 14px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    /* Hover catch beyond the visible bounds so the slider doesn't snap shut
+       when the cursor moves through the gap between slider and button. */
+    padding: 0;
+  }
+
+  .product-screenshot__sound {
+    position: relative;
     width: 36px;
     height: 36px;
+    flex-shrink: 0;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(8, 8, 8, 0.55);
@@ -199,7 +252,6 @@ const isGrid = all.length > 1 && !video;
     justify-content: center;
     opacity: 0.65;
     transition: opacity 200ms ease, transform 200ms ease, border-color 200ms ease, color 200ms ease;
-    z-index: 2;
   }
   .product-screenshot__frame:hover .product-screenshot__sound {
     opacity: 1;
@@ -216,5 +268,90 @@ const isGrid = all.length > 1 && !video;
     color: #e25bff;
     border-color: rgba(226, 91, 255, 0.45);
     opacity: 1;
+  }
+
+  /* Volume slider — collapsed by default, expands left from the button on hover. */
+  .product-screenshot__volume {
+    --vol: 0%;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0;
+    opacity: 0;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: rgba(8, 8, 8, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+    pointer-events: none;
+    transform-origin: right center;
+    transition:
+      width 240ms cubic-bezier(0.16, 1, 0.3, 1),
+      padding 240ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 200ms ease,
+      border-color 200ms ease;
+  }
+  .product-screenshot__sound-wrap:hover .product-screenshot__volume,
+  .product-screenshot__sound-wrap:focus-within .product-screenshot__volume {
+    width: 110px;
+    padding: 0 12px;
+    opacity: 1;
+    pointer-events: auto;
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  /* WebKit track + thumb */
+  .product-screenshot__volume::-webkit-slider-runnable-track {
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      #e25bff 0%,
+      #e25bff var(--vol),
+      rgba(255, 255, 255, 0.22) var(--vol),
+      rgba(255, 255, 255, 0.22) 100%
+    );
+  }
+  .product-screenshot__volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -4.5px;
+    border-radius: 999px;
+    background: #fff;
+    border: 2px solid #e25bff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 160ms ease;
+  }
+  .product-screenshot__volume::-webkit-slider-thumb:hover,
+  .product-screenshot__volume:focus-visible::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+  /* Firefox track + thumb */
+  .product-screenshot__volume::-moz-range-track {
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .product-screenshot__volume::-moz-range-progress {
+    height: 3px;
+    border-radius: 999px;
+    background: #e25bff;
+  }
+  .product-screenshot__volume::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #fff;
+    border: 2px solid #e25bff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
+  .product-screenshot__volume:focus-visible {
+    outline: none;
   }
 </style>
