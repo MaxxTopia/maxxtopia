@@ -1,0 +1,26 @@
+name = "maxxtopia-tickets"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Public-facing env vars (no secrets here — those go through `wrangler secret`).
+# Channel + role + user IDs are not sensitive (they're server-side identifiers
+# anyone in the server can read out of Discord's UI), so committing them is fine.
+[vars]
+DISCORD_GUILD_ID = "794160379767947264"
+OPEN_TICKET_CHANNEL_ID = "1502870740360368148"
+DIGGY_USER_ID = "426146621424664586"
+SUPPORT_ROLE_ID = "1502864513022558290"  # @MAXXER++
+# Optional — leave unset to skip transcript archival. Set after creating
+# a private #ticket-archive channel.
+# TICKET_ARCHIVE_CHANNEL_ID = ""
+
+# Per-user click rate-limit (1 ticket per 60s). Without this, click-spam
+# could DoS our Discord REST budget. KV is dirt-cheap for this.
+[[kv_namespaces]]
+binding = "TICKETS_RATELIMIT"
+id = "REPLACE_WITH_KV_ID_AFTER_CREATE"
+
+# Secrets to set (one-time):
+#   wrangler secret put DISCORD_PUBLIC_KEY    # from dev portal "General Information" → Public Key
+#   wrangler secret put DISCORD_BOT_TOKEN     # from dev portal "Bot" → Token (RESET if you ever lost track of it)
