@@ -1,0 +1,320 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Aurora from '../../components/Aurora.astro';
+
+/**
+ * Discordmaxxer pricing — Hypixel-style 4-tier ladder + Founder scarcity slot.
+ * In-app VipCard.tsx links here; "Open Discord ticket" buttons send buyers
+ * to the Maxxtopia Discord, where the Maxx bot's ticket-panel buttons spawn
+ * a private thread per buyer (per-tier handler in tickets-worker/worker.js).
+ *
+ * Pricing locked 2026-05-09 (project_discordmaxxer.md "Option A pricing").
+ */
+
+const DISCORD_INVITE = 'https://discord.gg/S78eecbWdx';
+
+type Tier = {
+  bracket: string;
+  bracketColor: string;
+  plusColor?: string;
+  monthly: string;
+  annual: string;
+  pitch: string;
+  perks: string[];
+  ctaLabel: string;
+  ctaHref: string;
+  highlight?: boolean;
+  upsell?: string;
+};
+
+const TIERS: Tier[] = [
+  {
+    bracket: '[FREE]',
+    bracketColor: '#9aa1ad',
+    monthly: '$0',
+    annual: 'Free forever',
+    pitch: 'The whole client. Every plugin, every theme, Tournament Mode, the Hub. Nothing crippled, nothing nagware.',
+    perks: [
+      'All ~30 default-on Vencord plugins',
+      '5 free themes (maxxer · val · sonic · dmc · bo3)',
+      'Tournament Mode (perf-only, screenshare-friendly)',
+      'CompactView · MassDelete · GIF favorites tab',
+      '1 saved video-background slot',
+      'Dragon Sword animated cursor',
+      'Founder badges visible on others\' popouts',
+    ],
+    ctaLabel: 'Download v0.6.8',
+    ctaHref: 'https://github.com/MaxxTopia/discordmaxxer/releases/latest',
+  },
+  {
+    bracket: '[MAXXER]',
+    bracketColor: '#55FF55',
+    monthly: '$4 / mo',
+    annual: '$38 / yr · save 20%',
+    pitch: 'The status flex starter. Hypixel-style [VIP] in front of your name when you type, plus a glowing avatar ring everywhere you go.',
+    perks: [
+      'Typing prefix — [VIP] in the indicator',
+      'Avatar tier ring · 1px outline + glow',
+      '5 animated cursor skins (Sharingan · Rinnegan · Rasengan · Chidori · Stiiizy smoke trail)',
+      'Per-theme curated sound packs (~194 KB Kenney pack)',
+      '5 saved video-background slots',
+    ],
+    ctaLabel: 'Open Discord ticket →',
+    ctaHref: DISCORD_INVITE,
+    upsell: 'Click "Buy MAXXER — $4/mo" in #open-ticket on the Maxxtopia Discord.',
+  },
+  {
+    bracket: '[MAXXER+]',
+    bracketColor: '#55FFFF',
+    monthly: '$9 / mo',
+    annual: '$86 / yr · save 20%',
+    pitch: 'The everyday Discord upgrade. Video backgrounds, an aqua glow on your name in member lists, custom mention chimes — the stuff people DM you about.',
+    perks: [
+      'Everything in MAXXER',
+      'Custom video backgrounds (URL or upload)',
+      '3 exclusive themes — Akatsuki · DMC: Devil Trigger · Eminence in Shadow',
+      'Member-list name tint with aqua glow-glimmer pulse',
+      'Custom themed mention chime (DMs · @-mentions · @everyone)',
+      'Profile popout banner stripe',
+      '20 saved video-background slots',
+    ],
+    ctaLabel: 'Open Discord ticket →',
+    ctaHref: DISCORD_INVITE,
+    upsell: 'Click "Buy MAXXER+ — $9/mo" in #open-ticket on the Maxxtopia Discord.',
+    highlight: true,
+  },
+  {
+    bracket: '[MVP++]',
+    bracketColor: '#FFAA00',
+    plusColor: '#FF5555',
+    monthly: '$17 / mo',
+    annual: '$163 / yr · save 20%',
+    pitch: 'The full flex. Vanilla-visible custom presence text, voice-channel name color, beta builds, plugin votes. Friends on stock Discord see your status.',
+    perks: [
+      'Everything in MAXXER+',
+      'Animated tier badge (gold→red shimmer)',
+      'Custom presence text — vanilla-visible flex on every friend\'s list',
+      'Voice channel name color (gold tint while in VC)',
+      'Beta-channel auto-updates (early-access features)',
+      'Plugin votes — vote on what ships next via #vip-chat polls',
+      '"Discordmaxxer++ supporter" credit strip on your profile popout',
+      'Unlimited saved video-background slots',
+    ],
+    ctaLabel: 'Open Discord ticket →',
+    ctaHref: DISCORD_INVITE,
+    upsell: 'Click "Buy MAXXER++ — $17/mo" in #open-ticket on the Maxxtopia Discord.',
+  },
+];
+
+const FOUNDER_DESCRIPTION = `33 ever, never reissued. Pay once, own a numbered Founder #N slot for life. ` +
+  `Each Founder gets a unique #1–#33 gold gem on their profile popout (visible to every Discordmaxxer user), ` +
+  `1 month MAXXER++ free, a 1-month MAXXER++ gift code to drop on a friend, and — most importantly — ` +
+  `MAXXER++ price-locked at $12/mo for life. When the rest of the world pays $30+/mo for fancy Discord clients, ` +
+  `Founders pay $12 forever.`;
+---
+
+<Layout
+  title="Discordmaxxer Pricing — Hypixel-style tier ladder · MAXXER through MAXXER++"
+  description="MAXXER $4/mo · MAXXER+ $9/mo · MAXXER++ $17/mo · Founder $67-one-time (33 ever). Open a Discord ticket to subscribe — checkout walks you through PayPal/BTC/Venmo, and Diggy DMs your activation code."
+>
+  <article class="relative">
+    <Aurora intensity="med" />
+    <div class="absolute inset-0 bg-grid opacity-30"></div>
+
+    <!-- Hero -->
+    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pt-20 sm:pt-24 pb-10">
+      <a
+        href="/discordmaxxer"
+        class="inline-flex items-center gap-1.5 text-[13px] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors mb-10"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to discordmaxxer
+      </a>
+
+      <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono reveal reveal-1">
+        Discordmaxxer · pricing
+      </p>
+      <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[72px] font-semibold tracking-[-0.035em] leading-[0.95] gradient-text">
+        The whole client is free. <span class="serif-accent gradient-suite">The flex is paid.</span>
+      </h1>
+      <p class="reveal reveal-3 mt-7 text-[18px] sm:text-[20px] leading-[1.4] text-[var(--color-text-mid)] max-w-2xl">
+        Hypixel-style 4-tier ladder. Every paying tier is cosmetic + cross-user status surfacing — MAXXER+ subscribers <em>see each other</em> light up across every server. The client itself stays 100% free, forever.
+      </p>
+    </section>
+
+    <!-- 4 tier cards -->
+    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-14">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {TIERS.map((tier) => (
+          <div
+            class={`reveal-on-scroll relative rounded-2xl border p-7 sm:p-8 transition-all ${
+              tier.highlight
+                ? 'border-[var(--color-cyan)] bg-[var(--color-bg-card)]'
+                : 'border-[var(--color-line)] bg-[var(--color-bg-card)]'
+            }`}
+            style={tier.highlight ? `box-shadow: 0 0 0 1px ${tier.bracketColor}33 inset, 0 8px 32px ${tier.bracketColor}22;` : ''}
+          >
+            {tier.highlight && (
+              <div class="absolute -top-3 left-7 px-2.5 py-1 rounded-full bg-[var(--color-cyan)] text-[var(--color-bg)] text-[10.5px] font-mono uppercase tracking-[0.12em] font-semibold">
+                Most-picked
+              </div>
+            )}
+
+            <!-- Bracket badge — Hypixel-style colored tag -->
+            <div class="mb-5 flex items-baseline gap-3 flex-wrap">
+              <span
+                style={`color: ${tier.bracketColor}; font-family: 'Tungsten Bold', 'Bebas Neue', 'Oswald', 'Arial Black', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: 0.02em; text-shadow: 0 0 14px ${tier.bracketColor}55, 0 1px 0 rgba(0,0,0,0.6);`}
+              >
+                {tier.bracket}
+              </span>
+              <div class="flex flex-col">
+                <span class="text-[20px] font-semibold text-[var(--color-text)]">{tier.monthly}</span>
+                <span class="text-[12px] text-[var(--color-muted)] font-mono">{tier.annual}</span>
+              </div>
+            </div>
+
+            <p class="mb-5 text-[14.5px] leading-[1.55] text-[var(--color-text-mid)]">
+              {tier.pitch}
+            </p>
+
+            <ul class="space-y-2.5 mb-7">
+              {tier.perks.map((perk) => (
+                <li class="flex items-start gap-2.5 text-[13.5px] leading-[1.45] text-[var(--color-text-mid)]">
+                  <span style={`color: ${tier.bracketColor}; flex-shrink: 0; margin-top: 1px;`}>✓</span>
+                  <span set:html={perk} />
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href={tier.ctaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block text-center px-5 py-3 rounded-lg text-[14px] font-semibold transition-all"
+              style={`background: ${tier.bracketColor}; color: #0a0a0a; box-shadow: 0 4px 18px ${tier.bracketColor}44;`}
+            >
+              {tier.ctaLabel}
+            </a>
+
+            {tier.upsell && (
+              <p class="mt-3 text-[11.5px] text-[var(--color-muted)] leading-[1.45]">
+                {tier.upsell}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Founder strip — scarcity slot -->
+    <section id="founder" class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
+      <div
+        class="relative rounded-2xl p-8 sm:p-10 border overflow-hidden"
+        style="border-color: rgba(243,175,25,0.45); background: linear-gradient(135deg, rgba(243,175,25,0.08) 0%, rgba(255,85,85,0.06) 100%); box-shadow: 0 0 0 1px rgba(243,175,25,0.18) inset, 0 8px 28px rgba(243,175,25,0.18);"
+      >
+        <div
+          class="absolute top-0 left-0 right-0 h-[3px] opacity-70"
+          style="background: linear-gradient(90deg, transparent, #FFAA00, transparent);"
+        ></div>
+
+        <div class="flex items-start gap-5 sm:gap-7 flex-wrap">
+          <!-- Gem icon -->
+          <span
+            class="inline-flex items-center justify-center flex-shrink-0"
+            style="width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #FFD27A, #C68A1A 60%, #5A3508 100%); box-shadow: 0 0 18px rgba(255,170,0,0.6), inset 0 0 8px rgba(255,255,255,0.35); font-family: 'Tungsten Bold', 'Bebas Neue', 'Oswald', 'Arial Black', sans-serif; font-size: 30px; font-weight: 800; color: #1a0e02; letter-spacing: 0.02em;"
+            title="Founder badge"
+          >
+            #
+          </span>
+
+          <div class="flex-1 min-w-[280px]">
+            <p class="text-[11px] uppercase tracking-[0.14em] font-mono mb-2" style="color: #FFD27A;">
+              ◇ Scarcity slot · 33 ever
+            </p>
+            <h2
+              class="font-display leading-[0.9] tracking-[-0.01em] mb-4"
+              style="font-size: clamp(48px, 8vw, 88px); color: #FFD580;"
+            >
+              Founder #N
+            </h2>
+            <p class="text-[13.5px] sm:text-[14.5px] leading-[1.6] text-[var(--color-text-mid)] max-w-2xl mb-6">
+              {FOUNDER_DESCRIPTION}
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-7">
+              <div class="rounded-xl p-4 border" style="border-color: rgba(243,175,25,0.25); background: rgba(0,0,0,0.18);">
+                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">One-time price</p>
+                <p class="text-[28px] font-bold" style="color: #FFD27A;">$67</p>
+              </div>
+              <div class="rounded-xl p-4 border" style="border-color: rgba(243,175,25,0.25); background: rgba(0,0,0,0.18);">
+                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Slots remaining</p>
+                <p class="text-[28px] font-bold" style="color: #FFD27A;">33 / 33</p>
+              </div>
+              <div class="rounded-xl p-4 border" style="border-color: rgba(243,175,25,0.25); background: rgba(0,0,0,0.18);">
+                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Price-locked at</p>
+                <p class="text-[28px] font-bold" style="color: #FFD27A;">$12 / mo</p>
+                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">forever</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <a
+                href={DISCORD_INVITE}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-block px-6 py-3 rounded-lg text-[14px] font-bold uppercase tracking-[0.04em]"
+                style="background: linear-gradient(135deg, #FFD27A, #FFAA00); color: #1a0e02; box-shadow: 0 0 22px rgba(255,170,0,0.45);"
+              >
+                Claim a Founder slot →
+              </a>
+              <span class="text-[11.5px] text-[var(--color-muted)] font-mono">
+                Click "Buy Founder #N — $67" in #open-ticket on the Maxxtopia Discord.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Checkout flow explainer -->
+    <section class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-24">
+      <p class="text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-6">
+        ◇ How checkout works
+      </p>
+      <div class="space-y-5">
+        <div class="flex gap-4">
+          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">1</span>
+          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
+            Click any "Open Discord ticket" button above. You'll land in the Maxxtopia Discord (suite-wide community hub).
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">2</span>
+          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
+            In <code class="text-[13px] bg-[var(--color-bg-card)] border border-[var(--color-line)] rounded px-1.5 py-0.5">#open-ticket</code>, click the "Buy Discordmaxxer [tier]" button. A private thread opens with you and Diggy — only the two of you can see it.
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">3</span>
+          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
+            Tell Diggy your preferred payment: <strong class="text-[var(--color-text)]">PayPal · BTC · Venmo · Cash App</strong>. He sends the address + amount. Once payment lands, he DMs your 16-character HWID-bound activation code.
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">4</span>
+          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
+            In Discordmaxxer: open the Hub panel → VIP claim → paste code. First-claim-wins — your tier locks to your rig forever, even offline. The Maxx bot grants your <code class="text-[13px] bg-[var(--color-bg-card)] border border-[var(--color-line)] rounded px-1.5 py-0.5">@VIP</code> role in the Discord with one click.
+          </p>
+        </div>
+      </div>
+
+      <p class="mt-10 text-[12.5px] text-[var(--color-muted)] leading-[1.5]">
+        We don't run Stripe yet — every paying tier flows through Discord tickets. The activation codes are HWID-bound,
+        so they work cross-product (the same code unlocks optimizationmaxxing if you own that tier too). No subscriptions
+        get auto-charged. No "trial → silent renewal" traps. We send a manual reminder when your month is up.
+      </p>
+    </section>
+  </article>
+</Layout>

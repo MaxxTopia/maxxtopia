@@ -327,13 +327,27 @@ function productLabelFor(product) {
     optmaxxing: 'Optimizationmaxxing',
     discordmaxxer: 'Discordmaxxer',
     clipmaxxer: 'Clipmaxxer',
+    // Discordmaxxer tier-specific buttons (each spawns a thread with
+    // tier-pricing baked into the welcome message).
+    'dm-maxxer': 'Discordmaxxer · MAXXER',
+    'dm-maxxer-plus': 'Discordmaxxer · MAXXER+',
+    'dm-maxxer-plus-plus': 'Discordmaxxer · MAXXER++',
+    'dm-founder': 'Discordmaxxer · Founder #N',
   }
   return map[product] ?? product
 }
 
+// Discordmaxxer-tier pricing copy. Each entry surfaces in buildWelcomeMessage.
+// Source of truth: project_discordmaxxer.md ladder + Founder strip.
+const DM_TIER_COPY = {
+  'dm-maxxer':            { price: '$4 / month',        annual: '$38 / yr · save 20%',     bracket: '[VIP]',    perks: 'typing prefix · 5 cursor skins · per-theme sound packs · 5 saved video bg slots' },
+  'dm-maxxer-plus':       { price: '$9 / month',        annual: '$86 / yr · save 20%',     bracket: '[VIP+]',   perks: 'video backgrounds · 3 exclusive themes · custom mention chime · member-list name glow · profile popout banner · 20 saved video bg slots' },
+  'dm-maxxer-plus-plus':  { price: '$17 / month',       annual: '$163 / yr · save 20%',    bracket: '[MVP++]',  perks: 'animated badge · custom presence text · voice-channel name color · beta builds · plugin votes · About credit · unlimited slots' },
+  'dm-founder':           { price: '$67 one-time',      annual: '33 ever, never reissued', bracket: 'Founder #N', perks: 'numbered # gem badge · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at $12/mo for life' },
+}
+
 function buildWelcomeMessage(product, productLabel, userId, diggyId) {
-  // Lifetime price + Element 115 framing for optmaxxing. Other products
-  // get their own welcome down the line as we add buy-buttons for them.
+  // Optmaxxing — lifetime + Element 115 framing.
   if (product === 'optmaxxing') {
     return [
       `**Welcome <@${userId}> — buying ${productLabel} VIP.**`,
@@ -351,6 +365,35 @@ function buildWelcomeMessage(product, productLabel, userId, diggyId) {
       '**When you\'re done**: hit `🔒 Close ticket` below. The thread archives and a transcript is saved for our records.',
     ].join('\n')
   }
+
+  // Discordmaxxer tier ladder — same payment flow, tier-aware copy.
+  if (DM_TIER_COPY[product]) {
+    const tier = DM_TIER_COPY[product]
+    const isFounder = product === 'dm-founder'
+    return [
+      `**Welcome <@${userId}> — buying ${productLabel}.**`,
+      '',
+      `Only you and <@${diggyId}> can see this thread. Take your time — Diggy usually replies within a few hours.`,
+      '',
+      `**${tier.bracket} · ${tier.price}** _(${tier.annual})_`,
+      `Perks: ${tier.perks}`,
+      '',
+      '**To complete your purchase:**',
+      '1. Tell Diggy your preferred payment: PayPal / BTC / Venmo / Cash App.',
+      `2. He sends you the address + amount: **${tier.price}**${isFounder ? ' — pay once, own a numbered Founder slot for life.' : ' — paid monthly (or save 20% paying annually).'}`,
+      '3. Once payment lands, Diggy DMs you a 16-char HWID-bound activation code.',
+      '4. In Discordmaxxer: open the Hub panel → VIP claim → paste code. First-claim-wins; the code locks to your rig forever, even offline.',
+      '5. Diggy clicks `Grant VIP` below — your `@VIP` role lands in the Maxxtopia Discord, unlocking #vip-chat + #early-access.',
+      '',
+      isFounder
+        ? '*Founder slots: 33 ever, never reissued. The numbered gem badge appears on your popout for every Discordmaxxer user. MAXXER++ price-locked at $12/mo for life — immune to future raises.*'
+        : '*Pricing details: <https://maxxtopia.com/discordmaxxer/vip>*',
+      '',
+      '**When you\'re done**: hit `🔒 Close ticket` below. The thread archives and a transcript is saved for our records.',
+    ].join('\n')
+  }
+
+  // Fallback for any product we haven't custom-scripted yet.
   return [
     `**Welcome <@${userId}> — buying ${productLabel}.**`,
     '',

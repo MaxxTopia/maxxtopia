@@ -1,11 +1,17 @@
 /*
- * Posts (or refreshes) the buy-ticket panel in #open-ticket. The panel is
- * a styled embed + a single Discord button. When clicked, the button hits
- * our maxxtopia-tickets Cloudflare Worker, which spawns a private thread
- * for the buyer.
+ * Posts (or refreshes) the buy-ticket panels in #open-ticket. Each panel is
+ * a styled embed + Discord button(s). When clicked, buttons hit the
+ * maxxtopia-tickets Cloudflare Worker, which spawns a private thread per
+ * buyer (handler in tickets-worker/worker.js).
  *
- * Idempotent — looks for a prior Maxx-authored panel with our signature
- * and edits it in-place if it exists. Safe to re-run after copy changes.
+ * Idempotent per panel — looks for a prior Maxx-authored panel with each
+ * panel's unique signature and edits it in-place if it exists. Safe to
+ * re-run after copy changes.
+ *
+ * Two panels currently posted:
+ *   1. Optimizationmaxxing — single-tier $115 launch sale, single button
+ *   2. Discordmaxxer — 4-tier ladder (MAXXER / MAXXER+ / MAXXER++ / Founder),
+ *      4 buttons in a single row per Discord's row limit (5)
  *
  * Usage:
  *   node scripts/post-ticket-panel.mjs --dry-run    # show plan, no changes
@@ -51,32 +57,150 @@ const ARGS = new Set(process.argv.slice(2));
 const DRY = !ARGS.has('--execute');
 if (DRY) console.log('[post-panel] DRY RUN — no changes. Pass --execute to commit.\n');
 
-// ─── Panel content ─────────────────────────────────────────────────────────
-//
-// Bumping the SIGNATURE_VERSION forces a re-post when the embed body changes
-// substantively (since equality check looks at the description). For most
-// copy tweaks an in-place edit fires automatically — bump only when you
-// want a fresh post (e.g. archived → new pinned).
-const SIGNATURE_VERSION = 'v1';
-// Three zero-width spaces + version tag at the end. Invisible, grep-able.
-const PANEL_SIGNATURE = `​​​[ticket-panel:${SIGNATURE_VERSION}]`;
+// ─── Panel definitions ─────────────────────────────────────────────────────
+// Each panel has a unique signature (zero-width-space prefix + version tag).
+// Bump a panel's SIGNATURE_VERSION when you want a fresh repost; otherwise
+// in-place edits trigger automatically when title/description change.
+const sig = (key, ver) => `​​​[ticket-panel:${key}:${ver}]`;
 
 const OPEN_TICKET_CHANNEL_NAME = 'open-ticket';
 
-// Embed body. Cyan border pulls the eye to the button below.
-const EMBED_TITLE = 'Buy Optimizationmaxxing VIP — $115 launch sale';
-const EMBED_DESCRIPTION = [
-    'You paid **$150** for a Superlight 2 to gain 0.5 ms.',
-    'Pay **$115** once for **12-22 ms** off your click-to-pixel.',
-    '',
-    '**Click the button below** → a private thread spawns where only you and Diggy can see it. Tell Diggy your preferred payment (PayPal / BTC / Venmo / Cash App), pay, receive a 16-char activation code via DM.',
-    '',
-    'Lifetime — pay once, every future tweak pack included.',
-    'After **2026-05-31** the price moves to $180.',
-    '',
-    '*Element 115 — the substance that turns dead PCs into living ones.*',
-    PANEL_SIGNATURE,
-].join('\n');
+const OPTMAXXING_PANEL = {
+    key: 'optmaxxing',
+    signature: sig('optmaxxing', 'v1'),
+    title: 'Buy Optimizationmaxxing VIP — $115 launch sale',
+    color: 0x3af0f0, // Element 115 cyan
+    description: [
+        'You paid **$150** for a Superlight 2 to gain 0.5 ms.',
+        'Pay **$115** once for **12-22 ms** off your click-to-pixel.',
+        '',
+        '**Click the button below** → a private thread spawns where only you and Diggy can see it. Tell Diggy your preferred payment (PayPal / BTC / Venmo / Cash App), pay, receive a 16-char activation code via DM.',
+        '',
+        'Lifetime — pay once, every future tweak pack included.',
+        'After **2026-05-31** the price moves to $180.',
+        '',
+        '*Element 115 — the substance that turns dead PCs into living ones.*',
+    ].join('\n'),
+    buttons: [
+        {
+            customId: 'vip-buy-optmaxxing',
+            label: 'Buy VIP — $115 launch sale',
+            style: ButtonStyle.Success,
+            emoji: '🧪', // test tube — closest universal emoji to "Element 115"
+        },
+    ],
+};
+
+const DISCORDMAXXER_PANEL = {
+    key: 'discordmaxxer',
+    signature: sig('discordmaxxer', 'v1'),
+    title: 'Buy Discordmaxxer — Hypixel-style 4-tier ladder',
+    color: 0xffaa00, // gold (MAXXER++ accent)
+    description: [
+        'The whole client is **free forever**. Paying tiers are cosmetic + cross-user status surfacing — Hypixel-style brackets, glowing avatar rings, themed mention chimes, custom presence text. The flex stays visible to your whole friends list.',
+        '',
+        '**[VIP] MAXXER · $4/mo** — Typing prefix · 5 cursor skins · sound packs · 5 video bg slots',
+        '**[VIP+] MAXXER+ · $9/mo** — Video backgrounds · 3 exclusive themes · custom mention chime · name glow · 20 slots',
+        '**[MVP++] MAXXER++ · $17/mo** — Animated badge · custom presence text · voice channel color · beta builds · plugin votes · About credit',
+        '**Founder #N · $67 one-time** — 33 ever, never reissued. Numbered # gem badge · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at **$12/mo for life**',
+        '',
+        '**Click your tier below** → private thread with Diggy. Same payment flow as optimizationmaxxing — PayPal / BTC / Venmo / Cash App, then DM\'d a 16-char HWID-bound activation code.',
+        '',
+        'Pricing & details: <https://maxxtopia.com/discordmaxxer/vip>',
+    ].join('\n'),
+    buttons: [
+        {
+            customId: 'vip-buy-dm-maxxer',
+            label: 'Buy MAXXER — $4/mo',
+            style: ButtonStyle.Success, // green (Hypixel [VIP] color)
+            emoji: '🟢',
+        },
+        {
+            customId: 'vip-buy-dm-maxxer-plus',
+            label: 'Buy MAXXER+ — $9/mo',
+            style: ButtonStyle.Primary, // aqua-leaning blue (Hypixel [VIP+])
+            emoji: '🟦',
+        },
+        {
+            customId: 'vip-buy-dm-maxxer-plus-plus',
+            label: 'Buy MAXXER++ — $17/mo',
+            style: ButtonStyle.Secondary, // grey-ish, gold emoji carries the color
+            emoji: '🟡',
+        },
+        {
+            customId: 'vip-buy-dm-founder',
+            label: 'Founder #N — $67 one-time',
+            style: ButtonStyle.Danger, // red — scarcity emphasis
+            emoji: '👑',
+        },
+    ],
+};
+
+const PANELS = [OPTMAXXING_PANEL, DISCORDMAXXER_PANEL];
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+function buildEmbed(panel) {
+    return new EmbedBuilder()
+        .setColor(panel.color)
+        .setTitle(panel.title)
+        .setDescription(`${panel.description}\n${panel.signature}`)
+        .setFooter({ text: 'Maxxtopia · self-hosted ticket system · click → private thread' });
+}
+
+function buildRow(panel) {
+    const row = new ActionRowBuilder();
+    for (const b of panel.buttons) {
+        const btn = new ButtonBuilder()
+            .setCustomId(b.customId)
+            .setLabel(b.label)
+            .setStyle(b.style);
+        if (b.emoji) btn.setEmoji(b.emoji);
+        row.addComponents(btn);
+    }
+    return row;
+}
+
+async function syncPanel(channel, clientUserId, panel) {
+    const embed = buildEmbed(panel);
+    const row = buildRow(panel);
+    const fullDescription = `${panel.description}\n${panel.signature}`;
+
+    let existing = null;
+    try {
+        const recent = await channel.messages.fetch({ limit: 50 });
+        existing = recent.find(
+            (m) => m.author.id === clientUserId && m.embeds[0]?.description?.includes(panel.signature),
+        );
+    } catch (e) {
+        console.warn(`[${panel.key}] could not fetch recent messages: ${e.message}`);
+    }
+
+    if (existing) {
+        const sameDesc = existing.embeds[0]?.description === fullDescription;
+        const sameTitle = existing.embeds[0]?.title === panel.title;
+        if (sameDesc && sameTitle) {
+            console.log(`[${panel.key}] panel already current (id ${existing.id}). No edit needed.`);
+        } else {
+            console.log(`[${panel.key}] [would] edit existing panel (id ${existing.id}) — copy or title changed`);
+            if (!DRY) {
+                await existing.edit({ embeds: [embed], components: [row] });
+                console.log(`[${panel.key}] [do]   panel updated in place.`);
+            }
+        }
+    } else {
+        console.log(`[${panel.key}] [would] post new panel in #${channel.name}`);
+        if (!DRY) {
+            const sent = await channel.send({ embeds: [embed], components: [row] });
+            console.log(`[${panel.key}] [do]   posted (id ${sent.id}).`);
+            try {
+                await sent.pin(`Pin the ${panel.key} buy-ticket panel`);
+                console.log(`[${panel.key}] [do]   pinned.`);
+            } catch (e) {
+                console.warn(`[${panel.key}] [warn] could not pin: ${e.message}`);
+            }
+        }
+    }
+}
 
 // ─── Main ─────────────────────────────────────────────────────────────────
 const client = new Client({
@@ -101,56 +225,8 @@ client.once('clientReady', async () => {
     }
     console.log(`[post-panel] Target channel: #${channel.name} (${channel.id})\n`);
 
-    const embed = new EmbedBuilder()
-        .setColor(0x3af0f0) // Element 115 cyan
-        .setTitle(EMBED_TITLE)
-        .setDescription(EMBED_DESCRIPTION)
-        .setFooter({ text: 'Maxxtopia · self-hosted ticket system · click → private thread' });
-
-    const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-            .setCustomId('vip-buy-optmaxxing')
-            .setLabel('Buy VIP — $115 launch sale')
-            .setStyle(ButtonStyle.Success) // green
-            .setEmoji('🧪'), // test tube — closest universal emoji to "Element 115"
-    );
-
-    // Look for an existing Maxx-authored panel in this channel.
-    let existing = null;
-    try {
-        const recent = await channel.messages.fetch({ limit: 50 });
-        existing = recent.find(
-            (m) => m.author.id === client.user.id && m.embeds[0]?.description?.endsWith(PANEL_SIGNATURE),
-        );
-    } catch (e) {
-        console.warn(`[warn] could not fetch recent messages: ${e.message}`);
-    }
-
-    if (existing) {
-        const sameDesc = existing.embeds[0]?.description === EMBED_DESCRIPTION;
-        const sameTitle = existing.embeds[0]?.title === EMBED_TITLE;
-        if (sameDesc && sameTitle) {
-            console.log(`[skip] panel already current (id ${existing.id}). No edit needed.`);
-        } else {
-            console.log(`[would] edit existing panel (id ${existing.id}) — copy or title changed`);
-            if (!DRY) {
-                await existing.edit({ embeds: [embed], components: [row] });
-                console.log(`[do]   panel updated in place.`);
-            }
-        }
-    } else {
-        console.log(`[would] post new panel in #${channel.name}`);
-        if (!DRY) {
-            const sent = await channel.send({ embeds: [embed], components: [row] });
-            console.log(`[do]   posted (id ${sent.id}).`);
-            // Pin it so newcomers see the panel without scrolling.
-            try {
-                await sent.pin('Pin the buy-ticket panel');
-                console.log(`[do]   pinned.`);
-            } catch (e) {
-                console.warn(`[warn] could not pin: ${e.message}`);
-            }
-        }
+    for (const panel of PANELS) {
+        await syncPanel(channel, client.user.id, panel);
     }
 
     console.log('\n[post-panel] Done.');
