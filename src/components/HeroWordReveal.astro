@@ -50,6 +50,15 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
     </span>
     <!-- Solo-Leveling aura ring — expanding shadow halo at the moment of rise. -->
     <span class="hero-word__sl-aura" aria-hidden="true"></span>
+    <!-- Black Clover "Luck" lightning — bolts crackling around the lock word.
+         Fires when "maxx" lands; ambient flicker between strikes. -->
+    <span class="hero-word__bolts" aria-hidden="true">
+      <svg viewBox="0 0 24 100" preserveAspectRatio="none"><path d="M 14 0 L 7 36 L 16 40 L 4 100" /></svg>
+      <svg viewBox="0 0 24 100" preserveAspectRatio="none"><path d="M 10 0 L 16 30 L 6 34 L 18 100" /></svg>
+      <svg viewBox="0 0 24 100" preserveAspectRatio="none"><path d="M 12 0 L 4 28 L 14 32 L 6 100" /></svg>
+      <svg viewBox="0 0 24 100" preserveAspectRatio="none"><path d="M 8  0 L 14 38 L 4  42 L 16 100" /></svg>
+      <svg viewBox="0 0 24 100" preserveAspectRatio="none"><path d="M 14 0 L 8  44 L 18 48 L 10 100" /></svg>
+    </span>
   </span>
 </span>
 
@@ -369,8 +378,89 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
     100% { transform: translate(-50%, -50%) scale(22); opacity: 0;    border-color: rgba(76, 29, 149, 0); }
   }
 
-  /* maxx (lock word) — keep the existing chromatic flash + ring pulse;
-     it's the standout because it's the brand. No per-word override. */
+  /* maxx (lock word) — Black Clover "Luck" lightning treatment.
+     Adds an electric-mint/cyan glow on top of the chromatic flash + ring pulse.
+     Bolts crackle in once on lock, then ambient-flicker between strikes. */
+  .hero-word__current.is-word-maxx- {
+    /* the slug for "maxx." -> "maxx-" (period stripped); both forms covered */
+  }
+  .hero-word__current.is-word-maxx,
+  .hero-word__current.is-word-maxx- {
+    text-shadow:
+      0 0 18px rgba(0, 255, 163, 0.7),
+      0 0 44px rgba(0, 212, 255, 0.45),
+      0 0 80px rgba(226, 91, 255, 0.25);
+    filter:
+      drop-shadow(0 0 14px rgba(0, 255, 163, 0.55))
+      drop-shadow(0 0 28px rgba(0, 212, 255, 0.35));
+  }
+
+  /* Bolt layer — five jagged SVG strikes around the lock word. */
+  .hero-word__bolts {
+    position: absolute;
+    inset: -30% -10%;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 0;
+    transition: opacity 180ms ease;
+  }
+  .hero-word__current.is-word-maxx ~ .hero-word__bolts,
+  .hero-word__current.is-word-maxx- ~ .hero-word__bolts {
+    opacity: 1;
+  }
+  .hero-word__bolts svg {
+    position: absolute;
+    width: 6%;
+    height: 100%;
+    overflow: visible;
+    opacity: 0;
+    mix-blend-mode: screen;
+    filter:
+      drop-shadow(0 0 6px rgba(0, 255, 163, 0.95))
+      drop-shadow(0 0 14px rgba(0, 212, 255, 0.75))
+      drop-shadow(0 0 28px rgba(255, 255, 255, 0.4));
+  }
+  .hero-word__bolts svg path {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: miter;
+  }
+  /* Five bolts staggered around the word — different x-positions, angles, timings.
+     --rot is the per-bolt rotation; used in both the static transform and the
+     animated keyframes so per-bolt angles survive across animations. */
+  .hero-word__bolts svg:nth-child(1) { left:  4%; --rot: -12deg; }
+  .hero-word__bolts svg:nth-child(2) { left: 24%; --rot:  18deg; }
+  .hero-word__bolts svg:nth-child(3) { left: 50%; --rot: -22deg; }
+  .hero-word__bolts svg:nth-child(4) { left: 70%; --rot:  10deg; }
+  .hero-word__bolts svg:nth-child(5) { left: 88%; --rot: -8deg;  }
+  .hero-word__bolts svg { transform: rotate(var(--rot, 0deg)); }
+
+  /* On lock: opening barrage (5 strikes), then ambient flicker loop. */
+  .hero-word__current.is-word-maxx ~ .hero-word__bolts svg,
+  .hero-word__current.is-word-maxx- ~ .hero-word__bolts svg {
+    animation: bolt-strike 240ms ease-out 1 forwards, bolt-flicker 4.4s ease-in-out 0.7s infinite;
+  }
+  .hero-word__bolts svg:nth-child(1) { animation-delay: 0.00s, 0.7s; }
+  .hero-word__bolts svg:nth-child(2) { animation-delay: 0.07s, 1.5s; }
+  .hero-word__bolts svg:nth-child(3) { animation-delay: 0.14s, 2.3s; }
+  .hero-word__bolts svg:nth-child(4) { animation-delay: 0.21s, 3.1s; }
+  .hero-word__bolts svg:nth-child(5) { animation-delay: 0.28s, 3.9s; }
+
+  @keyframes bolt-strike {
+    0%   { opacity: 0;   transform: rotate(var(--rot, 0deg)) scaleY(0.7); }
+    18%  { opacity: 1; }
+    35%  { opacity: 0.9; transform: rotate(var(--rot, 0deg)) scaleY(1.04); }
+    100% { opacity: 0;   transform: rotate(var(--rot, 0deg)) scaleY(1); }
+  }
+  @keyframes bolt-flicker {
+    0%, 88%, 100% { opacity: 0; }
+    90%           { opacity: 0.95; }
+    91%           { opacity: 0.2; }
+    92%           { opacity: 0.85; }
+    94%           { opacity: 0; }
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-word__current,
@@ -383,7 +473,8 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
       opacity: 1 !important;
     }
     .hero-word__pulse,
-    .hero-word__sl-particles { display: none; }
+    .hero-word__sl-particles,
+    .hero-word__bolts { display: none; }
   }
 </style>
 
