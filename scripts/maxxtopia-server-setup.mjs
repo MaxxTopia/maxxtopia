@@ -70,10 +70,20 @@ const ROLES = [
     { name: 'MAXXER',   color: 0x55ff55, hoist: true,  mentionable: false },
     { name: 'MAXXER+',  color: 0x55ffff, hoist: true,  mentionable: false },
     { name: 'MAXXER++', color: 0xffaa00, hoist: true,  mentionable: false },
+    // Universal "you've bought a paid tier of any product" role. Granted
+    // manually after the buyer redeems an activation code in-app
+    // (optimizationmaxxing $115 lifetime, future products get added to the
+    // same role to keep things simple). Per-product entitlement audit
+    // lives in each product's worker KV, not in Discord roles.
+    { name: 'VIP',      color: 0x3af0f0, hoist: true,  mentionable: false },
 ];
 
 // Channel categories + their members. `forum: true` makes a forum channel
 // (one post per topic, threaded discussion). Otherwise it's a text channel.
+//
+// `vipOnly: true` on a category locks the @everyone view permission OFF
+// and grants it ONLY to the @VIP role (set up in ROLES above). Members
+// without @VIP literally don't see the category exist.
 const STRUCTURE = [
     {
         category: '— maxxtopia —',
@@ -89,6 +99,21 @@ const STRUCTURE = [
             { name: 'showcase',          type: 'forum',        topic: 'One post per product. The OP is the product card; replies are the discussion.' },
             { name: 'bugs',              type: 'forum',        topic: 'One thread per bug. Tag the product in the title, e.g. "[clipmaxxer] export hangs at 90%".' },
             { name: 'feedback',          type: 'forum',        topic: 'Feature requests + ideas. Tag the product in the title.' },
+        ],
+    },
+    {
+        category: '— purchase —',
+        channels: [
+            { name: 'open-ticket',       type: 'text',         topic: 'Buy any paid tier here. Click the TicketTool button → private thread spawns → Diggy DMs back the activation code after payment. PayPal / BTC / Venmo / Cash App accepted.' },
+            { name: 'vip-claim-help',    type: 'text',         topic: 'Stuck redeeming a code? Code not activating? HWID conflict? Post here, Diggy reissues / debugs.' },
+        ],
+    },
+    {
+        category: '— vip lounge —',
+        vipOnly: true,
+        channels: [
+            { name: 'vip-chat',          type: 'text',         topic: 'Members-only. The unfiltered version of #general — Diggy hangs out here more.' },
+            { name: 'early-access',      type: 'text',         topic: 'Day-1 game configs as new titles drop, beta builds, plugin previews, anything VIPs see before the general server.' },
         ],
     },
 ];
@@ -182,28 +207,43 @@ const SHOWCASE_POSTS = [
     },
 ];
 
-// Welcome message to post in #welcome. Copy mirrors the v0.6.0 VipCard
-// ladder — keep these in sync when the in-app card copy changes.
+// Welcome message to post in #welcome. Multi-product framing — each
+// product is priced for what it structurally is. Discordmaxxer is
+// continuous-service software (recurring sub fits). Optimizationmaxxing
+// is one-shot value (lifetime fits). Don't pretend there's one unified
+// pricing model — savvy users smell that and lose trust.
+//
+// Keep in sync with each product's in-app pricing surface when those
+// change. As of 2026-05-10:
+//   - discordmaxxer: MAXXER tier ladder (subscription)
+//   - optimizationmaxxing: $115 launch lifetime / $180 reg lifetime (decided v0.1.57)
 const WELCOME_MESSAGE = [
     '**Welcome to Maxxtopia.**',
     '',
-    'This is the community hub for the maxxer suite — `optimizationmaxxing`, `discordmaxxer`, `clipmaxxer`, `dropmaxxer`, `aimmaxxer`, `viewmaxxing`, and `extensionmaxxing`. Tools built for players who count their frame times.',
+    'Community hub for the maxxer suite. Tools built for players who count their frame times.',
     '',
     '**Where to go:**',
     '— **#showcase** — one post per product. Browse, react, discuss in the thread.',
-    '— **#bugs** — one thread per bug. Title format: `[product] short summary`.',
-    '— **#feedback** — feature requests, with the same title format.',
+    '— **#bugs** / **#feedback** — one thread per bug or request. Title format: `[product] short summary`.',
     '— **#general** — chat about anything.',
+    '— **#open-ticket** — buy any paid tier. Diggy DMs back the activation code.',
     '',
-    '**Tier ladder (Hypixel-style):**',
-    '— **FREE** — all plugins · all themes · Tournament Mode · Hub panel · 1 active video bg',
-    '— **MAXXER** ($4/mo) — typing prefix · avatar ring · cursor skins · sound packs · 5 saved video bg slots',
-    '— **MAXXER+** ($9/mo) — video backgrounds · 3 exclusive themes · member list name glow · custom mention chime · popout banner',
-    '— **MAXXER++** ($17/mo) — animated badge · custom presence text · voice channel name color · beta builds · plugin votes · About credit',
+    '**Pricing per product** (because what you pay depends on what the product *is*):',
     '',
-    '**Founder #N** — first 33 ever, never reissued · $67 one-time · numbered # badge + 1mo MAXXER++ free + 1-mo gift code for a friend + MAXXER++ at $12/mo for life.',
+    '🔧 **optimizationmaxxing** — one-shot product, lifetime price:',
+    '— FREE: ~70 safe tweaks · auto-detect · /tune one-click apply · Asta Bench · Restore Point',
+    '— **VIP $115 launch sale** through 2026-05-31 → $180 after. One-time, lifetime, every future tweak pack included. *Element 115 — the substance that turns dead PCs into living ones.*',
     '',
-    'Grab the desktop client at https://maxxtopia.com/discordmaxxer to unlock the in-app tier system + redeem a code.',
+    '💬 **discordmaxxer** — continuous-service product, tier ladder:',
+    '— FREE: all plugins · all themes · Tournament Mode · Hub panel · 1 active video bg',
+    '— **MAXXER** $4/mo · **MAXXER+** $9/mo · **MAXXER++** $17/mo (each tier adds cosmetic + perf perks)',
+    '— Founder #N — first 33 ever · $67 one-time · numbered # badge + perks for life',
+    '',
+    '🎬 **clipmaxxer / dropmaxxer / aimmaxxer / viewmaxxing / extensionmaxxing** — beta or soon. Pricing announced as each ships.',
+    '',
+    '**To buy anything:** open a ticket in **#open-ticket** → TicketTool spawns a private thread (only you + Diggy see it) → tell Diggy your preferred payment (PayPal / BTC / Venmo / Cash App) → pay → receive activation code.',
+    '',
+    'Welcome to the maxxers.',
 ].join('\n');
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -287,14 +327,39 @@ client.once('clientReady', async () => {
 
     // 4. Channels
     const createdChannels = {};
+    // Resolve the @VIP role id once — needed to lock vipOnly categories
+    // to that role + deny @everyone.
+    const vipRole = guild.roles.cache.find((r) => r.name === 'VIP');
     for (const cat of STRUCTURE) {
+        // Build the permission-overwrite set for this category. vipOnly
+        // categories deny @everyone view + grant only @VIP. Public
+        // categories inherit (no overwrites at the category level).
+        const categoryOverwrites = cat.vipOnly && vipRole
+            ? [
+                  { id: guild.roles.everyone.id, deny: [PermissionsBitField.Flags.ViewChannel] },
+                  { id: vipRole.id, allow: [PermissionsBitField.Flags.ViewChannel] },
+              ]
+            : undefined;
+
         // Find or create the category
         let categoryChannel = guild.channels.cache.find((c) => c.type === ChannelType.GuildCategory && c.name === cat.category);
         if (!categoryChannel) {
-            plan(`create category "${cat.category}"`);
-            if (!DRY) categoryChannel = await guild.channels.create({ name: cat.category, type: ChannelType.GuildCategory });
+            plan(`create category "${cat.category}"${cat.vipOnly ? ' (VIP-only — locked from @everyone)' : ''}`);
+            if (!DRY) categoryChannel = await guild.channels.create({
+                name: cat.category,
+                type: ChannelType.GuildCategory,
+                permissionOverwrites: categoryOverwrites,
+            });
         } else {
             console.log(`[skip] category "${cat.category}" exists (id ${categoryChannel.id})`);
+            // Reapply VIP-only overwrites in case the category was created
+            // before vipRole existed, or the role id changed. Idempotent.
+            if (cat.vipOnly && vipRole && !DRY) {
+                try {
+                    await categoryChannel.permissionOverwrites.set(categoryOverwrites, 'reapply VIP-only lock');
+                    console.log(`[do]   reapplied VIP-only lock on "${cat.category}"`);
+                } catch (e) { console.warn(`[warn] could not reapply VIP-only lock: ${e.message}`); }
+            }
         }
 
         for (const ch of cat.channels) {
@@ -313,14 +378,21 @@ client.once('clientReady', async () => {
             };
             plan(`create channel #${ch.name} (${ch.type}) in "${cat.category}"`);
             if (!DRY && categoryChannel) {
+                // Per-channel overwrite: just match the category's policy.
+                // Discord defaults to inheriting the parent category, so
+                // explicitly omitting overwrites (rather than passing the
+                // permissive everyone-view rule) means VIP-only categories
+                // properly hide their channels from @everyone.
                 const newCh = await guild.channels.create({
                     name: ch.name,
                     type: typeMap[ch.type] ?? ChannelType.GuildText,
                     parent: categoryChannel.id,
                     topic: ch.topic,
-                    permissionOverwrites: [
-                        { id: guild.roles.everyone.id, allow: [PermissionsBitField.Flags.ViewChannel] },
-                    ],
+                    ...(cat.vipOnly ? {} : {
+                        permissionOverwrites: [
+                            { id: guild.roles.everyone.id, allow: [PermissionsBitField.Flags.ViewChannel] },
+                        ],
+                    }),
                 });
                 createdChannels[ch.name] = newCh;
             }
@@ -332,27 +404,72 @@ client.once('clientReady', async () => {
     // message we post. The message still appears in channel as normal.
     const SUPPRESS_NOTIFICATIONS = 1 << 12;
 
-    // 5. Welcome message in #welcome (silent)
-    plan(`post welcome message in #welcome (silent — no member notifications)`);
+    // 5. Welcome message in #welcome (silent + idempotent)
+    //
+    // We mark our welcome post with a tiny invisible signature so subsequent
+    // runs can detect it and either (a) skip, (b) edit-in-place when the
+    // message body changes. The signature is a zero-width-space run at the
+    // end of the message — invisible to humans, trivially grep-able by us.
+    const WELCOME_SIGNATURE = '​​​'; // 3× ZWSP
+    const WELCOME_BODY = WELCOME_MESSAGE + '\n' + WELCOME_SIGNATURE;
     const welcomeCh = createdChannels.welcome;
-    if (!DRY && welcomeCh && welcomeCh.type === ChannelType.GuildText) {
+    if (welcomeCh && welcomeCh.type === ChannelType.GuildText) {
+        let existingWelcome = null;
         try {
-            await welcomeCh.send({ content: WELCOME_MESSAGE, flags: SUPPRESS_NOTIFICATIONS });
-        } catch (e) { console.warn(`[warn] welcome post: ${e.message}`); }
+            const recent = await welcomeCh.messages.fetch({ limit: 50 });
+            existingWelcome = recent.find(
+                (m) => m.author.id === client.user.id && m.content.endsWith(WELCOME_SIGNATURE),
+            );
+        } catch (e) { /* permissions may forbid history fetch — fall through to post */ }
+
+        if (existingWelcome) {
+            if (existingWelcome.content === WELCOME_BODY) {
+                console.log(`[skip] welcome message already current in #welcome (id ${existingWelcome.id})`);
+            } else {
+                plan(`edit welcome message in #welcome (id ${existingWelcome.id}) — body changed`);
+                if (!DRY) {
+                    try { await existingWelcome.edit({ content: WELCOME_BODY, flags: SUPPRESS_NOTIFICATIONS }); }
+                    catch (e) { console.warn(`[warn] welcome edit: ${e.message}`); }
+                }
+            }
+        } else {
+            plan(`post welcome message in #welcome (silent — no member notifications)`);
+            if (!DRY) {
+                try { await welcomeCh.send({ content: WELCOME_BODY, flags: SUPPRESS_NOTIFICATIONS }); }
+                catch (e) { console.warn(`[warn] welcome post: ${e.message}`); }
+            }
+        }
     }
 
-    // 6. Forum-OPs in #showcase (silent)
+    // 6. Forum-OPs in #showcase (silent + idempotent)
+    //
+    // Forum-channel threads are separately enumerable via channels.fetchActiveThreads()
+    // + .threads.fetchArchived(). We check both before creating to avoid duplicates.
     const showcaseCh = createdChannels.showcase;
-    for (const post of SHOWCASE_POSTS) {
-        plan(`create showcase thread "${post.title}" (silent)`);
-        if (!DRY && showcaseCh && showcaseCh.type === ChannelType.GuildForum) {
-            try {
-                await showcaseCh.threads.create({
-                    name: post.title,
-                    message: { content: post.body, flags: SUPPRESS_NOTIFICATIONS },
-                });
-            } catch (e) {
-                console.warn(`[warn] showcase post "${post.title}": ${e.message}`);
+    if (showcaseCh && showcaseCh.type === ChannelType.GuildForum) {
+        let existingThreadNames = new Set();
+        try {
+            const active = await showcaseCh.threads.fetchActive();
+            for (const t of active.threads.values()) existingThreadNames.add(t.name);
+            const archived = await showcaseCh.threads.fetchArchived({ limit: 50 });
+            for (const t of archived.threads.values()) existingThreadNames.add(t.name);
+        } catch (e) { console.warn(`[warn] could not enumerate existing showcase threads: ${e.message}`); }
+
+        for (const post of SHOWCASE_POSTS) {
+            if (existingThreadNames.has(post.title)) {
+                console.log(`[skip] showcase thread "${post.title}" already exists`);
+                continue;
+            }
+            plan(`create showcase thread "${post.title}" (silent)`);
+            if (!DRY) {
+                try {
+                    await showcaseCh.threads.create({
+                        name: post.title,
+                        message: { content: post.body, flags: SUPPRESS_NOTIFICATIONS },
+                    });
+                } catch (e) {
+                    console.warn(`[warn] showcase post "${post.title}": ${e.message}`);
+                }
             }
         }
     }
