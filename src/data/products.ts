@@ -154,8 +154,8 @@ export const products: Product[] = [
         body: 'Cursor. Privacy. Trim. Plus 7 more, written as first-class code. Native plugin engine, no third-party runtime tax.',
       },
       {
-        title: '5 themes. 5 sound packs.',
-        body: 'Hand-tuned palettes, each with its own sound. Your Discord, your aesthetic.',
+        title: '5 themes.',
+        body: 'Hand-tuned palettes — Maxxer · Valorant · Sonic · DMC · BO3. Pick the vibe that matches your Discord.',
       },
       {
         title: 'No phone-home.',

@@ -97,10 +97,10 @@ const DISCORDMAXXER_PANEL = {
     title: 'Buy Discordmaxxer VIP — 4 tiers + Founder slot',
     color: 0xffaa00, // gold (MAXXER++ accent)
     description: [
-        'The whole client is **free forever**. Paid tiers add cosmetic + cross-user status surfacing — colored name brackets, glowing avatar rings, themed mention chimes, custom presence text. The flex stays visible to your whole friends list.',
+        'The whole client is **free forever**. Paid tiers add cosmetic + cross-user status surfacing — colored name brackets, glowing avatar rings, animated badges, custom presence text. The flex stays visible to your whole friends list.',
         '',
-        '**MAXXER · $4/mo** — Typing prefix · 5 cursor skins · sound packs · 5 video bg slots',
-        '**MAXXER+ · $9/mo** — Video backgrounds · 3 exclusive themes · custom mention chime · name glow · 20 slots',
+        '**MAXXER · $4/mo** — Typing prefix · avatar ring · 5 cursor skins · 5 video bg slots',
+        '**MAXXER+ · $9/mo** — Video backgrounds · 3 exclusive themes · name glow · popout banner · 20 slots',
         '**MAXXER++ · $17/mo** — Animated badge · custom presence text · voice channel color · beta builds · plugin votes · About credit',
         '**Founder #(x) · $67 one-time** — 33 ever, never reissued. Your numbered gem badge (one of #1–#33) · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at **$12/mo for life**',
         '',

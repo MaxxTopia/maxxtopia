@@ -340,8 +340,8 @@ function productLabelFor(product) {
 // Discordmaxxer-tier pricing copy. Each entry surfaces in buildWelcomeMessage.
 // Source of truth: project_discordmaxxer.md ladder + Founder strip.
 const DM_TIER_COPY = {
-  'dm-maxxer':            { price: '$4 / month',        annual: '$38 / yr · save 20%',     bracket: '[VIP]',    perks: 'typing prefix · 5 cursor skins · per-theme sound packs · 5 saved video bg slots' },
-  'dm-maxxer-plus':       { price: '$9 / month',        annual: '$86 / yr · save 20%',     bracket: '[VIP+]',   perks: 'video backgrounds · 3 exclusive themes · custom mention chime · member-list name glow · profile popout banner · 20 saved video bg slots' },
+  'dm-maxxer':            { price: '$4 / month',        annual: '$38 / yr · save 20%',     bracket: '[VIP]',    perks: 'typing prefix · avatar ring · 5 cursor skins · 5 saved video bg slots' },
+  'dm-maxxer-plus':       { price: '$9 / month',        annual: '$86 / yr · save 20%',     bracket: '[VIP+]',   perks: 'video backgrounds · 3 exclusive themes · member-list name glow · profile popout banner · 20 saved video bg slots' },
   'dm-maxxer-plus-plus':  { price: '$17 / month',       annual: '$163 / yr · save 20%',    bracket: '[MVP++]',  perks: 'animated badge · custom presence text · voice-channel name color · beta builds · plugin votes · About credit · unlimited slots' },
   'dm-founder':           { price: '$67 one-time',      annual: '33 ever, never reissued', bracket: 'Founder #(x)', perks: 'your numbered gem badge (one of #1–#33) · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at $12/mo for life' },
 }

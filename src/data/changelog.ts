@@ -14,7 +14,7 @@ export const changelog: ChangelogEntry[] = [
     productSlug: 'discordmaxxer',
     version: 'v0.7.0',
     title: 'Production cut.',
-    body: '21-chime sound library, MAXXER+-theme sound packs (akatsuki / dmcdt / eminence), votes-worker real tally backend. Tier ladder + checkout shipped. Page-hero demo live on /discordmaxxer.',
+    body: 'Votes-worker real tally backend. Tier ladder + checkout shipped. Page-hero demo live on /discordmaxxer.',
   },
   {
     date: '2026-05-10',
