@@ -106,8 +106,8 @@ const TIERS: Tier[] = [
   },
 ];
 
-const FOUNDER_DESCRIPTION = `33 ever, never reissued. Pay once, own a numbered Founder #N slot for life. ` +
-  `Each Founder gets a unique #1–#33 gold gem on their profile popout (visible to every Discordmaxxer user), ` +
+const FOUNDER_DESCRIPTION = `33 ever, never reissued. Pay once, own one numbered Founder slot from #1 to #33 for life. ` +
+  `Each Founder gets a unique gold gem on their profile popout (visible to every Discordmaxxer user), ` +
   `1 month MAXXER++ free, a 1-month MAXXER++ gift code to drop on a friend, and — most importantly — ` +
   `MAXXER++ price-locked at $12/mo for life. When the rest of the world pays $30+/mo for fancy Discord clients, ` +
   `Founders pay $12 forever.`;
@@ -237,7 +237,7 @@ const FOUNDER_DESCRIPTION = `33 ever, never reissued. Pay once, own a numbered F
               class="font-display leading-[0.9] tracking-[-0.01em] mb-4"
               style="font-size: clamp(48px, 8vw, 88px); color: #FFD580;"
             >
-              Founder #N
+              Founder #(x)
             </h2>
             <p class="text-[13.5px] sm:text-[14.5px] leading-[1.6] text-[var(--color-text-mid)] max-w-2xl mb-6">
               {FOUNDER_DESCRIPTION}
@@ -270,7 +270,7 @@ const FOUNDER_DESCRIPTION = `33 ever, never reissued. Pay once, own a numbered F
                 Claim a Founder slot →
               </a>
               <span class="text-[11.5px] text-[var(--color-muted)] font-mono">
-                Click "Buy Founder #N — $67" in #open-ticket on the Maxxtopia Discord.
+                Click "Buy Founder #(x) — $67" in #open-ticket on the Maxxtopia Discord.
               </span>
             </div>
           </div>

@@ -93,16 +93,16 @@ const OPTMAXXING_PANEL = {
 
 const DISCORDMAXXER_PANEL = {
     key: 'discordmaxxer',
-    signature: sig('discordmaxxer', 'v1'),
-    title: 'Buy Discordmaxxer — Hypixel-style 4-tier ladder',
+    signature: sig('discordmaxxer', 'v2'),
+    title: 'Buy Discordmaxxer VIP — 4 tiers + Founder slot',
     color: 0xffaa00, // gold (MAXXER++ accent)
     description: [
-        'The whole client is **free forever**. Paying tiers are cosmetic + cross-user status surfacing — Hypixel-style brackets, glowing avatar rings, themed mention chimes, custom presence text. The flex stays visible to your whole friends list.',
+        'The whole client is **free forever**. Paid tiers add cosmetic + cross-user status surfacing — colored name brackets, glowing avatar rings, themed mention chimes, custom presence text. The flex stays visible to your whole friends list.',
         '',
-        '**[VIP] MAXXER · $4/mo** — Typing prefix · 5 cursor skins · sound packs · 5 video bg slots',
-        '**[VIP+] MAXXER+ · $9/mo** — Video backgrounds · 3 exclusive themes · custom mention chime · name glow · 20 slots',
-        '**[MVP++] MAXXER++ · $17/mo** — Animated badge · custom presence text · voice channel color · beta builds · plugin votes · About credit',
-        '**Founder #N · $67 one-time** — 33 ever, never reissued. Numbered # gem badge · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at **$12/mo for life**',
+        '**MAXXER · $4/mo** — Typing prefix · 5 cursor skins · sound packs · 5 video bg slots',
+        '**MAXXER+ · $9/mo** — Video backgrounds · 3 exclusive themes · custom mention chime · name glow · 20 slots',
+        '**MAXXER++ · $17/mo** — Animated badge · custom presence text · voice channel color · beta builds · plugin votes · About credit',
+        '**Founder #(x) · $67 one-time** — 33 ever, never reissued. Your numbered gem badge (one of #1–#33) · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at **$12/mo for life**',
         '',
         '**Click your tier below** → private thread with Diggy. Same payment flow as optimizationmaxxing — PayPal / BTC / Venmo / Cash App, then DM\'d a 16-char HWID-bound activation code.',
         '',
@@ -129,7 +129,7 @@ const DISCORDMAXXER_PANEL = {
         },
         {
             customId: 'vip-buy-dm-founder',
-            label: 'Founder #N — $67 one-time',
+            label: 'Founder #(x) — $67 one-time',
             style: ButtonStyle.Danger, // red — scarcity emphasis
             emoji: '👑',
         },

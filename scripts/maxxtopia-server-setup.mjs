@@ -240,7 +240,7 @@ const WELCOME_MESSAGE = [
     '💬 **discordmaxxer** — continuous-service product, tier ladder:',
     '— FREE: all plugins · all themes · Tournament Mode · Hub panel · 1 active video bg',
     '— **MAXXER** $4/mo · **MAXXER+** $9/mo · **MAXXER++** $17/mo (each tier adds cosmetic + perf perks)',
-    '— Founder #N — first 33 ever · $67 one-time · numbered # badge + perks for life',
+    '— Founder #(x) — first 33 ever · $67 one-time · your own numbered badge + perks for life',
     '',
     '🎬 **clipmaxxer / dropmaxxer / aimmaxxer / viewmaxxing / extensionmaxxing** — beta or soon. Pricing announced as each ships.',
     '',

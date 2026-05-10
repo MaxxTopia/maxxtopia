@@ -332,7 +332,7 @@ function productLabelFor(product) {
     'dm-maxxer': 'Discordmaxxer · MAXXER',
     'dm-maxxer-plus': 'Discordmaxxer · MAXXER+',
     'dm-maxxer-plus-plus': 'Discordmaxxer · MAXXER++',
-    'dm-founder': 'Discordmaxxer · Founder #N',
+    'dm-founder': 'Discordmaxxer · Founder #(x)',
   }
   return map[product] ?? product
 }
@@ -343,7 +343,7 @@ const DM_TIER_COPY = {
   'dm-maxxer':            { price: '$4 / month',        annual: '$38 / yr · save 20%',     bracket: '[VIP]',    perks: 'typing prefix · 5 cursor skins · per-theme sound packs · 5 saved video bg slots' },
   'dm-maxxer-plus':       { price: '$9 / month',        annual: '$86 / yr · save 20%',     bracket: '[VIP+]',   perks: 'video backgrounds · 3 exclusive themes · custom mention chime · member-list name glow · profile popout banner · 20 saved video bg slots' },
   'dm-maxxer-plus-plus':  { price: '$17 / month',       annual: '$163 / yr · save 20%',    bracket: '[MVP++]',  perks: 'animated badge · custom presence text · voice-channel name color · beta builds · plugin votes · About credit · unlimited slots' },
-  'dm-founder':           { price: '$67 one-time',      annual: '33 ever, never reissued', bracket: 'Founder #N', perks: 'numbered # gem badge · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at $12/mo for life' },
+  'dm-founder':           { price: '$67 one-time',      annual: '33 ever, never reissued', bracket: 'Founder #(x)', perks: 'your numbered gem badge (one of #1–#33) · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at $12/mo for life' },
 }
 
 function buildWelcomeMessage(product, productLabel, userId, diggyId) {
