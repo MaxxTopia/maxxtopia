@@ -6,41 +6,39 @@ import { liveProducts, products } from '../data/products';
 const liveCount = liveProducts.length;
 const totalCount = products.length;
 
-// Category villains, not named competitors. Stock Discord stays — it's the
-// platform we improve, not a rival product.
+// Named competitors — we have specs, we beat them. Call it out.
 const villains = [
-  { name: 'PC tuners',       stat: '200 MB',  body: 'Electron settings panel.' },
-  { name: 'Driver utilities', stat: '81 MB',   body: 'Heavier than what they tune.' },
-  { name: 'Stock Discord',    stat: '1,041 MB', body: '14 outbound calls on launch.' },
+  { name: 'Hone',           stat: '200 MB',  body: 'Electron settings panel.' },
+  { name: 'Paragon',        stat: '81 MB',   body: 'Heavier than what it tunes.' },
+  { name: 'Stock Discord',  stat: '1,041 MB', body: '14 outbound calls on launch.' },
 ];
 
-// Receipts. Real numbers we can defend.
+// Real numbers we can defend.
 const receipts = [
-  { stat: '87',         label: 'Tweaks shipped', body: 'Each cited. Each reversible.' },
+  { stat: '87',         label: 'Tweaks shipped', body: 'Tested. Reversible. Real.' },
   { stat: '−753 MB',    label: 'Discord RAM cut', body: 'Native rewrite. Shipping now.' },
   { stat: `${liveCount}/${totalCount}`, label: 'Apps live',       body: 'The rest are cooking.' },
   { stat: '0',          label: 'Trackers',        body: 'Forever.' },
 ];
 
-const principles = [
-  { t: 'Sourced. Or it doesn\'t ship.',    b: 'Every tweak cites a primary source. No source, no build.' },
-  { t: 'Native or nothing.',                 b: '3.6 MB tuner. 288 MB Discord. Bundle size is a moral position.' },
-  { t: 'Reversible by default.',             b: 'Snapshot-backed. Undo any change, anytime. No paid undo tier.' },
-  { t: 'No telemetry. Ever.',                b: "We don't analytics you. We don't error-report you. We don't 'help us improve' you." },
-  { t: "Measure. Don't just modify.",        b: 'Live DPC. Latency probes. PCIe diagnostics. Trust, then verify.' },
-  { t: "Iterate until you'd defend it.",     b: 'The discordmaxxer logo took five tries. The first four were generic. The fifth wasn\'t.' },
+const rules = [
+  { t: 'Native or nothing.', b: '3.6 MB tuner. 288 MB Discord. Bundle size is a flex.' },
+  { t: 'Free. Forever.',     b: 'No upsells. No premium tier. No paywalled features.' },
+  { t: 'No telemetry.',      b: "Zero tracking. Zero 'help us improve'. Zero phone-home." },
+  { t: 'Open source.',       b: 'Read every line. Ship from main. No lockboxes.' },
+  { t: "Measure. Don't guess.", b: 'Live DPC. Latency probes. PCIe diagnostics. Numbers, not vibes.' },
 ];
 ---
 
 <Layout
   title="Why — Built to actually work"
-  description="Most gaming software is Chromium pretending to be an app. Ours isn't. Receipts, principles, and a refusal."
+  description="Most gaming software is Chromium pretending to be an app. Ours isn't. Receipts, rules, and a refusal."
 >
   <article class="relative">
     <Aurora intensity="low" />
     <div class="absolute inset-0 bg-grid opacity-30"></div>
 
-    <!-- Hero — declaration first. No prose. -->
+    <!-- Hero -->
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-24 pb-20">
       <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono reveal reveal-1">
         Why · v0.1
@@ -53,10 +51,10 @@ const principles = [
       </p>
     </div>
 
-    <!-- The status quo — three category villains, no name-drops. -->
+    <!-- Bloat — three named competitors we beat. -->
     <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
       <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-6">
-        ◇ The status quo
+        ◇ The bloat
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
         {villains.map((v, i) => (
@@ -75,14 +73,14 @@ const principles = [
       </div>
     </section>
 
-    <!-- The refusal — single line, full bleed. -->
+    <!-- The refusal -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 py-16">
       <h2 class="reveal-on-scroll text-[40px] sm:text-[60px] font-semibold tracking-[-0.03em] leading-[1] text-[var(--color-text)]">
         We don't ship that. <span class="serif-accent gradient-suite">Period.</span>
       </h2>
     </section>
 
-    <!-- Receipts — four real numbers we can defend. -->
+    <!-- Receipts -->
     <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
       <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono mb-6">
         ✦ Receipts
@@ -104,13 +102,13 @@ const principles = [
       </div>
     </section>
 
-    <!-- Principles — six rules, one-line each. -->
+    <!-- House rules — 5 plays. -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-20">
       <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-8">
-        ✶ Six rules
+        ✶ House rules
       </p>
       <div class="space-y-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
-        {principles.map((p, i) => (
+        {rules.map((p, i) => (
           <div class={`reveal-on-scroll reveal-delay-${(i % 5) + 1} bg-[var(--color-bg-card)] p-6 sm:p-7 group hover:bg-[var(--color-bg-card-hover)] transition-colors flex items-baseline gap-4 sm:gap-6`}>
             <span class="text-[12px] font-mono text-[var(--color-magenta)] group-hover:text-[var(--color-cyan)] transition-colors shrink-0 w-6">
               {String(i + 1).padStart(2, '0')}
@@ -128,26 +126,10 @@ const principles = [
       </div>
     </section>
 
-    <!-- The apps — one-liners stacked. -->
-    <section class="relative mx-auto max-w-3xl px-5 sm:px-8 py-16">
-      <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono mb-6">
-        ✶ The suite
-      </p>
-      <ul class="space-y-3 text-[18px] sm:text-[22px] font-medium tracking-[-0.01em] text-[var(--color-text-mid)]">
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Optimizationmaxxing.</span> Tunes the rig.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Discordmaxxer.</span> −753 MB. Same Discord.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Clipmaxxer.</span> Stream tonight. Posted by morning.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Dropmaxxer.</span> The drop, picked.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Aimmaxxer.</span> Drill the gap.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Viewmaxxing.</span> The audience graph, watched.</li>
-        <li class="reveal-on-scroll"><span class="text-[var(--color-text)]">Editmaxxing.</span> One mechanic. Tight.</li>
-      </ul>
-    </section>
-
     <!-- Closing — slogan, CTA. -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-32">
       <h2 class="reveal-on-scroll text-[36px] sm:text-[52px] font-semibold tracking-[-0.025em] leading-[1.05]">
-        Different tools. <span class="serif-accent gradient-suite">Same standard.</span>
+        Different tools. <span class="serif-accent gradient-suite">Same energy.</span>
       </h2>
       <p class="reveal-on-scroll mt-6 text-[16px] text-[var(--color-text-mid)]">
         Built by a player who counts ms. For everyone else who does too.
