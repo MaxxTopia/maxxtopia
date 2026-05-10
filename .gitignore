@@ -15,3 +15,10 @@ _demo_work/
 *.mov
 public/screenshots/**/demo*.mp4
 public/screenshots/**/demo*.jpg
+
+# Deployed demos under public/screenshots/ MUST be tracked so Cloudflare Pages picks them up.
+!public/screenshots/**/demo.mp4
+!public/screenshots/**/demo-720.mp4
+!public/screenshots/**/demo-tiktok.mp4
+!public/screenshots/**/demo-poster.jpg
+!public/screenshots/**/demo-tiktok-poster.jpg

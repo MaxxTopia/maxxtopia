@@ -4,15 +4,41 @@ type Props = {
   alt: string;
   /** Multiple screenshots → grid layout. */
   extras?: string[];
+  /** Optional demo video. When set, replaces the static screenshot with an
+   *  autoplay-muted-loop video. The poster is shown while loading and as a
+   *  fallback for users with `prefers-reduced-motion: reduce`. */
+  video?: {
+    /** 1080p mp4 (highest quality). */
+    src: string;
+    /** Optional 720p mp4 served first to mobile / slow connections via media query. */
+    src720?: string;
+    /** Poster frame shown until the video starts playing. */
+    poster: string;
+  };
 };
-const { src, alt, extras = [] } = Astro.props;
+const { src, alt, extras = [], video } = Astro.props;
 const all = [src, ...extras];
-const isGrid = all.length > 1;
+const isGrid = all.length > 1 && !video;
 ---
 
 <figure class={`product-screenshot ${isGrid ? 'product-screenshot--grid' : ''}`}>
   <div class="product-screenshot__frame">
-    {!isGrid ? (
+    {video ? (
+      <video
+        class="product-screenshot__img product-screenshot__video"
+        poster={video.poster}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label={alt}
+      >
+        {video.src720 && <source src={video.src720} type="video/mp4" media="(max-width: 768px)" />}
+        <source src={video.src} type="video/mp4" />
+        <img src={video.poster} alt={alt} class="product-screenshot__img" />
+      </video>
+    ) : !isGrid ? (
       <img
         src={src}
         alt={alt}
@@ -34,8 +60,62 @@ const isGrid = all.length > 1;
       </div>
     )}
     <div class="product-screenshot__shimmer" aria-hidden="true"></div>
+    {video && (
+      <button
+        type="button"
+        class="product-screenshot__sound"
+        aria-label="Toggle sound"
+        data-state="muted"
+      >
+        <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+        <svg class="icon-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+      </button>
+    )}
   </div>
 </figure>
+
+{video && (
+  <script>
+    // Pause demo video when scrolled offscreen (saves CPU + battery).
+    // Also honor prefers-reduced-motion: reduce by pausing entirely + showing poster.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll<HTMLVideoElement>('.product-screenshot__video').forEach((v) => {
+      if (reduceMotion) {
+        v.pause();
+        v.removeAttribute('autoplay');
+        v.controls = true;
+        return;
+      }
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            const el = e.target as HTMLVideoElement;
+            if (e.isIntersecting) el.play().catch(() => {});
+            else el.pause();
+          }
+        },
+        { threshold: 0.25 }
+      );
+      io.observe(v);
+    });
+
+    // Sound toggle: pairs each .product-screenshot__sound with the nearest video.
+    document.querySelectorAll<HTMLButtonElement>('.product-screenshot__sound').forEach((btn) => {
+      const frame = btn.closest('.product-screenshot__frame');
+      const v = frame?.querySelector<HTMLVideoElement>('.product-screenshot__video');
+      if (!v) return;
+      btn.addEventListener('click', () => {
+        v.muted = !v.muted;
+        btn.dataset.state = v.muted ? 'muted' : 'on';
+        if (!v.muted) v.play().catch(() => {});
+      });
+    });
+  </script>
+)}
 
 <style>
   .product-screenshot {
@@ -99,5 +179,42 @@ const isGrid = all.length > 1;
     .product-screenshot__grid {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
+
+  .product-screenshot__sound {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(8, 8, 8, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.82);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.65;
+    transition: opacity 200ms ease, transform 200ms ease, border-color 200ms ease, color 200ms ease;
+    z-index: 2;
+  }
+  .product-screenshot__frame:hover .product-screenshot__sound {
+    opacity: 1;
+  }
+  .product-screenshot__sound:hover {
+    border-color: rgba(226, 91, 255, 0.55);
+    color: #e25bff;
+    transform: scale(1.06);
+  }
+  .product-screenshot__sound .icon-on { display: none; }
+  .product-screenshot__sound[data-state="on"] .icon-muted { display: none; }
+  .product-screenshot__sound[data-state="on"] .icon-on { display: inline-block; }
+  .product-screenshot__sound[data-state="on"] {
+    color: #e25bff;
+    border-color: rgba(226, 91, 255, 0.45);
+    opacity: 1;
   }
 </style>
