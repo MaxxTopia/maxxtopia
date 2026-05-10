@@ -181,11 +181,6 @@ export const products: Product[] = [
         poster: '/screenshots/discordmaxxer/demo-poster.jpg',
       },
       {
-        src: '/screenshots/discordmaxxer/demo-cut2.mp4',
-        src720: '/screenshots/discordmaxxer/demo-cut2-720.mp4',
-        poster: '/screenshots/discordmaxxer/demo-cut2-poster.jpg',
-      },
-      {
         src: '/screenshots/discordmaxxer/demo-cut3.mp4',
         src720: '/screenshots/discordmaxxer/demo-cut3-720.mp4',
         poster: '/screenshots/discordmaxxer/demo-cut3-poster.jpg',
