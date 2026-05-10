@@ -26,6 +26,14 @@ const isGrid = all.length > 1 && !initialVideo;
 ---
 
 <figure class={`product-screenshot ${isGrid ? 'product-screenshot--grid' : ''}`}>
+  {initialVideo && (
+    <div class="product-screenshot__unmute-banner" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+      </svg>
+      <span>Tap the speaker icon to unmute</span>
+    </div>
+  )}
   <div class="product-screenshot__frame">
     {initialVideo ? (
       <video
@@ -195,6 +203,10 @@ const isGrid = all.length > 1 && !initialVideo;
           slider.value = String(Math.round(target * 100));
           paint(Number(slider.value));
           v.play().catch(() => {});
+          // User got the hint — kill the unmute banner instantly so it
+          // doesn't sit there mocking them.
+          const fig = frame?.closest('.product-screenshot');
+          fig?.querySelector('.product-screenshot__unmute-banner')?.remove();
         } else {
           v.muted = true;
           btn.dataset.state = 'muted';
@@ -212,6 +224,46 @@ const isGrid = all.length > 1 && !initialVideo;
     position: relative;
     margin: 48px 0 0;
     padding: 0;
+  }
+  /* "Tap the speaker icon to unmute" header — sits above the video frame
+     so first-time visitors know there's audio. Auto-fades out 8s after
+     load (browser autoplay-policy means demo videos must start muted, so
+     without a hint people just watch silently and bounce). */
+  .product-screenshot__unmute-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    margin: 0 auto 10px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(226, 91, 255, 0.16), rgba(226, 91, 255, 0.06));
+    border: 1px solid rgba(226, 91, 255, 0.45);
+    color: var(--color-text);
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    width: fit-content;
+    box-shadow: 0 0 18px rgba(226, 91, 255, 0.25);
+    animation: unmute-banner-pulse 2.4s ease-in-out 0s 2 alternate, unmute-banner-fade 1.2s ease 8s forwards;
+  }
+  .product-screenshot__unmute-banner svg { opacity: 0.9; }
+  /* Center the banner in the figure by promoting figure to flex column. */
+  .product-screenshot:has(.product-screenshot__unmute-banner) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .product-screenshot:has(.product-screenshot__unmute-banner) .product-screenshot__frame {
+    width: 100%;
+  }
+  @keyframes unmute-banner-pulse {
+    from { box-shadow: 0 0 14px rgba(226, 91, 255, 0.18); }
+    to   { box-shadow: 0 0 26px rgba(226, 91, 255, 0.42); }
+  }
+  @keyframes unmute-banner-fade {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-6px); pointer-events: none; }
   }
   .product-screenshot__frame {
     position: relative;
