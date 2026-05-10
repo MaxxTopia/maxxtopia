@@ -34,20 +34,28 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
     pointer-events: none;
   }
 
-  /* Discordmaxxer — magenta+blurple gradient base, glowing magenta halo. */
+  /* Discordmaxxer — naked logo, no circle, no background. The horror-Clyde
+     mark carries its own identity (red eyes, devil horns, speech-tail), so
+     wrapping it in a magenta-blurple gradient was redundant and shrank the
+     glyph. Sized larger than its sibling buttons because it has no chrome
+     to fill out the slot. */
   .header-dm-btn {
-    background: linear-gradient(135deg, #e25bff 0%, #4c51f7 100%);
-    box-shadow:
-      0 0 0 1px rgba(226, 91, 255, 0.4),
-      0 8px 24px rgba(226, 91, 255, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    width: 52px;
+    height: 52px;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+    filter: drop-shadow(0 4px 12px rgba(226, 91, 255, 0.18));
+  }
+  .header-dm-btn img {
+    object-fit: contain;
   }
   .header-dm-btn:hover {
-    box-shadow:
-      0 0 0 1px rgba(226, 91, 255, 0.6),
-      0 12px 36px rgba(226, 91, 255, 0.45),
-      0 0 50px rgba(0, 212, 255, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    filter:
+      drop-shadow(0 6px 18px rgba(226, 91, 255, 0.45))
+      drop-shadow(0 0 28px rgba(0, 212, 255, 0.18))
+      brightness(1.1);
   }
 
   /* Optimizationmaxxing — sits AFTER "Get the tuner →" so the arrow
@@ -98,7 +106,7 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
         aria-label="Discordmaxxer — Discord, optimized."
         title="Discordmaxxer"
       >
-        <img src="/logos/discordmaxxer.png" alt="" width="40" height="40" />
+        <img src="/logos/discordmaxxer.png" alt="" width="52" height="52" />
       </a>
       <a href="/optimizationmaxxing" class="btn-primary header-cta !h-10 !px-4 !text-[13.5px]">
         Get the tuner
