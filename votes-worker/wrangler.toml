@@ -31,4 +31,4 @@ MAX_HWID_LEN = "128"
 # then paste the returned id below.
 [[kv_namespaces]]
 binding = "VOTES"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "857a8316999a4a939a22ee8db04d411b"
