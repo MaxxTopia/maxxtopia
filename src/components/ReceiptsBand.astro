@@ -1,0 +1,133 @@
+---
+/**
+ * ReceiptsBand — sits between hero and feature zones on LIVE product pages.
+ * Replaces the deleted stats aside with a 4-up trust strip:
+ *
+ *   [ VERSION · DATE ]  [ SPEC ]  [ SPEC ]  [ OPEN-SOURCE LINK ]
+ *
+ * Qualitative trust signals, not live counters — avoids the "API down at
+ * deploy time" failure mode. Updates ride normal release cadence.
+ *
+ * Audience: ADHD-gamer. Compact horizontal strip, not a fold-consuming grid.
+ * The repo link is the receipt — anyone can read the code that ships.
+ */
+
+type Props = {
+  version: string;
+  versionDate: string;
+  /** Repo URL — null hides the cell. */
+  repoUrl: string | null;
+  repoLabel: string;
+  /** Two product-specific stats. Order = display order. */
+  stats: Array<{ label: string; value: string }>;
+  /** Accent hex for the cell glow + value text. */
+  accentHex: string;
+};
+
+const { version, versionDate, repoUrl, repoLabel, stats, accentHex } = Astro.props;
+---
+
+<aside class="receipts-band reveal-on-scroll" style={`--receipts-accent: ${accentHex};`}>
+  <div class="receipts-band__cell">
+    <p class="receipts-band__label">Current build</p>
+    <p class="receipts-band__value">{version}</p>
+    <p class="receipts-band__sub">Released {versionDate}</p>
+  </div>
+
+  {stats.map((s) => (
+    <div class="receipts-band__cell">
+      <p class="receipts-band__label">{s.label}</p>
+      <p class="receipts-band__value">{s.value}</p>
+    </div>
+  ))}
+
+  {repoUrl && (
+    <a
+      class="receipts-band__cell receipts-band__cell--link"
+      href={repoUrl}
+      target="_blank"
+      rel="noopener"
+    >
+      <p class="receipts-band__label">Open source</p>
+      <p class="receipts-band__value">{repoLabel}</p>
+      <p class="receipts-band__sub">
+        Read the diff
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+        </svg>
+      </p>
+    </a>
+  )}
+</aside>
+
+<style>
+  .receipts-band {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 56px 0 0;
+  }
+  @media (min-width: 640px) {
+    .receipts-band {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 960px) {
+    .receipts-band {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .receipts-band__cell {
+    background: var(--color-bg-card);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 200ms ease;
+  }
+  .receipts-band__cell--link {
+    cursor: pointer;
+  }
+  .receipts-band__cell--link:hover {
+    background: var(--color-bg-card-hover);
+  }
+  .receipts-band__cell--link:hover .receipts-band__value {
+    color: var(--receipts-accent);
+  }
+
+  .receipts-band__label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-subtle);
+    margin: 0;
+  }
+  .receipts-band__value {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: clamp(22px, 2.5vw, 30px);
+    line-height: 1.05;
+    color: var(--color-text);
+    margin: 0;
+    letter-spacing: 0.005em;
+    font-variant-numeric: tabular-nums;
+    transition: color 200ms ease;
+  }
+  .receipts-band__sub {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-muted);
+    margin: 0;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+</style>

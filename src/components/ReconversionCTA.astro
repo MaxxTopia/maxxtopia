@@ -1,0 +1,227 @@
+---
+/**
+ * ReconversionCTA — last conversion moment on the page. Reprints the hero
+ * stat, drops the CTA again, and pre-empts the three objections that bounce
+ * gamers from a Windows tuner / Discord client install:
+ *
+ *   - "is this placebo?"   (OM)         "will Discord ban me?" (DM)
+ *   - "will it brick my PC?" (OM)       "is my data safe?"     (DM)
+ *   - "is it actually free?" (OM)       "is it really OSS?"    (DM)
+ *
+ * Three FAQ rows max — anything more turns into a wall and loses the ADHD
+ * audience. <details> for native disclosure (no JS), accent ring on hover.
+ */
+
+type Props = {
+  heroStat: { value: string; label: string };
+  /** Big closing sentence. Six words ideal. */
+  closingLine: string;
+  ctaLabel: string;
+  ctaHref: string;
+  ctaExternal?: boolean;
+  faqs: Array<{ q: string; a: string }>;
+  accentHex: string;
+};
+
+const { heroStat, closingLine, ctaLabel, ctaHref, ctaExternal, faqs, accentHex } = Astro.props;
+---
+
+<section class="reconvert" style={`--reconvert-accent: ${accentHex};`}>
+  <div class="reconvert__inner">
+    <div class="reconvert__stat reveal-on-scroll">
+      <p class="reconvert__stat-value">{heroStat.value}</p>
+      <p class="reconvert__stat-label">{heroStat.label}</p>
+    </div>
+
+    <p class="reconvert__line reveal-on-scroll">{closingLine}</p>
+
+    <div class="reconvert__cta-row reveal-on-scroll">
+      <a
+        class="reconvert__cta"
+        href={ctaHref}
+        target={ctaExternal ? '_blank' : undefined}
+        rel={ctaExternal ? 'noopener' : undefined}
+      >
+        {ctaLabel}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="reconvert__faq reveal-on-scroll">
+      <p class="reconvert__faq-tag">Three questions you were going to ask anyway</p>
+      <div class="reconvert__faq-list">
+        {faqs.map((f) => (
+          <details class="reconvert__faq-row">
+            <summary class="reconvert__faq-q">
+              <span>{f.q}</span>
+              <svg class="reconvert__faq-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </summary>
+            <p class="reconvert__faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reconvert {
+    position: relative;
+    padding: 112px 0 96px;
+    border-top: 1px solid var(--color-line);
+    overflow: hidden;
+  }
+  .reconvert::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--reconvert-accent) 22%, transparent), transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(0, 212, 255, 0.10), transparent 60%);
+    pointer-events: none;
+    opacity: 0.85;
+  }
+  .reconvert__inner {
+    position: relative;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  @media (min-width: 640px) {
+    .reconvert__inner { padding: 0 32px; }
+  }
+
+  .reconvert__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 24px;
+  }
+  .reconvert__stat-value {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: clamp(72px, 12vw, 156px);
+    line-height: 0.88;
+    letter-spacing: 0.005em;
+    margin: 0;
+    background: linear-gradient(135deg, var(--reconvert-accent) 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .reconvert__stat-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .reconvert__line {
+    font-family: var(--font-sans);
+    font-size: clamp(22px, 3.2vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0 auto 36px;
+    line-height: 1.2;
+    max-width: 24ch;
+  }
+
+  .reconvert__cta-row {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 64px;
+  }
+  .reconvert__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 26px;
+    border-radius: 999px;
+    background: var(--color-text);
+    color: var(--color-bg);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, 0.4),
+      0 0 0 1px color-mix(in srgb, var(--reconvert-accent) 35%, transparent);
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
+  }
+  .reconvert__cta:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.5),
+      0 0 0 1px color-mix(in srgb, var(--reconvert-accent) 60%, transparent),
+      0 0 38px color-mix(in srgb, var(--reconvert-accent) 30%, transparent);
+  }
+
+  .reconvert__faq {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .reconvert__faq-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0 0 18px;
+    text-align: center;
+  }
+  .reconvert__faq-list {
+    display: grid;
+    gap: 8px;
+  }
+  .reconvert__faq-row {
+    border: 1px solid var(--color-line);
+    background: var(--color-bg-card);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: border-color 200ms ease, background 200ms ease;
+  }
+  .reconvert__faq-row[open] {
+    border-color: color-mix(in srgb, var(--reconvert-accent) 45%, transparent);
+    background: var(--color-bg-card-hover);
+  }
+  .reconvert__faq-row:hover {
+    border-color: color-mix(in srgb, var(--reconvert-accent) 35%, transparent);
+  }
+  .reconvert__faq-q {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 15.5px;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .reconvert__faq-q::-webkit-details-marker { display: none; }
+  .reconvert__faq-chevron {
+    color: var(--color-muted);
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease;
+    flex-shrink: 0;
+  }
+  .reconvert__faq-row[open] .reconvert__faq-chevron {
+    transform: rotate(180deg);
+    color: var(--reconvert-accent);
+  }
+  .reconvert__faq-a {
+    color: var(--color-text-mid);
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin: 12px 0 0;
+  }
+</style>

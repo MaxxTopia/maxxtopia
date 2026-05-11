@@ -1,0 +1,436 @@
+---
+/**
+ * CutAutopsy — DM's moat exhibit. Subtraction made visible. Three panels:
+ *
+ *   1. The Diff Bar — animated stock 1,041 MB → discordmaxxer 288 MB.
+ *   2. The Cut List — categorical (not per-MB) items we removed. Honest:
+ *      we have the total measured, we do not have line-by-line MB accounting.
+ *   3. KPI strip — three verified numbers (Δ, domains, idle CPU).
+ *
+ * Audience: ADHD-gamer. Each panel ticks/animates on scroll. List items
+ * pop in sequentially so the subtraction feels physical, not academic.
+ */
+
+const cuts: Array<{ label: string; detail: string }> = [
+  {
+    label: 'Telemetry stack',
+    detail: "Discord's first-party analytics + Sentry crash pipeline + ad-tech beacons. All compiled out.",
+  },
+  {
+    label: 'Embedded Chromium baseline',
+    detail: 'Discord ships a frozen Chromium fork. We compile against your installed runtime — no second browser.',
+  },
+  {
+    label: 'Experimental Labs features',
+    detail: 'A/B test scaffolding, growth experiments, marketing surfaces. Removed at build time.',
+  },
+  {
+    label: 'Locale bundles you will never load',
+    detail: 'Stock ships 33 locale packs ungated. We ship the locale your OS reports.',
+  },
+  {
+    label: 'Background asset preloader',
+    detail: 'The "warm the renderer for the next route" path. On-demand instead of pre-fetched.',
+  },
+  {
+    label: 'Phone-home keepalives',
+    detail: 'Periodic health pings to Discord-owned domains unrelated to your messages. Cut to zero on launch.',
+  },
+];
+
+const kpis: Array<{ value: string; label: string; accent?: string }> = [
+  { value: '−753 MB', label: 'vs stock · resident RAM', accent: '#5865F2' },
+  { value: '14 → 0', label: 'outbound domains · on launch' },
+  { value: '0%', label: 'idle CPU · Tournament Mode' },
+];
+---
+
+<section class="cut-autopsy" aria-labelledby="cut-autopsy-heading">
+  <div class="cut-autopsy__inner">
+    <header class="cut-autopsy__header reveal-on-scroll">
+      <p class="cut-autopsy__eyebrow">The autopsy</p>
+      <h2 id="cut-autopsy-heading" class="cut-autopsy__heading">
+        We compiled stock Discord out of itself.
+      </h2>
+      <p class="cut-autopsy__sub">
+        Same servers, same messages, same friends. We just shipped the parts that talk to your friends — not the parts that talk to Discord, Inc.
+      </p>
+    </header>
+
+    <div class="cut-autopsy__diff reveal-on-scroll" data-diff-anim>
+      <div class="cut-autopsy__diff-row cut-autopsy__diff-row--stock">
+        <div class="cut-autopsy__diff-meta">
+          <span class="cut-autopsy__diff-label">Stock Discord</span>
+          <span class="cut-autopsy__diff-value" data-target-num="1041" data-suffix=" MB">0 MB</span>
+        </div>
+        <div class="cut-autopsy__diff-track">
+          <div class="cut-autopsy__diff-fill cut-autopsy__diff-fill--stock" data-target-pct="100"></div>
+        </div>
+      </div>
+
+      <div class="cut-autopsy__diff-row cut-autopsy__diff-row--ours">
+        <div class="cut-autopsy__diff-meta">
+          <span class="cut-autopsy__diff-label">Discordmaxxer</span>
+          <span class="cut-autopsy__diff-value" data-target-num="288" data-suffix=" MB">0 MB</span>
+        </div>
+        <div class="cut-autopsy__diff-track">
+          <div class="cut-autopsy__diff-fill cut-autopsy__diff-fill--ours" data-target-pct="27.7"></div>
+        </div>
+      </div>
+
+      <p class="cut-autopsy__delta">
+        <span class="cut-autopsy__delta-num">−753 MB</span>
+        <span class="cut-autopsy__delta-label">resident · measured idle on Windows 11</span>
+      </p>
+    </div>
+
+    <div class="cut-autopsy__cuts reveal-on-scroll" data-cut-list>
+      <p class="cut-autopsy__cuts-tag">What we removed</p>
+      <ul class="cut-autopsy__cuts-list">
+        {cuts.map((c, i) => (
+          <li class="cut-autopsy__cut" style={`--cut-delay: ${i * 90}ms;`}>
+            <span class="cut-autopsy__cut-mark" aria-hidden="true">−</span>
+            <div class="cut-autopsy__cut-body">
+              <p class="cut-autopsy__cut-label">{c.label}</p>
+              <p class="cut-autopsy__cut-detail">{c.detail}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="cut-autopsy__cuts-note">
+        Cut categories · we measured the resident-RAM delta, not per-subsystem accounting.
+        Open the build to see the compile flags.
+      </p>
+    </div>
+
+    <div class="cut-autopsy__kpis reveal-on-scroll">
+      {kpis.map((k) => (
+        <div class="cut-autopsy__kpi">
+          <span
+            class="cut-autopsy__kpi-value"
+            style={k.accent ? `background: linear-gradient(135deg, ${k.accent} 0%, #00d4ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent;` : undefined}
+          >
+            {k.value}
+          </span>
+          <span class="cut-autopsy__kpi-label">{k.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Number-tick animation on the diff bars + bar-fill grow.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const diff = document.querySelector<HTMLElement>('[data-diff-anim]');
+  if (diff) {
+    const valueEls = diff.querySelectorAll<HTMLElement>('[data-target-num]');
+    const fillEls = diff.querySelectorAll<HTMLElement>('[data-target-pct]');
+
+    const settle = () => {
+      valueEls.forEach((el) => {
+        const target = Number(el.dataset.targetNum || '0');
+        const suffix = el.dataset.suffix || '';
+        el.textContent = target.toLocaleString() + suffix;
+      });
+      fillEls.forEach((el) => {
+        el.style.width = (el.dataset.targetPct || '0') + '%';
+      });
+    };
+
+    if (reduce) {
+      settle();
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            obs.disconnect();
+            const start = performance.now();
+            const duration = 1500;
+            const tick = (now: number) => {
+              const t = Math.min(1, (now - start) / duration);
+              const eased = 1 - Math.pow(1 - t, 3);
+              valueEls.forEach((el) => {
+                const target = Number(el.dataset.targetNum || '0');
+                const suffix = el.dataset.suffix || '';
+                el.textContent = Math.round(target * eased).toLocaleString() + suffix;
+              });
+              fillEls.forEach((el) => {
+                const target = Number(el.dataset.targetPct || '0');
+                el.style.width = (target * eased).toFixed(2) + '%';
+              });
+              if (t < 1) requestAnimationFrame(tick);
+              else settle();
+            };
+            requestAnimationFrame(tick);
+          }
+        },
+        { threshold: 0.4 }
+      );
+      io.observe(diff);
+    }
+  }
+
+  // Cut list — items fade in sequentially when the list reaches the viewport.
+  const cutList = document.querySelector<HTMLElement>('[data-cut-list]');
+  if (cutList && !reduce) {
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          obs.disconnect();
+          cutList.classList.add('is-revealed');
+        }
+      },
+      { threshold: 0.25 }
+    );
+    io.observe(cutList);
+  } else if (cutList) {
+    cutList.classList.add('is-revealed');
+  }
+</script>
+
+<style>
+  .cut-autopsy {
+    position: relative;
+    padding: 96px 0 64px;
+    border-top: 1px solid var(--color-line);
+  }
+  .cut-autopsy__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  @media (min-width: 640px) {
+    .cut-autopsy__inner { padding: 0 32px; }
+  }
+
+  .cut-autopsy__header {
+    max-width: 680px;
+    margin: 0 auto 56px;
+    text-align: center;
+  }
+  .cut-autopsy__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #5865F2;
+    margin: 0 0 14px;
+  }
+  .cut-autopsy__heading {
+    font-family: var(--font-sans);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 14px;
+  }
+  .cut-autopsy__sub {
+    color: var(--color-text-mid);
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0 auto;
+    max-width: 60ch;
+  }
+
+  /* Diff bar — stock vs ours, animated tick + fill grow. */
+  .cut-autopsy__diff {
+    display: grid;
+    gap: 22px;
+    padding: 32px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 18px;
+    background:
+      linear-gradient(180deg, rgba(88, 101, 242, 0.04), transparent 50%),
+      var(--color-bg-card);
+    box-shadow:
+      0 24px 60px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(88, 101, 242, 0.12);
+    margin: 0 0 56px;
+  }
+  .cut-autopsy__diff-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .cut-autopsy__diff-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--color-text-mid);
+  }
+  .cut-autopsy__diff-row--ours .cut-autopsy__diff-label {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .cut-autopsy__diff-value {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: 28px;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .cut-autopsy__diff-row--ours .cut-autopsy__diff-value {
+    background: linear-gradient(135deg, #5865F2 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cut-autopsy__diff-track {
+    height: 14px;
+    border-radius: 999px;
+    background: var(--color-line);
+    overflow: hidden;
+  }
+  .cut-autopsy__diff-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 60ms linear;
+  }
+  .cut-autopsy__diff-fill--stock {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.55));
+  }
+  .cut-autopsy__diff-fill--ours {
+    background: linear-gradient(90deg, #5865F2, #00d4ff);
+    box-shadow: 0 0 22px rgba(88, 101, 242, 0.45);
+  }
+  .cut-autopsy__delta {
+    margin: 8px 0 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .cut-autopsy__delta-num {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1;
+    background: linear-gradient(135deg, #5865F2 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cut-autopsy__delta-label {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Cut list — items animate in sequentially. */
+  .cut-autopsy__cuts {
+    margin: 0 0 56px;
+  }
+  .cut-autopsy__cuts-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #5865F2;
+    margin: 0 0 20px;
+    text-align: center;
+  }
+  .cut-autopsy__cuts-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .cut-autopsy__cut {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 14px;
+    padding: 18px 22px;
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+    background: var(--color-bg-card);
+    opacity: 0;
+    transform: translateX(-12px);
+    transition:
+      opacity 460ms cubic-bezier(0.16, 1, 0.3, 1) var(--cut-delay, 0ms),
+      transform 460ms cubic-bezier(0.16, 1, 0.3, 1) var(--cut-delay, 0ms),
+      border-color 200ms ease;
+  }
+  .is-revealed .cut-autopsy__cut {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .cut-autopsy__cut:hover {
+    border-color: rgba(88, 101, 242, 0.45);
+  }
+  .cut-autopsy__cut-mark {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: 30px;
+    line-height: 1;
+    color: #5865F2;
+    text-align: center;
+    align-self: center;
+  }
+  .cut-autopsy__cut-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .cut-autopsy__cut-detail {
+    color: var(--color-text-mid);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .cut-autopsy__cuts-note {
+    text-align: center;
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin: 18px 0 0;
+    letter-spacing: 0.04em;
+  }
+
+  /* KPI strip — three verified numbers. */
+  .cut-autopsy__kpis {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  @media (min-width: 720px) {
+    .cut-autopsy__kpis {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .cut-autopsy__kpi {
+    background: var(--color-bg-card);
+    padding: 28px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .cut-autopsy__kpi-value {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: clamp(36px, 5vw, 54px);
+    line-height: 1;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.005em;
+  }
+  .cut-autopsy__kpi-label {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+</style>

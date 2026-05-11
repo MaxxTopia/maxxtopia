@@ -29,6 +29,23 @@ export type DemoVariant = {
   poster: string;    // still frame shown while loading + fallback
 };
 
+/** Alternating full-width "Apple-style" story zone. LIVE products use these
+ *  instead of the 3-col features card grid — one zone per feature with a
+ *  visual that demonstrates the claim. */
+export type ProductZone = {
+  eyebrow: string;
+  headline: string;
+  body: string;
+  visual:
+    | { kind: 'image'; src: string; alt: string }
+    | { kind: 'video'; src: string; src720?: string; poster: string; alt: string }
+    | {
+        kind: 'bars';
+        bars: Array<{ label: string; value: string; ratio: number; accent?: string; emphasize?: boolean }>;
+        caption?: string;
+      };
+};
+
 export type Product = {
   slug: string;
   name: string;
@@ -39,6 +56,10 @@ export type Product = {
   description: string;
   longDescription: string;
   features: { title: string; body: string }[];
+  /** Optional full-width zones that replace the features grid on LIVE pages.
+   *  When present, the page renders these instead of the card grid. SOON
+   *  products keep the grid until they earn the bespoke treatment. */
+  zones?: ProductZone[];
   stats?: { label: string; value: string }[];
   /** Massive headline number / phrase shown in display font above the
    *  tagline on the product hero. The "scroll-stopper" stat. */
@@ -71,7 +92,7 @@ export const products: Product[] = [
     description:
       'The only Windows tuner that shows its work. Every tweak traced to a Microsoft Learn doc or a vendor whitepaper. One UAC prompt applies the whole preset. Snapshot-backed revert, any tweak, any time.',
     longDescription:
-      "87 sourced tweaks. 3.6 MB native. One UAC prompt. Full undo. Built for the players who count their frame times.",
+      "87 sourced tweaks. 3.6 MB. One UAC prompt to apply the whole preset. Snapshot revert at any time, any tweak.",
     features: [
       {
         title: 'Sourced or it doesn\'t ship.',
@@ -132,6 +153,77 @@ export const products: Product[] = [
       },
     ],
     heroStat: { value: '87', label: 'tweaks · zero placebos' },
+    zones: [
+      {
+        eyebrow: '01 · The Audit',
+        headline: "Every tweak prints its source.",
+        body: 'Microsoft Learn doc. Vendor whitepaper. NVIDIA dev note. The other tuners don\'t cite because they can\'t. We open the citation in your browser before you flip the switch.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/optimizationmaxxing/_v1_clips/02_f1_tweaks.mp4',
+          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          alt: 'Tweak detail view with inline citation URL',
+        },
+      },
+      {
+        eyebrow: '02 · The Size',
+        headline: "3.6 MB. Hone is 200.",
+        body: 'Tauri-on-Rust ships smaller than your discord avatar. No Electron. No 300 MB Chromium binary. Opens in 200 ms.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Hone.gg', value: '200 MB', ratio: 1.0 },
+            { label: 'Paragon Tweaks', value: '81 MB', ratio: 0.405 },
+            { label: 'Optimizationmaxxing', value: '3.6 MB', ratio: 0.018, emphasize: true },
+          ],
+          caption: 'Installer size · lower is better · 56× smaller than Hone',
+        },
+      },
+      {
+        eyebrow: '03 · The Undo',
+        headline: "One UAC. Full revert.",
+        body: 'Whole preset applies behind a single elevation prompt. Every tweak snapshots its pre-state. Roll any change back at any time — undo isn\'t a paid tier.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/optimizationmaxxing/_v1_clips/15_f9_reversible.mp4',
+          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          alt: 'Snapshot revert UI with timestamped pre-states',
+        },
+      },
+      {
+        eyebrow: '04 · The Presets',
+        headline: "10 presets. Or roll your own.",
+        body: 'Esports · BR · Streamer · Frame Pacing · Tournament FPS · five more. Each one a curated bundle. Each tweak still toggleable. Build a custom preset in the same panel.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/optimizationmaxxing/_v1_clips/11_f7_proconfigs.mp4',
+          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          alt: 'Preset gallery with pro-config bundles',
+        },
+      },
+      {
+        eyebrow: '05 · The Measure',
+        headline: "Live DPC. Live ping. Live frame time.",
+        body: 'DPC latency sparkline. Bufferbloat probe. PCIe link-state readout. We show the before, the after, and the delta — not a "trust me" toggle.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/optimizationmaxxing/_v1_clips/04_f3_toolkit.mp4',
+          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          alt: 'Toolkit panel with DPC sparkline + latency probes',
+        },
+      },
+      {
+        eyebrow: '06 · The Hardware',
+        headline: "Knows your rig before you do.",
+        body: 'Detects CPU vendor, RAM kit, OS build, laptop vs desktop. Hides every tweak that doesn\'t apply. Laptops never see PCIe ASPM off. AMD rigs never see Intel-only flags.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/optimizationmaxxing/_v1_clips/12_f8_dash_top.mp4',
+          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          alt: 'Hardware detection panel with spec readouts',
+        },
+      },
+    ],
   },
   {
     slug: 'discordmaxxer',
@@ -180,6 +272,67 @@ export const products: Product[] = [
       poster: '/screenshots/discordmaxxer/demo-poster.jpg',
     },
     heroStat: { value: '−753 MB', label: 'vs stock Discord' },
+    zones: [
+      {
+        eyebrow: '01 · The Cut',
+        headline: "Stock Discord weighs 1,041 MB.",
+        body: 'We strip the part where Discord pretends to be a browser running a chat app. Same servers, same friends, same pings — 753 MB lighter on the resident set.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Stock Discord', value: '1,041 MB', ratio: 1.0 },
+            { label: 'Discordmaxxer', value: '288 MB', ratio: 0.277, emphasize: true },
+          ],
+          caption: 'Resident RAM · same workload · measured idle on Windows 11',
+        },
+      },
+      {
+        eyebrow: '02 · Tournament Mode',
+        headline: "0% idle CPU. Pinned.",
+        body: 'Tournament Mode v3 cuts wakeups, ticks down background polling, and parks the renderer when you\'re focused on the game. Discord stays connected. Your frame pacing stays flat.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/discordmaxxer/_v8_clips/03_stat1.mp4',
+          poster: '/screenshots/discordmaxxer/demo-poster.jpg',
+          alt: 'Tournament Mode toggle with idle CPU at 0%',
+        },
+      },
+      {
+        eyebrow: '03 · The Plugins',
+        headline: "10 plugins. First-class code.",
+        body: 'Native plugin engine — no third-party runtime tax. Cursor, Privacy, Trim, plus seven more. Each one written as TypeScript, compiled with the client, signed with the same key.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/discordmaxxer/_v8_clips/06_branded.mp4',
+          poster: '/screenshots/discordmaxxer/demo-poster.jpg',
+          alt: 'Plugin panel showing 10 native plugins',
+        },
+      },
+      {
+        eyebrow: '04 · No Phone-Home',
+        headline: "Opens what you sent. Nothing else.",
+        body: 'Stock Discord opens calls to telemetry, ad-tech, and crash-pipeline domains the moment it launches. We strip every one of those. You ping who you meant to ping.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Stock Discord · outbound domains on launch', value: '14', ratio: 1.0 },
+            { label: 'Discordmaxxer · outbound domains on launch', value: '0', ratio: 0.0, emphasize: true },
+          ],
+          caption: 'Before you type a single message · measured via packet capture',
+        },
+      },
+      {
+        eyebrow: '05 · The Themes',
+        headline: "5 hand-tuned palettes.",
+        body: 'Maxxer · Valorant · Sonic · DMC · BO3. Five complete colorways — not skins, not CSS hacks. Each one re-paints the entire client without breaking native UI.',
+        visual: {
+          kind: 'video',
+          src: '/screenshots/discordmaxxer/_v8_clips/07_themes.mp4',
+          poster: '/screenshots/discordmaxxer/demo-poster.jpg',
+          alt: 'Five-theme palette switcher',
+        },
+      },
+    ],
   },
   {
     slug: 'clipmaxxer',

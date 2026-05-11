@@ -1,0 +1,368 @@
+---
+/**
+ * SourceWall — OM's killer moat exhibit. Twenty curated tweaks with their
+ * source attributions, plus an animated `0 → 87` counter and a category
+ * filter. No other Windows tuner publishes any of this. The page IS the
+ * audit.
+ *
+ * Audience: ADHD-gamer. Counter ticks fast (~1.4s). Chips give immediate
+ * sense of agency. Citation-of-the-day card sits up top so repeat visits
+ * show fresh content.
+ */
+import {
+  omSourceWall,
+  omSourceWallCategories,
+  citationOfTheDay,
+  omTotalTweaks,
+} from '../data/om-source-wall';
+
+const featured = citationOfTheDay();
+const others = omSourceWall.filter((t) => t.id !== featured.id);
+---
+
+<section class="source-wall" aria-labelledby="source-wall-heading">
+  <div class="source-wall__inner">
+    <header class="source-wall__header reveal-on-scroll">
+      <p class="source-wall__eyebrow">The audit</p>
+      <h2 id="source-wall-heading" class="source-wall__heading">
+        Every tweak ships with its source.
+      </h2>
+      <p class="source-wall__sub">
+        Hone has none. Paragon has none. We publish every citation, every category, every audit trail.
+      </p>
+
+      <div class="source-wall__counter" aria-label={`${omTotalTweaks} audited tweaks in the catalog`}>
+        <span class="source-wall__counter-num" data-target={omTotalTweaks}>0</span>
+        <span class="source-wall__counter-label">audited tweaks · in the build</span>
+      </div>
+    </header>
+
+    <div class="source-wall__chips reveal-on-scroll" role="tablist" aria-label="Filter sources by category">
+      <button type="button" class="source-wall__chip is-active" data-filter="all" role="tab" aria-selected="true">
+        All
+      </button>
+      {omSourceWallCategories.map((cat) => (
+        <button type="button" class="source-wall__chip" data-filter={cat} role="tab" aria-selected="false">
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <article class="source-wall__featured reveal-on-scroll" data-category={featured.category}>
+      <p class="source-wall__featured-tag">Citation of the day</p>
+      <div class="source-wall__featured-body">
+        <p class="source-wall__featured-meta">
+          <span class="source-wall__pill source-wall__pill--cat">{featured.category}</span>
+          <span class="source-wall__pill source-wall__pill--type">{featured.sourceType}</span>
+        </p>
+        <h3 class="source-wall__featured-title">{featured.title}</h3>
+        <p class="source-wall__featured-blurb">{featured.blurb}</p>
+        <p class="source-wall__featured-attribution">
+          <span class="source-wall__attribution-label">Cited:</span> {featured.attribution}
+        </p>
+      </div>
+    </article>
+
+    <div class="source-wall__grid" id="source-wall-grid">
+      {others.map((t) => (
+        <article class="source-wall__card" data-category={t.category}>
+          <div class="source-wall__card-meta">
+            <span class="source-wall__pill source-wall__pill--cat">{t.category}</span>
+            <span class="source-wall__pill source-wall__pill--type">{t.sourceType}</span>
+          </div>
+          <h3 class="source-wall__card-title">{t.title}</h3>
+          <p class="source-wall__card-blurb">{t.blurb}</p>
+          <p class="source-wall__card-attribution">{t.attribution}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="source-wall__more">
+      Showing 20. The remaining 67 ship with the build — every one cited inline in the app.
+    </p>
+  </div>
+</section>
+
+<script>
+  // Animated counter: 0 → target, runs once when the wall scrolls into view.
+  const counter = document.querySelector<HTMLElement>('.source-wall__counter-num');
+  if (counter) {
+    const target = parseInt(counter.dataset.target || '0', 10);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      counter.textContent = String(target);
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            obs.disconnect();
+            const start = performance.now();
+            const duration = 1400;
+            const tick = (now: number) => {
+              const t = Math.min(1, (now - start) / duration);
+              const eased = 1 - Math.pow(1 - t, 3);
+              counter.textContent = String(Math.round(target * eased));
+              if (t < 1) requestAnimationFrame(tick);
+              else counter.textContent = String(target);
+            };
+            requestAnimationFrame(tick);
+          }
+        },
+        { threshold: 0.4 }
+      );
+      io.observe(counter);
+    }
+  }
+
+  // Filter chips: hide cards whose data-category doesn't match the picked filter.
+  const chips = document.querySelectorAll<HTMLButtonElement>('.source-wall__chip');
+  const cards = document.querySelectorAll<HTMLElement>('.source-wall__card');
+  const featured = document.querySelector<HTMLElement>('.source-wall__featured');
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const filter = chip.dataset.filter || 'all';
+      chips.forEach((c) => {
+        const active = c === chip;
+        c.classList.toggle('is-active', active);
+        c.setAttribute('aria-selected', String(active));
+      });
+      cards.forEach((card) => {
+        const match = filter === 'all' || card.dataset.category === filter;
+        card.style.display = match ? '' : 'none';
+      });
+      if (featured) {
+        const match = filter === 'all' || featured.dataset.category === filter;
+        featured.style.display = match ? '' : 'none';
+      }
+    });
+  });
+</script>
+
+<style>
+  .source-wall {
+    position: relative;
+    padding: 96px 0 64px;
+    border-top: 1px solid var(--color-line);
+  }
+  .source-wall__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  @media (min-width: 640px) {
+    .source-wall__inner { padding: 0 32px; }
+  }
+
+  .source-wall__header {
+    max-width: 720px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  .source-wall__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-magenta);
+    margin: 0 0 14px;
+  }
+  .source-wall__heading {
+    font-family: var(--font-sans);
+    font-size: clamp(30px, 4.5vw, 48px);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 16px;
+  }
+  .source-wall__sub {
+    color: var(--color-text-mid);
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0 auto 32px;
+    max-width: 56ch;
+  }
+
+  .source-wall__counter {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .source-wall__counter-num {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: clamp(72px, 12vw, 156px);
+    line-height: 0.9;
+    letter-spacing: 0.005em;
+    background: linear-gradient(135deg, #e25bff 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-variant-numeric: tabular-nums;
+  }
+  .source-wall__counter-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .source-wall__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 0 0 40px;
+  }
+  .source-wall__chip {
+    appearance: none;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-bg-card);
+    color: var(--color-text-mid);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    padding: 7px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+  }
+  .source-wall__chip:hover {
+    color: var(--color-text);
+    border-color: var(--color-magenta);
+  }
+  .source-wall__chip.is-active {
+    background: linear-gradient(180deg, rgba(226, 91, 255, 0.18), rgba(226, 91, 255, 0.06));
+    color: #fff;
+    border-color: rgba(226, 91, 255, 0.55);
+    box-shadow: 0 0 18px rgba(226, 91, 255, 0.25);
+  }
+
+  /* Citation of the day — featured up top, distinct treatment. */
+  .source-wall__featured {
+    position: relative;
+    border: 1px solid var(--color-line-strong);
+    background:
+      linear-gradient(180deg, rgba(226, 91, 255, 0.06), transparent 50%),
+      var(--color-bg-card);
+    border-radius: 20px;
+    padding: 28px;
+    margin: 0 0 32px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 24px 60px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(226, 91, 255, 0.16);
+  }
+  .source-wall__featured-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-magenta);
+    margin: 0 0 14px;
+  }
+  .source-wall__featured-title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    line-height: 1.1;
+    margin: 12px 0 10px;
+    color: var(--color-text);
+  }
+  .source-wall__featured-blurb {
+    color: var(--color-text-mid);
+    font-size: 15.5px;
+    line-height: 1.55;
+    max-width: 64ch;
+    margin: 0 0 14px;
+  }
+  .source-wall__featured-attribution {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .source-wall__attribution-label {
+    color: var(--color-cyan);
+    margin-right: 6px;
+  }
+
+  .source-wall__grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .source-wall__card {
+    border: 1px solid var(--color-line);
+    background: var(--color-bg-card);
+    border-radius: 14px;
+    padding: 18px;
+    transition: border-color 200ms ease, transform 200ms ease, background 200ms ease;
+  }
+  .source-wall__card:hover {
+    border-color: rgba(226, 91, 255, 0.45);
+    transform: translateY(-2px);
+    background: var(--color-bg-card-hover);
+  }
+  .source-wall__card-meta,
+  .source-wall__featured-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .source-wall__card-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 12px 0 8px;
+    color: var(--color-text);
+    line-height: 1.25;
+  }
+  .source-wall__card-blurb {
+    color: var(--color-text-mid);
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin: 0 0 10px;
+  }
+  .source-wall__card-attribution {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-subtle);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .source-wall__pill {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+  }
+  .source-wall__pill--cat {
+    color: #00d4ff;
+    border-color: rgba(0, 212, 255, 0.32);
+    background: rgba(0, 212, 255, 0.08);
+  }
+  .source-wall__pill--type {
+    color: #e25bff;
+    border-color: rgba(226, 91, 255, 0.32);
+    background: rgba(226, 91, 255, 0.08);
+  }
+
+  .source-wall__more {
+    margin: 32px 0 0;
+    text-align: center;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+  }
+</style>

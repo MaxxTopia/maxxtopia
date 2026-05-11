@@ -1,0 +1,269 @@
+---
+/**
+ * FeatureZone — full-width "Apple-style" alternating zone used to replace the
+ * 3-col card grid on LIVE product pages. Each zone leads with one punchy
+ * headline + ≤2 lines body and pairs it with a single visual (image, video,
+ * or inline bar chart).
+ *
+ * Mobile: collapses to a single stacked column (eyebrow → headline → body →
+ * visual). Desktop: alternates the visual side via `flip` prop.
+ *
+ * Audience constraint: ADHD-gamer, ≤6-word headlines, no prose blocks, motion
+ * is welcome (zone visuals can be looping muted clips).
+ */
+
+type ZoneVisual =
+  | { kind: 'image'; src: string; alt: string }
+  | { kind: 'video'; src: string; src720?: string; poster: string; alt: string }
+  | {
+      kind: 'bars';
+      /** Each bar = one labelled value. The longest bar fills 100% of the
+       *  track via `ratio` (0..1). Optional `accent` overrides the default
+       *  magenta fill, useful for highlighting "ours". */
+      bars: Array<{ label: string; value: string; ratio: number; accent?: string; emphasize?: boolean }>;
+      caption?: string;
+    };
+
+type Zone = {
+  /** Short uppercase label above the headline. Often a step number ("01") or
+   *  a single word ("THE AUDIT", "THE CUT"). */
+  eyebrow: string;
+  headline: string;
+  /** Two lines max. Hard receipts, not prose. */
+  body: string;
+  visual: ZoneVisual;
+};
+
+type Props = {
+  zone: Zone;
+  index: number;
+  /** Force the visual side. If unset, alternates by index. */
+  flip?: boolean;
+  /** Product accent hex for the headline glow + bar fills. */
+  accentHex: string;
+};
+
+const { zone, index, flip, accentHex } = Astro.props;
+const flipped = flip ?? index % 2 === 1;
+---
+
+<section
+  class:list={['feature-zone reveal-on-scroll', flipped && 'feature-zone--flip']}
+  style={`--zone-accent: ${accentHex};`}
+>
+  <div class="feature-zone__text">
+    <p class="feature-zone__eyebrow">{zone.eyebrow}</p>
+    <h3 class="feature-zone__headline">{zone.headline}</h3>
+    <p class="feature-zone__body">{zone.body}</p>
+  </div>
+
+  <div class="feature-zone__visual">
+    {zone.visual.kind === 'image' && (
+      <div class="feature-zone__frame">
+        <img
+          src={zone.visual.src}
+          alt={zone.visual.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    {zone.visual.kind === 'video' && (
+      <div class="feature-zone__frame">
+        <video
+          class="feature-zone__video"
+          poster={zone.visual.poster}
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-label={zone.visual.alt}
+        >
+          {zone.visual.src720 && (
+            <source src={zone.visual.src720} type="video/mp4" media="(max-width: 768px)" />
+          )}
+          <source src={zone.visual.src} type="video/mp4" />
+        </video>
+      </div>
+    )}
+
+    {zone.visual.kind === 'bars' && (
+      <div class="feature-zone__bars" role="figure">
+        {zone.visual.bars.map((b) => (
+          <div
+            class:list={['feature-zone__bar-row', b.emphasize && 'is-emphasized']}
+          >
+            <div class="feature-zone__bar-meta">
+              <span class="feature-zone__bar-label">{b.label}</span>
+              <span class="feature-zone__bar-value">{b.value}</span>
+            </div>
+            <div class="feature-zone__bar-track">
+              <div
+                class="feature-zone__bar-fill"
+                style={`--ratio: ${Math.max(0, Math.min(1, b.ratio)) * 100}%; --bar-accent: ${b.accent ?? accentHex};`}
+              ></div>
+            </div>
+          </div>
+        ))}
+        {zone.visual.caption && (
+          <p class="feature-zone__bar-caption">{zone.visual.caption}</p>
+        )}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .feature-zone {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 56px 0;
+    border-top: 1px solid var(--color-line);
+    align-items: center;
+  }
+  .feature-zone:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  @media (min-width: 900px) {
+    .feature-zone {
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      padding: 96px 0;
+    }
+    .feature-zone--flip .feature-zone__text {
+      order: 2;
+    }
+    .feature-zone--flip .feature-zone__visual {
+      order: 1;
+    }
+  }
+
+  .feature-zone__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--zone-accent, var(--color-magenta));
+    margin: 0 0 16px;
+  }
+  .feature-zone__headline {
+    font-family: var(--font-sans);
+    font-size: clamp(30px, 4.2vw, 52px);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 16px;
+  }
+  .feature-zone__body {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-text-mid);
+    max-width: 38ch;
+    margin: 0;
+  }
+
+  .feature-zone__frame {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-bg-card);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.05) inset,
+      0 24px 60px rgba(0, 0, 0, 0.45),
+      0 0 0 1px color-mix(in srgb, var(--zone-accent) 18%, transparent),
+      0 0 70px color-mix(in srgb, var(--zone-accent) 10%, transparent);
+    aspect-ratio: 16 / 10;
+  }
+  .feature-zone__frame img,
+  .feature-zone__frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Inline bar chart — comparison data without leaving the page flow. */
+  .feature-zone__bars {
+    display: grid;
+    gap: 14px;
+  }
+  .feature-zone__bar-row {
+    display: grid;
+    gap: 6px;
+    opacity: 0.78;
+    transition: opacity 200ms ease;
+  }
+  .feature-zone__bar-row.is-emphasized {
+    opacity: 1;
+  }
+  .feature-zone__bar-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .feature-zone__bar-label {
+    color: var(--color-text-mid);
+    letter-spacing: 0.02em;
+  }
+  .is-emphasized .feature-zone__bar-label {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .feature-zone__bar-value {
+    color: var(--color-text);
+    font-family: var(--font-display), var(--font-sans);
+    font-size: 18px;
+    letter-spacing: 0.01em;
+  }
+  .is-emphasized .feature-zone__bar-value {
+    color: var(--zone-accent);
+  }
+  .feature-zone__bar-track {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--color-line);
+    overflow: hidden;
+    position: relative;
+  }
+  .feature-zone__bar-fill {
+    height: 100%;
+    width: var(--ratio, 0%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bar-accent) 60%, transparent),
+      var(--bar-accent)
+    );
+    border-radius: 999px;
+    box-shadow: 0 0 18px color-mix(in srgb, var(--bar-accent) 38%, transparent);
+    transform-origin: left center;
+    animation: feature-zone-bar-grow 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .feature-zone__bar-caption {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-subtle);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  @keyframes feature-zone-bar-grow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feature-zone__bar-fill {
+      animation: none;
+    }
+  }
+</style>

@@ -7,7 +7,95 @@ import StatusTape from '../components/StatusTape.astro';
 import BuildStatus from '../components/BuildStatus.astro';
 import NotifyMeCard from '../components/NotifyMeCard.astro';
 import ProductScreenshot from '../components/ProductScreenshot.astro';
+import FeatureZone from '../components/FeatureZone.astro';
+import SourceWall from '../components/SourceWall.astro';
+import CutAutopsy from '../components/CutAutopsy.astro';
+import ReceiptsBand from '../components/ReceiptsBand.astro';
+import ReconversionCTA from '../components/ReconversionCTA.astro';
+import dmReleaseMeta from '../data/discordmaxxer-release.json';
+import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
+
+// Per-LIVE-product receipts-band config — version meta + two specs +
+// open-source repo. The 4-up replaces the old hero stats aside.
+function fmtReleaseDate(iso: string | undefined): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+// Per-LIVE-product reconversion config — the closing CTA + 3-question FAQ
+// pre-empting the obvious objections. Three is the ceiling: more than that
+// turns into a wall the ADHD-gamer audience won't scroll.
+const reconvertConfig: Record<string, {
+  closingLine: string;
+  faqs: Array<{ q: string; a: string }>;
+}> = {
+  optimizationmaxxing: {
+    closingLine: 'Tune what you measured. Revert what didn\'t help.',
+    faqs: [
+      {
+        q: 'Is this just registry voodoo?',
+        a: "No. Every tweak cites a Microsoft Learn doc, NVIDIA dev note, or vendor whitepaper before you flip the switch. Twenty live on this page; the other 67 ship cited inside the build. Hone publishes none of theirs. Paragon publishes none of theirs.",
+      },
+      {
+        q: 'Will it brick my PC?',
+        a: "No. Every action snapshots its pre-state to a local SQLite ledger before applying. One-click revert at any time, any tweak. Zero BIOS writes, zero kernel drivers — that line is a hard refusal in the engine.",
+      },
+      {
+        q: "What's the catch?",
+        a: "Free. 3.6 MB. The catch is that a handful of the more aggressive tweaks (CPU set pinning, certain registry deep cuts) live behind a one-time $8 VIP unlock. Everything else — including full undo — is unlocked from the install.",
+      },
+    ],
+  },
+  discordmaxxer: {
+    closingLine: 'Same Discord. 753 MB less of it.',
+    faqs: [
+      {
+        q: 'Will Discord ban me?',
+        a: "We don't modify Discord's network protocol. Same WebSocket, same APIs, same identity flow — we just strip the renderer-side bloat. No mod logs report bans for client-side mods of this shape; we ship the source so you can audit what hits the wire.",
+      },
+      {
+        q: 'Is my data safe?',
+        a: "Your messages and voice still go to Discord's servers — that's where your friends are. What we strip is Discord-Inc.'s telemetry pipeline: analytics, crash beacons, ad-tech, growth experiments. Zero outbound calls outside the chat itself.",
+      },
+      {
+        q: 'Is it really open source?',
+        a: "Yes. The repo is in the receipts band above. Clone it, read the diff against stock, sign it with your own key. The whole point is that you don't have to take our word for what we stripped.",
+      },
+    ],
+  },
+};
+
+const receiptsConfig: Record<string, {
+  version: string;
+  versionDate: string;
+  repoUrl: string;
+  repoLabel: string;
+  stats: Array<{ label: string; value: string }>;
+}> = {
+  optimizationmaxxing: {
+    version: omReleaseMeta.version,
+    versionDate: fmtReleaseDate(omReleaseMeta.publishedAt),
+    repoUrl: 'https://github.com/MaxxTopia/optimizationmaxxing',
+    repoLabel: 'MaxxTopia/optimizationmaxxing',
+    stats: [
+      { label: 'Audited tweaks', value: '87' },
+      { label: 'Installer size', value: '3.6 MB' },
+    ],
+  },
+  discordmaxxer: {
+    version: dmReleaseMeta.version,
+    versionDate: fmtReleaseDate(dmReleaseMeta.publishedAt),
+    repoUrl: 'https://github.com/MaxxTopia/discordmaxxer',
+    repoLabel: 'MaxxTopia/discordmaxxer',
+    stats: [
+      { label: 'Resident RAM', value: '288 MB' },
+      { label: 'Idle CPU', value: '0%' },
+    ],
+  },
+};
 
 // Per-product build status — drives the BuildStatus banner.
 // Tuned by hand based on how close each product actually is.
@@ -38,6 +126,15 @@ const root = product.name.replace(/maxx(er|ing)$/i, '');
 const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
 const screenshotMain = product.screenshots?.[0];
 const screenshotExtras = product.screenshots?.slice(1) ?? [];
+
+// LIVE-product fork: OM + DM each get a bespoke story shape that demonstrates
+// the moat (sourced tweaks · subtracted MB) instead of a generic feature grid.
+// SOON products keep the original card-grid treatment. Drives:
+//   - stats aside hidden on LIVE (migrates to receipts band)
+//   - per-product story sections render after the hero
+const isOM = product.slug === 'optimizationmaxxing';
+const isDM = product.slug === 'discordmaxxer';
+const hasBespokeStory = isLive && (isOM || isDM);
 
 // SoftwareApplication JSON-LD — rich results in Google for live products.
 const softwareSchema = {
@@ -181,7 +278,10 @@ const softwareSchema = {
           </div>
         </div>
 
-        {product.stats && product.stats.length > 0 && (
+        {/* Stats aside: SOON products keep the 4-tile grid. LIVE products
+            (OM, DM) hide it here — the same numbers re-emerge below in the
+            Receipts band where they have room to breathe + carry citations. */}
+        {!hasBespokeStory && product.stats && product.stats.length > 0 && (
           <aside class="reveal reveal-6 md:col-span-4 grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
             {product.stats.map((s) => (
               <div class="bg-[var(--color-bg-card)] p-5">
@@ -207,6 +307,19 @@ const softwareSchema = {
         />
       )}
 
+      {/* LIVE-product receipts band — version cadence + 2 specs + repo link.
+          Replaces the hero stats aside that was dropped in Phase 1. */}
+      {hasBespokeStory && receiptsConfig[product.slug] && (
+        <ReceiptsBand
+          version={receiptsConfig[product.slug].version}
+          versionDate={receiptsConfig[product.slug].versionDate}
+          repoUrl={receiptsConfig[product.slug].repoUrl}
+          repoLabel={receiptsConfig[product.slug].repoLabel}
+          stats={receiptsConfig[product.slug].stats}
+          accentHex={product.accentHex}
+        />
+      )}
+
       <!-- Coming-soon "live build" banner — replaces the diagonal marquee. -->
       {isSoon && (
         <div class="mt-12 max-w-3xl">
@@ -222,33 +335,67 @@ const softwareSchema = {
     </div>
   </section>
 
-  <!-- Features -->
+  <!-- Features — bespoke zones for LIVE products, card grid fallback for SOON. -->
   <section class="relative overflow-hidden">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24">
       <div class="reveal-on-scroll mb-12">
         <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
-          What's inside
+          {isOM ? 'The receipts' : isDM ? 'The subtraction' : "What's inside"}
         </p>
         <h2 class="mt-3 text-[32px] sm:text-[44px] font-semibold tracking-[-0.025em] leading-[1.04]">
-          <span class="gradient-text">Built for the player</span> <span class="serif-accent gradient-suite">who measures.</span>
+          {isOM ? (
+            <><span class="gradient-text">Eighty-seven tweaks.</span> <span class="serif-accent gradient-suite">All cited.</span></>
+          ) : isDM ? (
+            <><span class="gradient-text">We removed the bloat.</span> <span class="serif-accent gradient-suite">All of it.</span></>
+          ) : (
+            <><span class="gradient-text">Built for the player</span> <span class="serif-accent gradient-suite">who measures.</span></>
+          )}
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
-        {product.features.map((f, i) => (
-          <div class={`reveal-on-scroll reveal-delay-${(i % 5) + 1} bg-[var(--color-bg-card)] p-7 sm:p-8 group hover:bg-[var(--color-bg-card-hover)] transition-colors`}>
-            <div class="text-[var(--color-magenta)] text-[13px] font-mono mb-3.5 group-hover:text-[var(--color-cyan)] transition-colors">
-              {String(i + 1).padStart(2, '0')}
+      {product.zones && product.zones.length > 0 ? (
+        <div class="feature-zones">
+          {product.zones.map((zone, i) => (
+            <FeatureZone zone={zone} index={i} accentHex={product.accentHex} />
+          ))}
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
+          {product.features.map((f, i) => (
+            <div class={`reveal-on-scroll reveal-delay-${(i % 5) + 1} bg-[var(--color-bg-card)] p-7 sm:p-8 group hover:bg-[var(--color-bg-card-hover)] transition-colors`}>
+              <div class="text-[var(--color-magenta)] text-[13px] font-mono mb-3.5 group-hover:text-[var(--color-cyan)] transition-colors">
+                {String(i + 1).padStart(2, '0')}
+              </div>
+              <h3 class="text-[17px] font-semibold tracking-tight">{f.title}</h3>
+              <p class="mt-2.5 text-[14.5px] text-[var(--color-text-mid)] leading-relaxed">
+                {f.body}
+              </p>
             </div>
-            <h3 class="text-[17px] font-semibold tracking-tight">{f.title}</h3>
-            <p class="mt-2.5 text-[14.5px] text-[var(--color-text-mid)] leading-relaxed">
-              {f.body}
-            </p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   </section>
+
+  {/* OM-only: Source Wall — the moat made visible. */}
+  {isOM && <SourceWall />}
+
+  {/* DM-only: Cut Autopsy — subtraction made visible. */}
+  {isDM && <CutAutopsy />}
+
+  {/* LIVE-product reconversion: reprint the hero stat, drop the CTA once
+      more, pre-empt the three obvious objections. */}
+  {hasBespokeStory && product.heroStat && reconvertConfig[product.slug] && (
+    <ReconversionCTA
+      heroStat={product.heroStat}
+      closingLine={reconvertConfig[product.slug].closingLine}
+      ctaLabel={product.primaryCta.label}
+      ctaHref={product.primaryCta.href}
+      ctaExternal={product.primaryCta.external}
+      faqs={reconvertConfig[product.slug].faqs}
+      accentHex={product.accentHex}
+    />
+  )}
 
   <!-- Related -->
   <section class="relative">
