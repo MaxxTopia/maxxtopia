@@ -25,9 +25,9 @@ function fmtReleaseDate(iso: string | undefined): string {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-// Per-LIVE-product reconversion config — the closing CTA + 3-question FAQ
-// pre-empting the obvious objections. Three is the ceiling: more than that
-// turns into a wall the ADHD-gamer audience won't scroll.
+// Per-product reconversion config — the closing CTA + 3-question FAQ.
+// LIVE products use the install CTA; SOON / BETA products inherit
+// `product.primaryCta` (typically the waitlist link). Three FAQs ceiling.
 const reconvertConfig: Record<string, {
   closingLine: string;
   faqs: Array<{ q: string; a: string }>;
@@ -63,6 +63,74 @@ const reconvertConfig: Record<string, {
       {
         q: 'Is it really open source?',
         a: "Yes. The repo is in the receipts band above. Clone it, read the diff against stock, sign it with your own key. The whole point is that you don't have to take our word for what we stripped.",
+      },
+    ],
+  },
+  clipmaxxer: {
+    closingLine: 'Stream tonight. Wake up posted.',
+    faqs: [
+      {
+        q: 'When does it actually ship?',
+        a: "Internal alpha is running on real streamer VODs today. Public beta lands when the cascade hits ≥3-of-5 banger rate across our test corpus. We don't ship to a date — we ship to a number.",
+      },
+      {
+        q: "How is this different from Eklipse / OpusClip?",
+        a: "They cut on one signal — Eklipse on audio volume, OpusClip on sentiment. We layer five: audio, chat, transcript, per-niche virality model, trending sounds. None of theirs watches what TikTok is rewarding this week. We do.",
+      },
+      {
+        q: 'Will it cost anything?',
+        a: "Free tier ships day one with 2 clips per VOD. Paid tiers unlock platform fan-out (TikTok + Shorts + Reels per VOD) and longer queue limits. Stripe Checkout. No tokens. No credit-card-up-front trial.",
+      },
+    ],
+  },
+  dropmaxxer: {
+    closingLine: 'Stop guessing your drop.',
+    faqs: [
+      {
+        q: 'Is this just another loot map?',
+        a: "No. Loot maps are static pictures with arrows. This is a calculator with cited Fortnite physics constants — bus speed, auto-deploy altitude, glide and nosedive — and a current-season POI database that refreshes the day a season ships.",
+      },
+      {
+        q: "Why should I trust the constants?",
+        a: "They're cross-referenced against Violevo's drop research and Epic patch notes. Every one of the four numbers above is sourced. If a season changes the math, the math changes — within hours.",
+      },
+      {
+        q: 'How does the algorithm decide?',
+        a: "IDW corpus lookup first — community drop data weighted by distance to your input. If the corpus has nothing for your novel path, the server-side physics simulator takes over. Fast where data exists. Right where it doesn't.",
+      },
+    ],
+  },
+  aimmaxxer: {
+    closingLine: 'Drill the four. Not the two hundred.',
+    faqs: [
+      {
+        q: 'Why not just use KovaaK\'s?',
+        a: "KovaaK's hands you 200 scenarios and a sensitivity guess. We measure four discrete metrics — sensitivity, prediction, anchor, trigger discipline — and prescribe the narrow set of drills that fix what's actually breaking your aim.",
+      },
+      {
+        q: 'Will it work with my sens?',
+        a: "Yes. The routine adapts to your DPI, in-game sensitivity, and play style. No 800-DPI prescription. No forced cm/360 changes. The drills bend around your hand — not the other way around.",
+      },
+      {
+        q: 'When does it ship?',
+        a: "Rust pipeline phases 2 and 3a are merged and benchmarked (18.5x and 82x speedups respectively). Calibration is the gating work. The waitlist sees the first public build.",
+      },
+    ],
+  },
+  viewmaxxing: {
+    closingLine: 'Operator-first. Slot reserved.',
+    faqs: [
+      {
+        q: 'What does it actually do?',
+        a: "Honest answer — we're not telling you yet. The framing has to be worth shipping before we put it on a page. Past 'built for the operator, not the viewer' the direction is still in flux. The waitlist gets the angle the moment it lands.",
+      },
+      {
+        q: "Why hold the slot if you don't know?",
+        a: "Because hype-shipping a streamer tool we don't believe in burns the trust we earned on the products that worked. The suite has six slots. One stays reserved until the angle is right.",
+      },
+      {
+        q: 'When will you decide?',
+        a: "When a real streamer workflow we sit with shows a clean wedge — one painful, repeatable, daily problem we can crush with code. The other products started there. This one will too.",
       },
     ],
   },
@@ -135,6 +203,21 @@ const screenshotExtras = product.screenshots?.slice(1) ?? [];
 const isOM = product.slug === 'optimizationmaxxing';
 const isDM = product.slug === 'discordmaxxer';
 const hasBespokeStory = isLive && (isOM || isDM);
+const hasZones = Array.isArray(product.zones) && product.zones.length > 0;
+
+// Per-product feature-section header. Each lands on the product's own
+// register — generic "What's inside" is a fallback for products that
+// haven't earned a bespoke framing yet.
+type FeatureHeading = { eyebrow: string; left: string; right: string };
+const featureHeadings: Record<string, FeatureHeading> = {
+  optimizationmaxxing: { eyebrow: 'The receipts',   left: 'Eighty-seven tweaks.',     right: 'All cited.' },
+  discordmaxxer:       { eyebrow: 'The subtraction', left: 'We removed the bloat.',    right: 'All of it.' },
+  clipmaxxer:          { eyebrow: 'The cascade',     left: 'Five signals.',            right: 'Never zero.' },
+  dropmaxxer:          { eyebrow: 'The math',        left: 'Cited physics.',           right: 'Current map.' },
+  aimmaxxer:           { eyebrow: 'The metrics',     left: 'Aim is four things.',      right: 'Drilled four ways.' },
+  viewmaxxing:         { eyebrow: 'The standard',    left: 'Operator-first.',          right: 'Slot reserved.' },
+};
+const featureHeading: FeatureHeading | undefined = featureHeadings[product.slug];
 
 // SoftwareApplication JSON-LD — rich results in Google for live products.
 const softwareSchema = {
@@ -340,20 +423,18 @@ const softwareSchema = {
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24">
       <div class="reveal-on-scroll mb-12">
         <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
-          {isOM ? 'The receipts' : isDM ? 'The subtraction' : "What's inside"}
+          {featureHeading?.eyebrow ?? "What's inside"}
         </p>
         <h2 class="mt-3 text-[32px] sm:text-[44px] font-semibold tracking-[-0.025em] leading-[1.04]">
-          {isOM ? (
-            <><span class="gradient-text">Eighty-seven tweaks.</span> <span class="serif-accent gradient-suite">All cited.</span></>
-          ) : isDM ? (
-            <><span class="gradient-text">We removed the bloat.</span> <span class="serif-accent gradient-suite">All of it.</span></>
+          {featureHeading ? (
+            <><span class="gradient-text">{featureHeading.left}</span> <span class="serif-accent gradient-suite">{featureHeading.right}</span></>
           ) : (
             <><span class="gradient-text">Built for the player</span> <span class="serif-accent gradient-suite">who measures.</span></>
           )}
         </h2>
       </div>
 
-      {product.zones && product.zones.length > 0 ? (
+      {hasZones && product.zones ? (
         <div class="feature-zones">
           {product.zones.map((zone, i) => (
             <FeatureZone zone={zone} index={i} accentHex={product.accentHex} />
@@ -383,9 +464,11 @@ const softwareSchema = {
   {/* DM-only: Cut Autopsy — subtraction made visible. */}
   {isDM && <CutAutopsy />}
 
-  {/* LIVE-product reconversion: reprint the hero stat, drop the CTA once
-      more, pre-empt the three obvious objections. */}
-  {hasBespokeStory && product.heroStat && reconvertConfig[product.slug] && (
+  {/* Reconversion CTA: reprint the hero stat, drop the CTA once more,
+      pre-empt the three obvious objections. Available for every product
+      that has both a heroStat and reconvert copy (LIVE downloads,
+      BETA + SOON waitlists). */}
+  {product.heroStat && reconvertConfig[product.slug] && (
     <ReconversionCTA
       heroStat={product.heroStat}
       closingLine={reconvertConfig[product.slug].closingLine}

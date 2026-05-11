@@ -377,6 +377,58 @@ export const products: Product[] = [
       '/screenshots/clipmaxxer/pricing.png',
     ],
     heroStat: { value: '3 clips', label: 'on your phone by morning' },
+    zones: [
+      {
+        eyebrow: '01 · The Cascade',
+        headline: "Five signals. Layered. Never zero.",
+        body: 'Audio energy → chat density → Whisper transcript → virality model → trending sounds. Each layer catches what the one above missed. The floor is never empty.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Audio energy', value: 'tier 1', ratio: 1.0 },
+            { label: 'Chat reaction density', value: 'tier 2', ratio: 0.85 },
+            { label: 'Whisper transcript', value: 'tier 3', ratio: 0.7 },
+            { label: 'Virality model', value: 'tier 4', ratio: 0.55 },
+            { label: 'Trending sounds + HUD', value: 'tier 5', ratio: 0.4, emphasize: true },
+          ],
+          caption: 'Cascade scoring · each tier catches what the prior tier missed',
+        },
+      },
+      {
+        eyebrow: '02 · The Reframe',
+        headline: "Face stays in frame.",
+        body: 'Per-frame OpenCV DNN face-tight reframe to 9:16. Subject re-centered every frame, never cropped at the eyebrow. The math is in the build, not the marketing.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/clipmaxxer/queue-vod.png',
+          alt: 'Clipmaxxer queue with face-tracked vertical reframes',
+        },
+      },
+      {
+        eyebrow: '03 · The Playbook',
+        headline: "Trained on what actually hit.",
+        body: 'Per-niche viral playbook lookup — Fortnite, Valorant, IRL, kickboxing — calibrated against real creators in that game. Not the average-streamer average; the floor of viral.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Eklipse — volume threshold only', value: 'one signal', ratio: 1.0 },
+            { label: 'OpusClip — sentiment only', value: 'one signal', ratio: 1.0 },
+            { label: 'Clipmaxxer — niche playbook', value: 'five signals', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Signal count · more layers · per-niche calibration',
+        },
+      },
+      {
+        eyebrow: '04 · The Format',
+        headline: "1 VOD. 3 platforms. 3 cuts.",
+        body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound. Tap once on your phone in the morning. Drafts ready before you read your texts.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/clipmaxxer/pricing.png',
+          alt: 'Clipmaxxer pricing + format selector',
+        },
+      },
+    ],
   },
   {
     slug: 'dropmaxxer',
@@ -413,6 +465,46 @@ export const products: Product[] = [
     accentHex: '#4c51f7',
     screenshots: ['/screenshots/dropmaxxer/preview.png'],
     heroStat: { value: '830 m/s', label: 'bus speed · cited' },
+    zones: [
+      {
+        eyebrow: '01 · The Constants',
+        headline: "Four numbers. All cited.",
+        body: 'Bus speed, auto-deploy altitude, glide speed, nosedive speed. The four numbers every drop calc needs — and the four every loot-map tool refuses to publish.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Bus speed', value: '830 m/s', ratio: 1.0, emphasize: true },
+            { label: 'Nosedive', value: '~190 m/s', ratio: 0.23 },
+            { label: 'Glide', value: '~80 m/s', ratio: 0.096 },
+            { label: 'Auto-deploy altitude', value: '100 m', ratio: 0.12 },
+          ],
+          caption: 'Source-backed Fortnite physics · cross-referenced Violevo + Epic patch notes',
+        },
+      },
+      {
+        eyebrow: '02 · The Map',
+        headline: "Current season only.",
+        body: 'Reality Falls is not suggested because Reality Falls is not a thing. POIs refresh the day a season ships. No legacy names. No stale arrows.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/dropmaxxer/preview.png',
+          alt: 'Dropmaxxer drop-path preview with current-season POIs',
+        },
+      },
+      {
+        eyebrow: '03 · The Algorithm',
+        headline: "IDW corpus first. Physics fallback.",
+        body: 'Community-data lookup on known paths via inverse-distance weighting. Server-side physics simulator on novel ones. Fast where data exists, right where it doesn\'t.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Other tools — static loot map', value: 'pictures', ratio: 1.0 },
+            { label: 'Dropmaxxer — IDW + physics solver', value: 'math', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Approach · static vs computed · every drop',
+        },
+      },
+    ],
   },
   {
     slug: 'aimmaxxer',
@@ -443,6 +535,36 @@ export const products: Product[] = [
     glyph: '◎',
     accentHex: '#f3af19',
     heroStat: { value: '4', label: 'metrics · not one' },
+    zones: [
+      {
+        eyebrow: '01 · The Metrics',
+        headline: "Aim is four things. Drilled four ways.",
+        body: 'Sensitivity, prediction, anchor, trigger. KovaaK\'s hands you 200 scenarios. We measure the 4 that fix what\'s actually broken, and drill each separately.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Sensitivity', value: 'scenario set A', ratio: 1.0, emphasize: true },
+            { label: 'Prediction', value: 'scenario set B', ratio: 1.0, emphasize: true },
+            { label: 'Anchor', value: 'scenario set C', ratio: 1.0, emphasize: true },
+            { label: 'Trigger discipline', value: 'scenario set D', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Four independent measurements · four independent drills',
+        },
+      },
+      {
+        eyebrow: '02 · The Routine',
+        headline: "Adapts to your sens.",
+        body: 'Your DPI, your in-game sensitivity, your play style. The routine flexes around them — not the other way around. No "use 800 DPI" prescriptions.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'KovaaK\'s — fixed sens prescription', value: 'static', ratio: 1.0 },
+            { label: 'Aimmaxxer — per-player adaptive', value: 'dynamic', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Calibration model · static vs adaptive',
+        },
+      },
+    ],
   },
   {
     slug: 'viewmaxxing',
@@ -473,6 +595,34 @@ export const products: Product[] = [
     glyph: '◐',
     accentHex: '#10b981',
     heroStat: { value: 'TBD', label: 'direction in flux' },
+    zones: [
+      {
+        eyebrow: '01 · The Side',
+        headline: "Built for the operator. Not the viewer.",
+        body: 'Every streamer dashboard pretends to serve everyone. Past that — what makes the operator faster, calmer, less interrupted — is where we\'re looking. The angle is in flux on purpose.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Stream Deck, OBS, Streamlabs — generic ops', value: 'multi-audience', ratio: 1.0 },
+            { label: 'Viewmaxxing — operator-first only', value: 'single-audience', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Design target · operator vs operator+viewer',
+        },
+      },
+      {
+        eyebrow: '02 · The Standard',
+        headline: "We hold the slot. We don’t fill it.",
+        body: 'We don\'t ship to fill space in the suite. The slot stays reserved until the direction is worth shipping. When it is, the page will say what it is — not what we hope it might be.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Hype-ship — promise first, build later', value: 'industry norm', ratio: 1.0 },
+            { label: 'Slot-reserve — direction first, page later', value: 'our standard', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Shipping ethic · slot reserved until the angle lands',
+        },
+      },
+    ],
   },
   {
     slug: 'extensionmaxxing',
