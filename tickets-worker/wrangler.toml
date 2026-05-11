@@ -32,5 +32,29 @@ id = "22c7543edfc248059e8eca493224c8e5"
 # in worker.js. Same convention as vip-worker (`VIP_CLAIMS`) and
 # telemetry-worker (`TELEMETRY`).
 
+# Founder pool — pre-minted FOUND* codes /33 pulls from. Only used by
+# /33; other slash commands mint codes on demand. Keys:
+#   unused:founder:<code>  -> "1"
+#
+# Create the namespace first:
+#   cd tickets-worker
+#   wrangler kv namespace create vip-code-pool
+#   # paste the returned ID below + uncomment the block.
+# [[kv_namespaces]]
+# binding = "VIP_CODE_POOL"
+# id = "PASTE-NAMESPACE-ID-HERE"
+
+# Shared with vip-worker. We write `meta:<code> → {tier, scope,
+# durationMs, mintedAt}` here at /gen-time so vip-worker can derive
+# tier + scope + expiresAt when the user claims. The vip-worker also
+# uses this same namespace for its own `claim:<code>` records — the
+# two key prefixes don't collide.
+#
+# Namespace ID is the same one vip-worker binds (see
+# optimizationmaxxing/vip-worker/wrangler.toml).
+[[kv_namespaces]]
+binding = "VIP_CLAIMS"
+id = "06752792b28c4e5e9d3ed3d48d3278ec"
+
 # Secrets to set (one-time, only the bot token is actually secret):
 #   wrangler secret put DISCORD_BOT_TOKEN     # from .bot-setup.local.env or the Discord dev portal "Bot" tab

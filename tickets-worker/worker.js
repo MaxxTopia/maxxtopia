@@ -31,6 +31,7 @@ const DISCORD_API = 'https://discord.com/api/v10'
 
 // Interaction types (https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type)
 const INTERACTION_PING = 1
+const INTERACTION_APPLICATION_COMMAND = 2
 const INTERACTION_MESSAGE_COMPONENT = 3
 
 // Response types
@@ -94,6 +95,36 @@ export default {
       // custom_id so we know who to grant without prompting.
       if (customId.startsWith('grant-vip:')) {
         ctx.waitUntil(handleGrantVip(env, interaction, customId))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
+    }
+
+    // Slash commands. /gen, /om, /33, /founderstatus registered via
+    // scripts/register-slash-commands.mjs against the guild. Every
+    // handler enforces Diggy-only auth (user.id === DIGGY_USER_ID) so
+    // even if a mod somehow gets the command unlocked, they can't gen
+    // keys.
+    if (interaction.type === INTERACTION_APPLICATION_COMMAND) {
+      const name = interaction.data?.name ?? ''
+      if (name === 'gen' || name === 'om') {
+        ctx.waitUntil(handleGen(env, interaction, name))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
+      if (name === '33') {
+        ctx.waitUntil(handle33(env, interaction))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
+      if (name === 'founderstatus') {
+        ctx.waitUntil(handleFounderStatus(env, interaction))
         return jsonResponse({
           type: RESP_DEFERRED_CHANNEL_MESSAGE,
           data: { flags: MSG_FLAG_EPHEMERAL },
@@ -314,6 +345,385 @@ async function handleGrantVip(env, interaction, customId) {
 
   await editFollowup(appId, interactionToken, {
     content: '✓ Granted. Buyer now sees the VIP lounge.',
+    flags: MSG_FLAG_EPHEMERAL,
+  })
+}
+
+// ─── Slash command handlers ─────────────────────────────────────────────
+
+/**
+ * Diggy-only gate. Strict — user.id must match env.DIGGY_USER_ID. No
+ * mod-role override, no support-role override. Slash commands route
+ * through this so even if Discord's command-permission UI gets
+ * misconfigured, the worker rejects non-Diggy callers.
+ *
+ * Returns true on auth pass, false after editing the deferred reply
+ * with a denial. Callers should `return` immediately on false.
+ */
+async function requireDiggy(env, interaction) {
+  const callerId = interaction.member?.user?.id ?? interaction.user?.id
+  if (callerId !== env.DIGGY_USER_ID) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⛔ Diggy-only command. Only <@' + env.DIGGY_USER_ID + '> can run this.',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return false
+  }
+  return true
+}
+
+/**
+ * Pulls a slash-command option by name.
+ */
+function getOption(interaction, name) {
+  return (interaction.data?.options ?? []).find(o => o.name === name)?.value
+}
+
+/**
+ * DM a recipient via the bot. Returns true on success.
+ * Opens (or reuses) the DM channel via POST /users/@me/channels.
+ */
+async function dmUser(env, recipientId, content) {
+  const dmChannel = await discordFetch(env, '/users/@me/channels', {
+    method: 'POST',
+    body: JSON.stringify({ recipient_id: recipientId }),
+  })
+  if (!dmChannel?.id) return false
+  const r = await discordFetch(env, `/channels/${dmChannel.id}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  })
+  return r !== null
+}
+
+// Crockford-style base32 alphabet (no I, L, O, U). Must match
+// optimizationmaxxing/scripts/mint-unbound-codes.py CROCKFORD and
+// vip-worker/worker.js ALLOWED_CODE_RE.
+const CROCKFORD = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
+
+/** Mint N random Crockford-base32 chars using crypto.getRandomValues. */
+function mintRandomCrockford(n) {
+  const buf = new Uint8Array(n)
+  crypto.getRandomValues(buf)
+  let out = ''
+  for (let i = 0; i < n; i++) out += CROCKFORD[buf[i] & 0x1f]
+  return out
+}
+
+/**
+ * Mint a 16-char code with a tier-encoding first char:
+ *   tier='maxxer'         -> "1" + 15 random
+ *   tier='maxxerplus'     -> "2" + 15 random
+ *   tier='maxxerplusplus' -> "3" + 15 random
+ *   tier='founder'        -> "FNDR" + 12 random (matches vip-worker's
+ *                            FOUNDER_PREFIX = "FNDR" — gets a sequential
+ *                            1-33 number assigned atomically at claim.)
+ *
+ * Vip-worker's tierFromCode() reads the prefix to determine which
+ * Discord role + which client tier to grant. Any code NOT matching one
+ * of these prefixes (e.g. pre-tier-prefix legacy codes) defaults to
+ * MAXXER++ for backwards-compat.
+ */
+function mintCode(tier) {
+  if (tier === 'founder') {
+    return 'FNDR' + mintRandomCrockford(12)
+  }
+  let prefix
+  switch (tier) {
+    case 'maxxer': prefix = '1'; break
+    case 'maxxerplus': prefix = '2'; break
+    case 'maxxerplusplus': prefix = '3'; break
+    default: throw new Error('unknown tier: ' + tier)
+  }
+  return prefix + mintRandomCrockford(15)
+}
+
+/** Format a 16-char raw code as MAXX-XXXX-XXXX-XXXX-XXXX for display. */
+function formatCodeForDisplay(rawCode) {
+  const norm = rawCode.toUpperCase().replace(/^MAXX-?/, '').replace(/[-\s]/g, '')
+  const chunks = []
+  for (let i = 0; i < norm.length; i += 4) chunks.push(norm.slice(i, i + 4))
+  return 'MAXX-' + chunks.join('-')
+}
+
+/** Human-readable tier label for DMs / confirmations. */
+function tierLabel(tier) {
+  return ({
+    maxxer: 'MAXXER',
+    maxxerplus: 'MAXXER+',
+    maxxerplusplus: 'MAXXER++',
+    founder: 'Founder',
+  })[tier] ?? tier
+}
+
+/** Term name → milliseconds. null = lifetime. */
+function termToMs(term) {
+  switch (term) {
+    case 'monthly': return 30 * 24 * 60 * 60 * 1000      // 30 days
+    case 'annual':  return 365 * 24 * 60 * 60 * 1000     // 365 days
+    case 'lifetime':
+    case null:
+    case undefined:
+      return null
+    default:
+      throw new Error('unknown term: ' + term)
+  }
+}
+
+/** Human-readable term for DM messages. */
+function termLabel(term) {
+  return ({ monthly: '30-day', annual: '1-year', lifetime: 'lifetime' })[term] ?? term ?? 'lifetime'
+}
+
+/**
+ * Write the code's metadata to the shared VIP_CLAIMS KV. Vip-worker
+ * reads `meta:<code>` at claim time to derive tier + scope + expiresAt.
+ * Without this entry vip-worker falls back to tier-from-first-char +
+ * scope=both + lifetime (backwards-compat for legacy mints).
+ *
+ * Idempotent — safe to call multiple times for the same code; the value
+ * overwrites. Failures don't block the DM (caller is the source of
+ * truth from Diggy's perspective).
+ */
+async function writeCodeMeta(env, code, { tier, scope, term, mintedBy }) {
+  if (!env.VIP_CLAIMS) {
+    console.warn('[writeCodeMeta] VIP_CLAIMS not bound — meta NOT written, vip-worker will fall back to defaults')
+    return
+  }
+  const durationMs = termToMs(term)
+  const meta = {
+    tier,                              // 'maxxer' | 'maxxerplus' | 'maxxerplusplus' | 'founder'
+    scope,                             // 'om' | 'dm' | 'both'
+    durationMs,                        // null = lifetime, else ms
+    mintedAt: Date.now(),
+    mintedBy: mintedBy ?? 'unknown',
+  }
+  try {
+    await env.VIP_CLAIMS.put(`meta:${code}`, JSON.stringify(meta), {
+      // metadata index lets the worker filter without fetching values
+      metadata: { tier, scope, durationMs },
+    })
+  } catch (e) {
+    console.warn('[writeCodeMeta] put failed:', e?.message ?? e)
+  }
+}
+
+/**
+ * /gen tier:<MAXXER|MAXXER+|MAXXER++> [user:<@id>]
+ * /om   [user:<@id>]   (alias for /gen tier:maxxerplusplus, OM purchase context)
+ *
+ * Mints a fresh tier-encoded code on demand. If user given, DMs them
+ * the code + redemption instructions. Else returns the code ephemerally
+ * to Diggy so he can hand-deliver. The code is NOT pre-registered with
+ * vip-worker — first-claim-wins still applies, so don't leak it.
+ */
+async function handleGen(env, interaction, commandName) {
+  if (!(await requireDiggy(env, interaction))) return
+
+  // /om is a thin alias for /gen tier:maxxerplusplus + scope=om +
+  // lifetime — the optimizationmaxxing one-time-purchase flow ($115).
+  let tier, term, scope, targetUserId
+  if (commandName === 'om') {
+    tier = 'maxxerplusplus'
+    term = 'lifetime'
+    scope = 'om'
+    targetUserId = getOption(interaction, 'user') ?? ''
+  } else {
+    tier = (getOption(interaction, 'tier') || '').toString()
+    term = (getOption(interaction, 'term') || 'monthly').toString()
+    scope = 'dm'   // /gen is the discordmaxxer subscription flow
+    targetUserId = getOption(interaction, 'user') ?? ''
+  }
+
+  if (!['maxxer', 'maxxerplus', 'maxxerplusplus'].includes(tier)) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⚠ Bad tier. Pick from MAXXER / MAXXER+ / MAXXER++.',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+  if (!['monthly', 'annual', 'lifetime'].includes(term)) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⚠ Bad term. Pick monthly / annual / lifetime.',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  const code = mintCode(tier)
+  const formatted = formatCodeForDisplay(code)
+  const label = tierLabel(tier)
+  const tLabel = termLabel(term)
+  const scopeLabel = scope === 'om' ? 'Optimizationmaxxing only' : (scope === 'dm' ? 'Discordmaxxer only' : 'all products')
+
+  // Write metadata BEFORE DMing — if meta write fails the user shouldn't
+  // get a code that we can't enforce against.
+  await writeCodeMeta(env, code, { tier, scope, term, mintedBy: interaction.member?.user?.id ?? interaction.user?.id })
+
+  if (targetUserId && /^\d+$/.test(targetUserId)) {
+    const dmText =
+      `🎁 Your Maxxer VIP code:\n\n` +
+      '```\n' + formatted + '\n```\n' +
+      `**Tier:** ${label}\n` +
+      `**Scope:** ${scopeLabel}\n` +
+      `**Term:** ${tLabel}${term === 'lifetime' ? '' : ' (auto-expires after first claim)'}\n\n` +
+      (scope === 'om'
+        ? 'Paste it into **Optimizationmaxxing → VIP**. This code is OM-only — Discordmaxxer will reject it.\n'
+        : 'Paste it into **Discordmaxxer → DMVipClaim**. This code is DM-only — Optimizationmaxxing will reject it.\n') +
+      'Codes are first-claim-wins per HWID; redeem on the rig you plan to keep.\n\n' +
+      'Stuck? Reply or open a ticket: https://discord.gg/S78eecbWdx'
+    const ok = await dmUser(env, targetUserId, dmText)
+    if (ok) {
+      await editFollowup(interaction.application_id, interaction.token, {
+        content: `✓ DMed **${label}** ${tLabel} (${scopeLabel}) code to <@${targetUserId}>.\n\nCode (for your records): \`${formatted}\``,
+        flags: MSG_FLAG_EPHEMERAL,
+      })
+      return
+    }
+    await editFollowup(interaction.application_id, interaction.token, {
+      content:
+        `⚠ Could NOT DM <@${targetUserId}> (DMs closed or bot blocked). ` +
+        `Hand-deliver this **${label}** ${tLabel} (${scopeLabel}) code:\n\n` +
+        '```\n' + formatted + '\n```',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  // No user → just hand the code to Diggy ephemerally.
+  await editFollowup(interaction.application_id, interaction.token, {
+    content: `Minted **${label}** ${tLabel} (${scopeLabel}):\n\n\`\`\`\n${formatted}\n\`\`\``,
+    flags: MSG_FLAG_EPHEMERAL,
+  })
+}
+
+/**
+ * /33 user:<@id>
+ *
+ * Pulls one pre-minted FNDR* code from the founder pool (KV prefix
+ * `unused:founder:`), DMs it to the target user, deletes the KV entry.
+ * The vip-worker's atomic founder counter (1-33) assigns the actual
+ * Founder NUMBER at claim time — this command just hands out the codes
+ * Diggy pre-uploaded.
+ *
+ * Pool is uploaded via scripts/upload-pool.mjs with pool=founder. See
+ * tickets-worker/README.md for the 33-code mint+upload one-shot.
+ */
+async function handle33(env, interaction) {
+  if (!(await requireDiggy(env, interaction))) return
+
+  if (!env.VIP_CODE_POOL) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⚠ VIP_CODE_POOL KV namespace not bound. Add the binding in wrangler.toml + redeploy.',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  const targetUserId = getOption(interaction, 'user') ?? ''
+  if (!/^\d+$/.test(targetUserId)) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⚠ Bad user option. @-mention the recipient.',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  // Pull the first unused FNDR code from the founder pool.
+  const prefix = 'unused:founder:'
+  const list = await env.VIP_CODE_POOL.list({ prefix, limit: 1 })
+  if (!list.keys.length) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content:
+        '⚠ Founder pool is empty. Upload more (or you\'ve handed out all 33):\n' +
+        '```\nnode scripts/upload-pool.mjs founder < your-33-founder-codes.txt\n```',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+  const key = list.keys[0].name
+  const code = key.slice(prefix.length)
+
+  // Delete first so a concurrent run can't grab the same code twice.
+  try {
+    await env.VIP_CODE_POOL.delete(key)
+  } catch (e) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: `⚠ KV delete failed: ${e?.message ?? e}. Aborted to avoid double-issue.`,
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  // Founder codes: MAXXER++ tier, lifetime, scope=both (founders get
+  // every product). Vip-worker's atomic counter assigns the actual
+  // 1-33 number at claim time.
+  await writeCodeMeta(env, code, {
+    tier: 'founder',
+    scope: 'both',
+    term: 'lifetime',
+    mintedBy: interaction.member?.user?.id ?? interaction.user?.id,
+  })
+
+  const formatted = formatCodeForDisplay(code)
+  const dmText =
+    `👑 Your **Founder** Maxxer code — one of 33, never reissued:\n\n` +
+    '```\n' + formatted + '\n```\n' +
+    '**Tier:** MAXXER++ (Founder #X assigned at claim)\n' +
+    '**Scope:** all products (Optmaxxing + Discordmaxxer)\n' +
+    '**Term:** lifetime\n\n' +
+    'Paste it into **Optimizationmaxxing → VIP** or **Discordmaxxer → DMVipClaim** to claim. ' +
+    'Your numbered Founder badge (#1-#33) is assigned automatically at claim time.\n\n' +
+    'Stuck? Reply or open a ticket: https://discord.gg/S78eecbWdx'
+
+  const ok = await dmUser(env, targetUserId, dmText)
+  if (ok) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: `✓ DMed **Founder** code to <@${targetUserId}>.\n\nCode (for your records): \`${formatted}\``,
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+  // DM failed — code already popped. Hand it to Diggy.
+  await editFollowup(interaction.application_id, interaction.token, {
+    content:
+      `⚠ Could NOT DM <@${targetUserId}> (DMs closed). ` +
+      `Code already popped from founder pool — hand-deliver:\n\n` +
+      '```\n' + formatted + '\n```',
+    flags: MSG_FLAG_EPHEMERAL,
+  })
+}
+
+/**
+ * /founderstatus
+ *
+ * Counts remaining unused founder codes in the pool. No args. The
+ * vip-worker tracks the actual claimed founder NUMBERS atomically;
+ * this only reports inventory.
+ */
+async function handleFounderStatus(env, interaction) {
+  if (!(await requireDiggy(env, interaction))) return
+
+  if (!env.VIP_CODE_POOL) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⚠ VIP_CODE_POOL not bound yet.',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  // Paginate KV. 33 max so one page suffices, but paginate defensively.
+  let cursor
+  let remaining = 0
+  do {
+    const page = await env.VIP_CODE_POOL.list({ prefix: 'unused:founder:', cursor, limit: 1000 })
+    remaining += page.keys.length
+    cursor = page.list_complete ? undefined : page.cursor
+  } while (cursor)
+
+  await editFollowup(interaction.application_id, interaction.token, {
+    content: `👑 **Founder pool**: ${remaining} of 33 unused.\n` +
+      (remaining === 0 ? 'All handed out. Mint more if you want to extend beyond 33 (but the cap is enforced at claim by vip-worker — 34th claim returns 410).' : ''),
     flags: MSG_FLAG_EPHEMERAL,
   })
 }
