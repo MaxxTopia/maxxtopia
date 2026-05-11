@@ -342,25 +342,21 @@ export const products: Product[] = [
     version: cmRelease.version ?? undefined,
     tagline: 'Stream. Sleep. Wake up posted.',
     description:
-      "Eklipse cuts on volume. OpusClip cuts on sentiment. Neither watches today's TikTok. We do.",
+      "Calibrated on the viral creators in your game — not on generic audio-volume rules. Three platform-ready clips on your phone by morning.",
     longDescription:
-      "Stream tonight. Queue runs overnight. 3 drafts on your phone by morning — captions, sound, hashtags, ready to post.",
+      "Per-niche playbook distilled from real viral creators in your game. Stream tonight; overnight queue scores your VOD against those patterns. Three platform-ready drafts on your phone by morning.",
     features: [
       {
-        title: 'Cascade scoring.',
-        body: 'Audio → chat → transcript → virality → trends → HUD. Five layers. Floor is never zero.',
-      },
-      {
-        title: 'Trained on what hit.',
-        body: 'Per-game playbooks from clips that actually went viral. Calibrated to your archetype, not the average streamer.',
+        title: 'Per-niche playbook.',
+        body: 'Real viral creators in your game — analyzed, patterns extracted, encoded into the matchmaker.',
       },
       {
         title: 'Face stays in frame.',
-        body: 'Per-frame OpenCV DNN face-tight reframe. Your eyebrow never ends up cropped.',
+        body: 'Per-frame OpenCV DNN face-tight reframe. Subject re-centered every frame, never cropped.',
       },
       {
         title: '1 VOD. 3 platforms.',
-        body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound. Tap to publish from your couch.',
+        body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound.',
       },
     ],
     primaryCta: cmRelease.installerUrl
@@ -368,64 +364,65 @@ export const products: Product[] = [
         : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
     secondaryCta: cmRelease.releasePageUrl
         ? { label: 'Release notes', href: cmRelease.releasePageUrl, external: true }
-        : { label: 'See sample clips', href: '#samples' },
+        : undefined,
     glyph: '✂',
     accentHex: '#00d4ff',
-    screenshots: [
-      '/screenshots/clipmaxxer/queue-vod.png',
-      '/screenshots/clipmaxxer/login-queue.png',
-      '/screenshots/clipmaxxer/pricing.png',
-    ],
+    // Hero screenshot dropped: the three dev-UI PNGs (queue/login/pricing)
+    // looked cropped in the 3-up 9:16 grid and aren't shippable marketing.
+    // queue-vod.png reappears once below in the "Queue" zone where it fits
+    // a 16:10 frame correctly. Real marketing screenshots land before launch.
     heroStat: { value: '3 clips', label: 'on your phone by morning' },
     zones: [
       {
-        eyebrow: '01 · The Cascade',
-        headline: "Five signals. Layered. Never zero.",
-        body: 'Audio energy → chat density → Whisper transcript → virality model → trending sounds. Each layer catches what the one above missed. The floor is never empty.',
+        eyebrow: '01 · The Playbook',
+        headline: "We score on what's hitting. Not on what's loud.",
+        body: "Per-niche viral playbook. We ingest the actual creators going viral in your game — their viral signals, anti-signals, stylebooks — and score your VOD against THAT. Eklipse scores on audio volume. OpusClip scores on sentiment. Neither watches your scene.",
         visual: {
           kind: 'bars',
           bars: [
-            { label: 'Audio energy', value: 'tier 1', ratio: 1.0 },
-            { label: 'Chat reaction density', value: 'tier 2', ratio: 0.85 },
-            { label: 'Whisper transcript', value: 'tier 3', ratio: 0.7 },
-            { label: 'Virality model', value: 'tier 4', ratio: 0.55 },
-            { label: 'Trending sounds + HUD', value: 'tier 5', ratio: 0.4, emphasize: true },
+            { label: 'Eklipse · audio-volume threshold', value: '1 signal', ratio: 0.18 },
+            { label: 'OpusClip · sentiment scoring', value: '1 signal', ratio: 0.18 },
+            { label: 'Clipmaxxer · per-niche creator playbook', value: 'multi-signal', ratio: 1.0, emphasize: true },
           ],
-          caption: 'Cascade scoring · each tier catches what the prior tier missed',
+          caption: 'Scoring source · generic threshold vs per-niche playbook',
         },
       },
       {
-        eyebrow: '02 · The Reframe',
-        headline: "Face stays in frame.",
-        body: 'Per-frame OpenCV DNN face-tight reframe to 9:16. Subject re-centered every frame, never cropped at the eyebrow. The math is in the build, not the marketing.',
+        eyebrow: '02 · The Research',
+        headline: "We watch the shorts before we pick yours.",
+        body: "For each game we analyze viral shorts from the creators actually winning in that niche. Patterns get distilled into a playbook YAML, injected into the matchmaker prompt. Generic clippers don't know what's viral in your scene — we do, because we did the homework.",
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Valorant · creator playbook live', value: 'in build', ratio: 1.0, emphasize: true },
+            { label: 'Fortnite · creator playbook live', value: 'in build', ratio: 1.0, emphasize: true },
+            { label: 'Additional niches · queued', value: 'in research', ratio: 0.5 },
+          ],
+          caption: 'Per-niche playbook coverage · expanded each release',
+        },
+      },
+      {
+        eyebrow: '03 · The Queue',
+        headline: "You approve. We render.",
+        body: "Overnight queue scores every action moment in your VOD. Top candidates surface in the morning — you swipe approve / reject before any platform render burns. The matchmaker proposes; you commit.",
         visual: {
           kind: 'image',
           src: '/screenshots/clipmaxxer/queue-vod.png',
-          alt: 'Clipmaxxer queue with face-tracked vertical reframes',
-        },
-      },
-      {
-        eyebrow: '03 · The Playbook',
-        headline: "Trained on what actually hit.",
-        body: 'Per-niche viral playbook lookup — Fortnite, Valorant, IRL, kickboxing — calibrated against real creators in that game. Not the average-streamer average; the floor of viral.',
-        visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'Eklipse — volume threshold only', value: 'one signal', ratio: 1.0 },
-            { label: 'OpusClip — sentiment only', value: 'one signal', ratio: 1.0 },
-            { label: 'Clipmaxxer — niche playbook', value: 'five signals', ratio: 1.0, emphasize: true },
-          ],
-          caption: 'Signal count · more layers · per-niche calibration',
+          alt: 'Clipmaxxer queue with candidate clips ranked by playbook score',
         },
       },
       {
         eyebrow: '04 · The Format',
         headline: "1 VOD. 3 platforms. 3 cuts.",
-        body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound. Tap once on your phone in the morning. Drafts ready before you read your texts.',
+        body: "TikTok, Shorts, Reels — each its own length, hook, caption, sound. Tap once on your phone in the morning. Drafts ready before you read your texts.",
         visual: {
-          kind: 'image',
-          src: '/screenshots/clipmaxxer/pricing.png',
-          alt: 'Clipmaxxer pricing + format selector',
+          kind: 'bars',
+          bars: [
+            { label: 'TikTok · 9:16 · short hook', value: 'platform fit', ratio: 1.0, emphasize: true },
+            { label: 'YouTube Shorts · 9:16 · YT hook', value: 'platform fit', ratio: 1.0, emphasize: true },
+            { label: 'Instagram Reels · 9:16 · IG hook', value: 'platform fit', ratio: 1.0, emphasize: true },
+          ],
+          caption: '3 cuts · one queue run · each tuned for its platform',
         },
       },
     ],
@@ -438,21 +435,21 @@ export const products: Product[] = [
     version: dpRelease.version ?? undefined,
     tagline: 'Stop guessing your drop.',
     description:
-      "Other tools: last-season's loot map with arrows. Ours: a calculator with cited physics.",
+      "Community drop data when it exists. Cited physics when it doesn't. Current-season POIs only.",
     longDescription:
-      "Bus 830 m/s. Auto-deploy 100 m. Cited constants. Current-season POIs only. Pick a path, see the math, drop the right spot.",
+      "Bus 830 m/s. Auto-deploy 100 m. Community-data lookup when your path matches the corpus; calibrated physics simulator when it doesn't. Current-season POIs, refreshed every season.",
     features: [
       {
-        title: 'IDW corpus + physics fallback.',
-        body: 'Community-data lookup on known paths. Server-side simulator on novel ones. Fast and right, every time.',
+        title: 'Two solvers. One answer.',
+        body: 'Community-data lookup when your path matches the corpus. Physics simulator on novel paths.',
       },
       {
         title: 'Current-season POIs.',
-        body: 'Refreshed the day each season ships. Reality Falls isn\'t suggested because Reality Falls isn\'t a thing.',
+        body: 'Refreshed every season — sourced from the live game catalog. No legacy names.',
       },
       {
-        title: 'Cited physics.',
-        body: 'Bus speed: 830 m/s. Auto-deploy: 100 m. Glide and nosedive constants — all sourced. Other tools won\'t print theirs.',
+        title: 'Cited constants.',
+        body: 'Bus 830 m/s. Auto-deploy 100 m. Glide and nosedive published, not hidden.',
       },
     ],
     primaryCta: dpRelease.installerUrl
@@ -468,8 +465,8 @@ export const products: Product[] = [
     zones: [
       {
         eyebrow: '01 · The Constants',
-        headline: "Four numbers. All cited.",
-        body: 'Bus speed, auto-deploy altitude, glide speed, nosedive speed. The four numbers every drop calc needs — and the four every loot-map tool refuses to publish.',
+        headline: "Four numbers. All published.",
+        body: "Bus speed, auto-deploy altitude, glide speed, nosedive speed. The four numbers every drop calc needs — and the four every loot-map tool refuses to print. The math is in the page header, not buried in a Discord.",
         visual: {
           kind: 'bars',
           bars: [
@@ -478,30 +475,31 @@ export const products: Product[] = [
             { label: 'Glide', value: '~80 m/s', ratio: 0.096 },
             { label: 'Auto-deploy altitude', value: '100 m', ratio: 0.12 },
           ],
-          caption: 'Source-backed Fortnite physics · cross-referenced Violevo + Epic patch notes',
+          caption: 'Constants published with the build · cross-referenced against community research',
         },
       },
       {
-        eyebrow: '02 · The Map',
+        eyebrow: '02 · The Algorithm',
+        headline: "Community data first. Physics solver second.",
+        body: "Two solvers, one decision. If your drop matches our corpus (47 current-season POIs × 4 bus paths) we serve the community-tested answer. If it doesn't, the calibrated physics simulator runs the math. Every result carries the badge — you see which one answered.",
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'LT-EXACT · community match within tight bound', value: 'corpus answer', ratio: 1.0, emphasize: true },
+            { label: 'LT-NEAR · community match within loose bound', value: 'corpus answer', ratio: 0.78, emphasize: true },
+            { label: 'SIMULATOR · novel path · physics solves it', value: 'physics fallback', ratio: 0.55 },
+          ],
+          caption: 'Solver transparency · UI badge on every drop tells you which answered',
+        },
+      },
+      {
+        eyebrow: '03 · The Map',
         headline: "Current season only.",
-        body: 'Reality Falls is not suggested because Reality Falls is not a thing. POIs refresh the day a season ships. No legacy names. No stale arrows.',
+        body: "Reality Falls is not suggested because Reality Falls is not a thing. POIs are sourced from the live game catalog and refresh the day a season ships. No legacy names. No arrows pointing at last-chapter rubble.",
         visual: {
           kind: 'image',
           src: '/screenshots/dropmaxxer/preview.png',
           alt: 'Dropmaxxer drop-path preview with current-season POIs',
-        },
-      },
-      {
-        eyebrow: '03 · The Algorithm',
-        headline: "IDW corpus first. Physics fallback.",
-        body: 'Community-data lookup on known paths via inverse-distance weighting. Server-side physics simulator on novel ones. Fast where data exists, right where it doesn\'t.',
-        visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'Other tools — static loot map', value: 'pictures', ratio: 1.0 },
-            { label: 'Dropmaxxer — IDW + physics solver', value: 'math', ratio: 1.0, emphasize: true },
-          ],
-          caption: 'Approach · static vs computed · every drop',
         },
       },
     ],

@@ -71,15 +71,15 @@ const reconvertConfig: Record<string, {
     faqs: [
       {
         q: 'When does it actually ship?',
-        a: "Internal alpha is running on real streamer VODs today. Public beta lands when the cascade hits ≥3-of-5 banger rate across our test corpus. We don't ship to a date — we ship to a number.",
+        a: "Internal alpha is running on real streamer VODs today. Public beta lands when the per-niche playbook scores a clean ≥3-of-5 hit rate across our test corpus. We don't ship to a date — we ship to a number.",
       },
       {
-        q: "How is this different from Eklipse / OpusClip?",
-        a: "They cut on one signal — Eklipse on audio volume, OpusClip on sentiment. We layer five: audio, chat, transcript, per-niche virality model, trending sounds. None of theirs watches what TikTok is rewarding this week. We do.",
+        q: "How is the playbook different from Eklipse / OpusClip?",
+        a: "Eklipse cuts on audio volume. OpusClip cuts on sentiment. Both are generic. We build a fresh viral playbook per game — Valorant, Fortnite, more on the way — distilled from the actual creators winning in that niche, and score your VOD against THAT.",
       },
       {
         q: 'Will it cost anything?',
-        a: "Free tier ships day one with 2 clips per VOD. Paid tiers unlock platform fan-out (TikTok + Shorts + Reels per VOD) and longer queue limits. Stripe Checkout. No tokens. No credit-card-up-front trial.",
+        a: "Free tier on launch. Paid tiers unlock platform fan-out (TikTok + Shorts + Reels per VOD) and longer queue limits. Stripe Checkout. No tokens. No credit-card-up-front trial.",
       },
     ],
   },
@@ -88,15 +88,15 @@ const reconvertConfig: Record<string, {
     faqs: [
       {
         q: 'Is this just another loot map?',
-        a: "No. Loot maps are static pictures with arrows. This is a calculator with cited Fortnite physics constants — bus speed, auto-deploy altitude, glide and nosedive — and a current-season POI database that refreshes the day a season ships.",
+        a: "No. Loot maps are static pictures with arrows. This is a drop calculator with cited Fortnite physics constants and a community-data corpus — when your path matches the corpus, you get a community-tested answer; when it doesn't, the calibrated physics solver runs the math.",
       },
       {
-        q: "Why should I trust the constants?",
-        a: "They're cross-referenced against Violevo's drop research and Epic patch notes. Every one of the four numbers above is sourced. If a season changes the math, the math changes — within hours.",
+        q: "How do I know which answered?",
+        a: "Every result carries a transparency badge in the UI: LT-EXACT, LT-NEAR, or SIMULATOR. You always know whether you're seeing a community-corroborated answer or a fresh physics calc. Most other tools won't even tell you they're guessing.",
       },
       {
-        q: 'How does the algorithm decide?',
-        a: "IDW corpus lookup first — community drop data weighted by distance to your input. If the corpus has nothing for your novel path, the server-side physics simulator takes over. Fast where data exists. Right where it doesn't.",
+        q: 'How current are the POIs?',
+        a: "Current-season only. POIs are sourced from the live game catalog and refresh the day each season ships. Reality Falls isn't suggested because Reality Falls isn't a thing.",
       },
     ],
   },
