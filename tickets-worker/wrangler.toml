@@ -32,17 +32,14 @@ id = "22c7543edfc248059e8eca493224c8e5"
 # in worker.js. Same convention as vip-worker (`VIP_CLAIMS`) and
 # telemetry-worker (`TELEMETRY`).
 
-# Founder pool — pre-minted FOUND* codes /33 pulls from. Only used by
+# Founder pool — pre-minted FNDR* codes /33 pulls from. Only used by
 # /33; other slash commands mint codes on demand. Keys:
 #   unused:founder:<code>  -> "1"
 #
-# Create the namespace first:
-#   cd tickets-worker
-#   wrangler kv namespace create vip-code-pool
-#   # paste the returned ID below + uncomment the block.
-# [[kv_namespaces]]
-# binding = "VIP_CODE_POOL"
-# id = "PASTE-NAMESPACE-ID-HERE"
+# Created 2026-05-11 via `wrangler kv namespace create vip-code-pool`.
+[[kv_namespaces]]
+binding = "VIP_CODE_POOL"
+id = "3a7ab0ad53cb4ca0995cc5021f6e347e"
 
 # Shared with vip-worker. We write `meta:<code> → {tier, scope,
 # durationMs, mintedAt}` here at /gen-time so vip-worker can derive
