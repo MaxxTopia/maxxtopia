@@ -1,0 +1,361 @@
+---
+/**
+ * DiscordKillshot — top-of-hero ribbon for /discordmaxxer.
+ *
+ * The dm-mark-transparent logo (horror-Clyde with three bullet holes through
+ * the face) is the brand's most violent visual asset. The mark literally has
+ * THREE bullet holes — so we tie each hole to one thing the client shot out
+ * of stock Discord: Telemetry, Bloat, Lag. Three rounds, one client.
+ *
+ * Sits above the "All products" back link inside the hero. Compact + potent —
+ * doesn't compete with the −753 MB hero stat below; it sets the register.
+ */
+
+const rounds = [
+  { idx: '01', label: 'Telemetry', detail: '14 → 0 outbound domains' },
+  { idx: '02', label: 'Bloat',     detail: '753 MB removed from RAM' },
+  { idx: '03', label: 'Lag',       detail: '0% idle CPU · Tournament Mode' },
+];
+---
+
+<div class="killshot reveal reveal-1" aria-labelledby="killshot-headline">
+  <div class="killshot__mark" aria-hidden="true">
+    <div class="killshot__polaroid">
+      <img
+        src="/logos/dm-mark-killshot.png"
+        alt=""
+        width="240"
+        height="240"
+        loading="eager"
+        decoding="async"
+      />
+      <div class="killshot__polaroid-caption">
+        <span class="killshot__polaroid-id">EXHIBIT A</span>
+        <span class="killshot__polaroid-stamp">3 RNDS · CONFIRMED</span>
+      </div>
+    </div>
+    <span class="killshot__mark-ring" aria-hidden="true"></span>
+  </div>
+
+  <div class="killshot__copy">
+    <p class="killshot__eyebrow">
+      <span class="killshot__eyebrow-dot" aria-hidden="true"></span>
+      Three rounds · one client
+    </p>
+    <h2 id="killshot-headline" class="killshot__headline">
+      We put three holes in <span class="killshot__strike">Discord</span><span class="killshot__period">.</span>
+    </h2>
+    <p class="killshot__sub">
+      Same servers. Same friends on the other end. We just shot out the parts
+      that talk to Discord, Inc. <span class="killshot__sub-tail">Three rounds — one for each hole.</span>
+    </p>
+
+    <ul class="killshot__rounds" role="list">
+      {rounds.map((r) => (
+        <li class="killshot__round">
+          <span class="killshot__round-idx" aria-hidden="true">{r.idx}</span>
+          <span class="killshot__round-body">
+            <span class="killshot__round-label">{r.label}</span>
+            <span class="killshot__round-detail">{r.detail}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .killshot {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 36px;
+    padding: 20px 24px;
+    border: 1px solid var(--color-line);
+    border-radius: 20px;
+    background:
+      radial-gradient(
+        120% 180% at 0% 50%,
+        rgba(88, 101, 242, 0.10) 0%,
+        rgba(226, 91, 255, 0.06) 35%,
+        rgba(5, 5, 5, 0) 70%
+      ),
+      var(--color-bg-card);
+    overflow: hidden;
+  }
+  /* Top-left muzzle-flash glow + subtle scan line above the headline */
+  .killshot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 80% at 0% 0%, rgba(226, 91, 255, 0.14), transparent 60%),
+      radial-gradient(50% 60% at 100% 100%, rgba(88, 101, 242, 0.10), transparent 60%);
+    mix-blend-mode: screen;
+  }
+
+  /* Mark slot — evidence-polaroid treatment.
+     v1 of the bullet-hole mark has a cream paper background, so we lean in
+     and frame it as an evidence photo: slight rotation, aged-paper card,
+     mono caption strip below (EXHIBIT A · 3 RNDS · CONFIRMED). The cream
+     paper reads as intentional, not as a missing transparency. */
+  .killshot__mark {
+    position: relative;
+    width: 156px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    transform: rotate(-3deg);
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .killshot:hover .killshot__mark { transform: rotate(-1.5deg) scale(1.02); }
+
+  .killshot__polaroid {
+    position: relative;
+    width: 100%;
+    padding: 8px 8px 0;
+    background: #efe9dc;
+    border-radius: 4px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 14px 28px rgba(0, 0, 0, 0.55),
+      0 0 28px rgba(226, 91, 255, 0.22),
+      0 0 48px rgba(88, 101, 242, 0.18);
+    filter: drop-shadow(0 0 14px rgba(255, 61, 139, 0.18));
+    animation: killshot-jitter 6s ease-in-out infinite;
+  }
+  /* Aged-paper grain noise on the polaroid */
+  .killshot__polaroid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 4px;
+    background:
+      radial-gradient(120% 80% at 30% 0%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.07) 100%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.08) 100%);
+    mix-blend-mode: multiply;
+  }
+  .killshot__polaroid img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    background: #efe9dc;
+  }
+  .killshot__polaroid-caption {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 6px 4px 7px;
+    font-family: var(--font-mono);
+  }
+  .killshot__polaroid-id {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1f1815;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .killshot__polaroid-stamp {
+    align-self: flex-end;
+    font-size: 8.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #b81e1e;
+    border: 1px solid #b81e1e;
+    padding: 1px 4px;
+    border-radius: 2px;
+    transform: rotate(-2deg);
+    transform-origin: right center;
+    white-space: nowrap;
+  }
+
+  @keyframes killshot-jitter {
+    0%, 100% { transform: translate(0, 0); }
+    25%      { transform: translate(0.6px, -0.5px); }
+    50%      { transform: translate(-0.5px, 0.4px); }
+    75%      { transform: translate(0.4px, 0.5px); }
+  }
+  /* killshot__mark-ring kept in markup but hidden — the polaroid replaces the
+     orbit ring as the framing device. */
+  .killshot__mark-ring { display: none; }
+
+  .killshot__copy {
+    min-width: 0;
+  }
+  .killshot__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-subtle);
+    margin-bottom: 8px;
+  }
+  .killshot__eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #ff3d8b;
+    box-shadow: 0 0 10px #ff3d8b, 0 0 22px rgba(255, 61, 139, 0.6);
+    animation: killshot-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes killshot-pulse {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%      { opacity: 0.55; transform: scale(0.85); }
+  }
+
+  .killshot__headline {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--color-text);
+    margin: 0;
+  }
+  /* "Discord" gets a struck-through bullet-line — visually shot out. */
+  .killshot__strike {
+    position: relative;
+    display: inline-block;
+    color: var(--color-text);
+  }
+  .killshot__strike::after {
+    content: '';
+    position: absolute;
+    left: -4%;
+    right: -4%;
+    top: 56%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #ff3d8b 20%, #ff3d8b 80%, transparent 100%);
+    box-shadow: 0 0 6px rgba(255, 61, 139, 0.7);
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: killshot-strike 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  }
+  @keyframes killshot-strike {
+    0%   { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+  .killshot__period { color: var(--color-magenta); }
+
+  .killshot__sub {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-mid);
+    max-width: 56ch;
+  }
+  .killshot__sub-tail {
+    color: var(--color-muted);
+  }
+
+  .killshot__rounds {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .killshot__round {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.015);
+    transition: border-color 220ms ease, background 220ms ease, transform 220ms ease;
+  }
+  .killshot__round:hover {
+    border-color: rgba(226, 91, 255, 0.35);
+    background: rgba(226, 91, 255, 0.04);
+    transform: translateY(-1px);
+  }
+  /* Bullet-hole "tap" on each round — a tiny black puncture mark.
+     Built from layered radial gradients so it reads as a hole, not a dot. */
+  .killshot__round::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 35% 35%,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(0, 0, 0, 0.95) 28%,
+        rgba(0, 0, 0, 0.95) 60%,
+        rgba(0, 0, 0, 0) 100%
+      );
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 2px rgba(0, 0, 0, 0.9),
+      0 0 6px rgba(0, 0, 0, 0.6);
+  }
+  .killshot__round-idx {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--color-magenta);
+    flex: none;
+  }
+  .killshot__round-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .killshot__round-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: -0.005em;
+  }
+  .killshot__round-detail {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Stacked layout below 760px — mark on top, then copy, then a 1-col round list. */
+  @media (max-width: 760px) {
+    .killshot {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 18px 18px 16px;
+    }
+    .killshot__mark {
+      width: 132px;
+    }
+    .killshot__headline { font-size: 22px; }
+    .killshot__rounds {
+      grid-template-columns: 1fr;
+    }
+    .killshot__round-detail { white-space: normal; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .killshot__mark img,
+    .killshot__mark-ring,
+    .killshot__eyebrow-dot { animation: none !important; }
+    .killshot__strike::after { animation: none !important; transform: scaleX(1) !important; }
+  }
+</style>

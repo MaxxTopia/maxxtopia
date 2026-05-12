@@ -32,9 +32,13 @@ const totalCount = products.length;
       <span class="block gradient-text">go to <HeroWordReveal lockWord="maxx." /></span>
     </h1>
 
-    <!-- Subhead — three slaps, then the hook. -->
+    <!-- Subhead — three slaps, then the hook.
+         Stamp tail in brand-shimmer (matches "None" in the stats grid + the
+         brand-shimmer used on the product cards) instead of the Bowlby italic
+         accent. Bowlby reads too chunky at subhead scale (22px); shimmer is
+         the site's signature accent at this register. -->
     <p class="reveal reveal-3 mt-7 max-w-xl text-[19px] sm:text-[22px] leading-[1.4] text-[var(--color-text-mid)]">
-      Seven tools. Native. Cited. Zero telemetry. <span class="serif-accent text-[var(--color-text)]">Built for the millisecond.</span>
+      Seven tools. Native. Cited. Zero telemetry. <span class="font-mono text-[var(--color-subtle)] mx-1">·</span> <span class="font-semibold tracking-tight text-[var(--color-text)]">Built for the <span class="brand-shimmer">millisecond</span>.</span>
     </p>
 
     <!-- CTAs — primary now drives to the live tuner -->

@@ -10,6 +10,7 @@ import ProductScreenshot from '../components/ProductScreenshot.astro';
 import FeatureZone from '../components/FeatureZone.astro';
 import SourceWall from '../components/SourceWall.astro';
 import CutAutopsy from '../components/CutAutopsy.astro';
+import DiscordKillshot from '../components/DiscordKillshot.astro';
 import ReceiptsBand from '../components/ReceiptsBand.astro';
 import ReconversionCTA from '../components/ReconversionCTA.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
@@ -252,6 +253,7 @@ const softwareSchema = {
     {isBeta && <StatusTape variant="beta" />}
 
     <div class="relative mx-auto max-w-7xl px-5 sm:px-8 pt-20 sm:pt-24 pb-16">
+      {isDM && <DiscordKillshot />}
       <a href="/#apps" class="inline-flex items-center gap-1.5 text-[13px] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors mb-12">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
