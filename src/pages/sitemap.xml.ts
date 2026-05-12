@@ -6,11 +6,13 @@ const SITE = 'https://maxxtopia.com';
 export const GET: APIRoute = () => {
   const today = new Date().toISOString().slice(0, 10);
   const urls = [
-    { loc: `${SITE}/`, priority: '1.0' },
-    { loc: `${SITE}/why`, priority: '0.7' },
+    { loc: `${SITE}/`,        priority: '1.0', changefreq: 'weekly' },
+    { loc: `${SITE}/why`,     priority: '0.8', changefreq: 'monthly' },
+    { loc: `${SITE}/updates`, priority: '0.8', changefreq: 'weekly' },
     ...products.map((p) => ({
       loc: `${SITE}/${p.slug}`,
       priority: p.status === 'live' ? '0.9' : '0.6',
+      changefreq: p.status === 'live' ? 'weekly' : 'monthly',
     })),
   ];
 
@@ -21,6 +23,7 @@ ${urls
     (u) => `  <url>
     <loc>${u.loc}</loc>
     <lastmod>${today}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`
   )

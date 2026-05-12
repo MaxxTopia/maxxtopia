@@ -27,6 +27,42 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+
+// Site-wide structured data so engines can build a knowledge graph
+// entry for "Maxxtopia" — surfaces sitelinks, the brand pill in SERP,
+// and the search-box widget once we have enough authority.
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Maxxtopia',
+  alternateName: ['Maxxer Suite', 'Maxxer'],
+  url: 'https://maxxtopia.com',
+  logo: 'https://maxxtopia.com/maxxtopia-clavicular-512.png',
+  description:
+    "Native gaming utilities for the players who count frame times. Sourced, reversible, zero telemetry.",
+  founder: { '@type': 'Person', name: 'Diggy', url: 'https://x.com/DTburnr' },
+  sameAs: [
+    'https://x.com/DTburnr',
+    'https://github.com/MaxxTopia',
+    'https://discord.gg/S78eecbWdx',
+  ],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Maxxtopia',
+  url: 'https://maxxtopia.com',
+  description:
+    "Native gaming utilities for the players who count frame times.",
+  publisher: { '@type': 'Organization', name: 'Maxxtopia' },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://maxxtopia.com/?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
 
 // Cloudflare Web Analytics — paste the beacon token in PUBLIC_CF_ANALYTICS_TOKEN
 // (.env.local or Cloudflare Pages env vars). Beacon does nothing if unset, so
@@ -65,6 +101,15 @@ const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN;
     <meta name="twitter:image" content={ogImage} />
 
     <meta name="theme-color" content="#0a0612" />
+
+    <!-- Site-wide structured data: Organization + WebSite. Homepage
+         also gets the SearchAction widget. -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+
+    <!-- RSS feed for /updates so feed readers, Discord/Slack bots, and
+         GitHub-action mirrors can auto-pick up changelog drops. -->
+    <link rel="alternate" type="application/rss+xml" title="Maxxtopia updates" href="/rss.xml" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
