@@ -88,11 +88,11 @@ export const products: Product[] = [
     category: 'PC Tuning',
     status: 'live',
     version: omRelease.version,
-    tagline: 'Eighty-seven tweaks. Zero placebos.',
+    tagline: 'One hundred tweaks. Zero placebos.',
     description:
       'The only Windows tuner that shows its work. Every tweak traced to a Microsoft Learn doc or a vendor whitepaper. One UAC prompt applies the whole preset. Snapshot-backed revert, any tweak, any time.',
     longDescription:
-      "87 sourced tweaks. 3.6 MB. One UAC prompt to apply the whole preset. Snapshot revert at any time, any tweak.",
+      "100 sourced tweaks. 3.6 MB. One UAC prompt to apply the whole preset. Snapshot revert at any time, any tweak.",
     features: [
       {
         title: 'Sourced or it doesn\'t ship.',
@@ -120,7 +120,7 @@ export const products: Product[] = [
       },
     ],
     stats: [
-      { label: 'Audited tweaks', value: '87' },
+      { label: 'Audited tweaks', value: '100' },
       { label: 'Curated presets', value: '10' },
       { label: 'Installer', value: '3.6 MB' },
       { label: 'Idle RAM', value: '~30 MB' },
@@ -152,7 +152,7 @@ export const products: Product[] = [
         poster: '/screenshots/optimizationmaxxing/demo-cut3-poster.jpg',
       },
     ],
-    heroStat: { value: '87', label: 'tweaks · zero placebos' },
+    heroStat: { value: '100', label: 'tweaks · zero placebos' },
     zones: [
       {
         eyebrow: '01 · The Audit',

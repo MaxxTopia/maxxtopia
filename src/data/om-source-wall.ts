@@ -222,4 +222,4 @@ export const omSourceWallCategories: SourceCategory[] = [
 ];
 
 /** Total audited tweaks in the in-app catalog (counter ticks 0 → this). */
-export const omTotalTweaks = 87;
+export const omTotalTweaks = 100;
