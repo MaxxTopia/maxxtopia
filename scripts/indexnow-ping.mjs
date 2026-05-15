@@ -31,7 +31,9 @@ const SLUGS = [
   'extensionmaxxing',
 ];
 
-const urlList = SLUGS.map((s) => `https://${HOST}/${s}`);
+// Trailing slash required — CF Pages 308-redirects no-slash URLs.
+// Ping the canonical form so IndexNow doesn't waste push on redirects.
+const urlList = SLUGS.map((s) => (s === '' ? `https://${HOST}/` : `https://${HOST}/${s}/`));
 
 const body = {
   host: HOST,

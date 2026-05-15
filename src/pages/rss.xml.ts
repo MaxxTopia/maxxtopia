@@ -20,7 +20,7 @@ export const GET: APIRoute = () => {
     .slice(0, 50)
     .map((entry) => {
       const date = new Date(`${entry.date}T12:00:00Z`).toUTCString();
-      const link = entry.productSlug ? `${SITE}/${entry.productSlug}` : `${SITE}/updates`;
+      const link = entry.productSlug ? `${SITE}/${entry.productSlug}/` : `${SITE}/updates/`;
       const title = entry.version
         ? `${entry.product} ${entry.version} — ${entry.title}`
         : `${entry.product} — ${entry.title}`;
