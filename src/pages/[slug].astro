@@ -221,22 +221,38 @@ const featureHeadings: Record<string, FeatureHeading> = {
 const featureHeading: FeatureHeading | undefined = featureHeadings[product.slug];
 
 // SoftwareApplication JSON-LD — rich results in Google for live products.
+// Per-slug keyword sets target real long-tail queries pulled from the
+// niches each product competes in. They help topical relevance without
+// muddying the visible brand voice in titles.
+const softwareKeywords: Record<string, string> = {
+  optimizationmaxxing: 'windows gaming optimizer, pc tweaking tool, free windows tuner, gaming pc optimization, low latency windows, fortnite optimization, valorant optimization, dpc latency tweaks, debloat windows 11, windows 11 gaming tweaks, hone alternative, paragon tweaks alternative',
+  discordmaxxer: 'lightweight discord client, discord alternative, low ram discord, discord without telemetry, discord client for gamers, vencord alternative, discord ram usage, fast discord client, tournament mode discord, discord plugins',
+  clipmaxxer: 'twitch clip maker, ai clip generator, opusclip alternative, eklipse alternative, vod clipper, fortnite clip maker, valorant clip ai, content matchmaker, tiktok shorts reels generator',
+  dropmaxxer: 'fortnite drop calculator, drop spot tool, drop path calculator, droppingcalc alternative, fortnite poi planner, fortnite bus speed, fortnite landing optimization',
+  aimmaxxer: 'ai aim trainer, kovaaks alternative, aim training routine, fps aim tracker, valorant aim trainer, fortnite aim training, two pc aim assist',
+  viewmaxxing: 'streamer toolkit, twitch streaming tools, obs alternative, streamer dashboard, content stream operator',
+  extensionmaxxing: 'browser extension pack, productivity extensions, gaming browser extensions',
+};
+
 const softwareSchema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: product.name,
+  alternateName: product.name.toLowerCase(),
   description: product.description,
   applicationCategory: product.category === 'PC Tuning' ? 'UtilitiesApplication'
     : product.category === 'Communication' ? 'CommunicationApplication'
     : 'GameApplication',
-  operatingSystem: 'Windows',
+  applicationSubCategory: product.category,
+  operatingSystem: 'Windows 10, Windows 11',
   ...(product.version && { softwareVersion: product.version }),
+  ...(softwareKeywords[product.slug] && { keywords: softwareKeywords[product.slug] }),
   offers: {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
   },
-  aggregateRating: undefined, // wire when we have real review counts
+  publisher: { '@type': 'Organization', name: 'Maxxtopia', url: 'https://maxxtopia.com' },
   url: `https://maxxtopia.com/${product.slug}`,
 };
 ---

@@ -73,6 +73,14 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 // reporting. Same pattern: nothing loads if unset, so the site has zero
 // Sentry weight when you haven't turned it on.
 const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN;
+
+// Search-engine ownership verification tokens. Paste the token string
+// (just the token, NOT the full meta tag) into Cloudflare Pages env vars
+// and the matching meta tag will render. Lets us verify GSC + Bing
+// Webmaster + Yandex without committing tokens to git.
+const googleVerify = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
+const bingVerify = import.meta.env.PUBLIC_BING_SITE_VERIFICATION;
+const yandexVerify = import.meta.env.PUBLIC_YANDEX_VERIFICATION;
 ---
 
 <!doctype html>
@@ -87,6 +95,10 @@ const sentryDsn = import.meta.env.PUBLIC_SENTRY_DSN;
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {googleVerify && <meta name="google-site-verification" content={googleVerify} />}
+    {bingVerify && <meta name="msvalidate.01" content={bingVerify} />}
+    {yandexVerify && <meta name="yandex-verification" content={yandexVerify} />}
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
