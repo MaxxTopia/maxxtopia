@@ -24,3 +24,9 @@ public/screenshots/**/demo*.jpg
 !public/screenshots/**/demo-tiktok-poster.jpg
 !public/screenshots/**/demo-cut*.mp4
 !public/screenshots/**/demo-cut*.jpg
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
