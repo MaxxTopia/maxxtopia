@@ -8,7 +8,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "og": "node scripts/render-og-image.mjs",
+    "og:cards": "node scripts/render-og-product-cards.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "discord.js": "^14.26.4",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "sharp": "^0.34.5"
   }
 }

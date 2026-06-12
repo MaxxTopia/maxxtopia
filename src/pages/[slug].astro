@@ -256,11 +256,12 @@ const softwareSchema = {
   url: `https://maxxtopia.com/${product.slug}`,
 };
 
-// Per-product social card: use the product's own first screenshot / OG asset
-// instead of the generic site-wide /og.png so shared links are visually
-// distinct per app. Falls back to the Layout default when a product has no
-// image yet (undefined → Layout's `image` default of /og.png).
-const ogImage = product.screenshots?.[0];
+// Per-product social card: a bespoke, branded 1200×630 card rendered for
+// every product by scripts/render-og-product-cards.mjs → public/og/<slug>.png
+// (run `npm run og:cards` after changing a name/tagline/accent). Each card
+// carries the product name + tagline + accent, so shared links are visually
+// distinct per app instead of all showing the generic site-wide /og.png.
+const ogImage = `/og/${product.slug}.png`;
 
 // VideoObject JSON-LD — lets Google surface the demo in video rich results.
 // Only products with a demoVideo get one; uploadDate borrows the matching
