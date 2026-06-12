@@ -135,6 +135,23 @@ const reconvertConfig: Record<string, {
       },
     ],
   },
+  extensionmaxxing: {
+    closingLine: 'One blocker. Four browsers. Zero ads.',
+    faqs: [
+      {
+        q: 'How do I install it?',
+        a: "Download the zip, unzip it somewhere you'll keep it, then open chrome://extensions (or brave:// / edge://), turn on Developer mode, click Load unpacked, and pick the unzipped folder. A welcome tab opens and you're blocking. Takes about thirty seconds.",
+      },
+      {
+        q: "Why isn't it on the Chrome Web Store?",
+        a: "A YouTube and Twitch ad blocker on the store is a takedown waiting to happen — that's exactly how the big blockers got gutted. Self-hosting the build sidesteps the store's veto entirely. The trade-off is no silent auto-update; the popup flags you when a refresh is worth running, and filter lists update weekly on their own. Firefox gets a one-click signed build shortly.",
+      },
+      {
+        q: 'Does it work on my iPhone?',
+        a: "Apple bans real ad blockers on iOS — every iPhone browser is Safari underneath, so no extension can do this there. Instead of faking it, the popup ships the exact blocking-DNS setup that genuinely kills your phone's Spotify and in-app ads. Honest reach over marketing reach.",
+      },
+    ],
+  },
 };
 
 const receiptsConfig: Record<string, {
@@ -217,6 +234,7 @@ const featureHeadings: Record<string, FeatureHeading> = {
   dropmaxxer:          { eyebrow: 'The math',        left: 'Cited physics.',           right: 'Current map.' },
   aimmaxxer:           { eyebrow: 'The metrics',     left: 'Aim is four things.',      right: 'Drilled four ways.' },
   viewmaxxing:         { eyebrow: 'The standard',    left: 'Operator-first.',          right: 'Slot reserved.' },
+  extensionmaxxing:    { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
 };
 const featureHeading: FeatureHeading | undefined = featureHeadings[product.slug];
 
@@ -231,7 +249,7 @@ const softwareKeywords: Record<string, string> = {
   dropmaxxer: 'fortnite drop calculator, drop spot tool, drop path calculator, droppingcalc alternative, fortnite poi planner, fortnite bus speed, fortnite landing optimization',
   aimmaxxer: 'ai aim trainer, kovaaks alternative, aim training routine, fps aim tracker, valorant aim trainer, fortnite aim training, two pc aim assist',
   viewmaxxing: 'streamer toolkit, twitch streaming tools, obs alternative, streamer dashboard, content stream operator',
-  extensionmaxxing: 'browser extension pack, productivity extensions, gaming browser extensions',
+  extensionmaxxing: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
 };
 
 const softwareSchema = {

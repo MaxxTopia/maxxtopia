@@ -628,7 +628,8 @@ export const products: Product[] = [
     slug: 'extensionmaxxing',
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
-    status: 'soon',
+    status: 'live',
+    version: '1.2.1',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "uBlock got gutted on Chrome and locked out everywhere else. AdBlockMaxxer is built native to the new standard (Manifest V3), so it loads on Brave, Chrome, Edge and Firefox with no 'unsupported' wall. It kills ads on YouTube, Spotify and Twitch — and keeps Twitch at full 1080p instead of dropping you to 480p like every other Twitch blocker.",
@@ -721,7 +722,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Get early access', href: WAITLIST_URL, external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome.zip', external: true },
     secondaryCta: undefined,
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
