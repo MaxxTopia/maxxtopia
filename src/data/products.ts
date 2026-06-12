@@ -12,13 +12,13 @@ import vmRelease from './viewmaxxing-release.json';
 // getwaitlist.com link in PUBLIC_WAITLIST_URL (Cloudflare Pages env
 // vars) and every "Get on the waitlist" button across the site flips
 // to it instantly.
-// Until that's wired, fall back to a mailto: that drafts an email so
-// clicks do *something* (silent #waitlist anchors felt broken). Users
-// without a configured mailto handler will get a browser prompt — still
-// better than nothing happening.
+// Until that's wired, fall back to the live Discord — launches are
+// announced there first (#announcements + per-product forum threads),
+// so "join for updates" actually works, with no backend to maintain and
+// no personal email exposed in the page source.
 const WAITLIST_URL =
     import.meta.env.PUBLIC_WAITLIST_URL ||
-    'mailto:lucidcobra@gmail.com?subject=Maxxer%20suite%20%E2%80%94%20waitlist%20signup&body=Hey%2C%20I%20want%20to%20be%20notified%20when%20more%20maxxer%20products%20ship.%0A%0AProduct%20I%27m%20most%20interested%20in%3A%20%5Bclipmaxxer%20%2F%20dropmaxxer%20%2F%20aimmaxxer%20%2F%20viewmaxxing%20%2F%20editmaxxing%5D%0AHow%20I%20found%20you%3A%20%0A';
+    'https://discord.gg/S78eecbWdx';
 
 export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon' | 'dev';
 

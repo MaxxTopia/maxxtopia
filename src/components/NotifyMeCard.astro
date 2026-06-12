@@ -1,39 +1,40 @@
 ---
+/**
+ * Floating "launch updates" card on coming-soon product pages.
+ *
+ * Was an email form that wrote only to the visitor's own localStorage and
+ * faked a "we'll email you" success — every lead silently lost. Replaced
+ * with a direct link to the live Discord, where launches are actually
+ * announced (#announcements + per-product forum threads). Zero backend,
+ * nothing to maintain, and it grows the real community hub.
+ */
 type Props = { productName: string };
 const { productName } = Astro.props;
+const DISCORD_INVITE = 'https://discord.gg/S78eecbWdx';
 ---
 
-<div class="notify-card" data-product={productName}>
-  <button class="notify-card__trigger" aria-expanded="false" aria-controls="notify-form">
-    <span class="notify-card__pulse" aria-hidden="true"></span>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+<a
+  class="notify-card"
+  href={DISCORD_INVITE}
+  target="_blank"
+  rel="noopener"
+  data-product={productName}
+>
+  <span class="notify-card__pulse" aria-hidden="true"></span>
+  <span class="notify-card__icon" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20.3 4.9A19 19 0 0 0 15.6 3.4a13 13 0 0 0-.6 1.3 17.6 17.6 0 0 0-5 0 13 13 0 0 0-.6-1.3A19 19 0 0 0 4.6 4.9 19.7 19.7 0 0 0 1.3 18a19.2 19.2 0 0 0 5.8 2.9 14 14 0 0 0 1.2-2 12.4 12.4 0 0 1-1.9-.9l.5-.4a13.7 13.7 0 0 0 11.7 0l.5.4a12.4 12.4 0 0 1-1.9.9 14 14 0 0 0 1.2 2A19.1 19.1 0 0 0 24 18a19.6 19.6 0 0 0-3.7-13.1ZM8.9 15.4c-1.1 0-2-1-2-2.3s.9-2.3 2-2.3 2 1 2 2.3-.9 2.3-2 2.3Zm6.2 0c-1.1 0-2-1-2-2.3s.9-2.3 2-2.3 2 1 2 2.3-.9 2.3-2 2.3Z"/>
     </svg>
-    <span>Notify me when {productName} ships</span>
-  </button>
-
-  <form class="notify-card__form" id="notify-form" hidden>
-    <input
-      type="email"
-      class="notify-card__input"
-      placeholder="you@gmail.com"
-      required
-      aria-label="Your email"
-    />
-    <button type="submit" class="notify-card__submit">
-      <span>Notify me</span>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  </span>
+  <span class="notify-card__body">
+    <span class="notify-card__title">{productName} drops in our Discord first</span>
+    <span class="notify-card__cta">Join for launch updates
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M5 12h14M13 5l7 7-7 7"/>
       </svg>
-    </button>
-    <p class="notify-card__hint">No spam. One email when it ships.</p>
-  </form>
-
-  <p class="notify-card__success" hidden>
-    Got it — we'll email you the moment {productName} is ready.
-  </p>
-</div>
+    </span>
+  </span>
+</a>
 
 <style>
   .notify-card {
@@ -41,94 +42,72 @@ const { productName } = Astro.props;
     bottom: 24px;
     right: 24px;
     z-index: 35;
-    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
     background: var(--color-bg-card);
     border: 1px solid var(--color-line-strong);
     border-radius: 14px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(226, 91, 255, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(88, 101, 242, 0.28);
     max-width: 320px;
+    text-decoration: none;
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease, border-color 220ms ease;
   }
-  .notify-card__trigger {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    background: transparent;
-    border: 0;
-    color: var(--color-text);
-    font-size: 13.5px;
-    font-weight: 500;
-    padding: 0;
-    text-align: left;
-    cursor: pointer;
+  .notify-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(88, 101, 242, 0.6);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(88, 101, 242, 0.5), 0 0 36px rgba(88, 101, 242, 0.25);
   }
   .notify-card__pulse {
-    position: relative;
-    width: 8px;
-    height: 8px;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 7px;
+    height: 7px;
     border-radius: 999px;
-    background: var(--color-magenta);
-    box-shadow: 0 0 0 0 rgba(226, 91, 255, 0.8);
+    background: #5865F2;
+    box-shadow: 0 0 0 0 rgba(88, 101, 242, 0.8);
     animation: notify-pulse 2.4s ease-out infinite;
-    flex-shrink: 0;
   }
   @keyframes notify-pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(226, 91, 255, 0.6);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(226, 91, 255, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(226, 91, 255, 0);
-    }
+    0%   { box-shadow: 0 0 0 0 rgba(88, 101, 242, 0.6); }
+    70%  { box-shadow: 0 0 0 9px rgba(88, 101, 242, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(88, 101, 242, 0); }
   }
-
-  .notify-card__form {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--color-line);
-  }
-  .notify-card__input {
-    background: var(--color-bg);
-    border: 1px solid var(--color-line-strong);
-    border-radius: 8px;
-    padding: 9px 12px;
-    color: var(--color-text);
-    font-size: 13.5px;
-    outline: none;
-    transition: border-color 200ms ease;
-  }
-  .notify-card__input:focus {
-    border-color: var(--color-magenta);
-  }
-  .notify-card__submit {
+  .notify-card__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    height: 36px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #e25bff, #4c51f7);
-    color: #fff;
-    border: 0;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: rgba(88, 101, 242, 0.16);
+    color: #c2c8ff;
+  }
+  .notify-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .notify-card__title {
+    color: var(--color-text);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  .notify-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #aab2ff;
+    font-size: 12.5px;
     font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
   }
-  .notify-card__hint {
-    font-size: 11px;
-    color: var(--color-subtle);
-    text-align: center;
-    margin: 0;
-  }
-  .notify-card__success {
-    margin: 8px 0 0;
-    font-size: 13px;
-    color: var(--color-magenta);
+  .notify-card:hover .notify-card__cta {
+    color: #c8cdff;
   }
 
   @media (max-width: 640px) {
@@ -140,38 +119,3 @@ const { productName } = Astro.props;
     }
   }
 </style>
-
-<script is:inline>
-  (() => {
-    const card = document.querySelector('.notify-card');
-    if (!card) return;
-    const trigger = card.querySelector('.notify-card__trigger');
-    const form = card.querySelector('.notify-card__form');
-    const input = card.querySelector('.notify-card__input');
-    const success = card.querySelector('.notify-card__success');
-    if (!trigger || !form || !input || !success) return;
-
-    let open = false;
-    trigger.addEventListener('click', () => {
-      open = !open;
-      form.hidden = !open;
-      trigger.setAttribute('aria-expanded', String(open));
-      if (open) input.focus();
-    });
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const product = card.getAttribute('data-product') || '';
-      const email = input.value.trim();
-      if (!email) return;
-      // TODO: wire to actual capture endpoint
-      try {
-        const list = JSON.parse(localStorage.getItem('maxxtopia_waitlist') || '[]');
-        list.push({ product, email, ts: Date.now() });
-        localStorage.setItem('maxxtopia_waitlist', JSON.stringify(list));
-      } catch (_) { /* no-op */ }
-      form.hidden = true;
-      success.hidden = false;
-    });
-  })();
-</script>
