@@ -7,7 +7,6 @@ import cmRelease from './clipmaxxer-release.json';
 import dpRelease from './dropmaxxer-release.json';
 import amRelease from './aimmaxxer-release.json';
 import vmRelease from './viewmaxxing-release.json';
-import emRelease from './editmaxxing-release.json';
 
 // Single shared waitlist URL. Drop a Tally / ConvertKit / MailerLite /
 // getwaitlist.com link in PUBLIC_WAITLIST_URL (Cloudflare Pages env
@@ -627,23 +626,105 @@ export const products: Product[] = [
   },
   {
     slug: 'extensionmaxxing',
-    name: 'Extensionmaxxing',
-    category: 'Extensions',
+    name: 'AdBlockMaxxer',
+    category: 'Browser Extension',
     status: 'soon',
-    version: emRelease.version ?? undefined,
-    tagline: '',
-    description: '',
-    longDescription: '',
-    features: [],
-    primaryCta: emRelease.installerUrl
-        ? { label: 'Download for Windows', href: emRelease.installerUrl, external: true }
-        : { label: 'Notify me if it ships', href: WAITLIST_URL, external: true },
-    secondaryCta: emRelease.releasePageUrl
-        ? { label: 'Release notes', href: emRelease.releasePageUrl, external: true }
-        : undefined,
-    glyph: '◈',
-    accentHex: '#ff6b8b',
-    heroStat: { value: '✕', label: 'on research hold' },
+    tagline: "The ad blocker they couldn't ban.",
+    description:
+      "uBlock got gutted on Chrome and locked out everywhere else. AdBlockMaxxer is built native to the new standard (Manifest V3), so it loads on Brave, Chrome, Edge and Firefox with no 'unsupported' wall. It kills ads on YouTube, Spotify and Twitch — and keeps Twitch at full 1080p instead of dropping you to 480p like every other Twitch blocker.",
+    longDescription:
+      "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch stays full quality.",
+    features: [
+      {
+        title: 'Loads where the others got banned.',
+        body: 'Manifest V3-native, so it installs on Brave, Chrome, Edge and Firefox. No more "this extension isn\'t supported" wall when you leave Brave.',
+      },
+      {
+        title: 'Twitch ads gone. 1080p stays.',
+        body: 'A stream-swap during ad breaks keeps you at full 1080p60. Every other Twitch blocker drops you to 480p with a "blocking ads" banner.',
+      },
+      {
+        title: "YouTube that doesn't freeze.",
+        body: 'Strips the ad slots out of the player before it loads — no skip-button race, no stuck player you have to refresh.',
+      },
+      {
+        title: '21,370 rules + per-site control.',
+        body: 'EasyList + EasyPrivacy network blocking, a cosmetic ad-box hider, and a one-click "pause on this site" — all toggleable.',
+      },
+      {
+        title: 'Updates itself.',
+        body: 'Filter lists and the Twitch fix refresh on a weekly schedule, so it keeps working when the ad networks change the game.',
+      },
+      {
+        title: 'Honest about your iPhone.',
+        body: "Apple bans real extensions on iOS — so instead of pretending, we ship the exact DNS + app setup that actually kills your phone's ads.",
+      },
+    ],
+    stats: [
+      { label: 'Browsers', value: '4' },
+      { label: 'Filter rules', value: '21,370' },
+      { label: 'Twitch quality', value: '1080p60' },
+      { label: 'Price', value: 'Free' },
+    ],
+    heroStat: { value: '0', label: 'ads · every browser' },
+    zones: [
+      {
+        eyebrow: '01 · The Ban',
+        headline: 'Loads where uBlock got locked out.',
+        body: "Google killed Manifest V2 — the thing the old blockers were built on — so they got gutted on Chrome and refused to install on Edge. AdBlockMaxxer is written native to Manifest V3, so it loads on all four major browsers without the \"unsupported\" wall.",
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Old uBlock setup — Brave only, banned elsewhere', value: '1 browser', ratio: 0.25 },
+            { label: 'AdBlockMaxxer — native Manifest V3', value: '4 browsers', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Where it actually installs · Brave · Chrome · Edge · Firefox',
+        },
+      },
+      {
+        eyebrow: '02 · The Quality',
+        headline: 'Twitch ads gone. The 1080p stays.',
+        body: 'Most Twitch blockers "work" by quietly swapping you to a low-res ad-free feed — you lose the ad and the quality. AdBlockMaxxer swaps in a full-resolution backup stream during the break, so the ad disappears and 1080p60 never does.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Other Twitch blockers (during ads)', value: '480p', ratio: 0.44 },
+            { label: 'AdBlockMaxxer (during ads)', value: '1080p60', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Stream quality while an ad break is being blocked · higher is better',
+        },
+      },
+      {
+        eyebrow: '03 · The Refresh',
+        headline: "YouTube that doesn't lock up.",
+        body: 'The hacky way to skip a YouTube ad is to race the skip button — which is exactly why mobile YouTube freezes and makes you refresh. We delete the ad slots from the player response before the player ever sees them. No race, no frozen frame.',
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Skip-button hacks — stuck, hit refresh', value: 'breaks', ratio: 0.4 },
+            { label: 'Player-response strip — clean cut', value: 'seamless', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'How the ad gets removed',
+        },
+      },
+      {
+        eyebrow: '04 · The iPhone',
+        headline: "We won't lie about iOS.",
+        body: "Apple forbids every iPhone browser from running the code an ad blocker needs — Safari, Chrome and Brave are all Safari underneath. So no extension can do this on iOS, ours included. Instead of faking it, the app ships the exact blocking-DNS + AdGuard setup that genuinely kills your phone's Spotify and in-app ads.",
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Blockers that claim "works everywhere"', value: 'marketing', ratio: 1.0 },
+            { label: 'AdBlockMaxxer — extension on desktop, real DNS guide on iOS', value: 'the truth', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'Honesty over reach · the same ethic as the rest of the suite',
+        },
+      },
+    ],
+    primaryCta: { label: 'Get early access', href: WAITLIST_URL, external: true },
+    secondaryCta: undefined,
+    glyph: '⏭',
+    accentHex: '#00d4ff',
   },
 ];
 
