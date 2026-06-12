@@ -453,7 +453,7 @@ export const products: Product[] = [
       },
       {
         title: 'Cited constants.',
-        body: 'Bus 830 m/s. Auto-deploy 100 m. Glide and nosedive published, not hidden.',
+        body: 'Bus 75 m/s at 832 m. Auto-deploy 100 m. Glide and nosedive published, not hidden.',
       },
     ],
     // Dropmaxxer is a browser app (no installer) — launch it directly.
@@ -464,7 +464,7 @@ export const products: Product[] = [
     glyph: '◇',
     accentHex: '#4c51f7',
     screenshots: ['/screenshots/dropmaxxer/preview.png'],
-    heroStat: { value: '830 m/s', label: 'bus speed · cited' },
+    heroStat: { value: '832 m', label: 'bus altitude · cited' },
     zones: [
       {
         eyebrow: '01 · The Constants',
@@ -473,10 +473,10 @@ export const products: Product[] = [
         visual: {
           kind: 'bars',
           bars: [
-            { label: 'Bus speed', value: '830 m/s', ratio: 1.0, emphasize: true },
-            { label: 'Nosedive', value: '~190 m/s', ratio: 0.23 },
-            { label: 'Glide', value: '~80 m/s', ratio: 0.096 },
-            { label: 'Auto-deploy altitude', value: '100 m', ratio: 0.12 },
+            { label: 'Bus speed', value: '~75 m/s', ratio: 1.0, emphasize: true },
+            { label: 'Nosedive (terminal)', value: '~60 m/s', ratio: 0.8 },
+            { label: 'Glide (horizontal)', value: '~17 m/s', ratio: 0.23 },
+            { label: 'Auto-deploy altitude', value: '100 m', ratio: 0.35 },
           ],
           caption: 'Constants published with the build · cross-referenced against community research',
         },
