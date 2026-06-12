@@ -26,14 +26,6 @@ const isGrid = all.length > 1 && !initialVideo;
 ---
 
 <figure class={`product-screenshot ${isGrid ? 'product-screenshot--grid' : ''}`}>
-  {initialVideo && (
-    <div class="product-screenshot__unmute-banner" aria-hidden="true">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-      </svg>
-      <span>Tap the speaker icon to unmute</span>
-    </div>
-  )}
   <div class="product-screenshot__frame">
     {initialVideo ? (
       <video
@@ -72,6 +64,14 @@ const isGrid = all.length > 1 && !initialVideo;
       </div>
     )}
     <div class="product-screenshot__shimmer" aria-hidden="true"></div>
+    {initialVideo && (
+      <button type="button" class="product-screenshot__playcta" aria-label={`Play ${alt} with sound`}>
+        <span class="product-screenshot__playcta-ring">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+        <span class="product-screenshot__playcta-label">Play with sound</span>
+      </button>
+    )}
     {initialVideo && (
       <div class="product-screenshot__sound-wrap">
         <input
@@ -136,7 +136,9 @@ const isGrid = all.length > 1 && !initialVideo;
         fallback.className = 'product-screenshot__img';
         v.appendChild(fallback);
         v.load();
-        v.play().catch(() => {});
+        // Stay frozen on the poster until the visitor clicks "Play with
+        // sound" — muted = paused rule, applied uniformly to every hero
+        // (single- and multi-variant) so they behave identically.
       } catch (_e) {
         // Bad JSON — leave server-rendered first variant in place.
       }
@@ -172,12 +174,28 @@ const isGrid = all.length > 1 && !initialVideo;
       const v = frame?.querySelector<HTMLVideoElement>('.product-screenshot__video');
       const btn = wrap.querySelector<HTMLButtonElement>('.product-screenshot__sound');
       const slider = wrap.querySelector<HTMLInputElement>('.product-screenshot__volume');
+      const overlay = frame?.querySelector<HTMLButtonElement>('.product-screenshot__playcta');
       if (!v || !btn || !slider) return;
       const UNMUTE_CAP = 0.75;       // mute-button unmute volume ceiling
       const DEFAULT_VOL = 0.25;       // slider rest position
       let lastVolume = DEFAULT_VOL;   // restored when un-muting via button
       const paint = (pct: number) => slider.style.setProperty('--vol', pct + '%');
       paint(Number(slider.value));    // matches the server-rendered value="25"
+      // Shared "go from frozen-muted → playing-with-sound" action, used by
+      // both the big centered overlay and the small speaker button.
+      const playWithSound = () => {
+        const target = Math.min(UNMUTE_CAP, lastVolume > 0 ? lastVolume : DEFAULT_VOL);
+        v.muted = false;
+        v.volume = target;
+        btn.dataset.state = 'on';
+        slider.value = String(Math.round(target * 100));
+        paint(Number(slider.value));
+        v.play().catch(() => {});
+        // Retire the overlay once it's done its job — don't let it sit on
+        // top of a playing video.
+        overlay?.classList.add('is-hidden');
+      };
+      overlay?.addEventListener('click', playWithSound);
       slider.addEventListener('input', () => {
         const pct = Number(slider.value);
         v.volume = pct / 100;
@@ -186,6 +204,7 @@ const isGrid = all.length > 1 && !initialVideo;
           btn.dataset.state = 'on';
           lastVolume = pct / 100;
           v.play().catch(() => {});
+          overlay?.classList.add('is-hidden');
         } else {
           v.muted = true;
           btn.dataset.state = 'muted';
@@ -195,18 +214,8 @@ const isGrid = all.length > 1 && !initialVideo;
       });
       btn.addEventListener('click', () => {
         if (v.muted || v.volume === 0) {
-          // Un-muting: cap at 75% (Diggy rule).
-          const target = Math.min(UNMUTE_CAP, lastVolume > 0 ? lastVolume : DEFAULT_VOL);
-          v.muted = false;
-          v.volume = target;
-          btn.dataset.state = 'on';
-          slider.value = String(Math.round(target * 100));
-          paint(Number(slider.value));
-          v.play().catch(() => {});
-          // User got the hint — kill the unmute banner instantly so it
-          // doesn't sit there mocking them.
-          const fig = frame?.closest('.product-screenshot');
-          fig?.querySelector('.product-screenshot__unmute-banner')?.remove();
+          // Un-muting: cap at 75% (Diggy rule). Same path as the overlay.
+          playWithSound();
         } else {
           v.muted = true;
           btn.dataset.state = 'muted';
@@ -225,45 +234,85 @@ const isGrid = all.length > 1 && !initialVideo;
     margin: 48px 0 0;
     padding: 0;
   }
-  /* "Tap the speaker icon to unmute" header — sits above the video frame
-     so first-time visitors know there's audio. Auto-fades out 8s after
-     load (browser autoplay-policy means demo videos must start muted, so
-     without a hint people just watch silently and bounce). */
-  .product-screenshot__unmute-banner {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 11px;
-    margin: 0 auto 10px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(226, 91, 255, 0.16), rgba(226, 91, 255, 0.06));
-    border: 1px solid rgba(226, 91, 255, 0.45);
-    color: var(--color-text);
-    font-size: 12.5px;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.01em;
-    width: fit-content;
-    box-shadow: 0 0 18px rgba(226, 91, 255, 0.25);
-    animation: unmute-banner-pulse 2.4s ease-in-out 0s 2 alternate, unmute-banner-fade 1.2s ease 8s forwards;
-  }
-  .product-screenshot__unmute-banner svg { opacity: 0.9; }
-  /* Center the banner in the figure by promoting figure to flex column. */
-  .product-screenshot:has(.product-screenshot__unmute-banner) {
+  /* Big centered "Play with sound" overlay — the obvious, persistent
+     affordance over the frozen poster. Browser autoplay-policy means the
+     demo starts muted + paused (muted = paused rule), so without a loud
+     call-to-action visitors just see a still and bounce. Clicking it
+     unmutes AND plays, then the overlay retires itself (.is-hidden). */
+  .product-screenshot__playcta {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .product-screenshot:has(.product-screenshot__unmute-banner) .product-screenshot__frame {
+    justify-content: center;
+    gap: 14px;
+    border: 0;
     width: 100%;
+    height: 100%;
+    cursor: pointer;
+    color: var(--color-text);
+    background:
+      radial-gradient(ellipse at center, rgba(10, 6, 18, 0.32) 0%, rgba(10, 6, 18, 0.52) 100%);
+    transition: opacity 360ms ease, visibility 360ms ease;
   }
-  @keyframes unmute-banner-pulse {
-    from { box-shadow: 0 0 14px rgba(226, 91, 255, 0.18); }
-    to   { box-shadow: 0 0 26px rgba(226, 91, 255, 0.42); }
+  .product-screenshot__playcta.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
-  @keyframes unmute-banner-fade {
-    from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(-6px); pointer-events: none; }
+  .product-screenshot__playcta-ring {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 999px;
+    color: #fff;
+    /* Optical-center the play triangle inside the ring. */
+    padding-left: 5px;
+    background: linear-gradient(180deg, rgba(226, 91, 255, 0.92), rgba(150, 60, 220, 0.92));
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 0 0 8px rgba(226, 91, 255, 0.14),
+      0 10px 34px rgba(226, 91, 255, 0.4),
+      0 4px 14px rgba(0, 0, 0, 0.45);
+    animation: playcta-pulse 2.6s ease-in-out infinite;
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
+  }
+  .product-screenshot__playcta:hover .product-screenshot__playcta-ring,
+  .product-screenshot__playcta:focus-visible .product-screenshot__playcta-ring {
+    transform: scale(1.08);
+    box-shadow:
+      0 0 0 10px rgba(226, 91, 255, 0.2),
+      0 14px 44px rgba(226, 91, 255, 0.55),
+      0 4px 14px rgba(0, 0, 0, 0.5);
+  }
+  .product-screenshot__playcta-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(8, 8, 12, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  }
+  .product-screenshot__playcta:focus-visible {
+    outline: 2px solid var(--color-magenta);
+    outline-offset: -4px;
+  }
+  @keyframes playcta-pulse {
+    0%, 100% { box-shadow: 0 0 0 8px rgba(226, 91, 255, 0.14), 0 10px 34px rgba(226, 91, 255, 0.4), 0 4px 14px rgba(0, 0, 0, 0.45); }
+    50%      { box-shadow: 0 0 0 14px rgba(226, 91, 255, 0.05), 0 10px 38px rgba(226, 91, 255, 0.5), 0 4px 14px rgba(0, 0, 0, 0.45); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .product-screenshot__playcta-ring { animation: none; }
   }
   .product-screenshot__frame {
     position: relative;

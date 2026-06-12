@@ -255,13 +255,53 @@ const softwareSchema = {
   publisher: { '@type': 'Organization', name: 'Maxxtopia', url: 'https://maxxtopia.com' },
   url: `https://maxxtopia.com/${product.slug}`,
 };
+
+// Per-product social card: use the product's own first screenshot / OG asset
+// instead of the generic site-wide /og.png so shared links are visually
+// distinct per app. Falls back to the Layout default when a product has no
+// image yet (undefined → Layout's `image` default of /og.png).
+const ogImage = product.screenshots?.[0];
+
+// VideoObject JSON-LD — lets Google surface the demo in video rich results.
+// Only products with a demoVideo get one; uploadDate borrows the matching
+// release date so the timestamp is honest rather than fabricated.
+const firstVideo = product.demoVideo
+  ? (Array.isArray(product.demoVideo) ? product.demoVideo[0] : product.demoVideo)
+  : undefined;
+const videoUploadDate = isOM ? omReleaseMeta.publishedAt : isDM ? dmReleaseMeta.publishedAt : undefined;
+const videoSchema = firstVideo
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name: `${product.name} — product demo`,
+      description: product.description,
+      thumbnailUrl: new URL(firstVideo.poster, Astro.site).href,
+      contentUrl: new URL(firstVideo.src, Astro.site).href,
+      ...(videoUploadDate && { uploadDate: videoUploadDate }),
+      publisher: { '@type': 'Organization', name: 'Maxxtopia', url: 'https://maxxtopia.com' },
+    }
+  : null;
+
+// BreadcrumbList JSON-LD — Home › Product. Earns the breadcrumb trail in
+// SERP instead of a bare URL.
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://maxxtopia.com/' },
+    { '@type': 'ListItem', position: 2, name: product.name, item: `https://maxxtopia.com/${product.slug}` },
+  ],
+};
 ---
 
 <Layout
   title={`${product.name} — ${product.tagline}`}
   description={product.description}
+  image={ogImage}
 >
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  {videoSchema && <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />}
   <!-- Product hero -->
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />

@@ -43,7 +43,7 @@ const TIERS: Tier[] = [
       'Dragon Sword animated cursor',
       'Founder badges visible on others\' popouts',
     ],
-    ctaLabel: 'Download v0.6.8',
+    ctaLabel: 'Download the client',
     ctaHref: 'https://github.com/MaxxTopia/discordmaxxer/releases/latest',
   },
   {
@@ -109,12 +109,24 @@ const FOUNDER_DESCRIPTION = `33 ever, never reissued. Pay once, own one numbered
   `1 month MAXXER++ free, a 1-month MAXXER++ gift code to drop on a friend, and — most importantly — ` +
   `MAXXER++ price-locked at $12/mo for life. When the rest of the world pays $30+/mo for fancy Discord clients, ` +
   `Founders pay $12 forever.`;
+
+// BreadcrumbList JSON-LD — Home › Discordmaxxer › Pricing for the nested route.
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://maxxtopia.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Discordmaxxer', item: 'https://maxxtopia.com/discordmaxxer' },
+    { '@type': 'ListItem', position: 3, name: 'Pricing', item: 'https://maxxtopia.com/discordmaxxer/vip' },
+  ],
+};
 ---
 
 <Layout
   title="Discordmaxxer Pricing — MAXXER through MAXXER++ + Founder slots"
   description="MAXXER $4/mo · MAXXER+ $9/mo · MAXXER++ $17/mo · Founder $67-one-time (33 ever). Open a Discord ticket to subscribe — checkout walks you through PayPal/BTC/Venmo, and Diggy DMs your activation code."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <article class="relative">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-30"></div>

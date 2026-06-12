@@ -16,10 +16,12 @@ src/
   data/products.ts   # single source of truth for the 7 products
   pages/
     index.astro      # hero + suite grid + principles + CTA
-    manifesto.astro  # the why
+    why.astro        # the why
+    updates.astro    # changelog feed
     [slug].astro     # dynamic per-product page (generates 7 routes)
     404.astro
     sitemap.xml.ts   # generated sitemap
+    rss.xml.ts       # generated RSS feed
   styles/global.css  # Tailwind import + theme tokens + utility classes
 public/
   favicon.svg
@@ -28,15 +30,18 @@ public/
 
 ## Routes
 - `/` — landing
-- `/manifesto`
+- `/why`
+- `/updates` (changelog feed; backed by `src/data/changelog.ts`)
 - `/optimizationmaxxing` (live)
 - `/discordmaxxer` (live)
-- `/clipmaxxer` (beta)
+- `/discordmaxxer/vip` (pricing tiers)
+- `/clipmaxxer` (soon)
 - `/dropmaxxer` (beta)
 - `/aimmaxxer` (soon)
 - `/viewmaxxing` (soon)
-- `/editmacros` (soon)
-- `/sitemap.xml`
+- `/extensionmaxxing` (soon)
+- `/404`
+- `/sitemap.xml` · `/rss.xml`
 
 ## Local dev
 ```
@@ -59,9 +64,10 @@ npm run preview  # serve dist/ locally
 No new files needed for new products.
 
 ## Design tokens
-- `--color-bg` `#050505` — near-black canvas
-- `--color-accent` `#00FFA3` — electric mint, single accent
-- Type: Geist Sans (display + body), Geist Mono (labels)
+- `--color-bg` `#0a0612` — deep cosmic purple-black canvas
+- `--color-magenta` `#e25bff` — primary accent · `--color-cyan` `#00d4ff` — secondary
+- Type: Geist Sans (display + body), Geist Mono (labels), Bebas Neue (`--font-display`),
+  Bowlby One (`--font-accent` / `.serif-accent`), Crimson Pro (DailyQuote), Metal Mania (one sidebar tooltip)
 - All tokens defined inline at `src/styles/global.css` under `@theme`.
 
 ## Deploy → Cloudflare Pages
