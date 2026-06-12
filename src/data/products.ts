@@ -435,10 +435,14 @@ export const products: Product[] = [
     version: dpRelease.version ?? undefined,
     tagline: 'Stop guessing your drop.',
     description:
-      "Community drop data when it exists. Cited physics when it doesn't. Current-season POIs only.",
+      "Two routes for every POI: cut-and-free-fall fast, or glide in safe. Built for the glider-cut meta. Current-season POIs.",
     longDescription:
-      "Bus 830 m/s. Auto-deploy 100 m. Community-data lookup when your path matches the corpus; calibrated physics simulator when it doesn't. Current-season POIs, refreshed every season.",
+      "Built for the new glider-cut mechanic: get the fastest cut-and-free-fall line and the safe glide line for any POI — both ETAs, the exact cut point, and the highest-ground spot to land first. Community-data lookup when your path matches the corpus; calibrated physics simulator when it doesn't. Current-season POIs, refreshed every season.",
     features: [
+      {
+        title: 'Fastest vs Safe.',
+        body: 'Cut the glider and free-fall for the quickest landing, or glide in safe. Both ETAs, the exact spot to cut, and roll-land guidance to keep full HP.',
+      },
       {
         title: 'Two solvers. One answer.',
         body: 'Community-data lookup when your path matches the corpus. Physics simulator on novel paths.',
