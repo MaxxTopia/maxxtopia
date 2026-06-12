@@ -626,7 +626,7 @@ export const products: Product[] = [
   },
   {
     slug: 'extensionmaxxing',
-    name: 'AdBlockMaxxer',
+    name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'soon',
     tagline: "The ad blocker they couldn't ban.",
@@ -724,6 +724,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Get early access', href: WAITLIST_URL, external: true },
     secondaryCta: undefined,
     glyph: '⏭',
+    logo: '/logos/adblockmaxxer.png',
     accentHex: '#00d4ff',
   },
 ];
