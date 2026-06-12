@@ -452,9 +452,8 @@ export const products: Product[] = [
         body: 'Bus 830 m/s. Auto-deploy 100 m. Glide and nosedive published, not hidden.',
       },
     ],
-    primaryCta: dpRelease.installerUrl
-        ? { label: 'Download for Windows', href: dpRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
+    // Dropmaxxer is a browser app (no installer) — launch it directly.
+    primaryCta: { label: 'Launch Dropmaxxer', href: 'https://dropmaxxer.pages.dev', external: true },
     secondaryCta: dpRelease.releasePageUrl
         ? { label: 'Release notes', href: dpRelease.releasePageUrl, external: true }
         : undefined,
