@@ -638,7 +638,7 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.13',
+    version: '1.2.14',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "Blocks YouTube, Spotify and Twitch ads — and restores Twitch to source quality after the ad-swap instead of stranding you at 480p. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
@@ -731,7 +731,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.13.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.14.zip', external: true },
     secondaryCta: undefined,
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
