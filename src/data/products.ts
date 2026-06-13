@@ -465,6 +465,11 @@ export const products: Product[] = [
         ? { label: 'Release notes', href: dpRelease.releasePageUrl, external: true }
         : undefined,
     glyph: '◇',
+    // Placeholder mark: a tactical drop-map badge (grid + POIs + bus path to a
+    // landing reticle) until real dropmaxxer art lands. Sidebar uses the
+    // reticle-only icon so it stays legible at 24px.
+    logo: '/logos/dropmaxxer.png',
+    icon: '/logos/dropmaxxer-icon.png',
     accentHex: '#4c51f7',
     screenshots: ['/screenshots/dropmaxxer/preview.png'],
     heroStat: { value: '832 m', label: 'bus altitude · cited' },
@@ -633,7 +638,7 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.12',
+    version: '1.2.13',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "Blocks YouTube, Spotify and Twitch ads — and restores Twitch to source quality after the ad-swap instead of stranding you at 480p. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
@@ -726,7 +731,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.12.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.13.zip', external: true },
     secondaryCta: undefined,
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
