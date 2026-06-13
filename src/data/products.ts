@@ -638,12 +638,12 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.14',
+    version: '1.2.15',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "Blocks YouTube, Spotify and Twitch ads — and restores Twitch to source quality after the ad-swap instead of stranding you at 480p. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
     longDescription:
-      "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch quality comes back to source after each break (optional source-quality lock).",
+      "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch quality comes back to source after each break (optional auto-downgrade lock).",
     features: [
       {
         title: 'Loads where the others got banned.',
@@ -651,7 +651,7 @@ export const products: Product[] = [
       },
       {
         title: 'Twitch ads gone. Quality comes back.',
-        body: 'A backup-stream swap hides the ad break — you may see a brief dip while it swaps, then it restores to your source quality (up to 1080p60). Other Twitch blockers just strand you at 480p with a "blocking ads" banner. Optional source-quality lock keeps it pinned to the top resolution.',
+        body: 'A backup-stream swap hides the ad break — you may see a brief dip while it swaps, then it restores to your source quality (up to 1080p60). Other Twitch blockers just strand you at 480p with a "blocking ads" banner. Optional quality lock also stops Twitch\'s auto-quality from downgrading you the rest of the time.',
       },
       {
         title: "YouTube that doesn't freeze.",
@@ -694,7 +694,7 @@ export const products: Product[] = [
       {
         eyebrow: '02 · The Quality',
         headline: 'Twitch ads gone. The quality comes back.',
-        body: 'Most Twitch blockers "work" by quietly leaving you on a low-res ad-free feed — you lose the ad and the quality. AdBlockMaxxer swaps in a backup stream to hide the break, then restores your source quality once it\'s over (a brief dip during the swap is normal). Flip on the source-quality lock and it re-pins the top resolution for you.',
+        body: 'Most Twitch blockers "work" by quietly leaving you on a low-res ad-free feed — you lose the ad and the quality. AdBlockMaxxer swaps in a backup stream to hide the break, then restores your source quality once it\'s over (a brief dip during the swap is normal). An optional quality lock keeps Twitch\'s auto-quality from downgrading you the rest of the time.',
         visual: {
           kind: 'bars',
           bars: [
@@ -731,7 +731,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.14.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.15.zip', external: true },
     secondaryCta: undefined,
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
