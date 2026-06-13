@@ -633,20 +633,20 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.11',
+    version: '1.2.12',
     tagline: "The ad blocker they couldn't ban.",
     description:
-      "Blocks YouTube, Spotify and Twitch ads — and keeps Twitch at full 1080p60. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
+      "Blocks YouTube, Spotify and Twitch ads — and restores Twitch to source quality after the ad-swap instead of stranding you at 480p. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
     longDescription:
-      "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch stays full quality.",
+      "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch quality comes back to source after each break (optional source-quality lock).",
     features: [
       {
         title: 'Loads where the others got banned.',
         body: 'Manifest V3-native, so it installs on Brave, Chrome, Edge and Firefox. No more "this extension isn\'t supported" wall when you leave Brave.',
       },
       {
-        title: 'Twitch ads gone. 1080p stays.',
-        body: 'A stream-swap during ad breaks keeps you at full 1080p60. Every other Twitch blocker drops you to 480p with a "blocking ads" banner.',
+        title: 'Twitch ads gone. Quality comes back.',
+        body: 'A backup-stream swap hides the ad break — you may see a brief dip while it swaps, then it restores to your source quality (up to 1080p60). Other Twitch blockers just strand you at 480p with a "blocking ads" banner. Optional source-quality lock keeps it pinned to the top resolution.',
       },
       {
         title: "YouTube that doesn't freeze.",
@@ -668,7 +668,7 @@ export const products: Product[] = [
     stats: [
       { label: 'Browsers', value: '4' },
       { label: 'Filter rules', value: '21,370' },
-      { label: 'Twitch quality', value: '1080p60' },
+      { label: 'Twitch quality', value: 'up to 1080p60' },
       { label: 'Price', value: 'Free' },
     ],
     heroStat: { value: '0', label: 'ads · every browser' },
@@ -688,15 +688,15 @@ export const products: Product[] = [
       },
       {
         eyebrow: '02 · The Quality',
-        headline: 'Twitch ads gone. The 1080p stays.',
-        body: 'Most Twitch blockers "work" by quietly swapping you to a low-res ad-free feed — you lose the ad and the quality. AdBlockMaxxer swaps in a full-resolution backup stream during the break, so the ad disappears and 1080p60 never does.',
+        headline: 'Twitch ads gone. The quality comes back.',
+        body: 'Most Twitch blockers "work" by quietly leaving you on a low-res ad-free feed — you lose the ad and the quality. AdBlockMaxxer swaps in a backup stream to hide the break, then restores your source quality once it\'s over (a brief dip during the swap is normal). Flip on the source-quality lock and it re-pins the top resolution for you.',
         visual: {
           kind: 'bars',
           bars: [
-            { label: 'Other Twitch blockers (during ads)', value: '480p', ratio: 0.44 },
-            { label: 'AdBlockMaxxer (during ads)', value: '1080p60', ratio: 1.0, emphasize: true },
+            { label: 'Other Twitch blockers (stuck during ads)', value: '480p', ratio: 0.44 },
+            { label: 'AdBlockMaxxer (restores after the swap)', value: 'up to 1080p60', ratio: 1.0, emphasize: true },
           ],
-          caption: 'Stream quality while an ad break is being blocked · higher is better',
+          caption: 'Stream quality once the ad break is handled · higher is better',
         },
       },
       {
@@ -726,7 +726,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.11.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.12.zip', external: true },
     secondaryCta: undefined,
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
