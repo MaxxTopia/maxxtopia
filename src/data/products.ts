@@ -68,6 +68,10 @@ export type Product = {
   glyph: string;
   /** SVG mark path under /logos/. If absent, ProductCard falls back to wordmark-only. */
   logo?: string;
+  /** Small-size mark for the sidebar rail (24px). Use when the full logo is a
+   *  detailed badge that turns to mush when shrunk — e.g. a bolt-only icon
+   *  instead of the circular wordmark badge. Falls back to `logo`. */
+  icon?: string;
   /** Suite-canon accent for sidebar + per-product highlights. */
   accentHex: string;
   /** Hero shot images under /screenshots/<slug>/. */
@@ -629,7 +633,7 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.10',
+    version: '1.2.11',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "Blocks YouTube, Spotify and Twitch ads — and keeps Twitch at full 1080p60. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
@@ -722,7 +726,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.10.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.11.zip', external: true },
     secondaryCta: undefined,
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
@@ -820,6 +824,7 @@ export const products: Product[] = [
     secondaryCta: undefined,
     glyph: '⚡',
     logo: '/logos/streammaxxing.png?v=2',
+    icon: '/logos/streammaxxing-icon.png',
     accentHex: '#22d3a0',
     // Placeholder hero visual: the branded OG card until a real product
     // screenshot / demo clip is recorded. Swap for a true app shot later.
