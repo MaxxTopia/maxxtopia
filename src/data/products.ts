@@ -745,16 +745,20 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.0',
+    version: '0.1.3',
     tagline: "Alerts that fire the instant it happens.",
     description:
-      "Instant Twitch alerts, fired locally on your PC — no cloud lag. One-click Botrix import, a built-in clip trimmer, loudness-leveling, and donor messages read aloud in your own cloned voice. Local, no account, free.",
+      "Instant Twitch alerts, fired locally on your PC — no cloud lag. Plus every platform's chat in one overlay, one-click Botrix import, a built-in clip trimmer, loudness-leveling, and donor messages read aloud in your own cloned voice. Local, no account, free.",
     longDescription:
-      "Local-first stream alerts: instant Twitch EventSub, one-click Botrix import, a built-in clip trimmer + loudness-normalize, and consent-gated voice-clone read-outs. Free.",
+      "Local-first stream alerts: instant Twitch EventSub, a unified Twitch/Kick/YouTube/TikTok chat overlay, one-click Botrix import, a built-in clip trimmer + loudness-normalize, and consent-gated voice-clone read-outs. Free.",
     features: [
       {
         title: 'Instant, because it runs on your PC.',
         body: 'A local Twitch EventSub connection fires your overlay the moment the event lands — no cloud round-trip to add seconds of lag between the follow and the alert.',
+      },
+      {
+        title: "Every platform's chat, one overlay.",
+        body: 'Twitch, Kick, YouTube and TikTok chat merged into a single widget — each message tagged with the platform it came from. Drop it on stream, or pop it out as an always-on-top window to read while you play.',
       },
       {
         title: 'Bring your Botrix alerts in one click.',
@@ -825,7 +829,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.0_x64-setup.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.3_x64-setup.exe', external: true },
     secondaryCta: undefined,
     glyph: '⚡',
     logo: '/logos/streammaxxing.png?v=2',
