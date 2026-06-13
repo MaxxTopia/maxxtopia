@@ -629,7 +629,7 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.3',
+    version: '1.2.4',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "uBlock got gutted on Chrome and locked out everywhere else. AdBlockMaxxer is built native to the new standard (Manifest V3), so it loads on Brave, Chrome, Edge and Firefox with no 'unsupported' wall. It kills ads on YouTube, Spotify and Twitch — and keeps Twitch at full 1080p instead of dropping you to 480p like every other Twitch blocker.",
@@ -727,6 +727,96 @@ export const products: Product[] = [
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
     accentHex: '#00d4ff',
+  },
+  {
+    slug: 'streammaxxing',
+    name: 'Streammaxxing',
+    category: 'Stream Alerts',
+    status: 'live',
+    version: '0.1.0',
+    tagline: "Alerts that fire the instant it happens.",
+    description:
+      "Cloud alert tools route every follow, sub and donation through their servers first — so your overlay can lag the moment by tens of seconds. Streammaxxing runs on your PC and fires the instant Twitch emits the event. Import your Botrix alerts in one click, trim clips and level every sound with built-in ffmpeg, and read donor messages aloud in a voice you cloned — 100% local, no account, free.",
+    longDescription:
+      "Local-first stream alerts: instant Twitch EventSub, one-click Botrix import, a built-in clip trimmer + loudness-normalize, and consent-gated voice-clone read-outs. Free.",
+    features: [
+      {
+        title: 'Instant, because it runs on your PC.',
+        body: 'A local Twitch EventSub connection fires your overlay the moment the event lands — no cloud round-trip to add seconds of lag between the follow and the alert.',
+      },
+      {
+        title: 'Bring your Botrix alerts in one click.',
+        body: 'Paste your Botrix link and it pulls every alert and downloads all the media to your disk — same look, now running locally. No rebuilding from scratch.',
+      },
+      {
+        title: 'Trim clips without leaving the app.',
+        body: 'A built-in ffmpeg trimmer cuts any video, GIF or sound to length for an alert — frame-exact, with a live preview. Nothing ever uploads.',
+      },
+      {
+        title: 'Every alert at one level.',
+        body: 'One click normalizes all your alert sounds to a consistent loudness (EBU R128, −16 LUFS) so nothing blasts and nothing whispers. Non-destructive — restore the originals anytime.',
+      },
+      {
+        title: 'Read donor messages in your own voice.',
+        body: 'Consent-gated voice cloning reads each donation or sub message aloud in a voice you trained from a short clip — synthesized locally on your GPU, never sent anywhere.',
+      },
+      {
+        title: 'Spam floods, handled.',
+        body: 'A follow-bot raid collapses into a single "+N follows" alert instead of a stampede, and a unified queue means alerts never overlap. Free, no account, media stays on your machine.',
+      },
+    ],
+    stats: [
+      { label: 'Alert latency', value: 'Local' },
+      { label: 'Botrix import', value: '1-click' },
+      { label: 'Read-outs', value: 'Cloned' },
+      { label: 'Price', value: 'Free' },
+    ],
+    heroStat: { value: 'Instant', label: 'alerts · fired on your PC' },
+    zones: [
+      {
+        eyebrow: '01 · The Delay',
+        headline: 'No cloud means no waiting.',
+        body: "Cloud alert services have to receive the event, queue it, and push it back down to your overlay — which is why a follow can take tens of seconds to show up. Streammaxxing holds a direct EventSub connection on your own machine, so the alert fires the instant Twitch sends it.",
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Cloud alert tools — event round-trips a server', value: '~30s', ratio: 1.0 },
+            { label: 'Streammaxxing — fired locally on your PC', value: 'instant', ratio: 0.04, emphasize: true },
+          ],
+          caption: 'Time from event to on-screen alert · lower is better',
+        },
+      },
+      {
+        eyebrow: '02 · The Levels',
+        headline: 'One button, every alert the same loudness.',
+        body: "Alert packs are a mess of mismatched volumes — one sound clips your ears, the next is inaudible. Streammaxxing measures and re-levels every alert sound to a broadcast standard (−16 LUFS), so they all sit at one consistent level. It's non-destructive: your originals are kept and one click restores them.",
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Raw alert sounds — wildly different volumes', value: '17.7 dB', ratio: 1.0 },
+            { label: 'After one-click normalize', value: '0.4 dB', ratio: 0.12, emphasize: true },
+          ],
+          caption: 'Loudness spread across a real alert set · tighter is better',
+        },
+      },
+      {
+        eyebrow: '03 · The Voice',
+        headline: 'Donations read aloud — in a voice you cloned.',
+        body: "Generic robot TTS makes every read-out sound the same. Streammaxxing clones a voice from a short reference clip and reads each donor's actual message in it, synthesized locally on your GPU. It's consent-gated and never leaves your machine.",
+        visual: {
+          kind: 'bars',
+          bars: [
+            { label: 'Stock TTS — one robotic voice', value: 'canned', ratio: 0.5 },
+            { label: 'Streammaxxing — your cloned voice, local', value: 'yours', ratio: 1.0, emphasize: true },
+          ],
+          caption: 'How donation messages get read · consent-gated, 100% on-device',
+        },
+      },
+    ],
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.0_x64-setup.exe', external: true },
+    secondaryCta: undefined,
+    glyph: '⚡',
+    accentHex: '#22d3a0',
   },
 ];
 
