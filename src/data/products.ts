@@ -188,7 +188,7 @@ export const products: Product[] = [
         body: 'Whole preset applies behind a single elevation prompt. Every tweak snapshots its pre-state. Roll any change back at any time — undo isn\'t a paid tier.',
         visual: {
           kind: 'video',
-          src: '/screenshots/optimizationmaxxing/_v1_clips/15_f9_reversible.mp4',
+          src: '/screenshots/optimizationmaxxing/_v1_clips/14_f9_realgains.mp4',
           poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
           alt: 'Snapshot revert UI with timestamped pre-states',
         },

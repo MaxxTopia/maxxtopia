@@ -63,12 +63,41 @@ jobs:
                     console.log("wrote", path, JSON.stringify(data));
                   '
 
+            # Curated changelog: if the GitHub release for this tag carries a
+            # `## Highlights` section, parse it into a clean /updates entry.
+            # Releases without that section just bump the version (no spam).
+            # continue-on-error so a changelog hiccup never blocks the deploy.
+            - name: Sync changelog from release notes
+              continue-on-error: true
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  VERSION: ${{ steps.payload.outputs.version }}
+              run: |
+                  if gh api "repos/MaxxTopia/optimizationmaxxing/releases/tags/$VERSION" > release.json; then
+                      node -e '
+                        const fs = require("fs");
+                        const r = JSON.parse(fs.readFileSync("release.json", "utf8"));
+                        fs.writeFileSync("release-input.json", JSON.stringify({
+                            product: "Optimizationmaxxing",
+                            slug: "optimizationmaxxing",
+                            version: process.env.VERSION,
+                            name: r.name || "",
+                            date: r.published_at || "",
+                            body: r.body || ""
+                        }));
+                      '
+                      node scripts/release-note-to-changelog.mjs release-input.json
+                      rm -f release.json release-input.json
+                  else
+                      echo "No GitHub release found for tag $VERSION — version bumped, no changelog entry."
+                  fi
+
             - name: Commit + push
               id: commit
               run: |
                   git config user.name "github-actions[bot]"
                   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git add src/data/optimizationmaxxing-release.json
+                  git add src/data/optimizationmaxxing-release.json src/data/changelog.json
                   if git diff --cached --quiet; then
                       echo "No changes — already at latest version."
                       echo "changed=false" >> "$GITHUB_OUTPUT"

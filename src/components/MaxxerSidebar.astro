@@ -61,8 +61,8 @@ const activeSlug = products.find((p) =>
           aria-label={p.name}
         >
           <span class="maxxer-sidebar__icon">
-            {p.logo ? (
-              <img src={p.logo} alt="" width="24" height="24" />
+            {p.icon || p.logo ? (
+              <img src={p.icon ?? p.logo} alt="" width="24" height="24" />
             ) : (
               <span class="maxxer-sidebar__monogram">{monogram(p.name)}</span>
             )}

@@ -2,9 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
 import { changelog } from '../data/changelog';
+import { getProduct } from '../data/products';
 ---
 
-<Layout title="Updates — Maxxtopia" description="What we've shipped across the maxxer apps.">
+<Layout title="Updates — Maxxtopia" description="What we've shipped across the maxxer apps — releases, features, and the little quality-of-life fixes.">
   <article class="relative">
     <Aurora intensity="low" />
     <div class="absolute inset-0 bg-grid opacity-30"></div>
@@ -17,35 +18,39 @@ import { changelog } from '../data/changelog';
         Everything we've <span class="serif-accent gradient-suite">shipped.</span>
       </h1>
       <p class="reveal reveal-3 mt-5 max-w-xl text-[15.5px] text-[var(--color-text-mid)] leading-relaxed">
-        One page across all seven products. Newest first. Updated every release.
+        One page across all eight apps. Big releases and the little quality-of-life
+        fixes alike. Newest first.
       </p>
     </div>
 
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-32">
-      <div class="space-y-7">
-        {changelog.map((entry) => (
-          <div class="reveal-on-scroll relative flex gap-5 pb-7 border-b border-[var(--color-line)] last:border-b-0">
-            <div class="shrink-0 w-28 pt-1">
-              <p class="text-[12.5px] font-mono text-[var(--color-subtle)]">{entry.date}</p>
-              {entry.version && (
-                <p class="mt-1 text-[11px] font-mono text-[var(--color-magenta)]">{entry.version}</p>
-              )}
-            </div>
-            <div class="flex-1">
-              {entry.productSlug ? (
-                <a href={`/${entry.productSlug}`} class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono hover:text-[var(--color-magenta)] transition-colors">
-                  {entry.product}
-                </a>
-              ) : (
-                <span class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono">
-                  {entry.product}
-                </span>
-              )}
-              <h2 class="mt-1.5 text-[20px] font-semibold tracking-tight">{entry.title}</h2>
-              <p class="mt-2 text-[14.5px] text-[var(--color-text-mid)] leading-relaxed">{entry.body}</p>
-            </div>
-          </div>
-        ))}
+      <div class="upd-list">
+        {changelog.map((entry) => {
+          const accent = entry.productSlug ? getProduct(entry.productSlug)?.accentHex : null;
+          return (
+            <article class="upd reveal-on-scroll" style={accent ? `--upd-accent: ${accent}` : ''}>
+              <div class="upd__meta">
+                <time class="upd__date">{entry.date}</time>
+                {entry.version && <span class="upd__ver">{entry.version}</span>}
+              </div>
+
+              <div class="upd__content">
+                {entry.productSlug ? (
+                  <a href={`/${entry.productSlug}`} class="upd__product">{entry.product}</a>
+                ) : (
+                  <span class="upd__product upd__product--plain">{entry.product}</span>
+                )}
+                <h2 class="upd__title">{entry.title}</h2>
+                {entry.body && <p class="upd__text">{entry.body}</p>}
+                {entry.items && entry.items.length > 0 && (
+                  <ul class="upd__list">
+                    {entry.items.map((it) => <li class="upd__item">{it}</li>)}
+                  </ul>
+                )}
+              </div>
+            </article>
+          );
+        })}
       </div>
 
       <div class="reveal-on-scroll mt-14 pt-10 border-t border-[var(--color-line)]">
@@ -59,3 +64,119 @@ import { changelog } from '../data/changelog';
     </div>
   </article>
 </Layout>
+
+<style>
+  .upd-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .upd {
+    --upd-accent: var(--color-magenta);
+    display: grid;
+    grid-template-columns: 124px 1fr;
+    gap: 22px;
+    padding: 20px 22px 20px 20px;
+    border: 1px solid var(--color-line);
+    border-left: 2px solid color-mix(in srgb, var(--upd-accent) 70%, transparent);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--color-bg-card) 70%, transparent);
+    transition: border-color 200ms ease, background 200ms ease;
+  }
+  .upd:hover {
+    border-color: var(--color-line-strong);
+    border-left-color: var(--upd-accent);
+    background: var(--color-bg-card);
+  }
+
+  /* Meta column — date stacked over the version pill. */
+  .upd__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    padding-top: 2px;
+  }
+  .upd__date {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--color-subtle);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .upd__ver {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--upd-accent);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--upd-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--upd-accent) 10%, transparent);
+  }
+
+  .upd__product {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--upd-accent);
+    text-decoration: none;
+    transition: opacity 160ms ease;
+  }
+  a.upd__product:hover { opacity: 0.7; }
+  .upd__product--plain { color: var(--color-muted); }
+
+  .upd__title {
+    margin-top: 6px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--color-text);
+  }
+  .upd__text {
+    margin-top: 8px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--color-text-mid);
+  }
+
+  .upd__list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .upd__item {
+    position: relative;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-mid);
+  }
+  .upd__item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--upd-accent);
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 640px) {
+    .upd {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .upd__meta {
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+</style>

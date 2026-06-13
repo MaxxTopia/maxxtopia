@@ -24,3 +24,18 @@ public/screenshots/**/demo*.jpg
 !public/screenshots/**/demo-tiktok-poster.jpg
 !public/screenshots/**/demo-cut*.mp4
 !public/screenshots/**/demo-cut*.jpg
+
+# Feature-zone clips referenced by the OM/DM product pages. Tracked so the
+# deploy.yml CI build ships a complete site (these used to live only in
+# wrangler uploads, which broke any CI-built deploy). Other _vN_clips/ folders
+# stay ignored — they're scratch render experiments, not referenced by the site.
+!public/screenshots/optimizationmaxxing/_v1_clips/*.mp4
+!public/screenshots/discordmaxxer/_v8_clips/*.mp4
+# …but never the render intermediates inside those folders (raw audio masters,
+# silent filler, concat manifests) — the site only loads the numbered clips.
+public/screenshots/**/_v1_clips/*.wav
+public/screenshots/**/_v8_clips/*.wav
+public/screenshots/**/_v1_clips/concat.txt
+public/screenshots/**/_v8_clips/concat.txt
+public/screenshots/**/_silent.mp4
+public/screenshots/**/_master.wav

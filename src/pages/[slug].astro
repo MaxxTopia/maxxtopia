@@ -38,7 +38,7 @@ const reconvertConfig: Record<string, {
     faqs: [
       {
         q: 'Is this just registry voodoo?',
-        a: "No. Every tweak cites a Microsoft Learn doc, NVIDIA dev note, or vendor whitepaper before you flip the switch. Twenty live on this page; the other 67 ship cited inside the build. Hone publishes none of theirs. Paragon publishes none of theirs.",
+        a: "No. Every tweak cites a Microsoft Learn doc, NVIDIA dev note, or vendor whitepaper before you flip the switch. Twenty live on this page; the other 80 ship cited inside the build. Hone publishes none of theirs. Paragon publishes none of theirs.",
       },
       {
         q: 'Will it brick my PC?',
@@ -152,13 +152,32 @@ const reconvertConfig: Record<string, {
       },
     ],
   },
+  streammaxxing: {
+    closingLine: 'Runs on your PC. Fires the instant it happens.',
+    faqs: [
+      {
+        q: 'Does it cost anything?',
+        a: "Free. No account, no subscription. It runs entirely on your PC — there's no server for us to bill you for. Botrix import, the clip trimmer, loudness-normalize, and voice-clone read-outs are all in the free build.",
+      },
+      {
+        q: 'Will it work with my existing alerts?',
+        a: "Yes. Paste your Botrix link and it pulls every alert and downloads all the media to your disk — same look, now firing locally. Nothing to rebuild from scratch.",
+      },
+      {
+        q: 'Is the voice cloning private?',
+        a: "It's consent-gated and 100% on-device. The voice is synthesized locally on your GPU from a short reference clip — no message, no audio, nothing ever leaves your machine.",
+      },
+    ],
+  },
 };
 
 const receiptsConfig: Record<string, {
   version: string;
   versionDate: string;
-  repoUrl: string;
+  repoUrl: string | null;
   repoLabel: string;
+  linkLabel?: string;
+  linkSub?: string;
   stats: Array<{ label: string; value: string }>;
 }> = {
   optimizationmaxxing: {
@@ -179,6 +198,32 @@ const receiptsConfig: Record<string, {
     stats: [
       { label: 'Resident RAM', value: '288 MB' },
       { label: 'Idle CPU', value: '0%' },
+    ],
+  },
+  // Closed-source live products: no public repo, so the 4th cell becomes a
+  // download CTA instead of a repo link.
+  extensionmaxxing: {
+    version: 'v1.2.7',
+    versionDate: 'Jun 2026',
+    repoUrl: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.7.zip',
+    repoLabel: 'Chrome · Brave · Edge',
+    linkLabel: 'Download',
+    linkSub: 'Free · MV3',
+    stats: [
+      { label: 'Browsers', value: '4' },
+      { label: 'Filter rules', value: '21,370' },
+    ],
+  },
+  streammaxxing: {
+    version: 'v0.1.0',
+    versionDate: 'Jun 13, 2026',
+    repoUrl: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.0_x64-setup.exe',
+    repoLabel: 'Windows',
+    linkLabel: 'Download',
+    linkSub: 'Free installer',
+    stats: [
+      { label: 'Alert latency', value: 'Local' },
+      { label: 'Price', value: 'Free' },
     ],
   },
 };
@@ -222,6 +267,10 @@ const isOM = product.slug === 'optimizationmaxxing';
 const isDM = product.slug === 'discordmaxxer';
 const hasBespokeStory = isLive && (isOM || isDM);
 const hasZones = Array.isArray(product.zones) && product.zones.length > 0;
+// Any live product with a receipts config shows the trust strip (and hides
+// the hero stats aside, since the band carries the same numbers). Covers the
+// OM/DM bespoke pages plus the closed-source live products (ext, stream).
+const hasReceiptsBand = isLive && !!receiptsConfig[product.slug];
 
 // Per-product feature-section header. Each lands on the product's own
 // register — generic "What's inside" is a fallback for products that
@@ -235,6 +284,7 @@ const featureHeadings: Record<string, FeatureHeading> = {
   aimmaxxer:           { eyebrow: 'The metrics',     left: 'Aim is four things.',      right: 'Drilled four ways.' },
   viewmaxxing:         { eyebrow: 'The standard',    left: 'Operator-first.',          right: 'Slot reserved.' },
   extensionmaxxing:    { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
+  streammaxxing:       { eyebrow: 'The latency',     left: 'No cloud hop.',            right: 'No delay.' },
 };
 const featureHeading: FeatureHeading | undefined = featureHeadings[product.slug];
 
@@ -250,6 +300,7 @@ const softwareKeywords: Record<string, string> = {
   aimmaxxer: 'ai aim trainer, kovaaks alternative, aim training routine, fps aim tracker, valorant aim trainer, fortnite aim training, two pc aim assist',
   viewmaxxing: 'streamer toolkit, twitch streaming tools, obs alternative, streamer dashboard, content stream operator',
   extensionmaxxing: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
+  streammaxxing: 'stream alerts, twitch alerts, local stream alerts, botrix alternative, streamlabs alerts alternative, twitch eventsub overlay, donation tts, voice clone tts alerts, obs alert overlay, free stream alerts, clip trimmer, loudness normalize alerts',
 };
 
 const softwareSchema = {
@@ -258,9 +309,14 @@ const softwareSchema = {
   name: product.name,
   alternateName: product.name.toLowerCase(),
   description: product.description,
-  applicationCategory: product.category === 'PC Tuning' ? 'UtilitiesApplication'
-    : product.category === 'Communication' ? 'CommunicationApplication'
-    : 'GameApplication',
+  applicationCategory: ({
+    'PC Tuning': 'UtilitiesApplication',
+    'Communication': 'CommunicationApplication',
+    'Browser Extension': 'BrowserApplication',
+    'Stream Alerts': 'MultimediaApplication',
+    'Streamer Tools': 'MultimediaApplication',
+    'Content': 'MultimediaApplication',
+  } as Record<string, string>)[product.category] ?? 'GameApplication',
   applicationSubCategory: product.category,
   operatingSystem: 'Windows 10, Windows 11',
   ...(product.version && { softwareVersion: product.version }),
@@ -441,7 +497,7 @@ const breadcrumbSchema = {
         {/* Stats aside: SOON products keep the 4-tile grid. LIVE products
             (OM, DM) hide it here — the same numbers re-emerge below in the
             Receipts band where they have room to breathe + carry citations. */}
-        {!hasBespokeStory && product.stats && product.stats.length > 0 && (
+        {!hasReceiptsBand && product.stats && product.stats.length > 0 && (
           <aside class="reveal reveal-6 md:col-span-4 grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
             {product.stats.map((s) => (
               <div class="bg-[var(--color-bg-card)] p-5">
@@ -469,12 +525,14 @@ const breadcrumbSchema = {
 
       {/* LIVE-product receipts band — version cadence + 2 specs + repo link.
           Replaces the hero stats aside that was dropped in Phase 1. */}
-      {hasBespokeStory && receiptsConfig[product.slug] && (
+      {hasReceiptsBand && receiptsConfig[product.slug] && (
         <ReceiptsBand
           version={receiptsConfig[product.slug].version}
           versionDate={receiptsConfig[product.slug].versionDate}
           repoUrl={receiptsConfig[product.slug].repoUrl}
           repoLabel={receiptsConfig[product.slug].repoLabel}
+          linkLabel={receiptsConfig[product.slug].linkLabel}
+          linkSub={receiptsConfig[product.slug].linkSub}
           stats={receiptsConfig[product.slug].stats}
           accentHex={product.accentHex}
         />

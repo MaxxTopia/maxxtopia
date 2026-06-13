@@ -15,16 +15,24 @@
 type Props = {
   version: string;
   versionDate: string;
-  /** Repo URL — null hides the cell. */
+  /** Link-cell URL — null hides the cell. Repo for OSS products, download
+   *  URL for closed-source ones. */
   repoUrl: string | null;
   repoLabel: string;
+  /** Link-cell eyebrow + sub. Default to the open-source wording; override
+   *  with "Download" / "Free" for products with no public repo. */
+  linkLabel?: string;
+  linkSub?: string;
   /** Two product-specific stats. Order = display order. */
   stats: Array<{ label: string; value: string }>;
   /** Accent hex for the cell glow + value text. */
   accentHex: string;
 };
 
-const { version, versionDate, repoUrl, repoLabel, stats, accentHex } = Astro.props;
+const {
+  version, versionDate, repoUrl, repoLabel, stats, accentHex,
+  linkLabel = 'Open source', linkSub = 'Read the diff',
+} = Astro.props;
 ---
 
 <aside class="receipts-band reveal-on-scroll" style={`--receipts-accent: ${accentHex};`}>
@@ -48,10 +56,10 @@ const { version, versionDate, repoUrl, repoLabel, stats, accentHex } = Astro.pro
       target="_blank"
       rel="noopener"
     >
-      <p class="receipts-band__label">Open source</p>
+      <p class="receipts-band__label">{linkLabel}</p>
       <p class="receipts-band__value">{repoLabel}</p>
       <p class="receipts-band__sub">
-        Read the diff
+        {linkSub}
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
         </svg>
