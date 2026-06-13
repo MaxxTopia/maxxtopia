@@ -56,6 +56,29 @@ npm run build    # outputs to dist/
 npm run preview  # serve dist/ locally
 ```
 
+## Changelog / Updates page (`/updates`)
+
+Data lives in `src/data/changelog.json` (typed by `changelog.ts`, newest-first).
+Each entry: `{ date, product, productSlug?, version?, title, body?, items? }` —
+`items[]` is the clean bullet list for QoL/feature passes.
+
+**Auto-sync (OM + DM only):** when those repos publish a GitHub Release, the
+`sync-*-release.yml` workflow bumps the version JSON *and* runs
+`scripts/release-note-to-changelog.mjs`, which parses the release notes into a
+changelog entry — **but only if the notes contain a `## Highlights` section**
+(curated gate; releases without it just bump the version silently).
+
+To write an **optimal release note** (great on GitHub, clean on the site):
+- **Release title** = the headline, brand voice, no version → becomes `title`.
+- Add a `## Highlights` section. Its first line = one-line summary (`body`);
+  the `- ` bullets become `items[]` (user benefits, ≤~12 words, 3–6 max).
+- Let GitHub's auto-generated PR list sit below under `## Full changelog` —
+  the parser ignores everything outside Highlights and strips Claude-authorship
+  lines as a backstop.
+
+AdBlock-Maxxer + Streammaxxing have **no public GitHub Releases** (R2-only /
+private repo), so their entries are hand-added to `changelog.json`.
+
 ## Adding a new product
 1. Add an entry to `src/data/products.ts` (status, tagline, features, stats, glyph).
 2. The dynamic `/[slug]` page auto-generates the marketing page.
