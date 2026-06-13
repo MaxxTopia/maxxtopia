@@ -629,7 +629,7 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.5',
+    version: '1.2.6',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "uBlock got gutted on Chrome and locked out everywhere else. AdBlockMaxxer is built native to the new standard (Manifest V3), so it loads on Brave, Chrome, Edge and Firefox with no 'unsupported' wall. It kills ads on YouTube, Spotify and Twitch — and keeps Twitch at full 1080p instead of dropping you to 480p like every other Twitch blocker.",
