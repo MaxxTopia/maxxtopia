@@ -629,10 +629,10 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.9',
+    version: '1.2.10',
     tagline: "The ad blocker they couldn't ban.",
     description:
-      "uBlock got gutted on Chrome and locked out everywhere else. AdBlockMaxxer is built native to the new standard (Manifest V3), so it loads on Brave, Chrome, Edge and Firefox with no 'unsupported' wall. It kills ads on YouTube, Spotify and Twitch — and keeps Twitch at full 1080p instead of dropping you to 480p like every other Twitch blocker.",
+      "Blocks YouTube, Spotify and Twitch ads — and keeps Twitch at full 1080p60. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
     longDescription:
       "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch stays full quality.",
     features: [
@@ -722,7 +722,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.9.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.10.zip', external: true },
     secondaryCta: undefined,
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
@@ -739,7 +739,7 @@ export const products: Product[] = [
     version: '0.1.0',
     tagline: "Alerts that fire the instant it happens.",
     description:
-      "Cloud alert tools route every follow, sub and donation through their servers first — so your overlay can lag the moment by tens of seconds. Streammaxxing runs on your PC and fires the instant Twitch emits the event. Import your Botrix alerts in one click, trim clips and level every sound with built-in ffmpeg, and read donor messages aloud in a voice you cloned — 100% local, no account, free.",
+      "Instant Twitch alerts, fired locally on your PC — no cloud lag. One-click Botrix import, a built-in clip trimmer, loudness-leveling, and donor messages read aloud in your own cloned voice. Local, no account, free.",
     longDescription:
       "Local-first stream alerts: instant Twitch EventSub, one-click Botrix import, a built-in clip trimmer + loudness-normalize, and consent-gated voice-clone read-outs. Free.",
     features: [
@@ -819,7 +819,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.0_x64-setup.exe', external: true },
     secondaryCta: undefined,
     glyph: '⚡',
-    logo: '/logos/streammaxxing.png',
+    logo: '/logos/streammaxxing.png?v=2',
     accentHex: '#22d3a0',
     // Placeholder hero visual: the branded OG card until a real product
     // screenshot / demo clip is recorded. Swap for a true app shot later.
