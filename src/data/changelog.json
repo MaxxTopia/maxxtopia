@@ -3,6 +3,21 @@
     "date": "2026-06-14",
     "product": "Streammaxxing",
     "productSlug": "streammaxxing",
+    "version": "v0.1.5",
+    "title": "The Command Center.",
+    "body": "The biggest release yet — a whole new dashboard, multi-streamer profiles, and one-click setup for everything.",
+    "items": [
+      "New Command Center dashboard with a quick-action home, Ctrl+K search and a fresh theme.",
+      "Channel-point sound alerts, YouTube song requests, watch-time points, a leaderboard and giveaways.",
+      "Multi-streamer profiles — run a whole roster from one install.",
+      "Go-live announcements to Discord (one-click connect), live session stats, and stream markers for your editor.",
+      "One-click add overlays to OBS, plus instant Spotify & Discord setup. Import from StreamElements too."
+    ]
+  },
+  {
+    "date": "2026-06-14",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
     "version": "v0.1.4",
     "title": "A full overlay studio lands.",
     "body": "The biggest update yet — customizable overlays, chat-voted polls, shareable setups and more.",

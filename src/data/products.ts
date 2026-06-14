@@ -745,12 +745,12 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.4',
+    version: '0.1.5',
     tagline: "Alerts that fire the instant it happens.",
     description:
-      "Instant Twitch alerts, fired locally on your PC — no cloud lag. Plus a full overlay studio (goals, scenes, subathon, social bar, webcam frame, Spotify now-playing), chat-voted polls, every platform's chat in one widget, one-click Botrix import, a clip trimmer, and donor messages read aloud in your own cloned voice. Local, no account, free.",
+      "Instant Twitch alerts, fired locally on your PC — no cloud lag. Plus a full Command Center: an overlay studio (goals, scenes, subathon, leaderboard, now-playing), every platform's chat in one widget, channel-point sound alerts, song requests, loyalty points & giveaways, session stats, and donor messages read in your own cloned voice. One-click setup for OBS, Discord and Spotify. Local, no account, free.",
     longDescription:
-      "Local-first stream alerts plus a whole overlay studio: goal bars, Starting Soon / BRB scenes, a subathon timer, a social-handles bar, a webcam frame and a Spotify now-playing widget — all customizable in-app. Highlight chat messages, run chat-voted polls, merge Twitch/Kick/YouTube/TikTok chat into one overlay, import Botrix in a click, trim clips, level loudness, and read donor messages in your own cloned voice. Share your whole setup as one file. Free.",
+      "Local-first stream alerts wrapped in a Command Center dashboard. A whole overlay studio (goal bars, Starting Soon / BRB scenes, subathon timer, points leaderboard, social bar, webcam frame, Spotify now-playing) — add any of them to OBS in one click. Channel-point sound alerts, song requests, watch-time points, giveaways and live session stats. Merge Twitch/Kick/YouTube/TikTok chat into one overlay, import your existing alerts, trim clips, level loudness, and read donor messages in a voice you cloned. Run multiple streamers from one install. Free.",
     features: [
       {
         title: 'Instant, because it runs on your PC.',
@@ -761,8 +761,20 @@ export const products: Product[] = [
         body: 'Twitch, Kick, YouTube and TikTok chat merged into a single widget — each message tagged with the platform it came from. Drop it on stream, or pop it out as an always-on-top window to read while you play.',
       },
       {
-        title: 'Bring your Botrix alerts in one click.',
-        body: 'Paste your Botrix link and it pulls every alert and downloads all the media to your disk — same look, now running locally. No rebuilding from scratch.',
+        title: 'Bring your existing alerts in one click.',
+        body: 'Import from Botrix or StreamElements — it pulls every alert and downloads all the media to your disk, same look, now running locally. No rebuilding from scratch.',
+      },
+      {
+        title: 'One click adds every overlay to OBS.',
+        body: 'Connect OBS once and a single button drops any overlay in as a browser source — named, sized and placed for you. No copy-pasting URLs into fifteen browser sources.',
+      },
+      {
+        title: 'Sound alerts your viewers trigger.',
+        body: 'Let chat redeem channel-point sounds that play on stream, run watch-time points with a leaderboard, draw giveaway winners, and take YouTube song requests — engagement tools built in, not bolted on.',
+      },
+      {
+        title: 'Run a whole roster from one install.',
+        body: 'Switch between streamer profiles on the sidebar — each with its own alerts, overlays, commands and login. Built for managers and anyone running more than one channel.',
       },
       {
         title: 'Trim clips without leaving the app.',
@@ -841,7 +853,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.4_x64-setup.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing-latest-x64-setup.exe', external: true },
     secondaryCta: undefined,
     glyph: '⚡',
     logo: '/logos/streammaxxing.png?v=2',
