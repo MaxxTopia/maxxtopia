@@ -745,12 +745,12 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.3',
+    version: '0.1.4',
     tagline: "Alerts that fire the instant it happens.",
     description:
-      "Instant Twitch alerts, fired locally on your PC — no cloud lag. Plus every platform's chat in one overlay, one-click Botrix import, a built-in clip trimmer, loudness-leveling, and donor messages read aloud in your own cloned voice. Local, no account, free.",
+      "Instant Twitch alerts, fired locally on your PC — no cloud lag. Plus a full overlay studio (goals, scenes, subathon, social bar, webcam frame, Spotify now-playing), chat-voted polls, every platform's chat in one widget, one-click Botrix import, a clip trimmer, and donor messages read aloud in your own cloned voice. Local, no account, free.",
     longDescription:
-      "Local-first stream alerts: instant Twitch EventSub, a unified Twitch/Kick/YouTube/TikTok chat overlay, one-click Botrix import, a built-in clip trimmer + loudness-normalize, and consent-gated voice-clone read-outs. Free.",
+      "Local-first stream alerts plus a whole overlay studio: goal bars, Starting Soon / BRB scenes, a subathon timer, a social-handles bar, a webcam frame and a Spotify now-playing widget — all customizable in-app. Highlight chat messages, run chat-voted polls, merge Twitch/Kick/YouTube/TikTok chat into one overlay, import Botrix in a click, trim clips, level loudness, and read donor messages in your own cloned voice. Share your whole setup as one file. Free.",
     features: [
       {
         title: 'Instant, because it runs on your PC.',
@@ -775,6 +775,18 @@ export const products: Product[] = [
       {
         title: 'Read donor messages in your own voice.',
         body: 'Consent-gated voice cloning reads each donation or sub message aloud in a voice you trained from a short clip — synthesized locally on your GPU, never sent anywhere.',
+      },
+      {
+        title: 'A whole overlay studio, built in.',
+        body: 'Goal bars, recent-event labels, Starting Soon / BRB / Ending scenes, a self-extending subathon timer, a death/win counter, a social-handles bar, a webcam frame, and a Spotify now-playing widget — every one customizable in the app, with a live preview before you add it to OBS.',
+      },
+      {
+        title: 'Run the chat, not just react to it.',
+        body: 'Pin a chat comment on stream as a shoutout, run a poll your viewers vote on by typing in chat, and answer FAQs automatically with a built-in !commands bot. A profanity filter catches slurs before they’re read aloud or hit the screen.',
+      },
+      {
+        title: 'Share your whole setup in one file.',
+        body: 'Export your alerts, overlays, commands and all their media to a single .smpack file — hand it to a friend, or import someone else’s, and get the exact same look instantly.',
       },
       {
         title: 'Spam floods, handled.',
@@ -829,7 +841,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.3_x64-setup.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.4_x64-setup.exe', external: true },
     secondaryCta: undefined,
     glyph: '⚡',
     logo: '/logos/streammaxxing.png?v=2',

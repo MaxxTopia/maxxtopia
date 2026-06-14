@@ -1,5 +1,20 @@
 [
   {
+    "date": "2026-06-14",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.4",
+    "title": "A full overlay studio lands.",
+    "body": "The biggest update yet — customizable overlays, chat-voted polls, shareable setups and more.",
+    "items": [
+      "New overlays: goal bars, scenes (Starting Soon / BRB / Ending), a subathon timer, social bar, webcam frame and a Spotify now-playing widget.",
+      "Highlight a chat message on stream, run chat-voted polls, and answer FAQs with a built-in !commands bot.",
+      "Tip alerts via StreamElements & Streamlabs, plus a profanity filter for read-outs.",
+      "Share your whole setup — alerts, overlays and media — as one .smpack file.",
+      "Auto-start with Windows, global mute/replay hotkeys, and in-app previews of every overlay."
+    ]
+  },
+  {
     "date": "2026-06-13",
     "product": "Streammaxxing",
     "productSlug": "streammaxxing",
