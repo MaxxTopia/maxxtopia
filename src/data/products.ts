@@ -748,7 +748,7 @@ export const products: Product[] = [
     version: '0.1.5',
     tagline: "Alerts that fire the instant it happens.",
     description:
-      "Everything you need to stream, in one free app. Instant alerts, on-screen overlays, all your chat in one place, sound effects your viewers trigger, and donations read out loud. One-click OBS setup, no account.",
+      "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
     longDescription:
       "Local-first stream alerts wrapped in a Command Center dashboard. A whole overlay studio (goal bars, Starting Soon / BRB scenes, subathon timer, points leaderboard, social bar, webcam frame, Spotify now-playing) — add any of them to OBS in one click. Channel-point sound alerts, song requests, watch-time points, giveaways and live session stats. Merge Twitch/Kick/YouTube/TikTok chat into one overlay, import your existing alerts, trim clips, level loudness, and read donor messages in a voice you cloned. Run multiple streamers from one install. Free.",
     features: [
