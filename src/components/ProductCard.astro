@@ -7,6 +7,11 @@ const { product, index = 0, large = false } = Astro.props;
 const isLive = product.status === 'live';
 const root = product.name.replace(/maxx(er|ing)$/i, '');
 const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
+// Placeholder products (no real copy yet) get a "locked" treatment that
+// mirrors the sidebar padlock convention instead of a sparse one-liner.
+const isPlaceholder =
+  (product.status === 'soon' || product.status === 'dev') &&
+  product.description.trim() === 'In development.';
 ---
 
 <a
@@ -27,6 +32,13 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
         ) : (
           <span style={`color: ${product.accentHex}`}>{product.glyph}</span>
         )}
+        {isPlaceholder && (
+          <span class="card-lock" aria-hidden="true">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a5 5 0 0 0-5 5v3H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-2V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 0 1 6 0v3H9Z"/>
+            </svg>
+          </span>
+        )}
       </span>
       <div>
         <p class="text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
@@ -40,10 +52,24 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
     <StatusPill status={product.status} />
   </div>
 
-  <!-- Description -->
-  <p class={`relative ${large ? 'mt-7 text-[15px]' : 'mt-6 text-[14.5px]'} leading-relaxed text-[var(--color-text-mid)]`}>
-    {product.description}
-  </p>
+  <!-- Description (or locked placeholder treatment) -->
+  {isPlaceholder ? (
+    <div class="card-locked-state">
+      <span class="card-locked-state__icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a5 5 0 0 0-5 5v3H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-2V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 0 1 6 0v3H9Z"/>
+        </svg>
+      </span>
+      <div>
+        <p class="card-locked-state__title">Locked · coming soon</p>
+        <p class="card-locked-state__sub">Join the Discord for the drop.</p>
+      </div>
+    </div>
+  ) : (
+    <p class={`relative ${large ? 'mt-7 text-[15px]' : 'mt-6 text-[14.5px]'} leading-relaxed text-[var(--color-text-mid)]`}>
+      {product.description}
+    </p>
+  )}
 
   <!-- Bottom row -->
   <div class="relative mt-6 flex items-center justify-between">
@@ -68,3 +94,62 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
     </span>
   </div>
 </a>
+
+<style>
+  /* ── Locked placeholder treatment ─────────────────────────────────
+     Mirrors the sidebar padlock convention for products with no real
+     copy yet (status soon/dev + "In development." placeholder). A small
+     corner padlock on the icon + a locked microcopy block fills the
+     gap where the description would be, so the card reads as
+     deliberately gated rather than unfinished. ──────────────────── */
+  .glyph-badge { position: relative; }
+  .card-lock {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 15px;
+    height: 15px;
+    border-radius: 999px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-line-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent, var(--color-subtle));
+  }
+
+  .card-locked-state {
+    position: relative;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 13px;
+    border-radius: 12px;
+    border: 1px dashed color-mix(in oklab, var(--accent, #888) 35%, var(--color-line-strong));
+    background: color-mix(in oklab, var(--accent, #888) 6%, transparent);
+  }
+  .card-locked-state__icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent, var(--color-subtle));
+    background: color-mix(in oklab, var(--accent, #888) 14%, transparent);
+  }
+  .card-locked-state__title {
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .card-locked-state__sub {
+    font-size: 12.5px;
+    color: var(--color-muted);
+    margin: 2px 0 0;
+  }
+</style>
