@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import ProductCard from '../components/ProductCard.astro';
 import SuiteMarquee from '../components/SuiteMarquee.astro';
+import Aurora from '../components/Aurora.astro';
 import { liveProducts, upcomingProducts } from '../data/products';
 ---
 
@@ -106,10 +107,7 @@ import { liveProducts, upcomingProducts } from '../data/products';
   <section class="relative">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-28">
       <div class="reveal-on-scroll relative overflow-hidden rounded-[28px] border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] p-10 sm:p-20 text-center">
-        <div class="aurora" aria-hidden="true">
-          <div class="aurora-blob aurora-blob--magenta" style="opacity: 0.35; width: 70vw; height: 70vw"></div>
-          <div class="aurora-blob aurora-blob--cyan" style="opacity: 0.30; width: 60vw; height: 60vw; right: -25%"></div>
-        </div>
+        <Aurora intensity="med" />
         <div class="relative">
           <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-4">
             ✦ Start here

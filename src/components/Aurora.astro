@@ -1,11 +1,106 @@
 ---
+/* Drifting starfield background. Replaces the old slow-moving gradient blobs
+ * with a quiet, premium field of slowly drifting dots — mostly white with a
+ * few brand-tinted (magenta/cyan) stars. Three parallax layers (small/mid/
+ * large) drift at different speeds for depth. Pure CSS: each layer is a 1–3px
+ * dot whose box-shadow clones it across the viewport, animated with a long
+ * transform drift (GPU-only, no per-frame JS, no repaint). Positions are
+ * generated at build time with a tiny seeded PRNG so the field is stable. */
 type Props = { intensity?: 'high' | 'med' | 'low' };
 const { intensity = 'med' } = Astro.props;
-const opacity = intensity === 'high' ? 1 : intensity === 'low' ? 0.4 : 0.7;
+const opacity = intensity === 'high' ? 0.95 : intensity === 'low' ? 0.45 : 0.7;
+
+// Deterministic PRNG so the star layout is identical every build (stable SSR).
+function rng(seed: number) {
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return () => (s = (s * 16807) % 2147483647) / 2147483647;
+}
+// Build a box-shadow list of `count` dots scattered across the viewport.
+// `tints` is the colour palette; most stars are white, a few brand-tinted.
+function field(count: number, seed: number, tints: string[]) {
+  const r = rng(seed);
+  const out: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const x = (r() * 100).toFixed(2);
+    const y = (r() * 100).toFixed(2);
+    const c = tints[Math.floor(r() * tints.length)];
+    out.push(`${x}vw ${y}vh ${c}`);
+  }
+  return out.join(', ');
+}
+
+const WHITE_HI = 'rgba(255,255,255,0.85)';
+const WHITE_MD = 'rgba(255,255,255,0.55)';
+const WHITE_LO = 'rgba(255,255,255,0.35)';
+const MAGENTA  = 'rgba(226,91,255,0.75)';
+const CYAN     = 'rgba(0,212,255,0.70)';
+
+// Small (most numerous, faint), mid, and large (sparse, brighter, tinted).
+const smallStars = field(70, 12345, [WHITE_LO, WHITE_MD, WHITE_LO, WHITE_MD, CYAN]);
+const midStars   = field(34, 67890, [WHITE_MD, WHITE_HI, MAGENTA, CYAN]);
+const bigStars   = field(14, 24680, [WHITE_HI, MAGENTA, CYAN]);
 ---
 
-<div class="aurora" style={`--aurora-opacity:${opacity}`} aria-hidden="true">
-  <div class="aurora-blob aurora-blob--magenta" style={`opacity:${0.45 * opacity}`}></div>
-  <div class="aurora-blob aurora-blob--cyan" style={`opacity:${0.40 * opacity}`}></div>
-  <div class="aurora-blob aurora-blob--indigo" style={`opacity:${0.40 * opacity}`}></div>
+<div class="starfield" style={`--sf-opacity:${opacity}`} aria-hidden="true">
+  <div class="sf-layer sf-small" style={`box-shadow:${smallStars}`}></div>
+  <div class="sf-layer sf-mid"   style={`box-shadow:${midStars}`}></div>
+  <div class="sf-layer sf-big"   style={`box-shadow:${bigStars}`}></div>
 </div>
+
+<style>
+  .starfield {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+    opacity: var(--sf-opacity, 0.7);
+    /* Fade the field toward the edges so it never hard-clips. */
+    -webkit-mask-image: radial-gradient(ellipse 95% 80% at 50% 35%, #000 0%, transparent 92%);
+    mask-image: radial-gradient(ellipse 95% 80% at 50% 35%, #000 0%, transparent 92%);
+  }
+  .sf-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background: transparent;
+    will-change: transform;
+  }
+  .sf-small {
+    width: 1px; height: 1px;
+    animation: sf-drift-a 140s linear infinite;
+  }
+  .sf-mid {
+    width: 2px; height: 2px;
+    animation: sf-drift-b 200s linear infinite, sf-twinkle 6s ease-in-out infinite;
+  }
+  .sf-big {
+    width: 2.5px; height: 2.5px;
+    animation: sf-drift-c 260s linear infinite, sf-twinkle 8s ease-in-out infinite 2s;
+  }
+
+  /* Gentle, seamless back-and-forth drift (no wrap seam). Different vectors per
+     layer create a soft parallax. */
+  @keyframes sf-drift-a {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%      { transform: translate3d(2.5vw, -3.5vh, 0); }
+  }
+  @keyframes sf-drift-b {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%      { transform: translate3d(-3vw, -2.2vh, 0); }
+  }
+  @keyframes sf-drift-c {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%      { transform: translate3d(2vw, 3vh, 0); }
+  }
+  @keyframes sf-twinkle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.55; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sf-layer { animation: none !important; }
+  }
+</style>
