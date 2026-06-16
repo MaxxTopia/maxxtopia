@@ -115,6 +115,10 @@ const sparkleStars = sparkles(16, 13579, [WHITE_HI, MAGENTA, CYAN, WHITE_HI]);
     height: 2px;
     border-radius: 50%;
     background: var(--c, #fff);
+    /* Static glow — the keyframe fades/scales the whole element (opacity +
+       transform only, GPU-composited) so the glow brightens with it without
+       animating box-shadow (which would force per-frame repaints). */
+    box-shadow: 0 0 6px var(--c, #fff);
     opacity: 0.22;
     transform: translate(-50%, -50%) scale(0.7);
     animation-name: sf-sparkle;
@@ -159,9 +163,9 @@ const sparkleStars = sparkles(16, 13579, [WHITE_HI, MAGENTA, CYAN, WHITE_HI]);
   /* Brief bright pop, then settle back to faint — most of the cycle is dim,
      so the sparkle reads as an occasional flash rather than a steady pulse. */
   @keyframes sf-sparkle {
-    0%, 100% { opacity: 0.22; transform: translate(-50%, -50%) scale(0.7); box-shadow: 0 0 2px var(--c, #fff); }
-    8%       { opacity: 1;    transform: translate(-50%, -50%) scale(1.55); box-shadow: 0 0 7px var(--c, #fff), 0 0 13px var(--c, #fff); }
-    18%      { opacity: 0.4;  transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 2px transparent; }
+    0%, 100% { opacity: 0.22; transform: translate(-50%, -50%) scale(0.7); }
+    8%       { opacity: 1;    transform: translate(-50%, -50%) scale(1.55); }
+    18%      { opacity: 0.4;  transform: translate(-50%, -50%) scale(1); }
   }
   @keyframes sf-spark-arm {
     0%, 100% { opacity: 0;   transform: translate(-50%, -50%) scale(0); }
