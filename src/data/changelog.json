@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-06-16",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.6",
+    "title": "Chat can clip the stream now.",
+    "body": "Viewers type !clip and get an instant, shareable Twitch clip — no clip software, no waiting for the VOD.",
+    "items": [
+      "New !clip chat command: anyone clips the stream and gets a shareable link instantly.",
+      "Set the command, cooldown and reply — and optionally save a local copy at your exact length via OBS."
+    ]
+  },
+  {
     "date": "2026-06-14",
     "product": "Streammaxxing",
     "productSlug": "streammaxxing",

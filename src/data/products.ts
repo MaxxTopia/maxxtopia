@@ -745,7 +745,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.5',
+    version: '0.1.6',
     tagline: "Alerts that fire the instant it happens.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
@@ -767,6 +767,10 @@ export const products: Product[] = [
       {
         title: 'One click adds every overlay to OBS.',
         body: 'Connect OBS once and a single button drops any overlay in as a browser source — named, sized and placed for you. No copy-pasting URLs into fifteen browser sources.',
+      },
+      {
+        title: 'Chat clips the stream with !clip.',
+        body: "Viewers type !clip and get an instant, shareable Twitch clip — no clip software running, no waiting for the VOD. Set a cooldown and reply, and optionally save a local copy at your exact length too.",
       },
       {
         title: 'Sound alerts your viewers trigger.',
