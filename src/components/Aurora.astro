@@ -40,12 +40,38 @@ const CYAN     = 'rgba(0,212,255,0.70)';
 const smallStars = field(70, 12345, [WHITE_LO, WHITE_MD, WHITE_LO, WHITE_MD, CYAN]);
 const midStars   = field(34, 67890, [WHITE_MD, WHITE_HI, MAGENTA, CYAN]);
 const bigStars   = field(14, 24680, [WHITE_HI, MAGENTA, CYAN]);
+
+// A handful of "sparkle" stars rendered as individual elements so each can
+// flash on its own staggered timer (box-shadow stars can't be animated
+// individually). Each gets a random position, tint, delay and duration so
+// they twinkle at different moments rather than in unison.
+function sparkles(count: number, seed: number, tints: string[]) {
+  const r = rng(seed);
+  const out: { x: string; y: string; c: string; delay: string; dur: string }[] = [];
+  for (let i = 0; i < count; i++) {
+    out.push({
+      x: (2 + r() * 96).toFixed(2),
+      y: (3 + r() * 92).toFixed(2),
+      c: tints[Math.floor(r() * tints.length)],
+      delay: (r() * 9).toFixed(2),
+      dur: (4.5 + r() * 4).toFixed(2),
+    });
+  }
+  return out;
+}
+const sparkleStars = sparkles(16, 13579, [WHITE_HI, MAGENTA, CYAN, WHITE_HI]);
 ---
 
 <div class="starfield" style={`--sf-opacity:${opacity}`} aria-hidden="true">
   <div class="sf-layer sf-small" style={`box-shadow:${smallStars}`}></div>
   <div class="sf-layer sf-mid"   style={`box-shadow:${midStars}`}></div>
   <div class="sf-layer sf-big"   style={`box-shadow:${bigStars}`}></div>
+  {sparkleStars.map((s) => (
+    <span
+      class="sf-sparkle"
+      style={`left:${s.x}%; top:${s.y}%; --c:${s.c}; animation-delay:${s.delay}s; animation-duration:${s.dur}s`}
+    ></span>
+  ))}
 </div>
 
 <style>
@@ -74,12 +100,47 @@ const bigStars   = field(14, 24680, [WHITE_HI, MAGENTA, CYAN]);
   }
   .sf-mid {
     width: 2px; height: 2px;
-    animation: sf-drift-b 200s linear infinite, sf-twinkle 6s ease-in-out infinite;
+    animation: sf-drift-b 200s linear infinite;
   }
   .sf-big {
     width: 2.5px; height: 2.5px;
-    animation: sf-drift-c 260s linear infinite, sf-twinkle 8s ease-in-out infinite 2s;
+    animation: sf-drift-c 260s linear infinite;
   }
+
+  /* Individual sparkle stars — each flashes on its own staggered timer
+     (delay + duration set inline per star), so they twinkle out of sync. */
+  .sf-sparkle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: var(--c, #fff);
+    opacity: 0.22;
+    transform: translate(-50%, -50%) scale(0.7);
+    animation-name: sf-sparkle;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: opacity, transform;
+  }
+  /* Cross arms that bloom in during the flash for a true "sparkle" shape.
+     They inherit the parent's delay/duration so they fire in sync with the dot. */
+  .sf-sparkle::before,
+  .sf-sparkle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: var(--c, #fff);
+    border-radius: 2px;
+    transform: translate(-50%, -50%) scale(0);
+    animation-name: sf-spark-arm;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-delay: inherit;
+    animation-duration: inherit;
+  }
+  .sf-sparkle::before { width: 1px; height: 9px; }
+  .sf-sparkle::after  { width: 9px; height: 1px; }
 
   /* Gentle, seamless back-and-forth drift (no wrap seam). Different vectors per
      layer create a soft parallax. */
@@ -95,12 +156,23 @@ const bigStars   = field(14, 24680, [WHITE_HI, MAGENTA, CYAN]);
     0%, 100% { transform: translate3d(0, 0, 0); }
     50%      { transform: translate3d(2vw, 3vh, 0); }
   }
-  @keyframes sf-twinkle {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.55; }
+  /* Brief bright pop, then settle back to faint — most of the cycle is dim,
+     so the sparkle reads as an occasional flash rather than a steady pulse. */
+  @keyframes sf-sparkle {
+    0%, 100% { opacity: 0.22; transform: translate(-50%, -50%) scale(0.7); box-shadow: 0 0 2px var(--c, #fff); }
+    8%       { opacity: 1;    transform: translate(-50%, -50%) scale(1.55); box-shadow: 0 0 7px var(--c, #fff), 0 0 13px var(--c, #fff); }
+    18%      { opacity: 0.4;  transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 2px transparent; }
+  }
+  @keyframes sf-spark-arm {
+    0%, 100% { opacity: 0;   transform: translate(-50%, -50%) scale(0); }
+    8%       { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+    20%      { opacity: 0;   transform: translate(-50%, -50%) scale(0.4); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sf-layer { animation: none !important; }
+    .sf-layer,
+    .sf-sparkle,
+    .sf-sparkle::before,
+    .sf-sparkle::after { animation: none !important; }
   }
 </style>
