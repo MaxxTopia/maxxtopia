@@ -345,7 +345,7 @@ export const products: Product[] = [
     version: cmRelease.version ?? undefined,
     tagline: 'Stream. Sleep. Wake up posted.',
     description:
-      "Calibrated on the viral creators in your game — not on generic audio-volume rules. Three platform-ready clips on your phone by morning.",
+      "Turns your streams into TikToks while you sleep. Three clips on your phone by morning — no editing.",
     longDescription:
       "Per-niche playbook distilled from real viral creators in your game. Stream tonight; overnight queue scores your VOD against those patterns. Three platform-ready drafts on your phone by morning.",
     features: [
@@ -641,7 +641,7 @@ export const products: Product[] = [
     version: '1.2.15',
     tagline: "The ad blocker they couldn't ban.",
     description:
-      "Blocks YouTube, Spotify and Twitch ads — and restores Twitch to source quality after the ad-swap instead of stranding you at 480p. Manifest V3-native, so it runs on Brave, Chrome, Edge and Firefox. 21,370 filter rules, per-site pause, free.",
+      "No more ads on YouTube, Spotify or Twitch. Works in every browser, keeps Twitch in full HD, and costs nothing.",
     longDescription:
       "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch quality comes back to source after each break (optional auto-downgrade lock).",
     features: [
@@ -748,7 +748,7 @@ export const products: Product[] = [
     version: '0.1.5',
     tagline: "Alerts that fire the instant it happens.",
     description:
-      "Instant Twitch alerts, fired locally on your PC — no cloud lag. Plus a full Command Center: an overlay studio (goals, scenes, subathon, leaderboard, now-playing), every platform's chat in one widget, channel-point sound alerts, song requests, loyalty points & giveaways, session stats, and donor messages read in your own cloned voice. One-click setup for OBS, Discord and Spotify. Local, no account, free.",
+      "Everything you need to stream, in one free app. Instant alerts, on-screen overlays, all your chat in one place, sound effects your viewers trigger, and donations read out loud. One-click OBS setup, no account.",
     longDescription:
       "Local-first stream alerts wrapped in a Command Center dashboard. A whole overlay studio (goal bars, Starting Soon / BRB scenes, subathon timer, points leaderboard, social bar, webcam frame, Spotify now-playing) — add any of them to OBS in one click. Channel-point sound alerts, song requests, watch-time points, giveaways and live session stats. Merge Twitch/Kick/YouTube/TikTok chat into one overlay, import your existing alerts, trim clips, level loudness, and read donor messages in a voice you cloned. Run multiple streamers from one install. Free.",
     features: [
