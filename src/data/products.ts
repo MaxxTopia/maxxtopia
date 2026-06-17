@@ -867,6 +867,31 @@ export const products: Product[] = [
     // screenshot / demo clip is recorded. Swap for a true app shot later.
     screenshots: ['/og/streammaxxing.png'],
   },
+  {
+    slug: 'snipemaxxer',
+    name: 'Snipemaxxer',
+    category: 'Fortnite',
+    status: 'soon',
+    tagline: 'Know your lobby before you drop.',
+    description: 'In development.',
+    longDescription:
+      'Live Fortnite lobby intel — reads the roster the safe way, through Overwolf\'s anti-cheat-whitelisted Game Events feed. No memory reading, no injection, nothing BattlEye or EAC bans for. Floats live streamers and known pros to the top of your lobby.',
+    features: [
+      {
+        title: 'Unbannable by design.',
+        body: 'Reads the lobby roster through Overwolf\'s GEP — the same whitelisted feed Fortnite Tracker uses. We never touch the game process.',
+      },
+      {
+        title: 'Spots the streamers.',
+        body: 'Cross-checks every lobby name against live Twitch streams and a known-pro database — flags who\'s live and who\'s comp.',
+      },
+    ],
+    primaryCta: { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
+    glyph: '⌖',
+    logo: '/logos/snipemaxxer.svg',
+    accentHex: '#ff3b3b',
+    heroStat: { value: '0', label: 'memory reads · unbannable' },
+  },
 ];
 
 export const liveProducts = products.filter((p) => p.status === 'live');
