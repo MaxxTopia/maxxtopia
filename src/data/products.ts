@@ -369,6 +369,7 @@ export const products: Product[] = [
         ? { label: 'Release notes', href: cmRelease.releasePageUrl, external: true }
         : undefined,
     glyph: '✂',
+    icon: '/logos/clipmaxxer-icon.svg',
     accentHex: '#00d4ff',
     // Hero screenshot dropped: the three dev-UI PNGs (queue/login/pricing)
     // looked cropped in the 3-up 9:16 grid and aren't shippable marketing.
@@ -469,7 +470,7 @@ export const products: Product[] = [
     // landing reticle) until real dropmaxxer art lands. Sidebar uses the
     // reticle-only icon so it stays legible at 24px.
     logo: '/logos/dropmaxxer.png',
-    icon: '/logos/dropmaxxer-icon.png',
+    icon: '/logos/dropmaxxer-icon.svg',
     accentHex: '#4c51f7',
     screenshots: ['/screenshots/dropmaxxer/preview.png'],
     heroStat: { value: '832 m', label: 'bus altitude · cited' },
@@ -542,6 +543,7 @@ export const products: Product[] = [
         ? { label: 'Release notes', href: amRelease.releasePageUrl, external: true }
         : undefined,
     glyph: '◎',
+    icon: '/logos/aimmaxxer-icon.svg',
     accentHex: '#f3af19',
     heroStat: { value: '4', label: 'metrics · not one' },
     zones: [
