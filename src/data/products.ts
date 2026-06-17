@@ -8,17 +8,11 @@ import dpRelease from './dropmaxxer-release.json';
 import amRelease from './aimmaxxer-release.json';
 import vmRelease from './viewmaxxing-release.json';
 
-// Single shared waitlist URL. Drop a Tally / ConvertKit / MailerLite /
-// getwaitlist.com link in PUBLIC_WAITLIST_URL (Cloudflare Pages env
-// vars) and every "Get on the waitlist" button across the site flips
-// to it instantly.
-// Until that's wired, fall back to the live Discord — launches are
-// announced there first (#announcements + per-product forum threads),
-// so "join for updates" actually works, with no backend to maintain and
-// no personal email exposed in the page source.
-const WAITLIST_URL =
-    import.meta.env.PUBLIC_WAITLIST_URL ||
-    'https://discord.gg/S78eecbWdx';
+// Per-product waitlist: one Discord-OAuth click and the Maxx bot DMs the user
+// the moment that product ships. Handled by the vip-worker (waitlist:* keys in
+// VIP_CLAIMS); see optimizationmaxxing/vip-worker/worker.js.
+const WAITLIST_BASE = 'https://optmaxxing-vip.maxxtopia.workers.dev/waitlist/start';
+const waitlistUrl = (slug: string) => `${WAITLIST_BASE}?product=${slug}`;
 
 export type ProductStatus = 'live' | 'beta' | 'waitlist' | 'soon' | 'dev';
 
@@ -364,7 +358,7 @@ export const products: Product[] = [
     ],
     primaryCta: cmRelease.installerUrl
         ? { label: 'Download for Windows', href: cmRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
+        : { label: 'Get notified on launch', href: waitlistUrl('clipmaxxer'), external: true },
     secondaryCta: cmRelease.releasePageUrl
         ? { label: 'Release notes', href: cmRelease.releasePageUrl, external: true }
         : undefined,
@@ -538,7 +532,7 @@ export const products: Product[] = [
     ],
     primaryCta: amRelease.installerUrl
         ? { label: 'Download for Windows', href: amRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
+        : { label: 'Get notified on launch', href: waitlistUrl('aimmaxxer'), external: true },
     secondaryCta: amRelease.releasePageUrl
         ? { label: 'Release notes', href: amRelease.releasePageUrl, external: true }
         : undefined,
@@ -599,7 +593,7 @@ export const products: Product[] = [
     ],
     primaryCta: vmRelease.installerUrl
         ? { label: 'Download for Windows', href: vmRelease.installerUrl, external: true }
-        : { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
+        : { label: 'Get notified on launch', href: waitlistUrl('viewmaxxing'), external: true },
     secondaryCta: vmRelease.releasePageUrl
         ? { label: 'Release notes', href: vmRelease.releasePageUrl, external: true }
         : undefined,
@@ -888,7 +882,7 @@ export const products: Product[] = [
         body: 'Cross-checks every lobby name against live Twitch streams and a known-pro database — flags who\'s live and who\'s comp.',
       },
     ],
-    primaryCta: { label: 'Get on the waitlist', href: WAITLIST_URL, external: true },
+    primaryCta: { label: 'Get notified on launch', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
     accentHex: '#ff3b3b',
