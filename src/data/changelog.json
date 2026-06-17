@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-06-17",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.2.16",
+    "title": "The YouTube ad-block wall, gone for good.",
+    "body": "Killed the “ad blockers violate YouTube’s Terms” pop-up that came back on every refresh.",
+    "items": [
+      "Now strips ads from the very first video on page load and hard-refresh, not just when you click between videos — the wall can’t trigger anymore.",
+      "If a wall ever does slip through, it’s removed instantly and playback resumes on its own."
+    ]
+  },
+  {
     "date": "2026-06-16",
     "product": "Streammaxxing",
     "productSlug": "streammaxxing",
