@@ -1,0 +1,80 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+---
+
+<GuideLayout slug="reduce-discord-ram-usage">
+  <p>
+    Open Task Manager mid-game and you'll often find Discord sitting on more memory than
+    the game you're playing. On a lot of Windows machines the stock client parks well over
+    <strong>1 GB of RAM</strong> just to show a chat window. Here's why that happens, and
+    seven things you can actually do about it.
+  </p>
+
+  <h2>Why Discord uses so much RAM</h2>
+  <p>
+    Discord is built on Electron — essentially a full copy of the Chrome browser bundled
+    with the app. That means it runs multiple Chromium processes (the main app, a GPU
+    process, renderers, utility helpers), each with its own memory footprint, before you've
+    read a single message. On top of that browser baseline, a few things inflate it further:
+  </p>
+  <ul>
+    <li><strong>Hardware acceleration</strong> spins up a GPU process that can leak memory over long sessions.</li>
+    <li><strong>Animated avatars, emojis, and stickers</strong> are decoded and held in memory as you scroll.</li>
+    <li><strong>Lots of large servers</strong> mean more cached members, channels, and media.</li>
+    <li><strong>Background telemetry and experiments</strong> add their own overhead you never see.</li>
+  </ul>
+
+  <h2>Seven ways to cut Discord's memory use</h2>
+
+  <h3>1. Toggle hardware acceleration</h3>
+  <p>
+    Settings → Advanced → Hardware Acceleration. If you're CPU-bound, leaving it on offloads
+    work to the GPU; if you're GPU-bound in a game, turning it off frees VRAM and can stop a
+    slow memory creep. Test both — the right answer depends on your rig.
+  </p>
+
+  <h3>2. Kill the "reduced motion" and animation load</h3>
+  <p>
+    Settings → Accessibility → enable <strong>Reduced Motion</strong> and disable animated
+    emoji and stickers. Fewer things decoding and looping in memory.
+  </p>
+
+  <h3>3. Close servers you don't use</h3>
+  <p>
+    Every server you're in is state Discord keeps warm. Leaving dead servers is the simplest
+    way to shrink the cached member and channel lists.
+  </p>
+
+  <h3>4. Clear the cache</h3>
+  <p>
+    Quit Discord fully, then delete the contents of <code>%AppData%\discord\Cache</code> and
+    <code>Code Cache</code>. A bloated cache doesn't just cost disk — it costs startup memory.
+  </p>
+
+  <h3>5. Actually quit it (don't just minimize)</h3>
+  <p>
+    Discord minimizes to the tray and keeps running. If you're not in a call, right-click the
+    tray icon → Quit. Re-launching takes two seconds and resets the memory baseline.
+  </p>
+
+  <h3>6. Disable startup + run only when needed</h3>
+  <p>
+    Settings → Windows Settings → turn off "Open Discord" on startup. No reason for a 1 GB
+    process to load before you've even opened a game.
+  </p>
+
+  <h3>7. Use a lighter-weight client</h3>
+  <p>
+    The structural fixes above help, but you're still running a full browser to read text.
+    The biggest single win is swapping the client itself. A trimmed build strips the parts of
+    Discord that pretend to be a browser — telemetry, crash beacons, ad-tech, growth
+    experiments — and idles dramatically lower. On the same machine where stock Discord uses
+    <strong>1,041 MB</strong>, our build sits at <strong>288 MB</strong>: same servers, same
+    friends, same pings, ~753 MB lighter.
+  </p>
+
+  <blockquote>
+    Quick wins: quit-don't-minimize, clear cache, and leave dead servers. Bigger win: a client
+    that wasn't built to spy on you.
+  </blockquote>
+</GuideLayout>

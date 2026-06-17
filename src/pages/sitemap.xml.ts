@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { products } from '../data/products';
+import { guides } from '../data/guides';
 
 const SITE = 'https://maxxtopia.com';
 
@@ -18,6 +19,12 @@ export const GET: APIRoute = () => {
       loc: `${SITE}/${p.slug}/`,
       priority: p.status === 'live' ? '0.9' : '0.6',
       changefreq: p.status === 'live' ? 'weekly' : 'monthly',
+    })),
+    { loc: `${SITE}/guides/`, priority: '0.7', changefreq: 'weekly' },
+    ...guides.map((g) => ({
+      loc: `${SITE}/guides/${g.slug}/`,
+      priority: '0.7',
+      changefreq: 'monthly',
     })),
   ];
 

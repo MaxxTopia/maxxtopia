@@ -1,0 +1,119 @@
+---
+import Layout from './Layout.astro';
+import { getGuide } from '../data/guides';
+import { getProduct } from '../data/products';
+
+type Props = { slug: string };
+const { slug } = Astro.props;
+
+const guide = getGuide(slug);
+if (!guide) throw new Error(`GuideLayout: no guide found for slug "${slug}"`);
+const product = guide.product ? getProduct(guide.product) : undefined;
+
+const canonical = new URL(`/guides/${guide.slug}/`, Astro.site).toString();
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: guide.title,
+  description: guide.description,
+  datePublished: guide.date,
+  dateModified: guide.updated ?? guide.date,
+  author: { '@type': 'Organization', name: 'Maxxtopia', url: 'https://maxxtopia.com' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Maxxtopia',
+    logo: { '@type': 'ImageObject', url: 'https://maxxtopia.com/maxxtopia-clavicular-512.png' },
+  },
+  mainEntityOfPage: canonical,
+};
+---
+
+<Layout title={`${guide.title} — Maxxtopia`} description={guide.description}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} is:inline />
+
+  <main class="guide" style={product ? `--accent: ${product.accentHex}` : ''}>
+    <nav class="guide__crumbs" aria-label="Breadcrumb">
+      <a href="/guides/">Guides</a><span aria-hidden="true">/</span>
+      <span>{guide.title}</span>
+    </nav>
+
+    <header class="guide__head">
+      <div class="guide__meta">
+        {product && <a class="guide__tag" href={`/${product.slug}/`}>{product.name}</a>}
+        <span class="guide__mins">{guide.readMins} min read</span>
+      </div>
+      <h1 class="guide__title">{guide.title}</h1>
+    </header>
+
+    <article class="guide-prose">
+      <slot />
+    </article>
+
+    {product && (
+      <aside class="guide__cta" aria-label="Related tool">
+        <div>
+          <p class="guide__cta-eyebrow">The shortcut</p>
+          <p class="guide__cta-name">{product.name}</p>
+          <p class="guide__cta-tag">{product.tagline}</p>
+        </div>
+        <a class="guide__cta-btn" href={`/${product.slug}/`}>See {product.name} →</a>
+      </aside>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .guide { max-width: 46rem; margin: 0 auto; padding: 5rem 1.5rem 5rem; }
+  .guide__crumbs {
+    font-family: var(--font-mono); font-size: 0.78rem; color: #7d7a8a;
+    display: flex; gap: 0.5rem; margin-bottom: 2rem;
+  }
+  .guide__crumbs a { color: var(--accent, #e25bff); text-decoration: none; }
+  .guide__meta { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+  .guide__tag {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--accent, #e25bff); text-decoration: none;
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 40%, transparent);
+    border-radius: 999px; padding: 0.15rem 0.6rem;
+  }
+  .guide__mins { font-family: var(--font-mono); font-size: 0.72rem; color: #7d7a8a; }
+  .guide__title {
+    font-family: var(--font-display); font-size: clamp(2.1rem, 5vw, 3.2rem);
+    line-height: 1.05; margin: 0;
+  }
+
+  .guide-prose { margin-top: 2.5rem; font-size: 1.06rem; line-height: 1.7; color: #cbc8d6; }
+  .guide-prose :global(h2) {
+    font-size: 1.5rem; line-height: 1.25; margin: 2.4rem 0 0.9rem; color: #f3f1f8;
+    font-family: var(--font-sans); font-weight: 700;
+  }
+  .guide-prose :global(h3) { font-size: 1.15rem; margin: 1.8rem 0 0.6rem; color: #ece9f4; }
+  .guide-prose :global(p) { margin: 0 0 1.1rem; }
+  .guide-prose :global(ul), .guide-prose :global(ol) { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+  .guide-prose :global(li) { margin: 0 0 0.5rem; }
+  .guide-prose :global(strong) { color: #f3f1f8; }
+  .guide-prose :global(a) { color: var(--accent, #e25bff); text-decoration: underline; text-underline-offset: 2px; }
+  .guide-prose :global(blockquote) {
+    border-left: 3px solid var(--accent, #e25bff); margin: 1.4rem 0; padding: 0.2rem 0 0.2rem 1.1rem;
+    color: #aeabbd; font-style: italic;
+  }
+
+  .guide__cta {
+    margin-top: 3.5rem; padding: 1.5rem 1.6rem; border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 35%, transparent);
+    background: color-mix(in srgb, var(--accent, #e25bff) 8%, transparent);
+    display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;
+  }
+  .guide__cta-eyebrow {
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent, #e25bff); margin: 0 0 0.35rem;
+  }
+  .guide__cta-name { font-size: 1.25rem; font-weight: 700; margin: 0 0 0.2rem; color: #fff; }
+  .guide__cta-tag { font-size: 0.95rem; color: #a5a2b3; margin: 0; }
+  .guide__cta-btn {
+    font-family: var(--font-mono); font-size: 0.9rem; white-space: nowrap;
+    background: var(--accent, #e25bff); color: #0a0612; font-weight: 700;
+    padding: 0.7rem 1.1rem; border-radius: 0.6rem; text-decoration: none;
+  }
+</style>

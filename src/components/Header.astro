@@ -111,6 +111,10 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
           class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/updates') ? 'text-[var(--color-text)]' : ''}`}
         >Updates</a>
         <a
+          href="/guides"
+          class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/guides') ? 'text-[var(--color-text)]' : ''}`}
+        >Guides</a>
+        <a
           href="https://discord.gg/S78eecbWdx"
           target="_blank"
           rel="noopener noreferrer"

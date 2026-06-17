@@ -1,0 +1,77 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { guides } from '../../data/guides';
+import { getProduct } from '../../data/products';
+
+const sorted = [...guides].sort((a, b) => (a.date < b.date ? 1 : -1));
+const title = 'Guides — Maxxtopia';
+const description =
+  'Straight-talking guides for competitive PC players: cut Discord RAM, separate real FPS tweaks from placebo, block ads, and more. No fluff, sourced where it counts.';
+---
+
+<Layout title={title} description={description}>
+  <main class="guides-hub">
+    <header class="guides-hub__head">
+      <p class="guides-hub__eyebrow">Guides</p>
+      <h1 class="guides-hub__title">Player guides, minus the fluff.</h1>
+      <p class="guides-hub__sub">
+        Practical walkthroughs for the things players actually search — RAM, FPS, ads,
+        latency. Sourced where it counts, honest about what's placebo.
+      </p>
+    </header>
+
+    <ul class="guides-hub__grid" role="list">
+      {sorted.map((g) => {
+        const p = g.product ? getProduct(g.product) : undefined;
+        return (
+          <li class="guide-card" style={p ? `--accent: ${p.accentHex}` : ''}>
+            <a href={`/guides/${g.slug}/`} class="guide-card__link">
+              <div class="guide-card__meta">
+                {p && <span class="guide-card__tag">{p.name}</span>}
+                <span class="guide-card__mins">{g.readMins} min read</span>
+              </div>
+              <h2 class="guide-card__title">{g.title}</h2>
+              <p class="guide-card__excerpt">{g.excerpt}</p>
+              <span class="guide-card__cta">Read guide →</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </main>
+</Layout>
+
+<style>
+  .guides-hub { max-width: 64rem; margin: 0 auto; padding: 6rem 1.5rem 5rem; }
+  .guides-hub__head { max-width: 44rem; margin-bottom: 3rem; }
+  .guides-hub__eyebrow {
+    font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--color-magenta); margin: 0 0 0.75rem;
+  }
+  .guides-hub__title {
+    font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.02; margin: 0 0 1rem;
+  }
+  .guides-hub__sub { font-size: 1.1rem; line-height: 1.6; color: #b9b6c7; margin: 0; }
+  .guides-hub__grid {
+    display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    margin: 0; padding: 0;
+  }
+  .guide-card {
+    border: 1px solid #ffffff14; border-radius: 1rem; background: #ffffff06;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  }
+  .guide-card:hover { border-color: color-mix(in srgb, var(--accent, #e25bff) 55%, transparent); transform: translateY(-2px); background: #ffffff0a; }
+  .guide-card__link { display: block; padding: 1.5rem; text-decoration: none; color: inherit; height: 100%; }
+  .guide-card__meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem; }
+  .guide-card__tag {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--accent, #e25bff);
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 40%, transparent);
+    border-radius: 999px; padding: 0.15rem 0.6rem;
+  }
+  .guide-card__mins { font-family: var(--font-mono); font-size: 0.72rem; color: #7d7a8a; }
+  .guide-card__title { font-size: 1.3rem; line-height: 1.25; margin: 0 0 0.6rem; }
+  .guide-card__excerpt { font-size: 0.96rem; line-height: 1.55; color: #a5a2b3; margin: 0 0 1.1rem; }
+  .guide-card__cta { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent, #e25bff); }
+</style>
