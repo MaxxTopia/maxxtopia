@@ -1,278 +1,293 @@
 [
-  {
-    "date": "2026-06-17",
-    "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
-    "version": "v1.2.22",
-    "title": "YouTube stability.",
-    "body": "Reverted to the stable YouTube ad blocker after testing against YouTube’s newest server-side enforcement.",
-    "items": [
-      "Reliable ad blocking on standard YouTube accounts.",
-      "Twitch, Spotify and web-wide blocking are unchanged."
-    ]
-  },
-  {
-    "date": "2026-06-16",
-    "product": "Streammaxxing",
-    "productSlug": "streammaxxing",
-    "version": "v0.1.6",
-    "title": "Chat can clip the stream now.",
-    "body": "Viewers type !clip and get an instant, shareable Twitch clip — no clip software, no waiting for the VOD.",
-    "items": [
-      "New !clip chat command: anyone clips the stream and gets a shareable link instantly.",
-      "Set the command, cooldown and reply — and optionally save a local copy at your exact length via OBS."
-    ]
-  },
-  {
-    "date": "2026-06-14",
-    "product": "Streammaxxing",
-    "productSlug": "streammaxxing",
-    "version": "v0.1.5",
-    "title": "The Command Center.",
-    "body": "The biggest release yet — a whole new dashboard, multi-streamer profiles, and one-click setup for everything.",
-    "items": [
-      "New Command Center dashboard with a quick-action home, Ctrl+K search and a fresh theme.",
-      "Channel-point sound alerts, YouTube song requests, watch-time points, a leaderboard and giveaways.",
-      "Multi-streamer profiles — run a whole roster from one install.",
-      "Go-live announcements to Discord (one-click connect), live session stats, and stream markers for your editor.",
-      "One-click add overlays to OBS, plus instant Spotify & Discord setup. Import from StreamElements too."
-    ]
-  },
-  {
-    "date": "2026-06-14",
-    "product": "Streammaxxing",
-    "productSlug": "streammaxxing",
-    "version": "v0.1.4",
-    "title": "A full overlay studio lands.",
-    "body": "The biggest update yet — customizable overlays, chat-voted polls, shareable setups and more.",
-    "items": [
-      "New overlays: goal bars, scenes (Starting Soon / BRB / Ending), a subathon timer, social bar, webcam frame and a Spotify now-playing widget.",
-      "Highlight a chat message on stream, run chat-voted polls, and answer FAQs with a built-in !commands bot.",
-      "Tip alerts via StreamElements & Streamlabs, plus a profanity filter for read-outs.",
-      "Share your whole setup — alerts, overlays and media — as one .smpack file.",
-      "Auto-start with Windows, global mute/replay hotkeys, and in-app previews of every overlay."
-    ]
-  },
-  {
-    "date": "2026-06-13",
-    "product": "Streammaxxing",
-    "productSlug": "streammaxxing",
-    "version": "v0.1.3",
-    "title": "Unified chat overlay — every platform, one widget.",
-    "body": "Read Twitch, Kick, YouTube & TikTok chat together — on stream or as a pop-out.",
-    "items": [
-      "Unified chat overlay: Twitch, Kick, YouTube & TikTok in one widget, each line tagged by platform.",
-      "Add it to OBS, or pop it out as an always-on-top window to read while you play.",
-      "One-click voice-engine setup — no terminal, no manual installs.",
-      "Auto-fetches the media tools (ffmpeg) it needs on first use.",
-      "Getting-started checklist, in-app alert text & volume editing, replay-last-alert, and a reconnect indicator."
-    ]
-  },
-  {
-    "date": "2026-06-13",
-    "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
-    "version": "v1.2.7",
-    "title": "Twitch chat overlay + QoL pass.",
-    "body": "Newest app in the suite keeps stacking Twitch extras.",
-    "items": [
-      "Full-screen chat overlay — read chat without dropping out of fullscreen.",
-      "Drag the overlay anywhere on screen; it stays where you put it.",
-      "Messages fade out after a few seconds so chat never clutters the stream.",
-      "Lighter CPU use and a self-healing controls panel under the hood."
-    ]
-  },
-  {
-    "date": "2026-06-13",
-    "product": "Streammaxxing",
-    "productSlug": "streammaxxing",
-    "version": "v0.1.0",
-    "title": "Local-first stream alerts ship.",
-    "body": "The newest app in the suite — instant alerts, fired on your own PC.",
-    "items": [
-      "Instant Twitch alerts over a local EventSub connection — no cloud round-trip.",
-      "One-click Botrix import pulls every alert and its media to your disk.",
-      "Built-in clip trimmer + one-button loudness-normalize (−16 LUFS).",
-      "Donor messages read aloud in a voice you cloned, synthesized on your GPU.",
-      "Stream-delay detect + sync. Signed installer with auto-update."
-    ]
-  },
-  {
-    "date": "2026-06-12",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.7.29",
-    "title": "Performance + correctness audit.",
-    "body": "A pass of perf and bug fixes: throttled the profile-flair DOM observer, recycled tier-flair nodes, mass-delete 429 backoff, migration data-loss guard, VIP-status caching, Tournament Mode reload-restore, and audio-constraint fixes on screenshare. Same 288 MB footprint, fewer wakeups."
-  },
-  {
-    "date": "2026-06-12",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.2.4",
-    "title": "The hundred-tweak catalog.",
-    "body": "Audited catalog crosses 100 sourced tweaks — every one still cited to a Microsoft Learn doc, vendor whitepaper, or NVIDIA dev note. Snapshot-backed revert on all of them."
-  },
-  {
-    "date": "2026-06-12",
-    "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
-    "version": "v1.2.1",
-    "title": "The blocker they couldn't ban — live.",
-    "body": "New to the suite: one ad blocker that loads where the others got banned.",
-    "items": [
-      "Manifest V3-native — installs on Brave, Chrome, Edge and Firefox, no \"unsupported\" wall.",
-      "Blocks YouTube, Spotify and Twitch ads.",
-      "Keeps Twitch at full 1080p60 instead of dropping you to 480p.",
-      "21,370 EasyList + EasyPrivacy rules, per-site pause, weekly self-update."
-    ]
-  },
-  {
-    "date": "2026-05-15",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.7.26",
-    "title": "Profile-flair URL hardening.",
-    "body": "Avatar/banner inputs now reject page-host links (TikTok, YouTube, Imgur-page, Reddit-page, Twitter/X, Twitch, Insta, FB, Vimeo) at all four entry points, with a friendly toast pointing at a catbox rehost. Direct CDN siblings still pass."
-  },
-  {
-    "date": "2026-05-13",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.7.25",
-    "title": "Screenshare echo, gone.",
-    "body": "Sender-side echo cancellation fix — both parties on a call run echo-free once they're on v0.7.25+. No more hearing yourself a beat late when someone shares their screen."
-  },
-  {
-    "date": "2026-05-10",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.7.0",
-    "title": "Production cut.",
-    "body": "Votes-worker real tally backend. Tier ladder + checkout shipped. Page-hero demo live on /discordmaxxer."
-  },
-  {
-    "date": "2026-05-10",
-    "product": "Maxxtopia",
-    "title": "Discord server live.",
-    "body": "Permanent invite at discord.gg/S78eecbWdx. 6 channels, 7 silent product threads, 3 tier roles, ticket panel + VIP-claim worker live."
-  },
-  {
-    "date": "2026-05-10",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.67",
-    "title": "Veno-quote pack + product demo.",
-    "body": "5 verbatim Veno quotes shipped on /grind cards. Page-hero demo + TikTok cut both live on /optimizationmaxxing — synced to a hand-picked Yeat track."
-  },
-  {
-    "date": "2026-05-10",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.66",
-    "title": "Per-game auto-pin daemon.",
-    "body": "sysinfo poll → SetProcessDefaultCpuSets. Set-and-forget. Config at %LOCALAPPDATA%\\optmaxxing\\auto-pin.json. Tournament Mode runs without you remembering."
-  },
-  {
-    "date": "2026-05-09",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.65",
-    "title": "Click-to-pin CPU Sets API.",
-    "body": "Right-click a process, pin its threads to specific cores via the CPU Sets API. AC tags 12 → 18."
-  },
-  {
-    "date": "2026-05-09",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.64",
-    "title": "Tournament Mode.",
-    "body": "One-toggle competitive preset. Standby memory cleaner integrated. AC tags 3 → 12."
-  },
-  {
-    "date": "2026-05-09",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.5.4",
-    "title": "VIP claim worker.",
-    "body": "Cloudflare Worker live at optmaxxing-vip.maxxtopia.workers.dev. HWID-locked codes shared cross-product — discordmaxxer + optmaxxing on the same rig redeem off the same code."
-  },
-  {
-    "date": "2026-05-07",
-    "product": "Maxxtopia",
-    "version": "v0.1.0",
-    "title": "The shell is live.",
-    "body": "maxxtopia.com goes online — hub for the maxxer apps. Cross-product sidebar, finite-rotate hero with sound, status-tape coming-soon treatment, per-product logos for opt + discord."
-  },
-  {
-    "date": "2026-05-07",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.35",
-    "title": "Research-driven mega-batch.",
-    "body": "Catalog 68 → 87. IntelMicrocodeCard, VbsStatusCard, live DPC sparkline (1-Hz toggle). HID priority quartet, vbs.hvci.disable, IFEO priority for Fortnite/Valorant/CS2, 9 service kills, telemetry-batch task disable."
-  },
-  {
-    "date": "2026-05-07",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.34",
-    "title": "Knowledge-audit gap closure.",
-    "body": "4 confident additions: Latency Probe on Toolkit, PCIe Link card on Diagnostics, AMD UCLK heuristic warning, Discord low-FPS research article."
-  },
-  {
-    "date": "2026-05-07",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.33",
-    "title": "Audit deferral pass.",
-    "body": "DPC migrated to per-NUMA/per-CCD counter source. NIC tweaks probe-and-log with vendor-tolerant fallbacks. formFactor desktop/laptop targeting. 5 laptop-hostile tweaks tagged desktop-only."
-  },
-  {
-    "date": "2026-05-07",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.32",
-    "title": "Audit-driven correctness pass.",
-    "body": "Catalog 78 → 68 honest tweaks. Cut 10 placebos. Fixed 2 wrong values. Fixed 2 revert bugs. Rebuilt Network Low-Latency around tweaks that actually work. Principle: every tweak must trade off verifiably."
-  },
-  {
-    "date": "2026-05-07",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.31",
-    "title": "FileWrite engine action.",
-    "body": "New TweakAction::FileWrite variant. Snapshot-backed byte-perfect revert (≤1 MB cap), env-var path expansion, user-profile vs admin routing. Catalog can now ship .ini / .nip / .cfg tweaks."
-  },
-  {
-    "date": "2026-05-07",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.30",
-    "title": "DPC + Interrupt Time card.",
-    "body": "Backend WMI Win32_PerfFormattedData_PerfOS_Processor. UI: 2 big stats + per-CPU expandable + Save baseline + diff column. Color thresholds (green ≤2% / red >5%). Apply-preset measurable before/after."
-  },
-  {
-    "date": "2026-05-06",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.1",
-    "title": "First production cut.",
-    "body": "Tournament Mode v3 ships. Sub-300 MB RAM at idle vs 1041 MB on stock. Full plugin set (Cursor, Privacy, Trim + 7 more), 5-theme system, Apple-grade icon, custom sounds."
-  },
-  {
-    "date": "2026-05-06",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.1.25",
-    "title": "Mega-batch v0.1.25.",
-    "body": "70 tweaks total (+5 curated). New /changelog page, sitemap.xml + robots.txt. SystemHealth gains category-filtered hint. Compare matrix gains free-text search."
-  },
-  {
-    "date": "2026-05-02",
-    "product": "Clipmaxxer",
-    "productSlug": "clipmaxxer",
-    "title": "Premise-first reset.",
-    "body": "Pipeline now ships shippable clips on 2 streamers (Dasnerth 4/5, Pilat 2/2). HUD wedge code deleted. Mission locked: auto-clip + auto-post for streamers."
-  }
+ {
+  "date": "2026-06-17",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.7",
+  "title": "Points economy: minigames, a loyalty store & predictions.",
+  "body": "Give your channel points a purpose. Viewers can now spend and wager what they earn — and you can run live predictions on your gameplay.",
+  "items": [
+   "Predictions: open a question, viewers bet their points, you resolve the winner and the pot splits automatically — with a clean on-stream overlay.",
+   "Minigames: !gamble, !slots and !duel let chat wager points head-to-head.",
+   "Timed point drops: periodic chat 'grabs' reward viewers who are paying attention.",
+   "Loyalty store: sell rewards (sound alerts, message highlights, counter bumps) for points, all editable in the dashboard.",
+   "Fixed a settings bug so saving chat commands no longer resets your loyalty, store or clip setup."
+  ]
+ },
+ {
+  "date": "2026-06-17",
+  "product": "AdBlock-Maxxer",
+  "productSlug": "extensionmaxxing",
+  "version": "v1.2.22",
+  "title": "YouTube stability.",
+  "body": "Reverted to the stable YouTube ad blocker after testing against YouTube’s newest server-side enforcement.",
+  "items": [
+   "Reliable ad blocking on standard YouTube accounts.",
+   "Twitch, Spotify and web-wide blocking are unchanged."
+  ]
+ },
+ {
+  "date": "2026-06-16",
+  "product": "Streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.6",
+  "title": "Chat can clip the stream now.",
+  "body": "Viewers type !clip and get an instant, shareable Twitch clip — no clip software, no waiting for the VOD.",
+  "items": [
+   "New !clip chat command: anyone clips the stream and gets a shareable link instantly.",
+   "Set the command, cooldown and reply — and optionally save a local copy at your exact length via OBS."
+  ]
+ },
+ {
+  "date": "2026-06-14",
+  "product": "Streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.5",
+  "title": "The Command Center.",
+  "body": "The biggest release yet — a whole new dashboard, multi-streamer profiles, and one-click setup for everything.",
+  "items": [
+   "New Command Center dashboard with a quick-action home, Ctrl+K search and a fresh theme.",
+   "Channel-point sound alerts, YouTube song requests, watch-time points, a leaderboard and giveaways.",
+   "Multi-streamer profiles — run a whole roster from one install.",
+   "Go-live announcements to Discord (one-click connect), live session stats, and stream markers for your editor.",
+   "One-click add overlays to OBS, plus instant Spotify & Discord setup. Import from StreamElements too."
+  ]
+ },
+ {
+  "date": "2026-06-14",
+  "product": "Streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.4",
+  "title": "A full overlay studio lands.",
+  "body": "The biggest update yet — customizable overlays, chat-voted polls, shareable setups and more.",
+  "items": [
+   "New overlays: goal bars, scenes (Starting Soon / BRB / Ending), a subathon timer, social bar, webcam frame and a Spotify now-playing widget.",
+   "Highlight a chat message on stream, run chat-voted polls, and answer FAQs with a built-in !commands bot.",
+   "Tip alerts via StreamElements & Streamlabs, plus a profanity filter for read-outs.",
+   "Share your whole setup — alerts, overlays and media — as one .smpack file.",
+   "Auto-start with Windows, global mute/replay hotkeys, and in-app previews of every overlay."
+  ]
+ },
+ {
+  "date": "2026-06-13",
+  "product": "Streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.3",
+  "title": "Unified chat overlay — every platform, one widget.",
+  "body": "Read Twitch, Kick, YouTube & TikTok chat together — on stream or as a pop-out.",
+  "items": [
+   "Unified chat overlay: Twitch, Kick, YouTube & TikTok in one widget, each line tagged by platform.",
+   "Add it to OBS, or pop it out as an always-on-top window to read while you play.",
+   "One-click voice-engine setup — no terminal, no manual installs.",
+   "Auto-fetches the media tools (ffmpeg) it needs on first use.",
+   "Getting-started checklist, in-app alert text & volume editing, replay-last-alert, and a reconnect indicator."
+  ]
+ },
+ {
+  "date": "2026-06-13",
+  "product": "AdBlock-Maxxer",
+  "productSlug": "extensionmaxxing",
+  "version": "v1.2.7",
+  "title": "Twitch chat overlay + QoL pass.",
+  "body": "Newest app in the suite keeps stacking Twitch extras.",
+  "items": [
+   "Full-screen chat overlay — read chat without dropping out of fullscreen.",
+   "Drag the overlay anywhere on screen; it stays where you put it.",
+   "Messages fade out after a few seconds so chat never clutters the stream.",
+   "Lighter CPU use and a self-healing controls panel under the hood."
+  ]
+ },
+ {
+  "date": "2026-06-13",
+  "product": "Streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.0",
+  "title": "Local-first stream alerts ship.",
+  "body": "The newest app in the suite — instant alerts, fired on your own PC.",
+  "items": [
+   "Instant Twitch alerts over a local EventSub connection — no cloud round-trip.",
+   "One-click Botrix import pulls every alert and its media to your disk.",
+   "Built-in clip trimmer + one-button loudness-normalize (−16 LUFS).",
+   "Donor messages read aloud in a voice you cloned, synthesized on your GPU.",
+   "Stream-delay detect + sync. Signed installer with auto-update."
+  ]
+ },
+ {
+  "date": "2026-06-12",
+  "product": "Discordmaxxer",
+  "productSlug": "discordmaxxer",
+  "version": "v0.7.29",
+  "title": "Performance + correctness audit.",
+  "body": "A pass of perf and bug fixes: throttled the profile-flair DOM observer, recycled tier-flair nodes, mass-delete 429 backoff, migration data-loss guard, VIP-status caching, Tournament Mode reload-restore, and audio-constraint fixes on screenshare. Same 288 MB footprint, fewer wakeups."
+ },
+ {
+  "date": "2026-06-12",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.2.4",
+  "title": "The hundred-tweak catalog.",
+  "body": "Audited catalog crosses 100 sourced tweaks — every one still cited to a Microsoft Learn doc, vendor whitepaper, or NVIDIA dev note. Snapshot-backed revert on all of them."
+ },
+ {
+  "date": "2026-06-12",
+  "product": "AdBlock-Maxxer",
+  "productSlug": "extensionmaxxing",
+  "version": "v1.2.1",
+  "title": "The blocker they couldn't ban — live.",
+  "body": "New to the suite: one ad blocker that loads where the others got banned.",
+  "items": [
+   "Manifest V3-native — installs on Brave, Chrome, Edge and Firefox, no \"unsupported\" wall.",
+   "Blocks YouTube, Spotify and Twitch ads.",
+   "Keeps Twitch at full 1080p60 instead of dropping you to 480p.",
+   "21,370 EasyList + EasyPrivacy rules, per-site pause, weekly self-update."
+  ]
+ },
+ {
+  "date": "2026-05-15",
+  "product": "Discordmaxxer",
+  "productSlug": "discordmaxxer",
+  "version": "v0.7.26",
+  "title": "Profile-flair URL hardening.",
+  "body": "Avatar/banner inputs now reject page-host links (TikTok, YouTube, Imgur-page, Reddit-page, Twitter/X, Twitch, Insta, FB, Vimeo) at all four entry points, with a friendly toast pointing at a catbox rehost. Direct CDN siblings still pass."
+ },
+ {
+  "date": "2026-05-13",
+  "product": "Discordmaxxer",
+  "productSlug": "discordmaxxer",
+  "version": "v0.7.25",
+  "title": "Screenshare echo, gone.",
+  "body": "Sender-side echo cancellation fix — both parties on a call run echo-free once they're on v0.7.25+. No more hearing yourself a beat late when someone shares their screen."
+ },
+ {
+  "date": "2026-05-10",
+  "product": "Discordmaxxer",
+  "productSlug": "discordmaxxer",
+  "version": "v0.7.0",
+  "title": "Production cut.",
+  "body": "Votes-worker real tally backend. Tier ladder + checkout shipped. Page-hero demo live on /discordmaxxer."
+ },
+ {
+  "date": "2026-05-10",
+  "product": "Maxxtopia",
+  "title": "Discord server live.",
+  "body": "Permanent invite at discord.gg/S78eecbWdx. 6 channels, 7 silent product threads, 3 tier roles, ticket panel + VIP-claim worker live."
+ },
+ {
+  "date": "2026-05-10",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.67",
+  "title": "Veno-quote pack + product demo.",
+  "body": "5 verbatim Veno quotes shipped on /grind cards. Page-hero demo + TikTok cut both live on /optimizationmaxxing — synced to a hand-picked Yeat track."
+ },
+ {
+  "date": "2026-05-10",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.66",
+  "title": "Per-game auto-pin daemon.",
+  "body": "sysinfo poll → SetProcessDefaultCpuSets. Set-and-forget. Config at %LOCALAPPDATA%\\optmaxxing\\auto-pin.json. Tournament Mode runs without you remembering."
+ },
+ {
+  "date": "2026-05-09",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.65",
+  "title": "Click-to-pin CPU Sets API.",
+  "body": "Right-click a process, pin its threads to specific cores via the CPU Sets API. AC tags 12 → 18."
+ },
+ {
+  "date": "2026-05-09",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.64",
+  "title": "Tournament Mode.",
+  "body": "One-toggle competitive preset. Standby memory cleaner integrated. AC tags 3 → 12."
+ },
+ {
+  "date": "2026-05-09",
+  "product": "Discordmaxxer",
+  "productSlug": "discordmaxxer",
+  "version": "v0.5.4",
+  "title": "VIP claim worker.",
+  "body": "Cloudflare Worker live at optmaxxing-vip.maxxtopia.workers.dev. HWID-locked codes shared cross-product — discordmaxxer + optmaxxing on the same rig redeem off the same code."
+ },
+ {
+  "date": "2026-05-07",
+  "product": "Maxxtopia",
+  "version": "v0.1.0",
+  "title": "The shell is live.",
+  "body": "maxxtopia.com goes online — hub for the maxxer apps. Cross-product sidebar, finite-rotate hero with sound, status-tape coming-soon treatment, per-product logos for opt + discord."
+ },
+ {
+  "date": "2026-05-07",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.35",
+  "title": "Research-driven mega-batch.",
+  "body": "Catalog 68 → 87. IntelMicrocodeCard, VbsStatusCard, live DPC sparkline (1-Hz toggle). HID priority quartet, vbs.hvci.disable, IFEO priority for Fortnite/Valorant/CS2, 9 service kills, telemetry-batch task disable."
+ },
+ {
+  "date": "2026-05-07",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.34",
+  "title": "Knowledge-audit gap closure.",
+  "body": "4 confident additions: Latency Probe on Toolkit, PCIe Link card on Diagnostics, AMD UCLK heuristic warning, Discord low-FPS research article."
+ },
+ {
+  "date": "2026-05-07",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.33",
+  "title": "Audit deferral pass.",
+  "body": "DPC migrated to per-NUMA/per-CCD counter source. NIC tweaks probe-and-log with vendor-tolerant fallbacks. formFactor desktop/laptop targeting. 5 laptop-hostile tweaks tagged desktop-only."
+ },
+ {
+  "date": "2026-05-07",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.32",
+  "title": "Audit-driven correctness pass.",
+  "body": "Catalog 78 → 68 honest tweaks. Cut 10 placebos. Fixed 2 wrong values. Fixed 2 revert bugs. Rebuilt Network Low-Latency around tweaks that actually work. Principle: every tweak must trade off verifiably."
+ },
+ {
+  "date": "2026-05-07",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.31",
+  "title": "FileWrite engine action.",
+  "body": "New TweakAction::FileWrite variant. Snapshot-backed byte-perfect revert (≤1 MB cap), env-var path expansion, user-profile vs admin routing. Catalog can now ship .ini / .nip / .cfg tweaks."
+ },
+ {
+  "date": "2026-05-07",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.30",
+  "title": "DPC + Interrupt Time card.",
+  "body": "Backend WMI Win32_PerfFormattedData_PerfOS_Processor. UI: 2 big stats + per-CPU expandable + Save baseline + diff column. Color thresholds (green ≤2% / red >5%). Apply-preset measurable before/after."
+ },
+ {
+  "date": "2026-05-06",
+  "product": "Discordmaxxer",
+  "productSlug": "discordmaxxer",
+  "version": "v0.1",
+  "title": "First production cut.",
+  "body": "Tournament Mode v3 ships. Sub-300 MB RAM at idle vs 1041 MB on stock. Full plugin set (Cursor, Privacy, Trim + 7 more), 5-theme system, Apple-grade icon, custom sounds."
+ },
+ {
+  "date": "2026-05-06",
+  "product": "Optimizationmaxxing",
+  "productSlug": "optimizationmaxxing",
+  "version": "v0.1.25",
+  "title": "Mega-batch v0.1.25.",
+  "body": "70 tweaks total (+5 curated). New /changelog page, sitemap.xml + robots.txt. SystemHealth gains category-filtered hint. Compare matrix gains free-text search."
+ },
+ {
+  "date": "2026-05-02",
+  "product": "Clipmaxxer",
+  "productSlug": "clipmaxxer",
+  "title": "Premise-first reset.",
+  "body": "Pipeline now ships shippable clips on 2 streamers (Dasnerth 4/5, Pilat 2/2). HUD wedge code deleted. Mission locked: auto-clip + auto-post for streamers."
+ }
 ]
