@@ -3,12 +3,13 @@
     "date": "2026-06-17",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
-    "version": "v1.2.18",
-    "title": "Stability fix for YouTube.",
-    "body": "Reverted a change that could trigger a “Something went wrong” error on accounts where YouTube enforces ads server-side.",
+    "version": "v1.2.19",
+    "title": "New YouTube ad bypass.",
+    "body": "Rebuilt the YouTube blocker to beat YouTube’s newer server-side ad enforcement.",
     "items": [
-      "YouTube ad stripping is back to the stable path that works for most accounts.",
-      "Faster page-load/refresh ad stripping from the last update is kept."
+      "Requests an ad-free player response up front instead of trying to strip ads after they’re sent.",
+      "Handles the new “video won’t load / something went wrong” enforcement, not just the pop-up.",
+      "Livestreams are left as-is for now to keep them playing."
     ]
   },
   {
