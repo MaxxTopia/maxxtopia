@@ -3,6 +3,20 @@
   "date": "2026-06-18",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.12",
+  "title": "Set up OBS in one click.",
+  "body": "Stop adding browser sources one by one. Tick the overlays you want and the app drops them all into OBS for you — named, sized and placed.",
+  "items": [
+   "New 'Set up OBS for me' checklist in Setup — pick your overlays, hit one button, done.",
+   "Quick-pick Essentials (alerts + chat + goals), All, or None — then add only what you ticked.",
+   "Clearer that you only NEED the alerts source; everything else is optional.",
+   "Needs OBS connected once (Tools → OBS control)."
+  ]
+ },
+ {
+  "date": "2026-06-18",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.11",
   "title": "Voices are level-matched now — and easier to pick.",
   "body": "Auditioning voices is simpler and safer: every voice plays at a consistent loudness, and the picker tells you exactly which one you're hearing.",

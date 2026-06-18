@@ -741,7 +741,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.11',
+    version: '0.1.12',
     tagline: "Alerts that fire the instant it happens.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
