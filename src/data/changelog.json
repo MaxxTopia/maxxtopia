@@ -3,6 +3,20 @@
   "date": "2026-06-18",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.11",
+  "title": "Voices are level-matched now — and easier to pick.",
+  "body": "Auditioning voices is simpler and safer: every voice plays at a consistent loudness, and the picker tells you exactly which one you're hearing.",
+  "items": [
+   "Every voice is auto-leveled to a consistent loudness, so switching from a quiet voice to a loud one never blasts you.",
+   "The voice you're playing now lights up as ♪ playing (and loading… while it prepares) — no more guessing.",
+   "Voices are cached after the first play, so tapping one again is instant.",
+   "Opening the voices area starts the engine for you and puts the ready-made voices right at the top."
+  ]
+ },
+ {
+  "date": "2026-06-18",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.10",
   "title": "Easier voice picking — and the volume slider now applies everywhere.",
   "body": "Reworked the read-out voices into one simple list, and fixed the preview volume so a test can never blast you again.",
