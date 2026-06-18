@@ -3,6 +3,19 @@
   "date": "2026-06-18",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.10",
+  "title": "Easier voice picking — and the volume slider now applies everywhere.",
+  "body": "Reworked the read-out voices into one simple list, and fixed the preview volume so a test can never blast you again.",
+  "items": [
+   "One voice list: tap ▶ to hear any voice, Use to set it — no more separate dropdowns.",
+   "The volume slider now controls every in-app preview, not just the live read-out (no more full-volume surprises).",
+   "Clear prompt to start the voice engine when you want the preset or cloned voices."
+  ]
+ },
+ {
+  "date": "2026-06-18",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.9",
   "title": "Pick a read-out voice — no cloning required.",
   "body": "Donation and sub messages can now be read aloud in a ready-made voice you pick in one click, instead of having to record and clone your own.",
