@@ -3,13 +3,12 @@
     "date": "2026-06-17",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
-    "version": "v1.2.21",
-    "title": "New YouTube ad bypass.",
-    "body": "Rebuilt the YouTube blocker to beat YouTube’s newer server-side ad enforcement.",
+    "version": "v1.2.22",
+    "title": "YouTube stability.",
+    "body": "Reverted to the stable YouTube ad blocker after testing against YouTube’s newest server-side enforcement.",
     "items": [
-      "Requests an ad-free player response up front instead of trying to strip ads after they’re sent.",
-      "Handles the new “video won’t load / something went wrong” enforcement, not just the pop-up.",
-      "Livestreams are left as-is for now to keep them playing."
+      "Reliable ad blocking on standard YouTube accounts.",
+      "Twitch, Spotify and web-wide blocking are unchanged."
     ]
   },
   {
