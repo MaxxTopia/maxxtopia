@@ -1,5 +1,19 @@
 [
  {
+  "date": "2026-06-18",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.9",
+  "title": "Pick a read-out voice — no cloning required.",
+  "body": "Donation and sub messages can now be read aloud in a ready-made voice you pick in one click, instead of having to record and clone your own.",
+  "items": [
+   "Ready-made system voices: pick any voice already on your PC — zero setup, no model download, works instantly.",
+   "Built-in preset voices: a set of natural character voices ship with the app, ready to select when the voice engine is on.",
+   "Preview button: audition any voice before you set it.",
+   "Cloning your own voice still works for a fully custom read-out."
+  ]
+ },
+ {
   "date": "2026-06-17",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
