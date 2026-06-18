@@ -1,6 +1,20 @@
 [
  {
   "date": "2026-06-17",
+  "product": "AdBlock-Maxxer",
+  "productSlug": "extensionmaxxing",
+  "version": "v1.2.23",
+  "title": "YouTube enforcement safeguard.",
+  "body": "When YouTube hard-enforces ads on an account server-side (videos go black), AdBlock-Maxxer now handles it gracefully instead of breaking.",
+  "items": [
+   "Auto-detects YouTube's server-side ad enforcement and pauses YouTube so your videos keep playing.",
+   "Shows an honest in-page note explaining why — no more wondering if the extension broke.",
+   "Auto-retries daily and goes ad-free again the moment YouTube lifts the enforcement.",
+   "Twitch, Spotify and web-wide blocking are unchanged."
+  ]
+ },
+ {
+  "date": "2026-06-17",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
   "version": "v0.1.7",
