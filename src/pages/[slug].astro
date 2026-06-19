@@ -504,6 +504,21 @@ const breadcrumbSchema = {
               </a>
             )}
           </div>
+          {product.tertiaryCta && (
+            <p class="reveal reveal-5 mt-3 text-sm text-[var(--color-subtle)]">
+              <a
+                href={product.tertiaryCta.href}
+                target={product.tertiaryCta.external ? '_blank' : undefined}
+                rel={product.tertiaryCta.external ? 'noopener' : undefined}
+                class="underline decoration-dotted underline-offset-2 hover:text-[var(--color-text)]"
+              >
+                {product.tertiaryCta.label} →
+              </a>
+              {product.tertiaryCta.note && (
+                <span class="block mt-1 text-[var(--color-subtle)]">{product.tertiaryCta.note}</span>
+              )}
+            </p>
+          )}
           {isLive && product.primaryCta?.href?.includes('setup.exe') && (
             <p class="reveal reveal-5 mt-3 text-sm text-[var(--color-subtle)]">
               First launch may show a Windows "unknown publisher" notice — that's normal for a new indie app. Click <strong>More info → Run anyway</strong>. The auto-updater is cryptographically signed.

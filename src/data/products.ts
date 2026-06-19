@@ -64,6 +64,9 @@ export type Product = {
   heroStat?: { value: string; label: string };
   primaryCta: { label: string; href: string; external?: boolean };
   secondaryCta?: { label: string; href: string; external?: boolean };
+  /** Optional third download, rendered as a subtle link + note under the buttons.
+   *  Used for opt-in add-ons most users don't need (e.g. the YouTube companion). */
+  tertiaryCta?: { label: string; href: string; external?: boolean; note?: string };
   glyph: string;
   /** SVG mark path under /logos/. If absent, ProductCard falls back to wordmark-only. */
   logo?: string;
@@ -850,6 +853,12 @@ export const products: Product[] = [
     ],
     primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.3.1.zip', external: true },
     secondaryCta: { label: 'On your phone? Get the Brave filter list', href: 'https://dl.maxxtopia.com/adblockmaxxer-mobile.txt', external: true },
+    tertiaryCta: {
+      label: 'YouTube showing ad-walls? Get the companion (.exe)',
+      href: 'https://dl.maxxtopia.com/adblockmaxxer-companion.exe',
+      external: true,
+      note: 'Optional — only if your YouTube account black-screens videos or shows an "allow ads" wall. Double-click to run; nothing to install. Everything else works with just the extension above.',
+    },
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
     accentHex: '#00d4ff',
