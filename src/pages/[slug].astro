@@ -232,11 +232,13 @@ const receiptsConfig: Record<string, {
 
 // Per-product build status — drives the BuildStatus banner.
 // Tuned by hand based on how close each product actually is.
-const buildStatus: Record<string, { progress: number; dropTarget: string; channel: string; waitlistCount: number }> = {
-  clipmaxxer:   { progress: 78, dropTarget: 'Q3 · 2026',     channel: 'v0.4 · INTERNAL ALPHA',  waitlistCount: 412 },
-  aimmaxxer:    { progress: 38, dropTarget: 'Q4 · 2026',     channel: 'v0.1 · CALIBRATION',     waitlistCount: 286 },
-  viewmaxxing:  { progress: 12, dropTarget: 'TBD',           channel: 'v0 · SCOPE RESEARCH',    waitlistCount: 84  },
-  editmaxxing:  { progress: 4,  dropTarget: 'ON HOLD',       channel: 'v0 · FEASIBILITY',       waitlistCount: 36  },
+// progress = hand-set self-estimate of how close each product is (not measured).
+const buildStatus: Record<string, { progress: number; dropTarget: string; channel: string }> = {
+  clipmaxxer:   { progress: 78, dropTarget: 'Q3 · 2026',        channel: 'v0.4 · INTERNAL ALPHA' },
+  aimmaxxer:    { progress: 38, dropTarget: 'Q4 · 2026',        channel: 'v0.1 · CALIBRATION' },
+  snipemaxxer:  { progress: 80, dropTarget: 'OVERWOLF REVIEW',  channel: 'v0.1 · AWAITING WHITELIST' },
+  viewmaxxing:  { progress: 12, dropTarget: 'TBD',              channel: 'v0 · SCOPE RESEARCH' },
+  editmaxxing:  { progress: 4,  dropTarget: 'ON HOLD',          channel: 'v0 · FEASIBILITY' },
 };
 
 export async function getStaticPaths() {
@@ -267,9 +269,11 @@ const screenshotExtras = product.screenshots?.slice(1) ?? [];
 //   - per-product story sections render after the hero
 const isOM = product.slug === 'optimizationmaxxing';
 const isDM = product.slug === 'discordmaxxer';
-// Products that show the How-it-works walkthrough ABOVE the feature zones
-// (zero-install / try-it-first): OM and dropmaxxer.
-const howItWorksFirst = isOM || product.slug === 'dropmaxxer';
+// Products that show the How-it-works walkthrough ABOVE the feature zones:
+// OM + dropmaxxer (zero-install / try-it-first), and streammaxxing (lead with
+// the "here's everything it does" walkthrough before the latency moat zones).
+const howItWorksFirst =
+  isOM || product.slug === 'dropmaxxer' || product.slug === 'streammaxxing';
 const hasBespokeStory = isLive && (isOM || isDM);
 const hasZones = Array.isArray(product.zones) && product.zones.length > 0;
 // Any live product with a receipts config shows the trust strip (and hides
@@ -532,9 +536,13 @@ const breadcrumbSchema = {
           Replaces the hero stats aside that was dropped in Phase 1. */}
       {hasReceiptsBand && receiptsConfig[product.slug] && (
         <ReceiptsBand
-          version={receiptsConfig[product.slug].version}
+          version={['streammaxxing', 'extensionmaxxing'].includes(product.slug) && product.version
+            ? `v${product.version}`
+            : receiptsConfig[product.slug].version}
           versionDate={receiptsConfig[product.slug].versionDate}
-          repoUrl={receiptsConfig[product.slug].repoUrl}
+          repoUrl={product.slug === 'extensionmaxxing'
+            ? product.primaryCta.href
+            : receiptsConfig[product.slug].repoUrl}
           repoLabel={receiptsConfig[product.slug].repoLabel}
           linkLabel={receiptsConfig[product.slug].linkLabel}
           linkSub={receiptsConfig[product.slug].linkSub}
@@ -551,7 +559,6 @@ const breadcrumbSchema = {
             progress={buildStatus[product.slug]?.progress ?? 50}
             dropTarget={buildStatus[product.slug]?.dropTarget ?? 'Q4 · 2026'}
             channel={buildStatus[product.slug]?.channel ?? 'v0.1 · INTERNAL'}
-            waitlistCount={buildStatus[product.slug]?.waitlistCount ?? 200}
           />
         </div>
       )}
@@ -656,5 +663,5 @@ const breadcrumbSchema = {
   </section>
 
   <!-- Floating Notify-me CTA on coming-soon products -->
-  {isSoon && <NotifyMeCard productName={product.name} />}
+  {isSoon && <NotifyMeCard productName={product.name} href={product.primaryCta.href} />}
 </Layout>

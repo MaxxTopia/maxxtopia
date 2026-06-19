@@ -166,7 +166,7 @@ export const products: Product[] = [
         visual: {
           kind: 'video',
           src: '/screenshots/optimizationmaxxing/_v1_clips/02_f1_tweaks.mp4',
-          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          poster: '/screenshots/optimizationmaxxing/_v1_clips/poster-02_f1_tweaks.jpg',
           alt: 'Tweak detail view with inline citation URL',
         },
       },
@@ -191,7 +191,7 @@ export const products: Product[] = [
         visual: {
           kind: 'video',
           src: '/screenshots/optimizationmaxxing/_v1_clips/14_f9_realgains.mp4',
-          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          poster: '/screenshots/optimizationmaxxing/_v1_clips/poster-14_f9_realgains.jpg',
           alt: 'Snapshot revert UI with timestamped pre-states',
         },
       },
@@ -202,7 +202,7 @@ export const products: Product[] = [
         visual: {
           kind: 'video',
           src: '/screenshots/optimizationmaxxing/_v1_clips/11_f7_proconfigs.mp4',
-          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          poster: '/screenshots/optimizationmaxxing/_v1_clips/poster-11_f7_proconfigs.jpg',
           alt: 'Preset gallery with pro-config bundles',
         },
       },
@@ -213,7 +213,7 @@ export const products: Product[] = [
         visual: {
           kind: 'video',
           src: '/screenshots/optimizationmaxxing/_v1_clips/04_f3_toolkit.mp4',
-          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          poster: '/screenshots/optimizationmaxxing/_v1_clips/poster-04_f3_toolkit.jpg',
           alt: 'Toolkit panel with DPC sparkline + latency probes',
         },
       },
@@ -224,7 +224,7 @@ export const products: Product[] = [
         visual: {
           kind: 'video',
           src: '/screenshots/optimizationmaxxing/_v1_clips/12_f8_dash_top.mp4',
-          poster: '/screenshots/optimizationmaxxing/demo-poster.jpg',
+          poster: '/screenshots/optimizationmaxxing/_v1_clips/poster-12_f8_dash_top.jpg',
           alt: 'Hardware detection panel with spec readouts',
         },
       },
@@ -348,10 +348,10 @@ export const products: Product[] = [
         headline: "Opens what you sent. Nothing else.",
         body: 'Stock Discord opens calls to telemetry, ad-tech, and crash-pipeline domains the moment it launches. We strip every one of those. You ping who you meant to ping.',
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'Stock Discord · outbound domains on launch', value: '14', ratio: 1.0 },
-            { label: 'Discordmaxxer · outbound domains on launch', value: '0', ratio: 0.0, emphasize: true },
+          kind: 'chips',
+          chips: [
+            { label: 'Stock Discord · domains it opens on launch', value: '14' },
+            { label: 'Discordmaxxer · domains it opens on launch', value: '0', emphasize: true },
           ],
           caption: 'Before you type a single message · measured via packet capture',
         },
@@ -458,11 +458,11 @@ export const products: Product[] = [
         headline: "We watch the shorts before we pick yours.",
         body: "For each game we analyze viral shorts from the creators actually winning in that niche. Patterns get distilled into a playbook YAML, injected into the matchmaker prompt. Generic clippers don't know what's viral in your scene — we do, because we did the homework.",
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'Valorant · creator playbook live', value: 'in build', ratio: 1.0, emphasize: true },
-            { label: 'Fortnite · creator playbook live', value: 'in build', ratio: 1.0, emphasize: true },
-            { label: 'Additional niches · queued', value: 'in research', ratio: 0.5 },
+          kind: 'chips',
+          chips: [
+            { label: 'Valorant · creator playbook', value: 'live', emphasize: true },
+            { label: 'Fortnite · creator playbook', value: 'live', emphasize: true },
+            { label: 'More niches', value: 'in research' },
           ],
           caption: 'Per-niche playbook coverage · expanded each release',
         },
@@ -482,11 +482,11 @@ export const products: Product[] = [
         headline: "1 VOD. 3 platforms. 3 cuts.",
         body: "TikTok, Shorts, Reels — each its own length, hook, caption, sound. Tap once on your phone in the morning. Drafts ready before you read your texts.",
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'TikTok · 9:16 · short hook', value: 'platform fit', ratio: 1.0, emphasize: true },
-            { label: 'YouTube Shorts · 9:16 · YT hook', value: 'platform fit', ratio: 1.0, emphasize: true },
-            { label: 'Instagram Reels · 9:16 · IG hook', value: 'platform fit', ratio: 1.0, emphasize: true },
+          kind: 'chips',
+          chips: [
+            { label: 'TikTok · short hook', value: '9:16 cut', emphasize: true },
+            { label: 'YouTube Shorts · YT hook', value: '9:16 cut', emphasize: true },
+            { label: 'Instagram Reels · IG hook', value: '9:16 cut', emphasize: true },
           ],
           caption: '3 cuts · one queue run · each tuned for its platform',
         },
@@ -611,7 +611,8 @@ export const products: Product[] = [
     status: 'soon',
     version: amRelease.version ?? undefined,
     tagline: 'Aim is four metrics. Not one.',
-    description: 'In development.',
+    description:
+      "AI aim trainer that measures four things — sensitivity, prediction, anchor, trigger — and drills only the ones breaking your aim. Not 200 scenarios. Four.",
     longDescription:
       "KovaaK's hands you 200 scenarios. We hand you the 4 that fix what's actually broken.",
     features: [
@@ -631,7 +632,8 @@ export const products: Product[] = [
         ? { label: 'Release notes', href: amRelease.releasePageUrl, external: true }
         : undefined,
     glyph: '◎',
-    icon: '/logos/aimmaxxer-icon.svg',
+    logo: '/logos/aimmaxxer.png',
+    icon: '/logos/aimmaxxer-icon.png',
     accentHex: '#f3af19',
     heroStat: { value: '4', label: 'metrics · not one' },
     zones: [
@@ -640,12 +642,12 @@ export const products: Product[] = [
         headline: "Aim is four things. Drilled four ways.",
         body: 'Sensitivity, prediction, anchor, trigger. KovaaK\'s hands you 200 scenarios. We measure the 4 that fix what\'s actually broken, and drill each separately.',
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'Sensitivity', value: 'scenario set A', ratio: 1.0, emphasize: true },
-            { label: 'Prediction', value: 'scenario set B', ratio: 1.0, emphasize: true },
-            { label: 'Anchor', value: 'scenario set C', ratio: 1.0, emphasize: true },
-            { label: 'Trigger discipline', value: 'scenario set D', ratio: 1.0, emphasize: true },
+          kind: 'chips',
+          chips: [
+            { label: 'Sensitivity', value: 'drilled' },
+            { label: 'Prediction', value: 'drilled' },
+            { label: 'Anchor', value: 'drilled' },
+            { label: 'Trigger discipline', value: 'drilled' },
           ],
           caption: 'Four independent measurements · four independent drills',
         },
@@ -655,10 +657,10 @@ export const products: Product[] = [
         headline: "Adapts to your sens.",
         body: 'Your DPI, your in-game sensitivity, your play style. The routine flexes around them — not the other way around. No "use 800 DPI" prescriptions.',
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'KovaaK\'s — fixed sens prescription', value: 'static', ratio: 1.0 },
-            { label: 'Aimmaxxer — per-player adaptive', value: 'dynamic', ratio: 1.0, emphasize: true },
+          kind: 'chips',
+          chips: [
+            { label: "KovaaK's — one fixed sens prescription", value: 'static' },
+            { label: 'Aimmaxxer — adapts to your DPI + style', value: 'adaptive', emphasize: true },
           ],
           caption: 'Calibration model · static vs adaptive',
         },
@@ -672,7 +674,8 @@ export const products: Product[] = [
     status: 'soon',
     version: vmRelease.version ?? undefined,
     tagline: 'A tool for streamers.',
-    description: 'In development.',
+    description:
+      "An operator-first streamer toolkit in active development. We're locking the one wedge worth shipping before we put it on a page.",
     longDescription:
       "A streamer toolkit in scope research. The framing will land when we lock the angle worth shipping.",
     features: [
@@ -692,6 +695,8 @@ export const products: Product[] = [
         ? { label: 'Release notes', href: vmRelease.releasePageUrl, external: true }
         : undefined,
     glyph: '◐',
+    logo: '/logos/viewmaxxing.png',
+    icon: '/logos/viewmaxxing-icon.png',
     accentHex: '#10b981',
     heroStat: { value: 'TBD', label: 'direction in flux' },
     zones: [
@@ -799,10 +804,10 @@ export const products: Product[] = [
         headline: "YouTube that doesn't lock up.",
         body: 'The hacky way to skip a YouTube ad is to race the skip button — which is exactly why mobile YouTube freezes and makes you refresh. We delete the ad slots from the player response before the player ever sees them. No race, no frozen frame.',
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'Skip-button hacks — stuck, hit refresh', value: 'breaks', ratio: 0.4 },
-            { label: 'Player-response strip — clean cut', value: 'seamless', ratio: 1.0, emphasize: true },
+          kind: 'chips',
+          chips: [
+            { label: 'Skip-button hacks — stuck, hit refresh', value: 'breaks' },
+            { label: 'Player-response strip — clean cut', value: 'seamless', emphasize: true },
           ],
           caption: 'How the ad gets removed',
         },
@@ -812,10 +817,10 @@ export const products: Product[] = [
         headline: 'Your phone, too — by filter list.',
         body: "Mobile browsers can't run extension code, so the YouTube player-strip and Twitch quality-swap are desktop-only — and we won't pretend otherwise. But Brave on Android and iOS both take a custom filter list. Paste ours in under Shields → Content filtering and it blocks ad and tracker domains across the whole web — display ads, trackers, Spotify-web and SoundCloud ads included — and auto-refreshes. The one honest limit: YouTube video ads stay unblockable on any phone.",
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'No filter list — phone ads everywhere', value: 'exposed', ratio: 0.3 },
-            { label: 'AdBlockMaxxer mobile list on Brave', value: 'domains blocked', ratio: 1.0, emphasize: true },
+          kind: 'chips',
+          chips: [
+            { label: 'No filter list — phone ads everywhere', value: 'exposed' },
+            { label: 'AdBlockMaxxer mobile list on Brave', value: 'domains blocked', emphasize: true },
           ],
           caption: 'Brave · Android + iOS · Shields → Content filtering → add custom list',
         },
@@ -835,7 +840,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.16',
+    version: '0.1.17',
     tagline: "Everything you stream with, in one free app.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
@@ -1004,7 +1009,8 @@ export const products: Product[] = [
     category: 'Fortnite',
     status: 'soon',
     tagline: 'Know your lobby before you drop.',
-    description: 'In development.',
+    description:
+      "Live Fortnite lobby intel that floats streamers and known pros to the top — read the safe way through Overwolf's whitelisted feed. No memory reading. Unbannable by design.",
     longDescription:
       'Live Fortnite lobby intel — reads the roster the safe way, through Overwolf\'s anti-cheat-whitelisted Game Events feed. No memory reading, no injection, nothing BattlEye or EAC bans for. Floats live streamers and known pros to the top of your lobby.',
     features: [

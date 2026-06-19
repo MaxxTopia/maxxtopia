@@ -3,6 +3,19 @@
   "date": "2026-06-19",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.17",
+  "title": "A tournament-points overlay, and every overlay is recolorable now.",
+  "body": "A Fortnite tournament tracker that shows your cumulative two-day total and points-to-qualify, plus a one-click color picker on every overlay.",
+  "items": [
+   "Tournament tracker overlay: cumulative points across all games and both days, plus 'points to qualify' — the combined total the in-game HUD never shows.",
+   "Color picker on every overlay — match any overlay to your brand or scene with presets or a custom color, applied live.",
+   "Most useful between games, when there's no in-game scoreboard for viewers to read."
+  ]
+ },
+ {
+  "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.16",
   "title": "Your drop on stream, a one-click sniper report, and smarter earnings.",
   "body": "A Fortnite drop-plan overlay, one-click stream-sniper evidence for Epic, accurate TikTok-gift earnings, and peak-audience + revenue tracking across your history.",
