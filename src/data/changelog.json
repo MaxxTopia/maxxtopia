@@ -3,6 +3,21 @@
   "date": "2026-06-19",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.20",
+  "title": "A round of fixes for live streams.",
+  "body": "A full audit of the live-event path turned up and fixed several issues so alerts, the subathon timer, predictions and polls all behave correctly on a real stream.",
+  "items": [
+   "Subathon timer: subs, bits and tips now bank time even before you press Start (and after a reset) — nothing is lost.",
+   "Predictions now require you to pick a winner before resolving, so payouts can't get stuck.",
+   "Polls no longer count ordinary chat that happens to start with a number as a vote.",
+   "Fixed first-month Tier 2/3 subs displaying as if they were month 2 or 3.",
+   "More accurate follow-spam summaries, peak-viewer counts and gifted-sub totals; fixed a duel bug that blanked a name on the leaderboard."
+  ]
+ },
+ {
+  "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.19",
   "title": "Easier than ever for first-timers.",
   "body": "A friendlier first run for newcomers: a welcome guide that walks you through setup, plainer wording, and step-by-step help for OBS.",
