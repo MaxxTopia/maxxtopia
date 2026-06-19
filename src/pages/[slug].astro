@@ -273,7 +273,10 @@ const isDM = product.slug === 'discordmaxxer';
 // OM + dropmaxxer (zero-install / try-it-first), and streammaxxing (lead with
 // the "here's everything it does" walkthrough before the latency moat zones).
 const howItWorksFirst =
-  isOM || product.slug === 'dropmaxxer' || product.slug === 'streammaxxing';
+  isOM ||
+  product.slug === 'dropmaxxer' ||
+  product.slug === 'streammaxxing' ||
+  product.slug === 'extensionmaxxing';
 const hasBespokeStory = isLive && (isOM || isDM);
 const hasZones = Array.isArray(product.zones) && product.zones.length > 0;
 // Any live product with a receipts config shows the trust strip (and hides
