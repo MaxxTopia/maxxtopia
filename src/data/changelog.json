@@ -3,6 +3,20 @@
   "date": "2026-06-19",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.19",
+  "title": "Easier than ever for first-timers.",
+  "body": "A friendlier first run for newcomers: a welcome guide that walks you through setup, plainer wording, and step-by-step help for OBS.",
+  "items": [
+   "First-run welcome guide front and center — three clickable steps that jump you straight to each task.",
+   "Plainer wording throughout, with hover tips explaining anything technical.",
+   "Step-by-step 'add a browser source in OBS' guide for anyone new to OBS.",
+   "Clearer, less intimidating OBS connection setup."
+  ]
+ },
+ {
+  "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.18",
   "title": "Live tournament cutoffs, and a much easier first-time setup.",
   "body": "Pull your real qualification cutoff straight from Fortnite's leaderboard — no more copying estimates. Plus one-click Twitch connect and a friendlier OBS + alerts setup for newcomers.",
