@@ -857,7 +857,7 @@ export const products: Product[] = [
       label: 'YouTube showing ad-walls? Get the companion (.exe)',
       href: 'https://dl.maxxtopia.com/adblockmaxxer-companion.exe',
       external: true,
-      note: 'Optional — only if your YouTube account black-screens videos or shows an "allow ads" wall. Double-click to run; nothing to install. Everything else works with just the extension above.',
+      note: 'Optional — only if your YouTube account black-screens videos or shows an "allow ads" wall. Double-click to run; nothing to install. Windows may show an "unknown publisher" notice the first time — that\'s expected for a new indie tool; click More info → Run anyway. Everything else works with just the extension above.',
     },
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
