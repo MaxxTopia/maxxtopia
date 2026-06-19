@@ -36,6 +36,11 @@ export type ProductZone = {
         kind: 'bars';
         bars: Array<{ label: string; value: string; ratio: number; accent?: string; emphasize?: boolean }>;
         caption?: string;
+      }
+    | {
+        kind: 'chips';
+        chips: Array<{ label: string; value: string; emphasize?: boolean }>;
+        caption?: string;
       };
 };
 
@@ -831,9 +836,32 @@ export const products: Product[] = [
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
     accentHex: '#00d4ff',
-    // Placeholder hero visual: the branded OG card until a real product
-    // screenshot / demo clip is recorded. Swap for a true app shot later.
-    screenshots: ['/og/extensionmaxxing.png'],
+    // Real hero shot: the post-install welcome screen ("You're set.").
+    screenshots: ['/screenshots/extensionmaxxing/welcome-hero.webp'],
+    howItWorks: {
+      eyebrow: 'How to use it',
+      heading: { left: 'Sideloaded in 30 seconds.', right: 'No store needed.' },
+      steps: [
+        {
+          title: 'Load it once — that’s the whole install',
+          body: "Download the zip, unzip it somewhere you’ll keep, open chrome://extensions (or brave:// / edge://), flip on Developer mode, click “Load unpacked,” and pick the folder. It’s not on the Web Store on purpose — that’s exactly how the big blockers got gutted. No store account, no silent auto-update spyware; filter lists still refresh on their own weekly.",
+          img: '/screenshots/extensionmaxxing/howto/install.webp',
+          alt: 'Loading AdBlock-Maxxer as an unpacked extension on the chrome://extensions page',
+        },
+        {
+          title: 'One popup, every toggle',
+          body: "Click the icon and you get a live “ads skipped” counter, a one-click snooze, a pop-out floating panel, and a switch for each surface — YouTube extra-skip, Spotify mute, Twitch points, SponsorBlock and more. Pause it on any single site without turning the whole thing off.",
+          img: '/screenshots/extensionmaxxing/howto/popup.webp',
+          alt: 'AdBlock-Maxxer popup with the ads-skipped counter and per-feature toggles',
+        },
+        {
+          title: 'A real settings dashboard',
+          body: "Open the options page for the full kit: choose exactly which SponsorBlock segments to skip, add your own EasyList filter URLs, lock Twitch to source quality, turn on performance mode, watch your block stats, and export your whole setup to one file.",
+          img: '/screenshots/extensionmaxxing/howto/settings.webp',
+          alt: 'AdBlock-Maxxer settings dashboard: features, SponsorBlock categories, custom filter lists and stats',
+        },
+      ],
+    },
   },
   {
     slug: 'streammaxxing',
