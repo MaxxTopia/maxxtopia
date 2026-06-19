@@ -3,6 +3,19 @@
   "date": "2026-06-18",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.15",
+  "title": "Vertical clips, your settings on stream, and your true audience across every platform.",
+  "body": "Three new tools: turn any clip into a TikTok/Shorts vertical, auto-show your Fortnite settings & gear on stream, and see your combined live viewers across every platform at once.",
+  "items": [
+   "Vertical clip maker: any clip → 9:16 for TikTok/Shorts/Reels, free and local (crop or blur-fill).",
+   "My settings & gear: auto-reads your Fortnite graphics and shows sens, keybinds and gear on an OBS overlay.",
+   "Cross-platform audience: combined live viewers across Twitch, Kick and YouTube — with an on-stream overlay."
+  ]
+ },
+ {
+  "date": "2026-06-18",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.14",
   "title": "Moderate your chat, fire alerts from every platform, and never start empty.",
   "body": "The biggest update yet — streammaxxing now polices your chat, fires alerts from YouTube, TikTok and Kick (not just Twitch), ships ready-made alert designs, and adds a Fortnite stream-sniper tracker.",

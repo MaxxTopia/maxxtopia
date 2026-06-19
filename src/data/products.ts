@@ -229,6 +229,36 @@ export const products: Product[] = [
         },
       },
     ],
+    howItWorks: {
+      eyebrow: 'How it works',
+      heading: { left: 'Tune what you measured.', right: 'Undo what you didn\'t.' },
+      steps: [
+        {
+          title: 'Open it — your rig, scored',
+          body: "It launches in about 200 ms to a dashboard that already knows your hardware: live CPU, RAM and a tweaks-applied count, with one button to tune. The suite-wide auto-update banner sits up top, so you're always on the signed latest build.",
+          img: '/screenshots/optimizationmaxxing/howto/dashboard.webp',
+          alt: 'Optimizationmaxxing dashboard with live rig gauges and the auto-update banner',
+        },
+        {
+          title: 'Every tweak shows its source',
+          body: "This is the whole point. Browse ~100 audited tweaks, each with a risk rating and a real citation — a Microsoft Learn doc, an NVIDIA dev note, a vendor whitepaper. The other tuners don't print sources because they don't have any.",
+          img: '/screenshots/optimizationmaxxing/howto/tweaks.webp',
+          alt: 'Tweak catalog with risk badges and source citations',
+        },
+        {
+          title: 'One-click revert, any tweak, any time',
+          body: "Everything you apply is snapshotted to a local ledger. \"Your Tune\" lists every change with its live status — still in place, or quietly reverted by a Windows update — and puts each one back with a single click. Undo is never a paid tier.",
+          img: '/screenshots/optimizationmaxxing/howto/your-tune.webp',
+          alt: 'Your Tune view listing applied tweaks with per-change revert status',
+        },
+        {
+          title: 'Measure before and after',
+          body: "A one-shot Diagnostics snapshot reads your real specs, thermals, disk, driver health and live latency — so you tune against numbers, not vibes, and can prove the change actually helped on your rig.",
+          img: '/screenshots/optimizationmaxxing/howto/diagnostics.webp',
+          alt: 'Diagnostics snapshot with hardware, thermals, disk and driver checks',
+        },
+      ],
+    },
   },
   {
     slug: 'discordmaxxer',
@@ -338,6 +368,36 @@ export const products: Product[] = [
         },
       },
     ],
+    howItWorks: {
+      eyebrow: 'How it works',
+      heading: { left: 'Your Discord.', right: 'Your rules.' },
+      steps: [
+        {
+          title: 'The DM Hub — one button, every toggle',
+          body: "Click the Discordmaxxer mark next to your mic and the hub opens: Tournament Mode for competitive play, Compact View to hide the sidebars, your theme, profile badge and more — each a one-tap toggle (Tournament Mode also fires on Ctrl+Alt+T, even mid-game with Discord unfocused).",
+          img: '/screenshots/discordmaxxer/howto/dm-hub.webp',
+          alt: 'The Discordmaxxer Hub panel with Tournament Mode and quick toggles',
+        },
+        {
+          title: 'A real plugin engine',
+          body: "Not userscripts bolted on — a native plugin engine compiled with the client. Browse, search and toggle dozens of plugins (cursor effects, privacy, trim, and more), each written as first-class code and signed with the same key.",
+          img: '/screenshots/discordmaxxer/howto/plugins.webp',
+          alt: 'Discordmaxxer native plugin list with toggles',
+        },
+        {
+          title: 'Themes that repaint everything',
+          body: "Hand-tuned palettes that re-skin the entire client — not a CSS hack on top. Load a theme, switch instantly, and full BetterDiscord/Vencord theme support is there if you want to go further.",
+          img: '/screenshots/discordmaxxer/howto/themes.webp',
+          alt: 'Discordmaxxer theme system with a theme applied',
+        },
+        {
+          title: 'Always up to date',
+          body: "A branded in-app updater checks for new builds and shows you the release notes before anything happens. One click installs and relaunches — the same auto-update system runs across the whole Maxxtopia suite.",
+          img: '/screenshots/discordmaxxer/howto/updater.webp',
+          alt: 'Discordmaxxer auto-updater showing an available update with release notes',
+        },
+      ],
+    },
   },
   {
     slug: 'clipmaxxer',
@@ -779,7 +839,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.14',
+    version: '0.1.15',
     tagline: "Alerts that fire the instant it happens.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
@@ -891,6 +951,48 @@ export const products: Product[] = [
         },
       },
     ],
+    howItWorks: {
+      eyebrow: 'How it works',
+      heading: { left: 'Your whole stream.', right: 'One app.' },
+      steps: [
+        {
+          title: 'The Command Center',
+          body: "Everything runs from one dashboard — go live, fire a test alert, clip the last moment, mark a highlight for your editor. No browser tabs, no cloud account, no fifteen logins. It all lives on your PC.",
+          img: '/screenshots/streammaxxing/howto/command-center.webp',
+          alt: 'Streammaxxing Command Center dashboard with quick actions and live session panels',
+        },
+        {
+          title: 'Add every overlay to OBS in one click',
+          body: "Connect OBS once, tick the overlays you want — or hit \"Essentials\" — and \"Add selected to OBS\" drops each one in as a browser source, named, sized and placed for you. No copy-pasting URLs into a dozen sources.",
+          img: '/screenshots/streammaxxing/howto/obs-setup.webp',
+          alt: 'One-click OBS setup with the Set up OBS for me overlay checklist',
+        },
+        {
+          title: 'A whole overlay studio, with live previews',
+          body: "Goal bars, a self-extending subathon timer, full-screen Starting Soon / BRB / Ending scenes, a death/win counter, social bar, webcam frame, Spotify now-playing — 21 overlays in all, each customizable with a live preview before it ever hits your stream.",
+          img: '/screenshots/streammaxxing/howto/overlay-scene.webp',
+          alt: 'Starting Soon full-screen scene overlay from the streammaxxing overlay studio',
+        },
+        {
+          title: "Every platform's chat, one widget",
+          body: "Twitch, Kick, YouTube and TikTok chat merged into a single overlay, each message tagged with where it came from. Drop it on stream or pop it out as an always-on-top window to read while you play. Moderation and a command bot are built in.",
+          img: '/screenshots/streammaxxing/howto/merged-chat.webp',
+          alt: 'Unified chat overlay merging Twitch, Kick, YouTube and TikTok',
+        },
+        {
+          title: 'Donations read aloud — in a voice you cloned',
+          body: "Generic robot TTS makes every read-out sound the same. Streammaxxing clones a voice from a short clip and reads each donor's message in it — synthesized locally on your GPU, consent-gated, never sent anywhere.",
+          img: '/screenshots/streammaxxing/howto/voice.webp',
+          alt: 'Message read-outs panel with the voice engine and voice picker',
+        },
+        {
+          title: 'Bring your alerts — leveled and tested',
+          body: "Import your existing alerts from Botrix or StreamElements in one click, or start from a built-in pack. Then one button normalizes every alert sound to a consistent loudness (−16 LUFS) so nothing blasts and nothing whispers.",
+          img: '/screenshots/streammaxxing/howto/alerts.webp',
+          alt: 'Starter alert packs grid with loudness normalization',
+        },
+      ],
+    },
     primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing-latest-x64-setup.exe', external: true },
     secondaryCta: undefined,
     glyph: '⚡',
