@@ -738,13 +738,17 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.2.23',
+    version: '1.3.0',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "No more ads on YouTube, Spotify or Twitch. Works in every browser, keeps Twitch in full HD, and costs nothing.",
     longDescription:
       "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch quality comes back to source after each break (optional auto-downgrade lock).",
     features: [
+      {
+        title: 'Beats YouTube\'s server-side ad enforcement.',
+        body: "Some accounts get bucketed into YouTube's strictest tier — videos black-screen or throw an \"allow ads\" wall, and no in-browser blocker (ours, uBlock, any) can touch it, because the ads are enforced on the server. The optional YouTube Reclaim companion app pulls the video ad-free and plays it right inside the normal YouTube page — 1080p/4K, quality picker, captions. One-time local setup; runs invisibly after.",
+      },
       {
         title: 'Loads where the others got banned.',
         body: 'Manifest V3-native, so it installs on Brave, Chrome, Edge and Firefox. No more "this extension isn\'t supported" wall when you leave Brave.',
@@ -818,7 +822,20 @@ export const products: Product[] = [
         },
       },
       {
-        eyebrow: '04 · The Phone',
+        eyebrow: '04 · The Reclaim',
+        headline: 'When YouTube enforces ads server-side, take the video back.',
+        body: "YouTube is rolling out server-side ad enforcement: flagged accounts get a black screen or an \"allow ads\" wall, and the ad is welded to the stream on Google's servers — so stripping it in the browser just turns the video off. No extension alone can win that, full stop. The optional YouTube Reclaim companion runs locally, fetches the same video ad-free, and plays it inside the normal YouTube page — search, comments and recommendations all stay native. Pick 1080p/4K, turn on captions, scrub freely. One-time setup, then it runs invisibly on login.",
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Enforced account, no companion — black screen / "allow ads"', value: 'blocked' },
+            { label: 'YouTube Reclaim companion', value: 'ad-free · up to 4K', emphasize: true },
+          ],
+          caption: 'Optional local companion · the only thing that beats server-side enforcement',
+        },
+      },
+      {
+        eyebrow: '05 · The Phone',
         headline: 'Your phone, too — by filter list.',
         body: "Mobile browsers can't run extension code, so the YouTube player-strip and Twitch quality-swap are desktop-only — and we won't pretend otherwise. But Brave on Android and iOS both take a custom filter list. Paste ours in under Shields → Content filtering and it blocks ad and tracker domains across the whole web — display ads, trackers, Spotify-web and SoundCloud ads included — and auto-refreshes. The one honest limit: YouTube video ads stay unblockable on any phone.",
         visual: {
@@ -831,7 +848,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.23.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.3.0.zip', external: true },
     secondaryCta: { label: 'On your phone? Get the Brave filter list', href: 'https://dl.maxxtopia.com/adblockmaxxer-mobile.txt', external: true },
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
