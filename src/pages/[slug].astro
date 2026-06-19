@@ -504,6 +504,11 @@ const breadcrumbSchema = {
               </a>
             )}
           </div>
+          {isLive && product.primaryCta?.href?.includes('setup.exe') && (
+            <p class="reveal reveal-5 mt-3 text-sm text-[var(--color-subtle)]">
+              First launch may show a Windows "unknown publisher" notice — that's normal for a new indie app. Click <strong>More info → Run anyway</strong>. The auto-updater is cryptographically signed.
+            </p>
+          )}
         </div>
 
         {/* Stats aside: SOON products keep the 4-tile grid. LIVE products

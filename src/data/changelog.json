@@ -18,6 +18,19 @@
   "date": "2026-06-19",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.21",
+  "title": "A one-click setup check and built-in help.",
+  "body": "Confirm everything's wired up before you go live, and get unstuck faster with a new troubleshooting guide.",
+  "items": [
+   "Test my setup: one click checks your overlay server, alerts, OBS and Twitch — and shows exactly what to fix if something's off.",
+   "New 'Fixing problems' guide covering the most common snags, plus one-click 'Copy diagnostics' to share when you ask for help.",
+   "Clearer first-install guidance so the Windows 'unknown publisher' notice doesn't trip up newcomers."
+  ]
+ },
+ {
+  "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.20",
   "title": "A round of fixes for live streams.",
   "body": "A full audit of the live-event path turned up and fixed several issues so alerts, the subathon timer, predictions and polls all behave correctly on a real stream.",
