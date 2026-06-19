@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!--
+    AIMMAXXING crest — maxxtopia circular team-badge archetype.
+    Amber accent ring + glow, product name arced across the top, dark
+    radial interior, and an aim emblem (an arrow striking dead-center of
+    a target) — "perfect aim", distinct from snipemaxxer's sniper scope.
+  -->
+  <defs>
+    <radialGradient id="am-bg" cx="50%" cy="40%" r="72%">
+      <stop offset="0%"  stop-color="#3a2606"/>
+      <stop offset="55%" stop-color="#160d04"/>
+      <stop offset="100%" stop-color="#080503"/>
+    </radialGradient>
+    <linearGradient id="am-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#ffe08a"/>
+      <stop offset="48%" stop-color="#f3af19"/>
+      <stop offset="100%" stop-color="#b8700a"/>
+    </linearGradient>
+    <filter id="am-glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- top arc for the arced name (left -> right over the top) -->
+    <path id="am-arc" d="M 38 100 A 62 62 0 0 1 162 100" />
+  </defs>
+
+  <!-- base + accent ring + dark field + thin inner ring -->
+  <circle cx="100" cy="100" r="98" fill="#080503"/>
+  <circle cx="100" cy="100" r="93" fill="none" stroke="url(#am-ring)" stroke-width="6" filter="url(#am-glow)"/>
+  <circle cx="100" cy="100" r="85" fill="url(#am-bg)"/>
+  <circle cx="100" cy="100" r="80" fill="none" stroke="url(#am-ring)" stroke-width="0.8" opacity="0.45"/>
+
+  <!-- arced product name -->
+  <text fill="url(#am-ring)" font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
+        font-weight="900" font-size="15.5" letter-spacing="2.6" filter="url(#am-glow)">
+    <textPath href="#am-arc" startOffset="50%" text-anchor="middle">AIMMAXXING</textPath>
+  </text>
+
+  <!-- aim emblem: arrow into a target, centered slightly low to sit under the name -->
+  <g transform="translate(100,114)">
+    <!-- target rings -->
+    <circle r="27" fill="none" stroke="url(#am-ring)" stroke-width="3" filter="url(#am-glow)"/>
+    <circle r="16" fill="none" stroke="url(#am-ring)" stroke-width="2.2" opacity="0.9"/>
+    <!-- arrow shaft + head striking the center, from lower-left -->
+    <g filter="url(#am-glow)">
+      <line x1="-34" y1="34" x2="-2" y2="2" stroke="url(#am-ring)" stroke-width="4.2" stroke-linecap="round"/>
+      <path d="M 2 2 L -12 -1 L -1 -12 Z" fill="url(#am-ring)"/>
+      <!-- fletching -->
+      <path d="M -34 34 l -9 -1 l 1 9 z" fill="url(#am-ring)"/>
+    </g>
+    <!-- hot center lock -->
+    <circle r="3.6" fill="#fff3d6"/>
+  </g>
+</svg>
