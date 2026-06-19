@@ -738,7 +738,7 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.3.0',
+    version: '1.3.1',
     tagline: "The ad blocker they couldn't ban.",
     description:
       "No more ads on YouTube, Spotify or Twitch. Works in every browser, keeps Twitch in full HD, and costs nothing.",
@@ -747,7 +747,7 @@ export const products: Product[] = [
     features: [
       {
         title: 'Beats YouTube\'s server-side ad enforcement.',
-        body: "Some accounts get bucketed into YouTube's strictest tier — videos black-screen or throw an \"allow ads\" wall, and no in-browser blocker (ours, uBlock, any) can touch it, because the ads are enforced on the server. The optional YouTube Reclaim companion app pulls the video ad-free and plays it right inside the normal YouTube page — 1080p/4K, quality picker, captions. One-time local setup; runs invisibly after.",
+        body: "Some accounts get bucketed into YouTube's strictest tier — videos black-screen or throw an \"allow ads\" wall, and no in-browser blocker (ours, uBlock, any) can touch it, because the ads are enforced on the server. The optional YouTube Reclaim companion pulls the video ad-free and plays it right inside the normal YouTube page — 1080p/4K, quality picker, captions. It's one click: download the companion .exe, double-click it (nothing to install — no Python), and it runs invisibly in the background.",
       },
       {
         title: 'Loads where the others got banned.',
@@ -824,14 +824,14 @@ export const products: Product[] = [
       {
         eyebrow: '04 · The Reclaim',
         headline: 'When YouTube enforces ads server-side, take the video back.',
-        body: "YouTube is rolling out server-side ad enforcement: flagged accounts get a black screen or an \"allow ads\" wall, and the ad is welded to the stream on Google's servers — so stripping it in the browser just turns the video off. No extension alone can win that, full stop. The optional YouTube Reclaim companion runs locally, fetches the same video ad-free, and plays it inside the normal YouTube page — search, comments and recommendations all stay native. Pick 1080p/4K, turn on captions, scrub freely. One-time setup, then it runs invisibly on login.",
+        body: "YouTube is rolling out server-side ad enforcement: flagged accounts get a black screen or an \"allow ads\" wall, and the ad is welded to the stream on Google's servers — so stripping it in the browser just turns the video off. No extension alone can win that, full stop. The optional YouTube Reclaim companion runs locally, fetches the same video ad-free, and plays it inside the normal YouTube page — search, comments and recommendations all stay native. Pick 1080p/4K, turn on captions, scrub freely. It's a single double-click: grab the companion .exe (Python and yt-dlp are baked in — nothing to install), and it runs invisibly, optionally auto-starting on login.",
         visual: {
           kind: 'chips',
           chips: [
             { label: 'Enforced account, no companion — black screen / "allow ads"', value: 'blocked' },
-            { label: 'YouTube Reclaim companion', value: 'ad-free · up to 4K', emphasize: true },
+            { label: 'YouTube Reclaim companion (.exe, one click)', value: 'ad-free · up to 4K', emphasize: true },
           ],
-          caption: 'Optional local companion · the only thing that beats server-side enforcement',
+          caption: 'One-click companion at dl.maxxtopia.com/adblockmaxxer-companion.exe · the only thing that beats server-side enforcement',
         },
       },
       {
@@ -848,7 +848,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.3.0.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.3.1.zip', external: true },
     secondaryCta: { label: 'On your phone? Get the Brave filter list', href: 'https://dl.maxxtopia.com/adblockmaxxer-mobile.txt', external: true },
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',

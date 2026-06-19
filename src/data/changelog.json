@@ -3,14 +3,15 @@
   "date": "2026-06-19",
   "product": "AdBlock-Maxxer",
   "productSlug": "extensionmaxxing",
-  "version": "v1.3.0",
-  "title": "YouTube Reclaim - ad-free YouTube on enforced accounts.",
-  "body": "YouTube's server-side ad enforcement (the black screen / 'allow ads' wall) can't be beaten by any in-browser blocker - the ad is welded to the stream on Google's servers. The new optional companion app fetches the same video ad-free and plays it inside the normal YouTube page.",
+  "version": "v1.3.1",
+  "title": "YouTube Reclaim - ad-free YouTube on enforced accounts, now one click.",
+  "body": "YouTube's server-side ad enforcement (the black screen / 'allow ads' wall) can't be beaten by any in-browser blocker - the ad is welded to the stream on Google's servers. The new optional companion fetches the same video ad-free and plays it inside the normal YouTube page. It's now a single download with nothing to install.",
   "items": [
-   "Ad-free YouTube even on accounts hit by server-side ad enforcement, via a small local companion app.",
+   "Ad-free YouTube even on accounts hit by server-side ad enforcement, via a small local companion.",
+   "One-click companion .exe - nothing to install (no Python); double-click and it runs invisibly.",
    "Plays inside the real YouTube page - search, comments and recommendations stay native.",
    "Quality picker up to 4K, live captions, and free scrubbing.",
-   "One-click installer makes the companion start invisibly every login."
+   "Optional installer makes the companion auto-start invisibly every login."
   ]
  },
  {
