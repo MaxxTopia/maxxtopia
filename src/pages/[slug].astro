@@ -8,6 +8,7 @@ import BuildStatus from '../components/BuildStatus.astro';
 import NotifyMeCard from '../components/NotifyMeCard.astro';
 import ProductScreenshot from '../components/ProductScreenshot.astro';
 import FeatureZone from '../components/FeatureZone.astro';
+import HowItWorks from '../components/HowItWorks.astro';
 import SourceWall from '../components/SourceWall.astro';
 import CutAutopsy from '../components/CutAutopsy.astro';
 import DiscordKillshot from '../components/DiscordKillshot.astro';
@@ -592,6 +593,12 @@ const breadcrumbSchema = {
       )}
     </div>
   </section>
+
+  {/* How it works — numbered, screenshot-driven usage walkthrough.
+      Renders for any product that has populated howItWorks steps. */}
+  {product.howItWorks && product.howItWorks.steps.length > 0 && (
+    <HowItWorks howItWorks={product.howItWorks} accentHex={product.accentHex} />
+  )}
 
   {/* OM-only: Source Wall — the moat made visible. */}
   {isOM && <SourceWall />}

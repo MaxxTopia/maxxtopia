@@ -3,6 +3,21 @@
   "date": "2026-06-18",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.14",
+  "title": "Moderate your chat, fire alerts from every platform, and never start empty.",
+  "body": "The biggest update yet — streammaxxing now polices your chat, fires alerts from YouTube, TikTok and Kick (not just Twitch), ships ready-made alert designs, and adds a Fortnite stream-sniper tracker.",
+  "items": [
+   "Chat moderation: auto-deletes spam, links and banned words, times out repeat offenders, and a one-click hate-raid lockdown.",
+   "Alerts now fire from YouTube, TikTok and Kick too — Super Chats, gifts and subs, not just Twitch.",
+   "Starter alert packs: pick a ready-made look in one click — no image or sound files needed.",
+   "Stream-sniper tracker (Fortnite): flags accounts that keep turning up in your lobbies, with an on-stream overlay.",
+   "Cleaner Home: your live controls, activity and stream markers all in one command center."
+  ]
+ },
+ {
+  "date": "2026-06-18",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.13",
   "title": "Voice read-outs go on automatically when you go live.",
   "body": "Set your read-out voice once and forget it — the voice engine now starts itself the moment you go live.",

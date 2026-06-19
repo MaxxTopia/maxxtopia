@@ -76,6 +76,14 @@ export type Product = {
   demoVideo?: DemoVariant | DemoVariant[];
   /** External live build URL — for beta products that have a working site outside maxxtopia. */
   deployedUrl?: string;
+  /** Step-by-step "How it works" walkthrough with real product screenshots.
+   *  Renders the HowItWorks section on the product page — shows people how to
+   *  actually use the tool, one numbered step + real screenshot at a time. */
+  howItWorks?: {
+    eyebrow?: string;
+    heading?: { left: string; right: string };
+    steps: { title: string; body: string; img: string; alt: string }[];
+  };
 };
 
 export const products: Product[] = [
@@ -509,6 +517,36 @@ export const products: Product[] = [
         },
       },
     ],
+    howItWorks: {
+      eyebrow: 'How to use it',
+      heading: { left: 'Four clicks.', right: 'You land first.' },
+      steps: [
+        {
+          title: 'Open the live map',
+          body: 'Launch Dropmaxxer in your browser — nothing to install. The current-season island loads with every POI labelled. Customize your bus skin, marker, and pose if you want; then hit "Let\'s Drop".',
+          img: '/screenshots/dropmaxxer/howto/step-1.webp',
+          alt: 'Dropmaxxer live map with current-season POIs and the customize panel',
+        },
+        {
+          title: 'Set the bus line, drop your target',
+          body: 'Click "Set Bus" and trace the battle-bus path across the map, then "Set Target" and tap the POI you\'re dropping. That\'s the only input it needs — your bus line and where you\'re going.',
+          img: '/screenshots/dropmaxxer/howto/step-2.webp',
+          alt: 'Setting the bus path and target POI on the Dropmaxxer map',
+        },
+        {
+          title: 'Read your drop: Fastest vs Safe',
+          body: 'The Flight Plan panel hands you both lines — the fastest cut-and-nosedive (37.1s here) and the safe glide (44.6s) — with the exact point to cut your glider and how much time the cut saves. Land with a gun before the fight starts.',
+          img: '/screenshots/dropmaxxer/howto/step-3.webp',
+          alt: 'Dropmaxxer Flight Plan showing Fastest vs Safe ETAs and the glider cut point',
+        },
+        {
+          title: 'See where the pros land',
+          body: 'Flip on "Pro Drops" to overlay the spots competitive players actually take this season — so you can copy a proven landing or deliberately avoid a contested one.',
+          img: '/screenshots/dropmaxxer/howto/step-4.webp',
+          alt: 'Pro Drops overlay marking competitive landing spots across the map',
+        },
+      ],
+    },
   },
   {
     slug: 'aimmaxxer',
@@ -741,7 +779,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.13',
+    version: '0.1.14',
     tagline: "Alerts that fire the instant it happens.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
