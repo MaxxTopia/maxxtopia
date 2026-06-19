@@ -3,6 +3,20 @@
   "date": "2026-06-19",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.18",
+  "title": "Live tournament cutoffs, and a much easier first-time setup.",
+  "body": "Pull your real qualification cutoff straight from Fortnite's leaderboard — no more copying estimates. Plus one-click Twitch connect and a friendlier OBS + alerts setup for newcomers.",
+  "items": [
+   "Tournament tracker: hit 'Fetch live cutoff' to pull the real points-to-qualify line straight from the leaderboard for your region — no estimate needed.",
+   "Connect Twitch in one click — no developer account or app registration. Power users can still bring their own.",
+   "Add overlays to OBS without leaving the page — turn on OBS's connection right from the setup card, with step-by-step help.",
+   "Clearer first-time flow: new streamers are pointed to one-click starter packs instead of needing an existing alert service."
+  ]
+ },
+ {
+  "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.17",
   "title": "A tournament-points overlay, and every overlay is recolorable now.",
   "body": "A Fortnite tournament tracker that shows your cumulative two-day total and points-to-qualify, plus a one-click color picker on every overlay.",
