@@ -11,13 +11,12 @@
 
 type Props = {
   productName: string;
-  /** 0..100 — drives the bar fill. Tune per product. */
+  /** 0..100 — drives the bar fill. A hand-set self-estimate of how close
+   *  this product is, not a measured number. Tune per product. */
   progress?: number;
   /** Free-form drop window. e.g. "Q3 · 2026" or "JUL 2026". */
   dropTarget?: string;
-  /** Faked-for-now waitlist count. Real wire-up when KV lands. */
-  waitlistCount?: number;
-  /** Build channel label (e.g. "v0.1 · INTERNAL", "BETA WAVE 1"). */
+  /** Build channel label (e.g. "v0.1 · CALIBRATION", "BETA WAVE 1"). */
   channel?: string;
 };
 
@@ -25,16 +24,16 @@ const {
   productName,
   progress = 62,
   dropTarget = 'Q3 · 2026',
-  waitlistCount = 247,
   channel = 'v0.1 · INTERNAL',
 } = Astro.props;
 
 const safe = Math.min(100, Math.max(0, progress));
-const fakeBuildLines = [
-  `> ${productName.toLowerCase()}/build  passing`,
-  `> typecheck                ok`,
-  `> lint                     ok`,
-  `> bench-suite              running…`,
+// Honest status lines — not a fabricated CI run. State what's true: the
+// channel, that it's in active development, and the pricing promise.
+const statusLines = [
+  `> ${productName.toLowerCase()}  ·  ${channel.toLowerCase()}`,
+  `> status      in active development`,
+  `> price       free on launch · no account`,
 ];
 ---
 
@@ -48,8 +47,7 @@ const fakeBuildLines = [
       </span>
       <span class="build-status__channel">{channel}</span>
       <span class="build-status__count">
-        <strong class="font-display">{waitlistCount.toLocaleString()}</strong>
-        <span>in line</span>
+        <span>free on launch</span>
       </span>
     </div>
 
@@ -71,9 +69,9 @@ const fakeBuildLines = [
       <span class="build-status__drop-target font-display">{dropTarget}</span>
     </div>
 
-    <!-- Fake build log — three lines of "ok / running" status -->
+    <!-- Honest status lines — channel, dev status, pricing (no fake CI) -->
     <ul class="build-status__log" aria-hidden="true">
-      {fakeBuildLines.map((line) => (
+      {statusLines.map((line) => (
         <li class="build-status__log-line">{line}</li>
       ))}
     </ul>

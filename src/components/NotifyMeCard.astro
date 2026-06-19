@@ -2,20 +2,19 @@
 /**
  * Floating "launch updates" card on coming-soon product pages.
  *
- * Was an email form that wrote only to the visitor's own localStorage and
- * faked a "we'll email you" success — every lead silently lost. Replaced
- * with a direct link to the live Discord, where launches are actually
- * announced (#announcements + per-product forum threads). Zero backend,
- * nothing to maintain, and it grows the real community hub.
+ * Points at the SAME real waitlist as the hero CTA — the Discord-OAuth
+ * waitlist worker, where the Maxx bot DMs the user the moment the product
+ * ships (handled by the vip-worker). Previously this linked to a generic
+ * Discord invite while the hero used the real waitlist, so the loud
+ * always-on card quietly sent high-intent users to the wrong place.
  */
-type Props = { productName: string };
-const { productName } = Astro.props;
-const DISCORD_INVITE = 'https://discord.gg/S78eecbWdx';
+type Props = { productName: string; href: string };
+const { productName, href } = Astro.props;
 ---
 
 <a
   class="notify-card"
-  href={DISCORD_INVITE}
+  href={href}
   target="_blank"
   rel="noopener"
   data-product={productName}
@@ -27,8 +26,8 @@ const DISCORD_INVITE = 'https://discord.gg/S78eecbWdx';
     </svg>
   </span>
   <span class="notify-card__body">
-    <span class="notify-card__title">{productName} drops in our Discord first</span>
-    <span class="notify-card__cta">Join for launch updates
+    <span class="notify-card__title">Get a DM the moment {productName} drops</span>
+    <span class="notify-card__cta">Join the waitlist
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M5 12h14M13 5l7 7-7 7"/>
       </svg>
