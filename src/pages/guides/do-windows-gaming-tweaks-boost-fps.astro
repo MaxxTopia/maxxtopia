@@ -3,20 +3,28 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 ---
 
 <GuideLayout slug="do-windows-gaming-tweaks-boost-fps">
+  <div class="tldr">
+    <p class="tldr__label">TL;DR</p>
+    <p>
+      Some Windows tweaks are real, most are placebo. The real ones mostly smooth out
+      <strong>stutter, frame pacing, and latency</strong> — not your raw average FPS. Only trust a
+      tweak if it's <strong>sourced, measured, and reversible</strong>. If it fails any of those
+      three, skip it.
+    </p>
+  </div>
+
   <p>
-    Search "boost FPS on Windows" and you'll drown in lists of registry edits, services to
-    kill, and "god mode" tweaks promising +50% frames. Some of it is real. A lot of it is
-    cargo-cult copy-paste that does nothing — or quietly makes things worse. Here's how to
-    tell the difference.
+    Search "boost FPS on Windows" and you'll drown in registry edits, services to kill, and "god
+    mode" tweaks promising +50% frames. Some of it is real. A lot of it is copy-paste that does
+    nothing — or quietly makes things worse. Here's how to tell the two apart.
   </p>
 
   <h2>The short answer</h2>
   <p>
-    Yes, some Windows tweaks measurably help — but mostly with <strong>frame pacing,
-    latency, and stutter</strong>, not raw average FPS. If a tweak claims a big average-FPS
-    jump from a registry key, be skeptical. The wins that matter to competitive players are
-    smoother 1% lows and lower input latency, and those come from a handful of specific,
-    documented changes.
+    Yes, some tweaks genuinely help — but mostly with <strong>frame pacing, latency, and
+    stutter</strong>, not raw average FPS. If a single registry key claims a big average-FPS jump,
+    be skeptical. What actually matters for competitive play is smoother 1% lows and lower input
+    lag, and those come from a small handful of specific, documented changes.
   </p>
 
   <h2>Tweaks with real, sourced evidence</h2>
@@ -48,18 +56,18 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
   </ul>
 
   <h2>How to tell real from placebo</h2>
-  <p>The test is simple, and it's the same one a good tuner should pass:</p>
+  <p>Run every tweak through three questions. A good tuner passes all three:</p>
   <ol>
-    <li><strong>Is there a source?</strong> A Microsoft Learn doc or a vendor whitepaper beats a Reddit comment every time.</li>
-    <li><strong>Did you measure before and after?</strong> Use a frametime graph and 1%-low numbers, not vibes.</li>
-    <li><strong>Can you undo it?</strong> Any tweak you can't cleanly revert is a liability, not an optimization.</li>
+    <li><strong>Is there a source?</strong> A Microsoft Learn doc or a vendor whitepaper beats a random Reddit comment every time.</li>
+    <li><strong>Did you measure before and after?</strong> Use a frametime graph and 1%-low numbers — not vibes.</li>
+    <li><strong>Can you undo it?</strong> If you can't cleanly revert a tweak, it's a liability, not an optimization.</li>
   </ol>
 
   <h2>The honest takeaway</h2>
   <p>
-    Don't paste a 200-line ".bat" from a stranger. Apply the handful of tweaks that are
-    documented, measure the result, and keep a way back. That's the whole game — most "FPS
-    boost" guides skip every one of those steps.
+    Don't paste a 200-line <code>.bat</code> file from a stranger. Apply the few tweaks that are
+    actually documented, measure the result, and keep a way back. That's the whole game — and most
+    "FPS boost" guides skip every step of it.
   </p>
   <blockquote>
     Sourced, measured, reversible. If a tweak fails any of the three, it doesn't belong on a

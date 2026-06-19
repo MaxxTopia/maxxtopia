@@ -267,6 +267,16 @@ const quotes = [
     if ($source) $source.textContent = source;
     if ($source && !source) $source.style.display = 'none';
 
+    // ── Auto-fit ─────────────────────────────────────────────────
+    // Longer quotes scale their font down a notch so they always sit
+    // cleanly inside the fixed-width card — no cramping, no overflow,
+    // no clipped lines. Length-based tiers (cheap + deterministic,
+    // works the same for every visitor on the static build). The base
+    // size lives in CSS per breakpoint; this only sets the multiplier.
+    const len = text.length;
+    const scale = len <= 90 ? 1 : len <= 150 ? 0.92 : len <= 210 ? 0.82 : 0.74;
+    root.style.setProperty('--qotd-scale', String(scale));
+
     // ── Collapse / expand ────────────────────────────────────────
     const STORAGE_KEY = 'maxxtopia_qotd_collapsed';
     const card  = document.getElementById('daily-quote-card');
@@ -480,7 +490,7 @@ const quotes = [
     font-family: 'Crimson Pro', 'Georgia', 'Times New Roman', serif;
     font-style: italic;
     font-weight: 500;
-    font-size: 16.5px;
+    font-size: calc(16.5px * var(--qotd-scale, 1));
     line-height: 1.32;
     letter-spacing: -0.003em;
     color: var(--color-text);
@@ -524,7 +534,7 @@ const quotes = [
       width: min(300px, calc(100vw - 28px));
       padding: 14px 14px 16px;
     }
-    .daily-quote__text { font-size: 13.5px; }
+    .daily-quote__text { font-size: calc(13.5px * var(--qotd-scale, 1)); }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,121 @@
+---
+/**
+ * HowItWorks — a numbered, screenshot-driven "how to actually use it" walkthrough.
+ *
+ * Distinct from FeatureZone (which sells the moat): this shows a new user the
+ * real product, step by step, with an actual screenshot per step. Steps
+ * alternate sides on desktop and stack on mobile. Accent-aware per product.
+ */
+import type { Product } from '../data/products';
+
+type Props = {
+  howItWorks: NonNullable<Product['howItWorks']>;
+  accentHex: string;
+};
+
+const { howItWorks, accentHex } = Astro.props;
+const { eyebrow = 'How to use it', heading, steps } = howItWorks;
+---
+
+<section class="relative overflow-hidden" style={`--accent: ${accentHex}`}>
+  <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24 border-t border-[var(--color-line)]">
+    <div class="reveal-on-scroll mb-14 max-w-2xl">
+      <p class="text-[12px] uppercase tracking-[0.1em] font-mono" style={`color: ${accentHex}`}>
+        {eyebrow}
+      </p>
+      <h2 class="mt-3 text-[32px] sm:text-[44px] font-semibold tracking-[-0.025em] leading-[1.04]">
+        {heading ? (
+          <><span class="gradient-text">{heading.left}</span> <span class="serif-accent gradient-suite">{heading.right}</span></>
+        ) : (
+          <><span class="gradient-text">From open</span> <span class="serif-accent gradient-suite">to done.</span></>
+        )}
+      </h2>
+    </div>
+
+    <ol class="hiw-steps" role="list">
+      {steps.map((step, i) => (
+        <li class="hiw-step reveal-on-scroll" data-flip={i % 2 === 1 ? 'true' : undefined}>
+          <div class="hiw-step__text">
+            <div class="hiw-step__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</div>
+            <h3 class="hiw-step__title">{step.title}</h3>
+            <p class="hiw-step__body">{step.body}</p>
+          </div>
+          <div class="hiw-step__shot">
+            <img src={step.img} alt={step.alt} loading="lazy" decoding="async" width="1600" height="1000" />
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .hiw-steps { display: flex; flex-direction: column; gap: 4rem; margin: 0; padding: 0; list-style: none; }
+
+  .hiw-step {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hiw-step { grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; }
+    /* Alternate the screenshot to the left on odd steps */
+    .hiw-step[data-flip] .hiw-step__text { order: 2; }
+    .hiw-step[data-flip] .hiw-step__shot { order: 1; }
+  }
+
+  .hiw-step__num {
+    font-family: var(--font-display, var(--font-mono));
+    font-size: 2.6rem;
+    line-height: 1;
+    color: color-mix(in srgb, var(--accent, #e25bff) 90%, white 0%);
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(140deg, var(--accent, #e25bff), color-mix(in srgb, var(--accent, #e25bff) 40%, #00d4ff));
+    -webkit-background-clip: text;
+    background-clip: text;
+    margin-bottom: 0.6rem;
+    font-weight: 800;
+  }
+  .hiw-step__title {
+    font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+    font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--color-text, #f3f1f8); margin: 0 0 0.7rem;
+  }
+  .hiw-step__body {
+    font-size: 1.02rem; line-height: 1.65;
+    color: var(--color-text-mid, #b9b6c7); margin: 0; max-width: 34rem;
+  }
+
+  .hiw-step__shot {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 28%, transparent);
+    background: #0a0612;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 24px 60px rgba(0, 0, 0, 0.5),
+      0 0 50px color-mix(in srgb, var(--accent, #e25bff) 12%, transparent);
+  }
+  .hiw-step__shot::after {
+    /* faint accent rim-light on top edge, like a real device frame */
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    border-radius: inherit;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  }
+  .hiw-step__shot img {
+    display: block; width: 100%; height: auto;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hiw-step__shot { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hiw-step__shot:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.05) inset,
+        0 30px 70px rgba(0, 0, 0, 0.55),
+        0 0 64px color-mix(in srgb, var(--accent, #e25bff) 22%, transparent);
+    }
+  }
+</style>

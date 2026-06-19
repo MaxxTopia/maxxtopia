@@ -534,8 +534,8 @@ export const products: Product[] = [
     logo: '/logos/dropmaxxer.png',
     icon: '/logos/dropmaxxer-icon.svg',
     accentHex: '#4c51f7',
-    screenshots: ['/screenshots/dropmaxxer/preview.png'],
-    heroStat: { value: '832 m', label: 'bus altitude · cited' },
+    screenshots: ['/screenshots/dropmaxxer/hero-flightplan.webp'],
+    heroStat: { value: '2', label: 'routes per drop · fastest + safe' },
     zones: [
       {
         eyebrow: '01 · The Constants',
@@ -555,15 +555,11 @@ export const products: Product[] = [
       {
         eyebrow: '02 · The Algorithm',
         headline: "Community data first. Physics solver second.",
-        body: "Two solvers, one decision. If your drop matches our corpus (47 current-season POIs × 4 bus paths) we serve the community-tested answer. If it doesn't, the calibrated physics simulator runs the math. Every result carries the badge — you see which one answered.",
+        body: "Two solvers, one decision. If your drop matches our corpus of pro and community data, you get the tested answer — flagged “pro-rooted,” with the real win-rate at that spot. If it doesn't, the calibrated physics simulator runs the math. Either way you get both lines, Fastest and Safe, plus the exact point to cut your glider.",
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'LT-EXACT · community match within tight bound', value: 'corpus answer', ratio: 1.0, emphasize: true },
-            { label: 'LT-NEAR · community match within loose bound', value: 'corpus answer', ratio: 0.78, emphasize: true },
-            { label: 'SIMULATOR · novel path · physics solves it', value: 'physics fallback', ratio: 0.55 },
-          ],
-          caption: 'Solver transparency · UI badge on every drop tells you which answered',
+          kind: 'image',
+          src: '/screenshots/dropmaxxer/flight-plan.webp',
+          alt: 'Dropmaxxer Flight Plan: Fastest vs Safe ETAs, the glider-cut breakdown, and a pro-rooted confidence badge',
         },
       },
       {
@@ -840,11 +836,11 @@ export const products: Product[] = [
     category: 'Stream Alerts',
     status: 'live',
     version: '0.1.15',
-    tagline: "Alerts that fire the instant it happens.",
+    tagline: "Everything you stream with, in one free app.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
     longDescription:
-      "Local-first stream alerts wrapped in a Command Center dashboard. A whole overlay studio (goal bars, Starting Soon / BRB scenes, subathon timer, points leaderboard, social bar, webcam frame, Spotify now-playing) — add any of them to OBS in one click. Channel-point sound alerts, song requests, watch-time points, giveaways and live session stats. Merge Twitch/Kick/YouTube/TikTok chat into one overlay, import your existing alerts, trim clips, level loudness, and read donor messages in a voice you cloned. Run multiple streamers from one install. Free.",
+      "Every tool you run a stream with, in one free app that lives on your PC — instant alerts, a full overlay studio, merged chat from every platform, and donation read-outs in a voice you cloned. No cloud, no account, no monthly bill.",
     features: [
       {
         title: 'Instant, because it runs on your PC.',
@@ -999,9 +995,8 @@ export const products: Product[] = [
     logo: '/logos/streammaxxing.png?v=2',
     icon: '/logos/streammaxxing-icon.png',
     accentHex: '#22d3a0',
-    // Placeholder hero visual: the branded OG card until a real product
-    // screenshot / demo clip is recorded. Swap for a true app shot later.
-    screenshots: ['/og/streammaxxing.png'],
+    // Real hero shot: the Command Center dashboard — the "everything in one app" proof.
+    screenshots: ['/screenshots/streammaxxing/howto/command-center.webp'],
   },
   {
     slug: 'snipemaxxer',

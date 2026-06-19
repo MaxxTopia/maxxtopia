@@ -99,6 +99,21 @@ const articleSchema = {
     color: #aeabbd; font-style: italic;
   }
 
+  /* TL;DR callout — the one-glance answer at the top of every guide.
+     Scannable, on-brand ("no fluff"), and the single biggest readability win. */
+  .guide-prose :global(.tldr) {
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 35%, transparent);
+    background: color-mix(in srgb, var(--accent, #e25bff) 7%, transparent);
+    border-radius: 0.9rem; padding: 1.1rem 1.3rem; margin: 0 0 2.2rem;
+  }
+  .guide-prose :global(.tldr__label) {
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent, #e25bff); margin: 0 0 0.5rem; font-weight: 700;
+  }
+  .guide-prose :global(.tldr p) { margin: 0; color: #ddd9e8; font-size: 1.02rem; }
+  .guide-prose :global(.tldr ul) { margin: 0.5rem 0 0; }
+  .guide-prose :global(.tldr li) { color: #ddd9e8; }
+
   .guide__cta {
     margin-top: 3.5rem; padding: 1.5rem 1.6rem; border-radius: 1rem;
     border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 35%, transparent);

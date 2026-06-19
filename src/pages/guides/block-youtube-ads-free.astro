@@ -3,54 +3,63 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 ---
 
 <GuideLayout slug="block-youtube-ads-free">
+  <div class="tldr">
+    <p class="tldr__label">TL;DR</p>
+    <p>
+      You can still block YouTube ads for free in 2026. Easiest route: a blocking browser like
+      <strong>Brave</strong>. Most reliable on desktop: a real filter-list extension like
+      <strong>AdBlock-Maxxer</strong>. On the YouTube phone app there's no free fix that lasts — just
+      watch in a browser instead.
+    </p>
+  </div>
+
   <p>
-    YouTube's ad load keeps climbing, and the "anti-adblock" pop-ups keep getting more
-    aggressive. The good news: blocking YouTube ads on desktop is still free and still works
-    in 2026 — you just need the right tool and realistic expectations. Here are the honest
-    options, ranked, with the trade-offs nobody mentions.
+    YouTube's ad load keeps climbing and the "anti-adblock" pop-ups keep getting pushier. Good news:
+    blocking YouTube ads on desktop is still free and still works in 2026. You just need the right
+    tool and realistic expectations. Here are the honest options, ranked — with the trade-offs
+    nobody mentions.
   </p>
 
   <h2>1. A blocking browser (easiest)</h2>
   <p>
-    The lowest-effort route is a browser that blocks ads natively — Brave being the obvious
-    one. Nothing to install, YouTube ads are gone out of the box, and it works on mobile too.
-    The trade-off: you're switching browsers, and native blockers occasionally lag a day or
-    two behind YouTube's changes.
+    The lowest-effort route is a browser that blocks ads on its own — <strong>Brave</strong> being
+    the obvious pick. Nothing to install, YouTube ads are gone out of the box, and it works on phones
+    too. The catch: you're switching browsers, and built-in blockers sometimes lag a day or two
+    behind YouTube's changes.
   </p>
 
-  <h2>2. A real content blocker extension</h2>
+  <h2>2. A real content-blocker extension</h2>
   <p>
-    On Chrome, Brave, or Edge, a proper blocker is the most reliable desktop route. It strips
-    the ad slots before they play and hides the "ad break" UI entirely. Two things matter when
-    you pick one:
+    On Chrome, Brave, or Edge, a proper blocker is the most reliable desktop route. It strips the ad
+    slots before they play and hides the "ad break" UI entirely. Two things matter when you pick one:
   </p>
   <ul>
-    <li><strong>It should use filter lists (EasyList)</strong>, not a hand-maintained mini-list that rots.</li>
+    <li><strong>It should use filter lists (EasyList)</strong> — not a tiny hand-made list that goes stale.</li>
     <li><strong>It shouldn't sell an "acceptable ads" allowlist.</strong> If a blocker takes money to let some ads through, you're not the customer — you're the product.</li>
   </ul>
   <p>
-    This is exactly why we built <strong>AdBlock-Maxxer</strong>: EasyList compiled to native
-    declarative rules, YouTube ads stripped, Spotify ads muted, no account, no telemetry, no
-    paid allowlist. Free on Chrome, Brave, and Edge.
+    That's exactly why we built <strong>AdBlock-Maxxer</strong>: EasyList compiled to native rules,
+    YouTube ads stripped, Spotify ads muted. No account, no telemetry, no paid allowlist. Free on
+    Chrome, Brave, and Edge.
   </p>
 
   <h2>3. The mobile asterisk</h2>
   <p>
-    Desktop extensions don't run on iOS Safari or the YouTube app. On mobile, your realistic
-    free options are a blocking browser (Brave) or, on iOS, a browser like Orion that supports
-    extensions. The YouTube app itself can't be extended — there's no free, no-jailbreak way to
-    block in-app ads that lasts. Watch in the browser instead.
+    Desktop extensions don't run on iPhone Safari or inside the YouTube app. On your phone, the
+    realistic free options are a blocking browser (Brave) or, on iPhone, a browser like Orion that
+    supports extensions. The YouTube app itself can't be extended — there's no free, no-jailbreak way
+    to kill in-app ads that actually lasts. Watch in a browser instead.
   </p>
 
   <h2>What about "anti-adblock" warnings?</h2>
   <p>
-    When YouTube shows "ad blockers aren't allowed," it's detecting the blocker, not beating it.
-    A maintained filter list updates to hide that prompt within days. If yours doesn't, it's
-    not being maintained — switch.
+    When YouTube flashes "ad blockers aren't allowed," it's <em>detecting</em> your blocker — not
+    beating it. A maintained filter list updates to hide that prompt within days. If yours doesn't,
+    it's not being maintained — switch.
   </p>
 
   <blockquote>
-    Rule of thumb: free is fine, but never install a YouTube "ad blocker" that isn't open about
-    its filter lists and its business model. That's how people end up with adware.
+    Rule of thumb: free is fine, but never install a YouTube "ad blocker" that won't tell you its
+    filter lists and how it makes money. That's how people end up with adware.
   </blockquote>
 </GuideLayout>

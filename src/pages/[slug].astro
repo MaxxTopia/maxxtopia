@@ -216,8 +216,9 @@ const receiptsConfig: Record<string, {
     ],
   },
   streammaxxing: {
-    version: 'v0.1.5',
-    versionDate: 'Jun 14, 2026',
+    // Keep in sync with the streammaxxing `version` in products.ts (shown in the hero pill).
+    version: '0.1.15',
+    versionDate: 'Jun 2026',
     repoUrl: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing-latest-x64-setup.exe',
     repoLabel: 'Windows',
     linkLabel: 'Download',
@@ -266,6 +267,9 @@ const screenshotExtras = product.screenshots?.slice(1) ?? [];
 //   - per-product story sections render after the hero
 const isOM = product.slug === 'optimizationmaxxing';
 const isDM = product.slug === 'discordmaxxer';
+// Products that show the How-it-works walkthrough ABOVE the feature zones
+// (zero-install / try-it-first): OM and dropmaxxer.
+const howItWorksFirst = isOM || product.slug === 'dropmaxxer';
 const hasBespokeStory = isLive && (isOM || isDM);
 const hasZones = Array.isArray(product.zones) && product.zones.length > 0;
 // Any live product with a receipts config shows the trust strip (and hides
@@ -554,9 +558,10 @@ const breadcrumbSchema = {
     </div>
   </section>
 
-  {/* OM shows its How-it-works walkthrough ABOVE the feature zones
-      (everyone else gets it after — see below the Features section). */}
-  {isOM && product.howItWorks && product.howItWorks.steps.length > 0 && (
+  {/* OM + dropmaxxer show the How-it-works walkthrough ABOVE the feature
+      zones (zero-install / try-it-first products); everyone else gets it
+      after the Features section below. */}
+  {howItWorksFirst && product.howItWorks && product.howItWorks.steps.length > 0 && (
     <HowItWorks howItWorks={product.howItWorks} accentHex={product.accentHex} />
   )}
 
@@ -600,9 +605,9 @@ const breadcrumbSchema = {
     </div>
   </section>
 
-  {/* How it works — renders after the feature zones for every product
-      EXCEPT OM, which shows its walkthrough above the zones (see hero). */}
-  {!isOM && product.howItWorks && product.howItWorks.steps.length > 0 && (
+  {/* How it works — renders after the feature zones for products that
+      aren't in the "walkthrough first" set (OM, dropmaxxer). */}
+  {!howItWorksFirst && product.howItWorks && product.howItWorks.steps.length > 0 && (
     <HowItWorks howItWorks={product.howItWorks} accentHex={product.accentHex} />
   )}
 
