@@ -1,5 +1,19 @@
 [
  {
+  "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.16",
+  "title": "Your drop on stream, a one-click sniper report, and smarter earnings.",
+  "body": "A Fortnite drop-plan overlay, one-click stream-sniper evidence for Epic, accurate TikTok-gift earnings, and peak-audience + revenue tracking across your history.",
+  "items": [
+   "Drop plan overlay: show viewers where you're landing — POI, strategy note, and a Fastest/Safe glider-cut badge.",
+   "Sniper tracker: 'Copy report for Epic' compiles the repeat-offender evidence to submit.",
+   "Earnings estimate now values TikTok gifts correctly (diamonds aren't dollars).",
+   "Stream history now tracks your peak combined audience and a per-session revenue estimate."
+  ]
+ },
+ {
   "date": "2026-06-18",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
