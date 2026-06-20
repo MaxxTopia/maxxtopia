@@ -1,5 +1,22 @@
 [
  {
+  "date": "2026-06-20",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.24",
+  "title": "It runs itself: alerts auto-start, tournaments auto-fill, overlays stay fresh.",
+  "body": "streammaxxing now connects and tracks your stream on its own — alerts, uptime and the subathon timer start the moment you go live and stop when you end. The tournament tracker fills itself in from live Epic data and your points by IGN, and overlays no longer get stuck on old text in OBS.",
+  "items": [
+   "Alerts, uptime and subathon start automatically when you go live — no clicking Connect.",
+   "Uptime shows your real stream time and stops on its own when you end.",
+   "Tournament tracker auto-loads events from Epic and pulls your live points by IGN.",
+   "Tournament overlay hides itself when you're not competing.",
+   "Settings & gear overlay can pop in on a !sens / !gear command instead of staying on.",
+   "Fixed connecting TikTok chat and Spotify; voice read-outs default to GPU.",
+   "Overlays refresh themselves, so OBS no longer shows stale text."
+  ]
+ },
+ {
   "date": "2026-06-19",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
