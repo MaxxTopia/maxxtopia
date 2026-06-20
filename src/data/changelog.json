@@ -1,6 +1,20 @@
 [
  {
   "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
+  "version": "v0.1.22",
+  "title": "Reliable alert media, scene music, and a smoother setup.",
+  "body": "Imported alerts now show their GIFs, images and sounds reliably — even when a host blocks the download — and scenes can play looping background music. The setup flow also puts connecting Twitch front and centre.",
+  "items": [
+   "Alert media that just works: if a GIF, video or sound can't be saved to your PC, the overlay now plays it from the original source instead of dropping to text-only.",
+   "Imports grab media more reliably, getting past hosts like Giphy that used to block the download.",
+   "Scene background music: add your own track to any Starting Soon / BRB / Ending scene — it loops and fades in and out.",
+   "Connect Twitch is now the first step on the Go-live tab, and the 'Test my setup' fix buttons jump straight to the right card and highlight it."
+  ]
+ },
+ {
+  "date": "2026-06-19",
   "product": "AdBlock-Maxxer",
   "productSlug": "extensionmaxxing",
   "version": "v1.3.1",
