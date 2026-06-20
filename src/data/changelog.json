@@ -3,6 +3,19 @@
   "date": "2026-06-19",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.23",
+  "title": "OBS stays connected, and the voice list is tidy.",
+  "body": "A few rough edges smoothed out: streammaxxing now reconnects to OBS on its own, duplicate preset voices are cleaned up, and the setup check tucks itself away once everything's green.",
+  "items": [
+   "OBS auto-reconnects using your saved password — no more re-entering it every launch.",
+   "Duplicate preset voices left by older versions are removed, so each voice appears once.",
+   "'Test my setup' collapses to a single green line once everything's ready."
+  ]
+ },
+ {
+  "date": "2026-06-19",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.22",
   "title": "Reliable alert media, scene music, and a smoother setup.",
   "body": "Imported alerts now show their GIFs, images and sounds reliably — even when a host blocks the download — and scenes can play looping background music. The setup flow also puts connecting Twitch front and centre.",
