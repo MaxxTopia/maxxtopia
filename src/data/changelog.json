@@ -3,6 +3,19 @@
   "date": "2026-06-20",
   "product": "streammaxxing",
   "productSlug": "streammaxxing",
+  "version": "v0.1.25",
+  "title": "See exactly what your stream did.",
+  "body": "A new 'Last stream report' shows precisely what streammaxxing saw during your stream — when you went live and for how long, every follow, sub, cheer and raid, which alerts fired, and any errors — so you never have to guess what worked again.",
+  "items": [
+   "New 'Last stream report' in the Session tab — a full timeline of what fired.",
+   "See when you went live, how long you streamed, and every event received.",
+   "Clear warning if no go-live was detected, plus any errors flagged in red."
+  ]
+ },
+ {
+  "date": "2026-06-20",
+  "product": "streammaxxing",
+  "productSlug": "streammaxxing",
   "version": "v0.1.24",
   "title": "It runs itself: alerts auto-start, tournaments auto-fill, overlays stay fresh.",
   "body": "streammaxxing now connects and tracks your stream on its own — alerts, uptime and the subathon timer start the moment you go live and stop when you end. The tournament tracker fills itself in from live Epic data and your points by IGN, and overlays no longer get stuck on old text in OBS.",
