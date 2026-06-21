@@ -8,9 +8,9 @@ const totalCount = products.length;
 
 // Named competitors — we have specs, we beat them. Call it out.
 const villains = [
-  { name: 'Hone',           stat: '200 MB',  body: 'Electron settings panel.' },
-  { name: 'Paragon',        stat: '81 MB',   body: 'Heavier than what it tunes.' },
-  { name: 'Stock Discord',  stat: '1,041 MB', body: '14 outbound calls on launch.' },
+  { name: 'Hone',           stat: '200 MB',  body: 'An Electron wrapper around a settings panel.' },
+  { name: 'Paragon',        stat: '81 MB',   body: 'Heavier than the settings it tunes.' },
+  { name: 'Stock Discord',  stat: '1,041 MB', body: 'A gig of RAM before you say a word.' },
 ];
 
 // Real numbers we can defend.
@@ -23,8 +23,8 @@ const receipts = [
 ---
 
 <Layout
-  title="Why — Built to actually work"
-  description="Most gaming software is Chromium pretending to be an app. Ours isn't. Receipts, rules, and a refusal."
+  title="Why — Built stuff I'd use"
+  description="A competitive player got tired of bloated, paywalled tools — so I built the ones I actually wanted. Receipts, rules, and a refusal."
 >
   <article class="relative">
     <Aurora intensity="low" />
@@ -36,25 +36,26 @@ const receipts = [
         Why · v0.1
       </p>
       <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[80px] font-semibold tracking-[-0.035em] leading-[0.95] gradient-text">
-        Built to <span class="serif-accent gradient-suite">actually work.</span>
+        Built stuff <span class="serif-accent gradient-suite">I'd use.</span>
       </h1>
       <p class="reveal reveal-3 mt-7 text-[20px] sm:text-[24px] leading-[1.35] text-[var(--color-text-mid)] max-w-xl">
-        Most gaming software is Chromium pretending to be an app. Ours isn't.
+        I'm a player first. These are the tools I wanted on my own rig — light, native, free. So I built them.
       </p>
     </div>
 
     <!-- Bloat — three named competitors we beat. -->
     <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
       <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-6">
-        ◇ The bloat
+        ◇ What they ship
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
         {villains.map((v, i) => (
           <div class={`reveal-on-scroll reveal-delay-${i + 1} bg-[var(--color-bg-card)] p-7 sm:p-8`}>
-            <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
+            <p class="flex items-center gap-2 text-[12px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
+              <span class="rounded border border-[var(--color-magenta)] px-1.5 py-0.5 text-[9px] leading-none tracking-[0.12em] text-[var(--color-magenta)]">BLOAT</span>
               {v.name}
             </p>
-            <p class="font-display mt-2 text-[56px] sm:text-[72px] gradient-suite leading-none">
+            <p class="font-display mt-3 text-[56px] sm:text-[72px] leading-none text-[var(--color-subtle)] line-through decoration-[var(--color-magenta)] decoration-[3px]">
               {v.stat}
             </p>
             <p class="mt-4 text-[14.5px] leading-[1.5] text-[var(--color-text-mid)]">
@@ -70,6 +71,9 @@ const receipts = [
       <h2 class="reveal-on-scroll text-[40px] sm:text-[60px] font-semibold tracking-[-0.03em] leading-[1] text-[var(--color-text)]">
         We don't ship that. <span class="serif-accent gradient-suite">Period.</span>
       </h2>
+      <p class="reveal-on-scroll mt-6 text-[18px] sm:text-[20px] leading-[1.4] text-[var(--color-text-mid)] max-w-xl">
+        Native code, no Chromium. Small enough you forget it's running — which is the whole point. Every megabyte we don't take is a megabyte your game keeps. Here's what that buys you. ↓
+      </p>
     </section>
 
     <!-- Receipts -->
@@ -100,7 +104,7 @@ const receipts = [
         Different tools. <span class="serif-accent gradient-suite">Same energy.</span>
       </h2>
       <p class="reveal-on-scroll mt-6 text-[16px] text-[var(--color-text-mid)]">
-        Built by a player who counts ms. For everyone else who does too.
+        Built by a player who counts milliseconds. For everyone else who does too.
       </p>
       <p class="reveal-on-scroll mt-10">
         <span class="slogan">made by diggy</span>
