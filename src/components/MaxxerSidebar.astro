@@ -123,57 +123,50 @@ const activeSlug = products.find((p) =>
 
     apply(initial);
 
-    // ── Orb sounds — ported verbatim from dropmaxxer's Web Audio engine
-    //    (zero files, no copyright). Banish = minimize swoosh-down,
-    //    Unleash = swoosh-in + soft confirm chime. Same feel as dropmaxxer.
-    var _actx = null;
-    function _ctx() {
+    // ── Orb sounds — real Devil May Cry menu SFX (shared with optimizationmaxxing).
+    //    Two clearly-distinct treatments of the SAME sample so they read as one
+    //    identity but you can tell open from close blind:
+    //      Unleash (open)  = full pitch, bright, unfiltered.
+    //      Banish (close)  = pitched down + low-passed ("muffled"), powering down.
+    //    Routed through Web Audio because a plain <audio> can only change volume +
+    //    rate, not filter. Sample at public/audio/dmc-menu.mp3.
+    var _actx = null, _buf = null;
+    function _ensureAudio() {
       try {
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return null;
-        if (!_actx || _actx.state === 'closed') _actx = new AC();
+        if (!_actx) {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return null;
+          _actx = new AC();
+        }
         if (_actx.state === 'suspended') _actx.resume();
+        if (!_buf) {
+          fetch('/audio/dmc-menu.mp3')
+            .then(function (r) { return r.arrayBuffer(); })
+            .then(function (ab) { return _actx.decodeAudioData(ab); })
+            .then(function (b) { _buf = b; })
+            .catch(function () {});
+        }
         return _actx;
       } catch (e) { return null; }
     }
-    var _masterVol = 0.5;
-    function _master(c) { var g = c.createGain(); g.gain.value = _masterVol; g.connect(c.destination); return g; }
-    function _noiseBuf(c, duration) {
-      var len = Math.floor(c.sampleRate * duration);
-      var buf = c.createBuffer(1, len, c.sampleRate);
-      var d = buf.getChannelData(0);
-      for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-      return buf;
+    function _playMenu(vol, rate, lowpassHz) {
+      var c = _ensureAudio();
+      if (!c || !_buf) return; // first click may race the decode; preloaded below
+      try {
+        var src = c.createBufferSource(); src.buffer = _buf; src.playbackRate.value = rate;
+        var g = c.createGain(); g.gain.value = Math.max(0, Math.min(1, vol));
+        if (lowpassHz) {
+          var lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = lowpassHz;
+          src.connect(lp); lp.connect(g);
+        } else {
+          src.connect(g);
+        }
+        g.connect(c.destination); src.start();
+      } catch (e) { /* no-op */ }
     }
-    function playSidebarMinimize() {
-      var c = _ctx(); if (!c) return;
-      var t = c.currentTime, out = _master(c);
-      var n = c.createBufferSource(); n.buffer = _noiseBuf(c, 0.45);
-      var ng = c.createGain(), lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 1.2;
-      lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(200, t + 0.4);
-      ng.gain.setValueAtTime(0, t); ng.gain.linearRampToValueAtTime(0.28, t + 0.04); ng.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
-      n.connect(lp); lp.connect(ng); ng.connect(out); n.start(t); n.stop(t + 0.45);
-      var o = c.createOscillator(); o.type = 'sine';
-      o.frequency.setValueAtTime(500, t); o.frequency.exponentialRampToValueAtTime(120, t + 0.35);
-      var og = c.createGain(); og.gain.setValueAtTime(0, t); og.gain.linearRampToValueAtTime(0.08, t + 0.03); og.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
-      o.connect(og); og.connect(out); o.start(t); o.stop(t + 0.4);
-    }
-    function playSidebarExpand() {
-      var c = _ctx(); if (!c) return;
-      var t = c.currentTime, out = _master(c);
-      var n = c.createBufferSource(); n.buffer = _noiseBuf(c, 0.18);
-      var bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.8;
-      bp.frequency.setValueAtTime(400, t); bp.frequency.exponentialRampToValueAtTime(1800, t + 0.15);
-      var nG = c.createGain(); nG.gain.setValueAtTime(0, t); nG.gain.linearRampToValueAtTime(0.12, t + 0.03); nG.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-      n.connect(bp); bp.connect(nG); nG.connect(out); n.start(t); n.stop(t + 0.2);
-      var notes = [659.25, 880.00];
-      notes.forEach(function (freq, i) {
-        var o = c.createOscillator(); o.type = 'sine'; o.frequency.value = freq;
-        var g = c.createGain(); var delay = 0.04 + i * 0.05;
-        g.gain.setValueAtTime(0, t + delay); g.gain.linearRampToValueAtTime(0.08, t + delay + 0.01); g.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.18);
-        o.connect(g); g.connect(out); o.start(t + delay); o.stop(t + delay + 0.2);
-      });
-    }
+    function playSidebarMinimize() { _playMenu(0.42, 0.74, 820); } // Banish (close) — down + muffled
+    function playSidebarExpand()  { _playMenu(0.32, 1.0, null);  } // Unleash (open) — bright, full
+    _ensureAudio(); // preload + decode so the first click isn't silent
 
     closeBtn.addEventListener('click', () => { playSidebarMinimize(); apply(false); });
     openBtn.addEventListener('click', () => { playSidebarExpand(); apply(true); });
