@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-06-24",
+    "product": "streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.28",
+    "title": "Name your scenes with a splash of colour.",
+    "body": "New Source labels let you put a clean, colourful name on anything on screen - your webcam, your gameplay, a guest, your 'Just Chatting' frame. Pick the text and colour, copy the link, and drop it into OBS as a Browser source. Add as many as you like, each its own colour and style.",
+    "items": [
+      "Label any source - webcam, gameplay, a guest - in one click.",
+      "Five styles with full colour control and a live preview.",
+      "Add unlimited labels, each its own colour, no extra setup."
+    ]
+  },
+  {
     "date": "2026-06-21",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
