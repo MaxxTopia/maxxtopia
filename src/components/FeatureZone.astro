@@ -67,14 +67,18 @@ const flipped = flip ?? index % 2 === 1;
 
   <div class="feature-zone__visual">
     {zone.visual.kind === 'image' && (
-      <div class="feature-zone__frame">
+      <button class="feature-zone__frame feature-zone__frame--btn" type="button" data-zoom={zone.visual.src} aria-label={`Enlarge: ${zone.visual.alt}`}>
         <img
           src={zone.visual.src}
           alt={zone.visual.alt}
           loading="lazy"
           decoding="async"
         />
-      </div>
+        <span class="feature-zone__zoomhint" aria-hidden="true">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+          Click to enlarge
+        </span>
+      </button>
     )}
 
     {zone.visual.kind === 'video' && (
@@ -209,6 +213,43 @@ const flipped = flip ?? index % 2 === 1;
     object-fit: cover;
     display: block;
   }
+  /* Image zones are click-to-enlarge buttons (the cover-crop hides detail — the
+     lightbox shows the full image at full resolution, then click to zoom 1:1). */
+  .feature-zone__frame--btn {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0;
+    width: 100%;
+    cursor: zoom-in;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+  }
+  .feature-zone__frame--btn img { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .feature-zone__frame--btn:hover img,
+  .feature-zone__frame--btn:focus-visible img { transform: scale(1.03); }
+  .feature-zone__frame--btn:focus-visible { outline: 2px solid var(--zone-accent); outline-offset: 3px; }
+  .feature-zone__zoomhint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: rgba(8, 8, 12, 0.66);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    opacity: 0.85;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  .feature-zone__frame--btn:hover .feature-zone__zoomhint { opacity: 1; transform: translateY(-1px); }
 
   /* Inline bar chart — comparison data without leaving the page flow. */
   .feature-zone__bars {
@@ -336,3 +377,81 @@ const flipped = flip ?? index % 2 === 1;
     }
   }
 </style>
+
+<!-- Shared image lightbox (global — the overlay is appended to <body>, outside
+     component style scope). One instance, wired by event delegation. -->
+<style is:global>
+  .fz-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(4, 3, 8, 0.93);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    overflow: auto;
+    cursor: zoom-out;
+  }
+  .fz-lightbox.open { display: flex; }
+  .fz-lightbox img {
+    max-width: 96vw;
+    max-height: 92vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7);
+    cursor: zoom-in;
+  }
+  .fz-lightbox img.zoomed {
+    max-width: none;
+    max-height: none;
+    cursor: zoom-out;
+  }
+  .fz-lightbox__close {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    font-size: 30px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.8);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+  }
+  .fz-lightbox__close:hover { color: #fff; }
+</style>
+
+<script>
+  (() => {
+    if ((window as any).__fzLightbox) return;
+    (window as any).__fzLightbox = true;
+    const lb = document.createElement('div');
+    lb.className = 'fz-lightbox';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.innerHTML = '<button class="fz-lightbox__close" aria-label="Close">×</button><img alt="">';
+    document.body.appendChild(lb);
+    const img = lb.querySelector('img') as HTMLImageElement;
+    const close = () => { lb.classList.remove('open'); img.classList.remove('zoomed'); document.body.style.overflow = ''; };
+    lb.addEventListener('click', (e) => { if (e.target === lb || (e.target as HTMLElement).classList.contains('fz-lightbox__close')) close(); });
+    img.addEventListener('click', (e) => { e.stopPropagation(); img.classList.toggle('zoomed'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('[data-zoom]') as HTMLElement | null;
+      if (!btn) return;
+      const src = btn.getAttribute('data-zoom');
+      if (!src) return;
+      const alt = btn.querySelector('img')?.getAttribute('alt') || '';
+      img.src = src;
+      img.alt = alt;
+      img.classList.remove('zoomed');
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  })();
+</script>

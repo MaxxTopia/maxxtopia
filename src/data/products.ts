@@ -681,60 +681,99 @@ export const products: Product[] = [
   {
     slug: 'viewmaxxing',
     name: 'Viewmaxxing',
-    category: 'Streamer Tools',
-    status: 'soon',
-    version: vmRelease.version ?? undefined,
-    tagline: 'A tool for streamers.',
+    category: 'TV Streaming',
+    status: 'beta',
+    version: vmRelease.version ?? '0.4.38',
+    tagline: 'One app. Every mood. Zero bills.',
     description:
-      "An operator-first streamer toolkit in active development. We're locking the one wedge worth shipping before we put it on a page.",
+      "Scrapped and rebuilt. The old streamer toolkit is gone — Viewmaxxing is now the one free app for your TV box: YouTube (native, ad-free), movies, shows, anime and Twitch on one D-pad home. No account, no subscription.",
     longDescription:
-      "A streamer toolkit in scope research. The framing will land when we lock the angle worth shipping.",
+      "We scrapped the old streamer toolkit and rebuilt it into the one app you open when you get home — YouTube (native, ad-free), movies, shows, anime and Twitch, all on one remote-first home that runs local on your box and learns what you watch. Free. No login. Grab it in the Discord.",
     features: [
       {
-        title: 'Streamer-side.',
-        body: 'Built for the operator, not the viewer. Past that — the framing is in flux.',
+        title: 'Five surfaces. One app.',
+        body: 'YouTube, movies, TV, anime and Twitch under one remote. The mood switches; the app doesn\'t.',
       },
       {
-        title: 'Slot reserved.',
-        body: 'We hold the slot until the direction is worth shipping. We don\'t ship to fill space.',
+        title: 'YouTube. Native. Ad-free.',
+        body: 'Extracted on the box, not loaded as a web page — so ads never play. English-filtered feeds, a multi-language audio picker, captions, and Auto/720/Max quality.',
+      },
+      {
+        title: 'No mirror picker. It just plays.',
+        body: 'A TMDb-sized catalog with multi-mirror streaming and automatic best-server selection. Continue Watching, episode pickers, sub or dub.',
+      },
+      {
+        title: 'Free. Local. Yours.',
+        body: 'No account, no subscription, no monthly bill. "For You" learns on the box — nothing uploaded, no profile sold.',
       },
     ],
-    primaryCta: vmRelease.installerUrl
-        ? { label: 'Download for Windows', href: vmRelease.installerUrl, external: true }
-        : { label: 'Get notified on launch', href: waitlistUrl('viewmaxxing'), external: true },
-    secondaryCta: vmRelease.releasePageUrl
-        ? { label: 'Release notes', href: vmRelease.releasePageUrl, external: true }
-        : undefined,
+    stats: [
+      { label: 'Apps in one', value: '5' },
+      { label: 'YouTube ads', value: '0' },
+      { label: 'Price', value: 'Free' },
+      { label: 'Account', value: 'None' },
+    ],
+    primaryCta: { label: 'Get it free — Discord #free-stuff', href: 'https://discord.gg/S78eecbWdx', external: true },
+    secondaryCta: undefined,
     glyph: '◐',
     logo: '/logos/viewmaxxing.png',
     icon: '/logos/viewmaxxing-icon.png',
     accentHex: '#10b981',
-    heroStat: { value: 'TBD', label: 'direction in flux' },
+    heroStat: { value: '5', label: 'apps in one · $0 forever' },
     zones: [
       {
-        eyebrow: '01 · The Side',
-        headline: "Built for the operator. Not the viewer.",
-        body: 'Every streamer dashboard pretends to serve everyone. Past that — what makes the operator faster, calmer, less interrupted — is where we\'re looking. The angle is in flux on purpose.',
+        eyebrow: '01 · The Rebuild',
+        headline: "We scrapped the first one. On purpose.",
+        body: 'The old Viewmaxxing was a vague streamer toolkit aimed at a tiny audience. It never shipped. We didn\'t fill the slot with slop — we deleted the concept and rebuilt it into the box app everyone actually wanted: instant-open, one tap to whatever you\'re in the mood for.',
         visual: {
-          kind: 'bars',
-          bars: [
-            { label: 'Stream Deck, OBS, Streamlabs — generic ops', value: 'multi-audience', ratio: 1.0 },
-            { label: 'Viewmaxxing — operator-first only', value: 'single-audience', ratio: 1.0, emphasize: true },
+          kind: 'chips',
+          chips: [
+            { label: 'Old Viewmaxxing · operator toolkit, never shipped', value: 'scrapped' },
+            { label: 'New Viewmaxxing · everyday relax app', value: 'v0.4.38 live', emphasize: true },
           ],
-          caption: 'Design target · operator vs operator+viewer',
+          caption: 'Same name · different product · rebuilt from zero',
         },
       },
       {
-        eyebrow: '02 · The Standard',
-        headline: "We hold the slot. We don’t fill it.",
-        body: 'We don\'t ship to fill space in the suite. The slot stays reserved until the direction is worth shipping. When it is, the page will say what it is — not what we hope it might be.',
+        eyebrow: '02 · The Stack',
+        headline: "Your living room runs six apps. This is one.",
+        body: 'YouTube here, a movie service there, an anime app, Twitch on your phone — five subscriptions and five remotes\' worth of friction. Viewmaxxing collapses all of it into one home screen, and it bills you nothing.',
         visual: {
           kind: 'bars',
           bars: [
-            { label: 'Hype-ship — promise first, build later', value: 'industry norm', ratio: 1.0 },
-            { label: 'Slot-reserve — direction first, page later', value: 'our standard', ratio: 1.0, emphasize: true },
+            { label: 'Stacked streaming subs', value: '$50+/mo', ratio: 1.0 },
+            { label: 'YouTube Premium alone', value: '$13.99/mo', ratio: 0.28 },
+            { label: 'Viewmaxxing', value: '$0/mo', ratio: 0.02, emphasize: true },
           ],
-          caption: 'Shipping ethic · slot reserved until the angle lands',
+          caption: 'Typical living-room stack vs one free app · prices as listed, subject to change',
+        },
+      },
+      {
+        eyebrow: '03 · The Feed',
+        headline: "YouTube on the big screen. Zero ads.",
+        body: 'The stock TV YouTube app shows unskippable ads and buries the audio tracks. Viewmaxxing extracts the video natively on the box, so ad slots never load — plus a multi-language audio picker, optional captions, and quality from Auto to Max.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'TV YouTube app · ad breaks', value: 'unskippable' },
+            { label: 'TV YouTube app · audio + captions', value: 'buried' },
+            { label: 'Viewmaxxing · YouTube', value: 'ad-free', emphasize: true },
+            { label: 'Viewmaxxing · audio + captions', value: 'built in', emphasize: true },
+          ],
+          caption: 'Native extraction on the box · not a browser ad-blocker',
+        },
+      },
+      {
+        eyebrow: '04 · The Pick',
+        headline: "It finds the working server. You don't.",
+        body: 'A TMDb-powered catalog of movies and shows, plus anime and live Twitch. Multi-mirror streaming auto-selects the best source in the background — no manual picker, no "try another link." Continue Watching remembers where you stopped; episode pickers and sub/dub are built in. All of it D-pad native.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Other sideload apps · pick a mirror, hope it works', value: 'manual' },
+            { label: 'Viewmaxxing · auto best-server', value: 'one tap', emphasize: true },
+          ],
+          caption: 'Reliability ranked per source · the working mirror plays first',
         },
       },
     ],
@@ -1118,9 +1157,9 @@ export const products: Product[] = [
       },
       {
         eyebrow: 'The whole map',
-        headline: 'Where everyone is. Who\'s left.',
-        body: 'Every drop, rotation and last-known position plotted on the live season map, with off-region players flagged. See the contested spots, the quiet rotates, and where the lobby is thinning out.',
-        visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp', alt: 'The Who\'s Left & Where survivor map — the full current-season Fortnite map with drop and rotation paths and POI markers.' },
+        headline: 'Where everyone was.',
+        body: 'Every player in your match plotted on the live season map as a colour-coded dot — you, pros, off-region opponents — with a head-count on each POI. A snapshot from the replay: read the clusters and the empty lanes for safe rotations. Click the map to open it full-size.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp', alt: 'Survivor map — the full current-season Fortnite map with a colour-coded dot for each player\'s last-known position and per-POI head-counts.' },
       },
     ],
     primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.66.exe', external: true },
