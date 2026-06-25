@@ -1104,7 +1104,7 @@ export const products: Product[] = [
     name: 'Snipemaxxer',
     category: 'Fortnite',
     status: 'beta',
-    version: '0.1.67',
+    version: '0.1.68',
     tagline: 'Know who\'s in your lobby.',
     description:
       "Auto-detects your match and names the whole lobby — pros, live streamers, who dropped where, off-region — plus more features to help in-game.",
@@ -1158,11 +1158,11 @@ export const products: Product[] = [
       {
         eyebrow: 'The whole map',
         headline: 'Where everyone was.',
-        body: 'Every player in your match plotted on the live season map as a colour-coded dot — you, pros, off-region opponents — with a head-count on each POI. A snapshot from the replay: read the clusters and the empty lanes for safe rotations. Click the map to open it full-size.',
-        visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp', alt: 'Survivor map — the full current-season Fortnite map with a colour-coded dot for each player\'s last-known position and per-POI head-counts.' },
+        body: 'The pros and live streamers in your game, shown with their skin and IGN right on the POI they landed — colour-coded for you, pros and streamers. The rest of the lobby as dots, with a head-count per POI. A snapshot from the replay; click the map to open it full-size.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp', alt: 'Where Everyone Was map — the current-season Fortnite map showing each pro and streamer\'s skin icon and IGN at the POI they landed, with the field as dots and per-POI head-counts.' },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.67.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.68.exe', external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
