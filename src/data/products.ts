@@ -621,11 +621,11 @@ export const products: Product[] = [
     category: 'Training',
     status: 'soon',
     version: amRelease.version ?? undefined,
-    tagline: 'Aim is four metrics. Not one.',
+    tagline: 'Warm up right. Per game.',
     description:
-      "AI aim trainer that measures four things — sensitivity, prediction, anchor, trigger — and drills only the ones breaking your aim. Not 200 scenarios. Four.",
+      "The community's best KovaaK's warmup for your game — clicking, tracking, or both — plus a straight answer on mouse skates. Free. Aimmaxxer v2, the real trainer, is in the lab.",
     longDescription:
-      "KovaaK's hands you 200 scenarios. We hand you the 4 that fix what's actually broken.",
+      "Ten minutes in KovaaK's before you queue, with the right scenarios for the aim your game actually demands. Plus the gear that moves your aim more than a new mouse. The real trainer is coming.",
     features: [
       {
         title: '4 metrics. 4 drills.',
@@ -646,7 +646,7 @@ export const products: Product[] = [
     logo: '/logos/aimmaxxer.png',
     icon: '/logos/aimmaxxer-icon.png',
     accentHex: '#f3af19',
-    heroStat: { value: '4', label: 'metrics · not one' },
+    heroStat: { value: '6', label: 'games · a warmup for each' },
     zones: [
       {
         eyebrow: '01 · The Metrics',

@@ -251,12 +251,37 @@
    values in sync while matching the page's green vibe instead of the
    generic magenta (which read as plain on a green-accented page). */
 .gradient-view {
-  background: linear-gradient(120deg, #6ee7b7 0%, #10b981 45%, #2dd4bf 78%, #06b6d4 100%);
-  background-size: 200% 100%;
+  /* Ben 10 Omnitrix-inspired alien green — lime → green → emerald (the page
+     accent) → back to lime. Stays in the page's green family while the energy
+     visibly sweeps + pulses, so the hero number and the four stat tiles cycle
+     in sync like an Omnitrix charging. */
+  background: linear-gradient(
+    115deg,
+    #d9f99d 0%,
+    #a3e635 18%,
+    #4ade80 38%,
+    #10b981 58%,
+    #22c55e 78%,
+    #bef264 100%
+  );
+  background-size: 280% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: shimmer 6s ease-in-out infinite;
+  animation: omnitrix-flux 4.5s ease-in-out infinite;
+}
+@keyframes omnitrix-flux {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: brightness(1) drop-shadow(0 0 0 rgba(132, 204, 22, 0));
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.16) drop-shadow(0 0 12px rgba(74, 222, 128, 0.32));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gradient-view { animation: none; }
 }
 
 /* ────────────────────────────────────────────────────────────────────

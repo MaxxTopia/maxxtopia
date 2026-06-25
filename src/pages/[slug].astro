@@ -14,6 +14,7 @@ import CutAutopsy from '../components/CutAutopsy.astro';
 import DiscordKillshot from '../components/DiscordKillshot.astro';
 import ReceiptsBand from '../components/ReceiptsBand.astro';
 import ReconversionCTA from '../components/ReconversionCTA.astro';
+import AimWarmup from '../components/AimWarmup.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -102,23 +103,8 @@ const reconvertConfig: Record<string, {
       },
     ],
   },
-  aimmaxxer: {
-    closingLine: 'Drill the four. Not the two hundred.',
-    faqs: [
-      {
-        q: 'Why not just use KovaaK\'s?',
-        a: "KovaaK's hands you 200 scenarios and a sensitivity guess. We measure four discrete metrics — sensitivity, prediction, anchor, trigger discipline — and prescribe the narrow set of drills that fix what's actually breaking your aim.",
-      },
-      {
-        q: 'Will it work with my sens?',
-        a: "Yes. The routine adapts to your DPI, in-game sensitivity, and play style. No 800-DPI prescription. No forced cm/360 changes. The drills bend around your hand — not the other way around.",
-      },
-      {
-        q: 'When does it ship?',
-        a: "Rust pipeline phases 2 and 3a are merged and benchmarked (18.5x and 82x speedups respectively). Calibration is the gating work. The waitlist sees the first public build.",
-      },
-    ],
-  },
+  // aimmaxxer intentionally omitted — its page closes with the bespoke
+  // "Aimmaxxer v2, the real deal" teaser in the AimWarmup section instead.
   viewmaxxing: {
     closingLine: 'One app. Every mood. Zero bills.',
     faqs: [
@@ -288,6 +274,11 @@ const primaryBtnClass = product.slug === 'viewmaxxing' ? 'btn-view' : 'btn-prima
 // (under the Live / version pills) instead of the full-width shot below.
 const isExt = product.slug === 'extensionmaxxing';
 
+// Aimmaxxer: interim resource page — per-game KovaaK warmups + gear advice +
+// a "v2, the real deal" teaser (the AimWarmup section) instead of the generic
+// feature grid / build-status banner.
+const isAim = product.slug === 'aimmaxxer';
+
 // LIVE-product fork: OM + DM each get a bespoke story shape that demonstrates
 // the moat (sourced tweaks · subtracted MB) instead of a generic feature grid.
 // SOON products keep the original card-grid treatment. Drives:
@@ -336,7 +327,7 @@ const softwareKeywords: Record<string, string> = {
   discordmaxxer: 'lightweight discord client, discord alternative, low ram discord, discord without telemetry, discord client for gamers, vencord alternative, discord ram usage, fast discord client, tournament mode discord, discord plugins',
   clipmaxxer: 'twitch clip maker, ai clip generator, opusclip alternative, eklipse alternative, vod clipper, fortnite clip maker, valorant clip ai, content matchmaker, tiktok shorts reels generator',
   dropmaxxer: 'fortnite drop calculator, drop spot tool, drop path calculator, droppingcalc alternative, fortnite poi planner, fortnite bus speed, fortnite landing optimization',
-  aimmaxxer: 'ai aim trainer, kovaaks alternative, aim training routine, fps aim tracker, valorant aim trainer, fortnite aim training, two pc aim assist',
+  aimmaxxer: 'kovaaks warmup routine, best kovaaks scenarios, valorant warmup routine, apex aim warmup, cs2 aim warmup, fortnite aim warmup, overwatch aim warmup, voltaic vdim, best mouse skates, ptfe vs glass mouse skates, tiger arc 2, ai aim trainer, kovaaks alternative',
   viewmaxxing: 'free streaming app for android tv, tv box streaming app, firestick streaming app, ad-free youtube on tv, free movie streaming app, anime streaming app, all-in-one streaming app, android tv box apk, kodi alternative, cord cutting app, twitch on tv box',
   extensionmaxxing: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
   streammaxxing: 'stream alerts, twitch alerts, local stream alerts, botrix alternative, streamlabs alerts alternative, twitch eventsub overlay, donation tts, voice clone tts alerts, obs alert overlay, free stream alerts, clip trimmer, loudness normalize alerts',
@@ -434,7 +425,7 @@ const breadcrumbSchema = {
       </a>
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
-        <div class="md:col-span-8">
+        <div class={isExt ? 'md:col-span-7' : 'md:col-span-8'}>
           <div class="reveal reveal-1 flex items-center gap-3.5 mb-8">
             <span class="glyph-badge !w-12 !h-12" style={`--accent: ${product.accentHex}; ${product.logo ? 'padding: 4px;' : ''}`} aria-hidden="true">
               {product.logo ? (
@@ -578,11 +569,15 @@ const breadcrumbSchema = {
         )}
 
         {/* AdBlock-Maxxer: hero screenshot lives in the right column, sized to
-            sit just under the Live / version pills, instead of full-width below. */}
+            sit just under the Live / version pills. Click-to-enlarge via the
+            global data-zoom lightbox (injected by FeatureZone, present here). */}
         {isExt && screenshotMain && (
-          <aside class="reveal reveal-6 md:col-span-4 md:mt-14">
-            <figure
-              class="ext-hero-shot rounded-2xl overflow-hidden border border-[var(--color-line-strong)]"
+          <aside class="reveal reveal-6 md:col-span-5 md:mt-12">
+            <button
+              type="button"
+              class="ext-hero-shot group relative block w-full cursor-zoom-in rounded-2xl overflow-hidden border border-[var(--color-line-strong)]"
+              data-zoom={screenshotMain}
+              aria-label={`Enlarge: ${product.name} welcome screen`}
               style={`box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px ${product.accentHex}22, 0 0 60px ${product.accentHex}14;`}
             >
               <img
@@ -590,9 +585,13 @@ const breadcrumbSchema = {
                 alt={`${product.name} welcome screen`}
                 loading="eager"
                 decoding="async"
-                class="block w-full h-auto"
+                class="block w-full h-auto transition-transform duration-500 group-hover:scale-[1.03]"
               />
-            </figure>
+              <span class="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/65 px-2.5 py-1 text-[11px] font-mono tracking-wide text-white/90 opacity-85 backdrop-blur transition-opacity group-hover:opacity-100">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+                Click to enlarge
+              </span>
+            </button>
           </aside>
         )}
       </div>
@@ -627,8 +626,10 @@ const breadcrumbSchema = {
         />
       )}
 
-      <!-- Coming-soon "live build" banner — replaces the diagonal marquee. -->
-      {isSoon && (
+      <!-- Coming-soon "live build" banner — replaces the diagonal marquee.
+           Aimmaxxer suppresses it: its dedicated "v2, the real deal" teaser
+           in the AimWarmup section is the single coming-soon signal. -->
+      {isSoon && !isAim && (
         <div class="mt-12 max-w-3xl">
           <BuildStatus
             productName={product.name}
@@ -648,7 +649,9 @@ const breadcrumbSchema = {
     <HowItWorks howItWorks={product.howItWorks} accentHex={product.accentHex} />
   )}
 
-  <!-- Features — bespoke zones for LIVE products, card grid fallback for SOON. -->
+  {/* Features — bespoke zones for LIVE products, card grid fallback for SOON.
+      Aimmaxxer swaps this whole section for the bespoke AimWarmup below. */}
+  {!isAim && (
   <section class="relative overflow-hidden">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-24">
       <div class="reveal-on-scroll mb-12">
@@ -687,6 +690,13 @@ const breadcrumbSchema = {
       )}
     </div>
   </section>
+  )}
+
+  {/* Aimmaxxer: interim resource section — per-game KovaaK warmups + a brief
+      mouse-skates take + the "v2, the real deal" teaser. */}
+  {isAim && (
+    <AimWarmup accentHex={product.accentHex} notifyHref={product.primaryCta.href} />
+  )}
 
   {/* How it works — renders after the feature zones for products that
       aren't in the "walkthrough first" set (OM, dropmaxxer). */}
@@ -738,6 +748,7 @@ const breadcrumbSchema = {
     </div>
   </section>
 
-  <!-- Floating Notify-me CTA on coming-soon products -->
-  {isSoon && <NotifyMeCard productName={product.name} href={product.primaryCta.href} />}
+  <!-- Floating Notify-me CTA on coming-soon products (aimmaxxer uses its own
+       v2 teaser CTA instead). -->
+  {isSoon && !isAim && <NotifyMeCard productName={product.name} href={product.primaryCta.href} />}
 </Layout>

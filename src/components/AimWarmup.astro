@@ -1,0 +1,451 @@
+---
+/**
+ * AimWarmup — aimmaxxer's interim resource section. Until the real trainer (v2)
+ * ships, the page earns its keep: the community-standard KovaaK's warm-up per
+ * game (sorted by the aim each game demands — clicking / tracking / mixed), a
+ * brief honest take on mouse skates, and a "v2, the real deal" teaser.
+ *
+ * Scenario picks reflect community consensus + the canonical Voltaic benchmark
+ * vocabulary; exact in-trainer spellings vary by uploaded copy. Not fabricated —
+ * sourced from kovaaks.com playlists, the Voltaic benchmarks, and aim-trainer
+ * community routines.
+ */
+type Props = { accentHex: string; notifyHref: string };
+const { accentHex, notifyHref } = Astro.props;
+
+type Game = {
+  game: string;
+  style: 'Clicking' | 'Tracking' | 'Mixed';
+  why: string;
+  scenarios: { name: string; warms: string }[];
+};
+
+const games: Game[] = [
+  {
+    game: 'Valorant',
+    style: 'Clicking',
+    why: 'One-taps + crosshair placement win rounds.',
+    scenarios: [
+      { name: '1wall6targets', warms: 'static one-tap precision' },
+      { name: 'Pasu', warms: 'reactive flicks + trigger discipline' },
+      { name: 'Tile Frenzy', warms: 'fast target acquisition' },
+    ],
+  },
+  {
+    game: 'CS2',
+    style: 'Clicking',
+    why: 'Static precision and peek flicks.',
+    scenarios: [
+      { name: '1wall6targets', warms: 'spray transfer + static aim' },
+      { name: 'Tile Frenzy', warms: 'peek flicks under pressure' },
+      { name: 'VDIM Clicking', warms: 'a full clicking day' },
+    ],
+  },
+  {
+    game: 'Apex Legends',
+    style: 'Tracking',
+    why: 'Hold the beam on a strafing target.',
+    scenarios: [
+      { name: 'Smoothbot', warms: 'smooth beam tracking' },
+      { name: 'Air', warms: 'long + mid-air tracking' },
+      { name: 'Close Long Strafes', warms: 'reactive close tracking' },
+    ],
+  },
+  {
+    game: 'Overwatch 2',
+    style: 'Tracking',
+    why: 'Hitscan beams + flanker duels.',
+    scenarios: [
+      { name: 'VT Suavetrack', warms: 'smooth hitscan tracking' },
+      { name: 'Pilltrack', warms: 'precise tracking at range' },
+      { name: 'Close Long Strafes', warms: 'Tracer / Genji duels' },
+    ],
+  },
+  {
+    game: 'Fortnite',
+    style: 'Mixed',
+    why: 'Box-fight flicks + open-field tracking.',
+    scenarios: [
+      { name: '1wall6targets', warms: 'box-fight flicks' },
+      { name: 'Smoothbot', warms: 'tracking in the open' },
+      { name: 'Sphereswitch', warms: 'fast target switching' },
+    ],
+  },
+  {
+    game: 'Call of Duty',
+    style: 'Mixed',
+    why: 'Close-range beams + quick flicks.',
+    scenarios: [
+      { name: 'Smoothbot', warms: 'close-range beam control' },
+      { name: 'Tile Frenzy', warms: 'quick acquisition' },
+      { name: '1w6ts (switch)', warms: 'multi-enemy transfers' },
+    ],
+  },
+];
+
+const skates = [
+  { name: 'Tiger Arc 2', kind: 'PTFE', best: 'Best value — fast, durable, zero break-in. The default pick.' },
+  { name: 'Corepad Skatez', kind: 'PTFE', best: 'The fastest "neutral" PTFE glide.' },
+  { name: 'Tiger Ice', kind: 'PTFE+', best: 'Premium — noticeably quicker, hybrid feel.' },
+  { name: 'Pulsar Superglide', kind: 'Glass', best: 'Fastest + lasts years. Scratchy on cloth.' },
+];
+---
+
+<section class="aim-warmup" style={`--aim-accent: ${accentHex};`} aria-labelledby="aim-warmup-heading">
+  <div class="aim-warmup__inner">
+    <header class="aim-warmup__header reveal-on-scroll">
+      <p class="aim-warmup__eyebrow">Warm up right</p>
+      <h2 id="aim-warmup-heading" class="aim-warmup__heading">
+        Your aim warmup. <span class="aim-warmup__accent">Per game.</span>
+      </h2>
+      <p class="aim-warmup__sub">
+        Aim is three skills — clicking, tracking, switching — and the right warmup is the one
+        your game leans on. Ten minutes in KovaaK's before you queue. These are the
+        community-standard picks for each.
+      </p>
+    </header>
+
+    <div class="aim-warmup__grid">
+      {games.map((g) => (
+        <article class="aim-warmup__card reveal-on-scroll">
+          <div class="aim-warmup__card-head">
+            <h3 class="aim-warmup__game">{g.game}</h3>
+            <span class:list={['aim-warmup__tag', `aim-warmup__tag--${g.style.toLowerCase()}`]}>{g.style}</span>
+          </div>
+          <p class="aim-warmup__why">{g.why}</p>
+          <ul class="aim-warmup__scn">
+            {g.scenarios.map((s) => (
+              <li class="aim-warmup__scn-row">
+                <span class="aim-warmup__scn-name">{s.name}</span>
+                <span class="aim-warmup__scn-warms">{s.warms}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+
+    <p class="aim-warmup__system reveal-on-scroll">
+      Want one system, not a pick-list? Run the <strong>Voltaic Daily Improvement Method (VDIM)</strong> —
+      clicking-weighted for tac-shooters, tracking-weighted for Apex / Overwatch. Benchmark, drill your
+      worst skill, repeat.
+    </p>
+
+    <!-- Brief gear note: mouse skates -->
+    <div class="aim-warmup__skates reveal-on-scroll">
+      <div class="aim-warmup__skates-head">
+        <p class="aim-warmup__eyebrow">While you're at it · the glide</p>
+        <h3 class="aim-warmup__skates-title">New skates do more for your aim than a new mouse.</h3>
+        <p class="aim-warmup__skates-tradeoff">
+          <strong>PTFE</strong> = cheaper, more control, wears in 6–12 months.
+          <strong>Glass / ceramic</strong> = faster, smoother, lasts years, pricier.
+        </p>
+      </div>
+      <div class="aim-warmup__skates-grid">
+        {skates.map((s) => (
+          <div class="aim-warmup__skate">
+            <div class="aim-warmup__skate-top">
+              <span class="aim-warmup__skate-name">{s.name}</span>
+              <span class="aim-warmup__skate-kind">{s.kind}</span>
+            </div>
+            <p class="aim-warmup__skate-best">{s.best}</p>
+          </div>
+        ))}
+      </div>
+      <p class="aim-warmup__skates-tip">
+        Buy the set cut for your exact mouse model, wipe off the old adhesive first, and match the skate
+        speed to your pad — a fast skate on a fast pad with a light mouse turns uncontrollable.
+      </p>
+    </div>
+
+    <!-- v2 teaser -->
+    <div class="aim-warmup__v2 reveal-on-scroll">
+      <p class="aim-warmup__v2-eyebrow">What's coming</p>
+      <h3 class="aim-warmup__v2-title">Aimmaxxer <span class="aim-warmup__accent">v2.</span> The real deal.</h3>
+      <p class="aim-warmup__v2-body">
+        Warmups get you loose. v2 fixes what's actually broken. It measures four things —
+        sensitivity, prediction, anchor, trigger — and drills only the ones breaking your aim, in a
+        routine that adapts to your DPI and play style. Not 200 scenarios. Four.
+      </p>
+      <a class="aim-warmup__v2-cta" href={notifyHref} target="_blank" rel="noopener">
+        Get notified when v2 drops
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .aim-warmup {
+    position: relative;
+    padding: 88px 0 32px;
+    border-top: 1px solid var(--color-line);
+  }
+  .aim-warmup__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  @media (min-width: 640px) {
+    .aim-warmup__inner { padding: 0 32px; }
+  }
+
+  .aim-warmup__header {
+    max-width: 680px;
+    margin: 0 0 40px;
+  }
+  .aim-warmup__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--aim-accent, var(--color-magenta));
+    margin: 0 0 14px;
+  }
+  .aim-warmup__heading {
+    font-family: var(--font-sans);
+    font-size: clamp(30px, 4.5vw, 48px);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 16px;
+  }
+  .aim-warmup__accent { color: var(--aim-accent, var(--color-magenta)); }
+  .aim-warmup__sub {
+    color: var(--color-text-mid);
+    font-size: 16px;
+    line-height: 1.55;
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .aim-warmup__grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  .aim-warmup__card {
+    border: 1px solid var(--color-line);
+    background: var(--color-bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    transition: border-color 200ms ease, transform 200ms ease, background 200ms ease;
+  }
+  .aim-warmup__card:hover {
+    border-color: color-mix(in srgb, var(--aim-accent) 45%, transparent);
+    transform: translateY(-2px);
+    background: var(--color-bg-card-hover);
+  }
+  .aim-warmup__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 6px;
+  }
+  .aim-warmup__game {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .aim-warmup__tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .aim-warmup__tag--clicking {
+    color: #f3af19;
+    border-color: rgba(243, 175, 25, 0.32);
+    background: rgba(243, 175, 25, 0.08);
+  }
+  .aim-warmup__tag--tracking {
+    color: #00d4ff;
+    border-color: rgba(0, 212, 255, 0.32);
+    background: rgba(0, 212, 255, 0.08);
+  }
+  .aim-warmup__tag--mixed {
+    color: #e25bff;
+    border-color: rgba(226, 91, 255, 0.32);
+    background: rgba(226, 91, 255, 0.08);
+  }
+  .aim-warmup__why {
+    color: var(--color-muted);
+    font-size: 13px;
+    line-height: 1.45;
+    margin: 0 0 14px;
+  }
+  .aim-warmup__scn {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .aim-warmup__scn-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-line);
+  }
+  .aim-warmup__scn-name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .aim-warmup__scn-warms {
+    font-size: 12.5px;
+    color: var(--color-text-mid);
+    text-align: right;
+    line-height: 1.35;
+  }
+
+  .aim-warmup__system {
+    margin: 24px 0 0;
+    color: var(--color-text-mid);
+    font-size: 14.5px;
+    line-height: 1.6;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--color-line);
+    background: color-mix(in srgb, var(--aim-accent) 5%, var(--color-bg-card));
+  }
+  .aim-warmup__system strong { color: var(--color-text); }
+
+  /* Mouse skates — brief gear note. */
+  .aim-warmup__skates {
+    margin: 48px 0 0;
+    padding-top: 40px;
+    border-top: 1px solid var(--color-line);
+  }
+  .aim-warmup__skates-head { max-width: 680px; margin: 0 0 22px; }
+  .aim-warmup__skates-title {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--color-text);
+    margin: 0 0 12px;
+  }
+  .aim-warmup__skates-tradeoff {
+    color: var(--color-text-mid);
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .aim-warmup__skates-tradeoff strong { color: var(--color-text); }
+  .aim-warmup__skates-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .aim-warmup__skate {
+    border: 1px solid var(--color-line);
+    background: var(--color-bg-card);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .aim-warmup__skate-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 6px;
+  }
+  .aim-warmup__skate-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .aim-warmup__skate-kind {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-subtle);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .aim-warmup__skate-best {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--color-text-mid);
+    margin: 0;
+  }
+  .aim-warmup__skates-tip {
+    margin: 16px 0 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--color-subtle);
+  }
+
+  /* v2 teaser. */
+  .aim-warmup__v2 {
+    margin: 56px 0 0;
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center;
+    border: 1px solid color-mix(in srgb, var(--aim-accent) 35%, transparent);
+    background:
+      radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--aim-accent) 12%, transparent), transparent 60%),
+      var(--color-bg-card);
+    box-shadow: 0 0 60px color-mix(in srgb, var(--aim-accent) 12%, transparent);
+  }
+  .aim-warmup__v2-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--aim-accent, var(--color-magenta));
+    margin: 0 0 12px;
+  }
+  .aim-warmup__v2-title {
+    font-family: var(--font-display), var(--font-sans);
+    font-size: clamp(34px, 6vw, 64px);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: 0.01em;
+    color: var(--color-text);
+    margin: 0 0 16px;
+  }
+  .aim-warmup__v2-body {
+    max-width: 60ch;
+    margin: 0 auto 24px;
+    color: var(--color-text-mid);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .aim-warmup__v2-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 48px;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: #0a0612;
+    background: var(--aim-accent, var(--color-magenta));
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--aim-accent) 35%, transparent);
+    transition: transform 200ms ease, filter 200ms ease, box-shadow 200ms ease;
+  }
+  .aim-warmup__v2-cta:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 40px color-mix(in srgb, var(--aim-accent) 45%, transparent);
+  }
+  .aim-warmup__v2-cta:active { transform: scale(0.98); }
+</style>
