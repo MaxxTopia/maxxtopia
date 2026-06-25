@@ -84,10 +84,10 @@ const games: Game[] = [
 ];
 
 const skates = [
-  { name: 'Corepad Skatez PRO', kind: 'PTFE', best: 'Best on cloth. Pure-PTFE control + a clean stop. Cut for the Logitech Superstrike / Superlight 2 and the Finalmouse ULX.' },
-  { name: 'EspTiger Ice V2', kind: 'PTFE', best: 'Fast control PTFE — smooth on cloth without losing the brakes.' },
-  { name: 'Lethal Obsidian Control', kind: 'PTFE', best: 'Control-leaning, rounded edges so they never grind the weave.' },
-  { name: 'Pulsar Superglide', kind: 'Glass', best: 'Only for glass / hard pads. Fastest there — the wrong tool on cloth.' },
+  { name: 'X-Raypad Jade', kind: 'PTFE · speed', best: 'The cloth speed pick. Fastest PTFE on an Artisan pad — boardzy & Mighty’s cloth favorite. Near-zero brake, so it’s pure glide.' },
+  { name: 'Tiger Ice V2', kind: 'PTFE · balanced', best: 'Same top tier as Jade but more controlled — the flick-and-stop middle for build/edit. (Magic Ice is the same class.)' },
+  { name: 'Corepad Skatez', kind: 'PTFE · control', best: 'More braking, the most durable soft PTFE. The control end of the cloth range.' },
+  { name: 'X-Raypad Obsidian', kind: 'glass-first', best: 'Hardened PTFE built for glass / hard pads. On cloth the reviewers say it adds tug or nothing — skip it unless you switch to glass.' },
 ];
 ---
 
@@ -135,11 +135,12 @@ const skates = [
     <div class="aim-warmup__skates reveal-on-scroll">
       <div class="aim-warmup__skates-head">
         <p class="aim-warmup__eyebrow">While you're at it · the glide</p>
-        <h3 class="aim-warmup__skates-title">On cloth, the right skates beat a new mouse.</h3>
+        <h3 class="aim-warmup__skates-title">On cloth it's glide vs brake — and both are PTFE.</h3>
         <p class="aim-warmup__skates-tradeoff">
-          On an <strong>Artisan</strong> (or any cloth) pad, run <strong>pure PTFE</strong> — predictable
-          deceleration and the stopping power a flick game needs. <strong>Glass / ceramic</strong> skates
-          are built for glass and hard pads; on cloth they over-speed the flick and scratch the weave.
+          On an <strong>Artisan</strong> cloth pad you want <strong>PTFE</strong>; the real choice is speed
+          vs control. <strong>Jade</strong> is the fastest (almost no stopping power); <strong>Tiger Ice V2</strong>
+          and <strong>Corepad</strong> add the brake a build-and-edit flicker needs. The glass-first skates —
+          <strong>Obsidian</strong>, Pulsar Superglide — belong on hard / glass pads, not cloth.
         </p>
       </div>
       <div class="aim-warmup__skates-grid">
@@ -154,9 +155,11 @@ const skates = [
         ))}
       </div>
       <p class="aim-warmup__skates-tip">
-        Buy the set cut for your exact mouse, wipe off the old adhesive first, and match skate speed to
-        your pad. One honest note: pros publish their mouse, sens and pad — almost never their skates —
-        so ignore any "pro X runs Y." On cloth, stock PTFE is already good; these are upgrades, not fixes.
+        The hype, corrected: Jade and Obsidian are both X-Raypad flagships, but opposites — Jade is fast PTFE
+        built for cloth; Obsidian is a hardened control skate built for glass. On your Artisan cloth, run Jade
+        for glide or Tiger Ice V2 for control. Grab the Superstrike / Superlight 2 cut (sold for both) or
+        universal dots; for the Finalmouse ULX Prophecy use universal dots (S12 / UL2 / ULX). No pro publishes
+        their feet — this is reviewer + community consensus (boardzy, Mighty, r/MouseReview), not a "pro uses X" claim.
       </p>
     </div>
 
