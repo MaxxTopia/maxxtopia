@@ -246,6 +246,19 @@
   color: transparent;
 }
 
+/* Accent-green variant of .gradient-suite — same shimmer, tuned to the
+   viewmaxxing emerald accent. Keeps the hero number + the four stat-tile
+   values in sync while matching the page's green vibe instead of the
+   generic magenta (which read as plain on a green-accented page). */
+.gradient-view {
+  background: linear-gradient(120deg, #6ee7b7 0%, #10b981 45%, #2dd4bf 78%, #06b6d4 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s ease-in-out infinite;
+}
+
 /* ────────────────────────────────────────────────────────────────────
    Buttons — magnetic primary + ghost secondary.
    ──────────────────────────────────────────────────────────────────── */
@@ -312,6 +325,35 @@
   background: rgba(226, 91, 255, 0.05);
 }
 .btn-secondary:active { transform: scale(0.98); }
+
+/* Dimmed, green-tinted primary — for the viewmaxxing page so the main CTA
+   matches the page vibe instead of shouting in suite-magenta. Self-contained
+   (used INSTEAD of .btn-primary), glassy emerald fill echoing the stat tiles. */
+.btn-view {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(6, 182, 212, 0.16) 100%);
+  color: #a7f3d0;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease, filter 220ms ease, background 220ms ease;
+}
+.btn-view:hover {
+  filter: brightness(1.06);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(6, 182, 212, 0.20) 100%);
+  box-shadow:
+    0 0 0 1px rgba(16, 185, 129, 0.55),
+    0 10px 38px rgba(16, 185, 129, 0.22);
+}
+.btn-view:active { transform: scale(0.98); }
 
 /* ────────────────────────────────────────────────────────────────────
    Card — 3D tilt with mouse, glow on hover.

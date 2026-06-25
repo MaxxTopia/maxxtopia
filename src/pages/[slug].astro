@@ -120,19 +120,19 @@ const reconvertConfig: Record<string, {
     ],
   },
   viewmaxxing: {
-    closingLine: 'Operator-first. Slot reserved.',
+    closingLine: 'One app. Every mood. Zero bills.',
     faqs: [
       {
-        q: 'What does it actually do?',
-        a: "Honest answer — we're not telling you yet. The framing has to be worth shipping before we put it on a page. Past 'built for the operator, not the viewer' the direction is still in flux. The waitlist gets the angle the moment it lands.",
+        q: 'Is it really free? What\'s the catch?',
+        a: "Free. No account, no subscription, no trial that flips to paid. It runs locally on your TV box, and your watch history and \"For You\" recs stay on the device — nothing is uploaded. The honest catch: it's a sideloaded, personal-grade app for TV boxes, not a Play Store download.",
       },
       {
-        q: "Why hold the slot if you don't know?",
-        a: "Because hype-shipping a streamer tool we don't believe in burns the trust we earned on the products that worked. The suite has six slots. One stays reserved until the angle is right.",
+        q: 'Will it run on my box?',
+        a: "It's built for Android TV boxes, set-top boxes and Fire-Stick-class devices, and it's D-pad/remote-first by design. You sideload it — no store account needed — and the in-app updater keeps it current after that.",
       },
       {
-        q: 'When will you decide?',
-        a: "When a real streamer workflow we sit with shows a clean wedge — one painful, repeatable, daily problem we can crush with code. The other products started there. This one will too.",
+        q: 'How do I get it?',
+        a: "Join the Maxxtopia Discord and open the #free-stuff channel — the latest build (v0.4.38, updated often) is posted there with sideload steps. Invite: discord.gg/S78eecbWdx. Sideload it onto your box and open it.",
       },
     ],
   },
@@ -278,6 +278,16 @@ const suffix = product.name.match(/maxx(er|ing)$/i)?.[0] ?? '';
 const screenshotMain = product.screenshots?.[0];
 const screenshotExtras = product.screenshots?.slice(1) ?? [];
 
+// Per-product accent treatment: viewmaxxing's green page recolors the hero
+// number + stat tiles (kept in sync) and dims the loud suite-magenta CTA to a
+// glassy emerald that matches the page. Everything else keeps the suite look.
+const numGradient = product.slug === 'viewmaxxing' ? 'gradient-view' : 'gradient-suite';
+const primaryBtnClass = product.slug === 'viewmaxxing' ? 'btn-view' : 'btn-primary';
+
+// AdBlock-Maxxer: pull the hero screenshot up into the empty right column
+// (under the Live / version pills) instead of the full-width shot below.
+const isExt = product.slug === 'extensionmaxxing';
+
 // LIVE-product fork: OM + DM each get a bespoke story shape that demonstrates
 // the moat (sourced tweaks · subtracted MB) instead of a generic feature grid.
 // SOON products keep the original card-grid treatment. Drives:
@@ -310,7 +320,7 @@ const featureHeadings: Record<string, FeatureHeading> = {
   clipmaxxer:          { eyebrow: 'The cascade',     left: 'Five signals.',            right: 'Never zero.' },
   dropmaxxer:          { eyebrow: 'The math',        left: 'Cited physics.',           right: 'Current map.' },
   aimmaxxer:           { eyebrow: 'The metrics',     left: 'Aim is four things.',      right: 'Drilled four ways.' },
-  viewmaxxing:         { eyebrow: 'The standard',    left: 'Operator-first.',          right: 'Slot reserved.' },
+  viewmaxxing:         { eyebrow: 'The lineup',      left: 'Five surfaces.',           right: 'One remote.' },
   extensionmaxxing:    { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
   streammaxxing:       { eyebrow: 'The latency',     left: 'No cloud hop.',            right: 'No delay.' },
   snipemaxxer:         { eyebrow: 'The edge',        left: 'Intel you can\'t get',     right: 'from inside the game.' },
@@ -327,7 +337,7 @@ const softwareKeywords: Record<string, string> = {
   clipmaxxer: 'twitch clip maker, ai clip generator, opusclip alternative, eklipse alternative, vod clipper, fortnite clip maker, valorant clip ai, content matchmaker, tiktok shorts reels generator',
   dropmaxxer: 'fortnite drop calculator, drop spot tool, drop path calculator, droppingcalc alternative, fortnite poi planner, fortnite bus speed, fortnite landing optimization',
   aimmaxxer: 'ai aim trainer, kovaaks alternative, aim training routine, fps aim tracker, valorant aim trainer, fortnite aim training, two pc aim assist',
-  viewmaxxing: 'streamer toolkit, twitch streaming tools, obs alternative, streamer dashboard, content stream operator',
+  viewmaxxing: 'free streaming app for android tv, tv box streaming app, firestick streaming app, ad-free youtube on tv, free movie streaming app, anime streaming app, all-in-one streaming app, android tv box apk, kodi alternative, cord cutting app, twitch on tv box',
   extensionmaxxing: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
   streammaxxing: 'stream alerts, twitch alerts, local stream alerts, botrix alternative, streamlabs alerts alternative, twitch eventsub overlay, donation tts, voice clone tts alerts, obs alert overlay, free stream alerts, clip trimmer, loudness normalize alerts',
   snipemaxxer: 'fortnite lobby scout, fortnite tournament tool, fncs scout, cash cup helper, fortnite replay analyzer, who is in my fortnite lobby, fortnite pro tracker, fortnite live streamer detector, fortnite points calculator, fortnite qualify calculator, fortnite surge tracker, fortnite tournament coach',
@@ -345,10 +355,11 @@ const softwareSchema = {
     'Browser Extension': 'BrowserApplication',
     'Stream Alerts': 'MultimediaApplication',
     'Streamer Tools': 'MultimediaApplication',
+    'TV Streaming': 'MultimediaApplication',
     'Content': 'MultimediaApplication',
   } as Record<string, string>)[product.category] ?? 'GameApplication',
   applicationSubCategory: product.category,
-  operatingSystem: 'Windows 10, Windows 11',
+  operatingSystem: product.slug === 'viewmaxxing' ? 'Android' : 'Windows 10, Windows 11',
   ...(product.version && { softwareVersion: product.version }),
   ...(softwareKeywords[product.slug] && { keywords: softwareKeywords[product.slug] }),
   offers: {
@@ -453,7 +464,7 @@ const breadcrumbSchema = {
           ) : (
             <div class="reveal reveal-2 mb-6">
               <p
-                class="font-display gradient-suite leading-[0.85] tracking-[0.005em]"
+                class={`font-display ${numGradient} leading-[0.85] tracking-[0.005em]`}
                 style="font-size: clamp(96px, 18vw, 220px);"
                 aria-label={`${product.heroStat.value} ${product.heroStat.label}`}
               >
@@ -477,7 +488,7 @@ const breadcrumbSchema = {
             {isLive ? (
               <a
                 href={product.primaryCta.href}
-                class="btn-primary"
+                class={primaryBtnClass}
                 target={product.primaryCta.external ? '_blank' : undefined}
                 rel={product.primaryCta.external ? 'noopener' : undefined}
               >
@@ -490,7 +501,7 @@ const breadcrumbSchema = {
               <>
                 <a
                   href={product.primaryCta.href}
-                  class="btn-primary"
+                  class={primaryBtnClass}
                   target={product.primaryCta.external ? '_blank' : undefined}
                   rel={product.primaryCta.external ? 'noopener' : undefined}
                 >
@@ -508,7 +519,7 @@ const breadcrumbSchema = {
             ) : (
               <a
                 href={product.primaryCta.href}
-                class="btn-primary"
+                class={primaryBtnClass}
                 target={product.primaryCta.external ? '_blank' : undefined}
                 rel={product.primaryCta.external ? 'noopener' : undefined}
               >
@@ -558,22 +569,42 @@ const breadcrumbSchema = {
                 <p class="text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
                   {s.label}
                 </p>
-                <p class="font-display mt-2 text-[34px] sm:text-[40px] gradient-suite leading-none">
+                <p class={`font-display mt-2 text-[34px] sm:text-[40px] ${numGradient} leading-none`}>
                   {s.value}
                 </p>
               </div>
             ))}
           </aside>
         )}
+
+        {/* AdBlock-Maxxer: hero screenshot lives in the right column, sized to
+            sit just under the Live / version pills, instead of full-width below. */}
+        {isExt && screenshotMain && (
+          <aside class="reveal reveal-6 md:col-span-4 md:mt-14">
+            <figure
+              class="ext-hero-shot rounded-2xl overflow-hidden border border-[var(--color-line-strong)]"
+              style={`box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px ${product.accentHex}22, 0 0 60px ${product.accentHex}14;`}
+            >
+              <img
+                src={screenshotMain}
+                alt={`${product.name} welcome screen`}
+                loading="eager"
+                decoding="async"
+                class="block w-full h-auto"
+              />
+            </figure>
+          </aside>
+        )}
       </div>
 
       <!-- Apple-style hero shot (or demo video) for live + beta products -->
-      {(screenshotMain || product.demoVideo) && (
+      {!isExt && (screenshotMain || product.demoVideo) && (
         <ProductScreenshot
           src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
           alt={`${product.name} demo`}
           extras={product.demoVideo ? [] : screenshotExtras}
           video={product.demoVideo}
+          maxWidth={product.slug === 'snipemaxxer' ? '680px' : undefined}
         />
       )}
 
