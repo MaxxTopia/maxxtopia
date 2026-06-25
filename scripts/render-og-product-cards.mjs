@@ -43,6 +43,7 @@ const PRODUCTS = [
   { slug: 'viewmaxxing',         name: 'Viewmaxxing',         category: 'Streamer Tools',   status: 'soon', tagline: 'A tool for streamers.',           accent: '#10b981', stat: 'operator-first · slot reserved' },
   { slug: 'extensionmaxxing',    name: 'AdBlock-Maxxer',      category: 'Browser Extension', status: 'live', tagline: "The ad blocker they couldn't ban.", accent: '#00d4ff', stat: '0 ads · every browser' },
   { slug: 'streammaxxing',       name: 'Streammaxxing',       category: 'Stream Alerts',    status: 'live', tagline: 'Alerts that fire the instant it happens.', accent: '#22d3a0', stat: 'instant · fired on your PC' },
+  { slug: 'snipemaxxer',         name: 'Snipemaxxer',         category: 'Fortnite',         status: 'beta', tagline: "Know who's in your lobby.",        accent: '#ff3b3b', stat: 'the whole lobby · named' },
 ];
 
 const STATUS_LABEL = { live: 'LIVE', beta: 'BETA', soon: 'COMING SOON', dev: 'IN DEV', waitlist: 'WAITLIST' };

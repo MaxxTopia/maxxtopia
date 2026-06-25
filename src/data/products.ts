@@ -1061,27 +1061,72 @@ export const products: Product[] = [
     slug: 'snipemaxxer',
     name: 'Snipemaxxer',
     category: 'Fortnite',
-    status: 'soon',
-    tagline: 'Know your lobby before you drop.',
+    status: 'beta',
+    version: '0.1.65',
+    tagline: 'Know who\'s in your lobby.',
     description:
-      "Live Fortnite lobby intel that floats streamers and known pros to the top — read the safe way through Overwolf's whitelisted feed. No memory reading. Unbannable by design.",
+      "Snipemaxxer auto-detects your Fortnite tournament match, pulls the server replay through your own Epic login, and names the whole lobby — which pros and live streamers are in your game, where everyone dropped, who's beaten down — plus a voice coach and an always-on points/qualify HUD. Reads Epic's replay, never your game.",
     longDescription:
-      'Live Fortnite lobby intel — reads the roster the safe way, through Overwolf\'s anti-cheat-whitelisted Game Events feed. No memory reading, no injection, nothing BattlEye or EAC bans for. Floats live streamers and known pros to the top of your lobby.',
+      "It finds your FNCS or Cash Cup match on its own, pulls the server replay through your own Epic login, and hands you the whole lobby — which pros and live streamers are still alive, where everyone dropped, who's already beaten down, and who's playing off-region. A voice coach calls the read; an always-on HUD does your points-and-qualify math. Zero game memory touched — it reads Epic's replay, not Fortnite.",
     features: [
       {
-        title: 'Unbannable by design.',
-        body: 'Reads the lobby roster through Overwolf\'s GEP — the same whitelisted feed Fortnite Tracker uses. We never touch the game process.',
+        title: 'The whole lobby, named.',
+        body: 'Every account in your tournament game resolved to a name and cross-checked against a 300-player pro brain and live Twitch/YouTube/Kick streams. Who you\'re really up against.',
       },
       {
-        title: 'Spots the streamers.',
-        body: 'Cross-checks every lobby name against live Twitch streams and a known-pro database — flags who\'s live and who\'s comp.',
+        title: 'Who to key. Who to fade.',
+        body: 'Surfaces beaten-down players (took more than they dealt), low-HP teams, and off-region (high-ping) opponents — the easy points you can\'t see from inside your own box fight.',
+      },
+      {
+        title: 'Push, or place?',
+        body: 'An always-on HUD does the math live: your surge-safety, what your finish is worth right now, how many must die for the next tier, and whether a kill or a placement pays more.',
+      },
+      {
+        title: 'Qualify math, automatically.',
+        body: 'Enter your points and the cutoff once. The HUD tells you the gap, how many elims close it, and the moment you\'re safe to play for the qualify.',
+      },
+      {
+        title: 'A voice in your ear.',
+        body: 'Alluka, the built-in coach, speaks the one read that matters and stays quiet otherwise — so you can glance, not read, mid-game. Ask her anything with push-to-talk.',
+      },
+      {
+        title: 'Unbannable by design.',
+        body: 'No memory reading, no injection, no overlay hooked into the game. It downloads the official server replay through your own Epic login and reads it — nothing for BattlEye or EAC to flag.',
       },
     ],
-    primaryCta: { label: 'Get notified on launch', href: waitlistUrl('snipemaxxer'), external: true },
+    zones: [
+      {
+        eyebrow: 'The hidden roster',
+        headline: 'Who\'s actually in your lobby.',
+        body: 'The server replay captures all 100 players — not just the ones you fought. Snipemaxxer resolves every account to a name, pins the pros and live streamers to the top with their skin and where they dropped, and lists the rest. The intel you simply cannot get from inside your own game.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/whos-in-lobby.webp', alt: 'The Who\'s in your lobby panel — pros and live streamers pinned to the top with skins and drop locations, the rest of the lobby below.' },
+      },
+      {
+        eyebrow: 'Right now',
+        headline: 'Who to key. Who to fade.',
+        body: 'A single triage board: your surge standing up top, then who\'s keyable now (beaten down, low HP, off-region — with their last-seen POI), then which big names are still alive and where. One glance tells you the easy points and the real threats.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/right-now.webp', alt: 'The Right Now board — Keyable Now lists beaten-down targets with damage and location; Threats Still In lists alive pros and live streamers.' },
+      },
+      {
+        eyebrow: 'The points brain',
+        headline: 'Push, or place?',
+        body: 'The always-on overlay does the comp math you can\'t do mid-fight: surge-safe or at-risk, what dying now is worth, how many must die for each placement tier and the points that buys, whether a kill or the next tier pays more — and exactly how far you are from the qualify cutoff.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/overlay-hud.webp', alt: 'The overlay HUD — Right Now callout, surge-safe net, alive count, die-now placement and points, placement ladder, fight-vs-placement EV, and the qualify gap in elims.' },
+      },
+      {
+        eyebrow: 'The whole map',
+        headline: 'Where everyone is. Who\'s left.',
+        body: 'Every drop, rotation and last-known position plotted on the live season map, with off-region players flagged. See the contested spots, the quiet rotates, and where the lobby is thinning out.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp', alt: 'The Who\'s Left & Where survivor map — the full current-season Fortnite map with drop and rotation paths and POI markers.' },
+      },
+    ],
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.65.exe', external: true },
+    secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
     accentHex: '#ff3b3b',
-    heroStat: { value: '0', label: 'memory reads · unbannable' },
+    screenshots: ['/screenshots/snipemaxxer/scout-glance.webp'],
+    heroStat: { value: '0', label: "game memory read — it scouts Epic's replay, not your game" },
   },
 ];
 

@@ -153,6 +153,23 @@ const reconvertConfig: Record<string, {
       },
     ],
   },
+  snipemaxxer: {
+    closingLine: 'Know the lobby. Win the points game.',
+    faqs: [
+      {
+        q: 'Will this get me banned?',
+        a: "No. Snipemaxxer never touches Fortnite's process — no memory reading, no injection, no overlay hooked into the game. It downloads the official server replay of your match through your own Epic login and reads it, the same public match data Fortnite Tracker and fortnite.gg work from. There's nothing for BattlEye or EAC to flag.",
+      },
+      {
+        q: 'It says the data is ~5 minutes behind — what good is that?',
+        a: "The replay is server-side, so it lands a few minutes into your game — which is exactly when you're boxed up and farming and can actually glance. That window is enough to know which pros and live streamers are still alive, who's beaten down for an easy key, who's off-region, and whether the points math says push or place. It's a between-fights brain, not an aimbot — and the qualify HUD is useful the whole game.",
+      },
+      {
+        q: 'Do I need two PCs or a capture card?',
+        a: "No. It runs on the same PC you play on. Set your Fortnite name once, tick auto-detect, and it finds your FNCS and Cash Cup matches on its own through Epic — no second PC, no capture card, no log files to wire up. Two-PC streamers can run it on the streaming PC for a zero-overhead setup, but that's entirely optional. Heads up: it only works for standard BR tournaments (FNCS, Cash Cups) — Ranked, pubs and Reload have no downloadable server replay.",
+      },
+    ],
+  },
   streammaxxing: {
     closingLine: 'Runs on your PC. Fires the instant it happens.',
     faqs: [
@@ -236,7 +253,6 @@ const receiptsConfig: Record<string, {
 const buildStatus: Record<string, { progress: number; dropTarget: string; channel: string }> = {
   clipmaxxer:   { progress: 78, dropTarget: 'Q3 · 2026',        channel: 'v0.4 · INTERNAL ALPHA' },
   aimmaxxer:    { progress: 38, dropTarget: 'Q4 · 2026',        channel: 'v0.1 · CALIBRATION' },
-  snipemaxxer:  { progress: 80, dropTarget: 'OVERWOLF REVIEW',  channel: 'v0.1 · AWAITING WHITELIST' },
   viewmaxxing:  { progress: 12, dropTarget: 'TBD',              channel: 'v0 · SCOPE RESEARCH' },
   editmaxxing:  { progress: 4,  dropTarget: 'ON HOLD',          channel: 'v0 · FEASIBILITY' },
 };
@@ -297,6 +313,7 @@ const featureHeadings: Record<string, FeatureHeading> = {
   viewmaxxing:         { eyebrow: 'The standard',    left: 'Operator-first.',          right: 'Slot reserved.' },
   extensionmaxxing:    { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
   streammaxxing:       { eyebrow: 'The latency',     left: 'No cloud hop.',            right: 'No delay.' },
+  snipemaxxer:         { eyebrow: 'The edge',        left: 'Intel you can\'t get',     right: 'from inside the game.' },
 };
 const featureHeading: FeatureHeading | undefined = featureHeadings[product.slug];
 
@@ -313,6 +330,7 @@ const softwareKeywords: Record<string, string> = {
   viewmaxxing: 'streamer toolkit, twitch streaming tools, obs alternative, streamer dashboard, content stream operator',
   extensionmaxxing: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
   streammaxxing: 'stream alerts, twitch alerts, local stream alerts, botrix alternative, streamlabs alerts alternative, twitch eventsub overlay, donation tts, voice clone tts alerts, obs alert overlay, free stream alerts, clip trimmer, loudness normalize alerts',
+  snipemaxxer: 'fortnite lobby scout, fortnite tournament tool, fncs scout, cash cup helper, fortnite replay analyzer, who is in my fortnite lobby, fortnite pro tracker, fortnite live streamer detector, fortnite points calculator, fortnite qualify calculator, fortnite surge tracker, fortnite tournament coach',
 };
 
 const softwareSchema = {
