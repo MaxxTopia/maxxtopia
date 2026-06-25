@@ -1065,7 +1065,7 @@ export const products: Product[] = [
     name: 'Snipemaxxer',
     category: 'Fortnite',
     status: 'beta',
-    version: '0.1.65',
+    version: '0.1.66',
     tagline: 'Know who\'s in your lobby.',
     description:
       "Snipemaxxer auto-detects your Fortnite tournament match and names the whole lobby — which pros and live streamers are in your game, where everyone dropped, who's beaten down — plus a voice coach and an always-on HUD that tracks your live tournament standing and tells you whether to play for placement or push to qualify.",
@@ -1123,7 +1123,7 @@ export const products: Product[] = [
         visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp', alt: 'The Who\'s Left & Where survivor map — the full current-season Fortnite map with drop and rotation paths and POI markers.' },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.65.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.66.exe', external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
