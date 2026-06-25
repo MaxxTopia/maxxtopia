@@ -158,11 +158,11 @@ const reconvertConfig: Record<string, {
     faqs: [
       {
         q: 'Will this get me banned?',
-        a: "No. Snipemaxxer never touches Fortnite's process — no memory reading, no injection, no overlay hooked into the game. It downloads the official server replay of your match through your own Epic login and reads it, the same public match data Fortnite Tracker and fortnite.gg work from. There's nothing for BattlEye or EAC to flag.",
+        a: "No. Snipemaxxer never touches Fortnite's process — no memory reading, no injection, no overlay hooked into the game. It reads the official server replay of your match, the same public match data Fortnite Tracker and fortnite.gg work from. There's nothing for BattlEye or EAC to flag.",
       },
       {
-        q: 'It says the data is ~5 minutes behind — what good is that?',
-        a: "The replay is server-side, so it lands a few minutes into your game — which is exactly when you're boxed up and farming and can actually glance. That window is enough to know which pros and live streamers are still alive, who's beaten down for an easy key, who's off-region, and whether the points math says push or place. It's a between-fights brain, not an aimbot — and the qualify HUD is useful the whole game.",
+        q: 'How does it actually help mid-tournament?',
+        a: "Two ways. Between games, the HUD polls your live tournament standing — your points, your rank, and how many games you have left in the window — and tells you, for the format you're playing, whether to play for placement or push for elims to make the cutoff. And once you're a few minutes into a match, the scouting report names the lobby: which pros and live streamers are still alive, who's beaten down for an easy key, and who's off-region. You always know the read.",
       },
       {
         q: 'Do I need two PCs or a capture card?',
@@ -446,7 +446,11 @@ const breadcrumbSchema = {
             </div>
           </div>
 
-          {product.heroStat && (
+          {product.heroStat && (product.heroStat.inline ? (
+            <p class="reveal reveal-2 mb-6 text-[12px] sm:text-[13px] uppercase tracking-[0.14em] font-mono text-[var(--color-muted)]">
+              <span class="text-[var(--color-text)] font-semibold">{product.heroStat.value}</span> {product.heroStat.label}
+            </p>
+          ) : (
             <div class="reveal reveal-2 mb-6">
               <p
                 class="font-display gradient-suite leading-[0.85] tracking-[0.005em]"
@@ -459,7 +463,7 @@ const breadcrumbSchema = {
                 {product.heroStat.label}
               </p>
             </div>
-          )}
+          ))}
 
           <h2 class="reveal reveal-3 text-[34px] sm:text-[48px] md:text-[58px] font-semibold tracking-[-0.025em] leading-[1] gradient-text max-w-2xl">
             {product.tagline}

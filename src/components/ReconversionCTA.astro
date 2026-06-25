@@ -13,7 +13,7 @@
  */
 
 type Props = {
-  heroStat: { value: string; label: string };
+  heroStat: { value: string; label: string; inline?: boolean };
   /** Big closing sentence. Six words ideal. */
   closingLine: string;
   ctaLabel: string;
@@ -29,8 +29,14 @@ const { heroStat, closingLine, ctaLabel, ctaHref, ctaExternal, faqs, accentHex }
 <section class="reconvert" style={`--reconvert-accent: ${accentHex};`}>
   <div class="reconvert__inner">
     <div class="reconvert__stat reveal-on-scroll">
-      <p class="reconvert__stat-value">{heroStat.value}</p>
-      <p class="reconvert__stat-label">{heroStat.label}</p>
+      {heroStat.inline ? (
+        <p class="reconvert__stat-inline"><span>{heroStat.value}</span> {heroStat.label}</p>
+      ) : (
+        <>
+          <p class="reconvert__stat-value">{heroStat.value}</p>
+          <p class="reconvert__stat-label">{heroStat.label}</p>
+        </>
+      )}
     </div>
 
     <p class="reconvert__line reveal-on-scroll">{closingLine}</p>
@@ -121,6 +127,18 @@ const { heroStat, closingLine, ctaLabel, ctaHref, ctaExternal, faqs, accentHex }
     text-transform: uppercase;
     color: var(--color-muted);
     margin: 0;
+  }
+  .reconvert__stat-inline {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .reconvert__stat-inline span {
+    color: var(--color-text);
+    font-weight: 600;
   }
 
   .reconvert__line {

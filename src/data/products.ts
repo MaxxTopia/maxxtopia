@@ -60,8 +60,11 @@ export type Product = {
   zones?: ProductZone[];
   stats?: { label: string; value: string }[];
   /** Massive headline number / phrase shown in display font above the
-   *  tagline on the product hero. The "scroll-stopper" stat. */
-  heroStat?: { value: string; label: string };
+   *  tagline on the product hero. The "scroll-stopper" stat.
+   *  `inline: true` renders it small — value sit beside the label at label
+   *  size — instead of the giant display number (for stats like "0" where the
+   *  giant treatment doesn't read as a flex). */
+  heroStat?: { value: string; label: string; inline?: boolean };
   primaryCta: { label: string; href: string; external?: boolean };
   secondaryCta?: { label: string; href: string; external?: boolean };
   /** Optional third download, rendered as a subtle link + note under the buttons.
@@ -1065,9 +1068,9 @@ export const products: Product[] = [
     version: '0.1.65',
     tagline: 'Know who\'s in your lobby.',
     description:
-      "Snipemaxxer auto-detects your Fortnite tournament match, pulls the server replay through your own Epic login, and names the whole lobby — which pros and live streamers are in your game, where everyone dropped, who's beaten down — plus a voice coach and an always-on points/qualify HUD. Reads Epic's replay, never your game.",
+      "Snipemaxxer auto-detects your Fortnite tournament match and names the whole lobby — which pros and live streamers are in your game, where everyone dropped, who's beaten down — plus a voice coach and an always-on HUD that tracks your live tournament standing and tells you whether to play for placement or push to qualify.",
     longDescription:
-      "It finds your FNCS or Cash Cup match on its own, pulls the server replay through your own Epic login, and hands you the whole lobby — which pros and live streamers are still alive, where everyone dropped, who's already beaten down, and who's playing off-region. A voice coach calls the read; an always-on HUD does your points-and-qualify math. Zero game memory touched — it reads Epic's replay, not Fortnite.",
+      "It finds your FNCS or Cash Cup match on its own and hands you the whole lobby — which pros and live streamers are still alive, where everyone dropped, who's already beaten down, and who's playing off-region. A voice coach calls the read; an always-on HUD polls your live tournament standing — your points, your rank, your games left — and tells you whether to play for placement or w-key to qualify.",
     features: [
       {
         title: 'The whole lobby, named.',
@@ -1110,8 +1113,8 @@ export const products: Product[] = [
       {
         eyebrow: 'The points brain',
         headline: 'Push, or place?',
-        body: 'The always-on overlay does the comp math you can\'t do mid-fight: surge-safe or at-risk, what dying now is worth, how many must die for each placement tier and the points that buys, whether a kill or the next tier pays more — and exactly how far you are from the qualify cutoff.',
-        visual: { kind: 'image', src: '/screenshots/snipemaxxer/overlay-hud.webp', alt: 'The overlay HUD — Right Now callout, surge-safe net, alive count, die-now placement and points, placement ladder, fight-vs-placement EV, and the qualify gap in elims.' },
+        body: 'Between games the overlay polls your live tournament standing — your points, your rank, and the games you have left — and reads it against the cutoff and the cup\'s format. Then it gives you the one call that decides the next game: play for placement, or push for elims to qualify. No manual point-tracking, no spreadsheet.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/overlay-hud.webp', alt: 'The overlay HUD — your live tournament standing: points, rank, games left, the qualify gap, and the call to play for placement or push to qualify.' },
       },
       {
         eyebrow: 'The whole map',
@@ -1126,7 +1129,7 @@ export const products: Product[] = [
     logo: '/logos/snipemaxxer.svg',
     accentHex: '#ff3b3b',
     screenshots: ['/screenshots/snipemaxxer/scout-glance.webp'],
-    heroStat: { value: '0', label: "game memory read — it scouts Epic's replay, not your game" },
+    heroStat: { value: '0', label: 'game memory read', inline: true },
   },
 ];
 
