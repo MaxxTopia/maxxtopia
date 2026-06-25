@@ -1068,9 +1068,9 @@ export const products: Product[] = [
     version: '0.1.66',
     tagline: 'Know who\'s in your lobby.',
     description:
-      "Snipemaxxer auto-detects your Fortnite tournament match and names the whole lobby — which pros and live streamers are in your game, where everyone dropped, who's beaten down — plus a voice coach and an always-on HUD that tracks your live tournament standing and tells you whether to play for placement or push to qualify.",
+      "Auto-detects your match and names the whole lobby — pros, live streamers, who dropped where, off-region — plus more features to help in-game.",
     longDescription:
-      "It finds your FNCS or Cash Cup match on its own and hands you the whole lobby — which pros and live streamers are still alive, where everyone dropped, who's already beaten down, and who's playing off-region. A voice coach calls the read; an always-on HUD polls your live tournament standing — your points, your rank, your games left — and tells you whether to play for placement or w-key to qualify.",
+      "Auto-detects your match and names the whole lobby — pros, live streamers, who dropped where, off-region — plus more features to help in-game.",
     features: [
       {
         title: 'The whole lobby, named.',
