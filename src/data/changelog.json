@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-06-25",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.3.9",
+    "title": "A real scrub bar on YouTube, and chat over your Twitch VODs.",
+    "body": "The YouTube Reclaim player now draws its own control bar instead of leaning on the browser's basic controls - so you get a proper draggable seek bar, play/pause, time, volume and fullscreen on every ad-free video. And the fullscreen Twitch chat overlay now works on VODs and chat replay, not only live streams.",
+    "items": [
+      "Reclaim player has a real, draggable seek bar with buffered preview.",
+      "Play/pause, time, volume and fullscreen built right into the player.",
+      "Fullscreen chat overlay now mirrors chat replay on Twitch VODs."
+    ]
+  },
+  {
     "date": "2026-06-24",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
