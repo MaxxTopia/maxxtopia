@@ -1,6 +1,21 @@
 [
   {
     "date": "2026-06-25",
+    "product": "streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.29",
+    "title": "Built to run all night, unattended.",
+    "body": "A deep reliability pass so streammaxxing keeps working through long streams no matter what happens. Overlays now heal themselves the instant the app reconnects, the core auto-restarts if anything ever hiccups, your settings can't be corrupted by a crash, and the stream report only counts real events - never your own test alerts.",
+    "items": [
+      "Overlays auto-recover and re-pull their look after any app restart.",
+      "Self-healing core: the alert hub and Twitch connection auto-restart.",
+      "Crash-proof saves: settings and points survive a crash or power loss.",
+      "Accurate stream reports: test alerts no longer count as real events.",
+      "Clear prompt when your Twitch login expires, instead of silent stops."
+    ]
+  },
+  {
+    "date": "2026-06-25",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
     "version": "v1.3.9",
