@@ -10,8 +10,8 @@
  * sourced from kovaaks.com playlists, the Voltaic benchmarks, and aim-trainer
  * community routines.
  */
-type Props = { accentHex: string; notifyHref: string };
-const { accentHex, notifyHref } = Astro.props;
+type Props = { accentHex: string };
+const { accentHex } = Astro.props;
 
 type Game = {
   game: string;
@@ -84,10 +84,10 @@ const games: Game[] = [
 ];
 
 const skates = [
-  { name: 'Tiger Arc 2', kind: 'PTFE', best: 'Best value — fast, durable, zero break-in. The default pick.' },
-  { name: 'Corepad Skatez', kind: 'PTFE', best: 'The fastest "neutral" PTFE glide.' },
-  { name: 'Tiger Ice', kind: 'PTFE+', best: 'Premium — noticeably quicker, hybrid feel.' },
-  { name: 'Pulsar Superglide', kind: 'Glass', best: 'Fastest + lasts years. Scratchy on cloth.' },
+  { name: 'Corepad Skatez PRO', kind: 'PTFE', best: 'Best on cloth. Pure-PTFE control + a clean stop. Cut for the Logitech Superstrike / Superlight 2 and the Finalmouse ULX.' },
+  { name: 'EspTiger Ice V2', kind: 'PTFE', best: 'Fast control PTFE — smooth on cloth without losing the brakes.' },
+  { name: 'Lethal Obsidian Control', kind: 'PTFE', best: 'Control-leaning, rounded edges so they never grind the weave.' },
+  { name: 'Pulsar Superglide', kind: 'Glass', best: 'Only for glass / hard pads. Fastest there — the wrong tool on cloth.' },
 ];
 ---
 
@@ -135,10 +135,11 @@ const skates = [
     <div class="aim-warmup__skates reveal-on-scroll">
       <div class="aim-warmup__skates-head">
         <p class="aim-warmup__eyebrow">While you're at it · the glide</p>
-        <h3 class="aim-warmup__skates-title">New skates do more for your aim than a new mouse.</h3>
+        <h3 class="aim-warmup__skates-title">On cloth, the right skates beat a new mouse.</h3>
         <p class="aim-warmup__skates-tradeoff">
-          <strong>PTFE</strong> = cheaper, more control, wears in 6–12 months.
-          <strong>Glass / ceramic</strong> = faster, smoother, lasts years, pricier.
+          On an <strong>Artisan</strong> (or any cloth) pad, run <strong>pure PTFE</strong> — predictable
+          deceleration and the stopping power a flick game needs. <strong>Glass / ceramic</strong> skates
+          are built for glass and hard pads; on cloth they over-speed the flick and scratch the weave.
         </p>
       </div>
       <div class="aim-warmup__skates-grid">
@@ -153,22 +154,18 @@ const skates = [
         ))}
       </div>
       <p class="aim-warmup__skates-tip">
-        Buy the set cut for your exact mouse model, wipe off the old adhesive first, and match the skate
-        speed to your pad — a fast skate on a fast pad with a light mouse turns uncontrollable.
+        Buy the set cut for your exact mouse, wipe off the old adhesive first, and match skate speed to
+        your pad. One honest note: pros publish their mouse, sens and pad — almost never their skates —
+        so ignore any "pro X runs Y." On cloth, stock PTFE is already good; these are upgrades, not fixes.
       </p>
     </div>
 
-    <!-- v2 teaser -->
-    <div class="aim-warmup__v2 reveal-on-scroll">
+    <!-- v2 teaser — Dante red, paid, DM-to-purchase -->
+    <div class="aim-warmup__v2 reveal-on-scroll" style="--aim-accent: #e11d2b;">
       <p class="aim-warmup__v2-eyebrow">What's coming</p>
       <h3 class="aim-warmup__v2-title">Aimmaxxer <span class="aim-warmup__accent">v2.</span> The real deal.</h3>
-      <p class="aim-warmup__v2-body">
-        Warmups get you loose. v2 fixes what's actually broken. It measures four things —
-        sensitivity, prediction, anchor, trigger — and drills only the ones breaking your aim, in a
-        routine that adapts to your DPI and play style. Not 200 scenarios. Four.
-      </p>
-      <a class="aim-warmup__v2-cta" href={notifyHref} target="_blank" rel="noopener">
-        Get notified when v2 drops
+      <a class="aim-warmup__v2-cta" href="https://discord.gg/S78eecbWdx" target="_blank" rel="noopener">
+        DM Diggy personally to purchase
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
     </div>
@@ -437,7 +434,7 @@ const skates = [
     border-radius: 999px;
     font-weight: 600;
     font-size: 0.9375rem;
-    color: #0a0612;
+    color: #fff;
     background: var(--aim-accent, var(--color-magenta));
     box-shadow: 0 8px 32px color-mix(in srgb, var(--aim-accent) 35%, transparent);
     transition: transform 200ms ease, filter 200ms ease, box-shadow 200ms ease;

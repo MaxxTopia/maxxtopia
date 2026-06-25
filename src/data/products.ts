@@ -720,6 +720,7 @@ export const products: Product[] = [
     icon: '/logos/viewmaxxing-icon.png',
     accentHex: '#10b981',
     heroStat: { value: '5', label: 'apps in one · $0 forever' },
+    screenshots: ['/screenshots/viewmaxxing/home-hero.webp'],
     zones: [
       {
         eyebrow: '01 · The Rebuild',
@@ -774,6 +775,26 @@ export const products: Product[] = [
             { label: 'Viewmaxxing · auto best-server', value: 'one tap', emphasize: true },
           ],
           caption: 'Reliability ranked per source · the working mirror plays first',
+        },
+      },
+      {
+        eyebrow: '05 · The Catalog',
+        headline: "Every show. Real artwork. One grid.",
+        body: 'Movies, prestige TV and anime in a live catalog with real poster art — not a wall of broken links. House of the Dragon, The Boys, FROM, Snowfall: all a click from the couch, sorted into Popular and Top Rated.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/viewmaxxing/catalog.webp',
+          alt: 'Viewmaxxing TV Shows catalog — Popular and Top Rated rows of real series with poster art',
+        },
+      },
+      {
+        eyebrow: '06 · The Search',
+        headline: "Type it once. It's already there.",
+        body: 'One search across movies, TV, anime and YouTube. Type "Snowfall" and the full FX series surfaces first — six seasons, sixty episodes deep — next to everything adjacent. No bouncing between apps to find a show you already know the name of.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/viewmaxxing/snowfall-search.webp',
+          alt: 'Searching Snowfall in Viewmaxxing — the FX series surfaces first among live results',
         },
       },
     ],

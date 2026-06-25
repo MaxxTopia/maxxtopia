@@ -40,9 +40,13 @@ const { eyebrow = 'How to use it', heading, steps } = howItWorks;
             <h3 class="hiw-step__title">{step.title}</h3>
             <p class="hiw-step__body">{step.body}</p>
           </div>
-          <div class="hiw-step__shot">
+          <button class="hiw-step__shot hiw-step__shot--btn" type="button" data-zoom={step.img} aria-label={`Enlarge: ${step.alt}`}>
             <img src={step.img} alt={step.alt} loading="lazy" decoding="async" width="1600" height="1000" />
-          </div>
+            <span class="hiw-zoomhint" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+              Click to enlarge
+            </span>
+          </button>
         </li>
       ))}
     </ol>
@@ -107,6 +111,29 @@ const { eyebrow = 'How to use it', heading, steps } = howItWorks;
   .hiw-step__shot img {
     display: block; width: 100%; height: auto;
   }
+  /* Click-to-enlarge: the step screenshot is a button wired to the global
+     data-zoom lightbox. */
+  .hiw-step__shot--btn {
+    appearance: none; -webkit-appearance: none;
+    padding: 0; width: 100%; cursor: zoom-in;
+    font: inherit; color: inherit; text-align: left;
+  }
+  .hiw-step__shot--btn img { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .hiw-step__shot--btn:hover img,
+  .hiw-step__shot--btn:focus-visible img { transform: scale(1.025); }
+  .hiw-step__shot--btn:focus-visible { outline: 2px solid var(--accent, #e25bff); outline-offset: 3px; }
+  .hiw-zoomhint {
+    position: absolute; bottom: 12px; right: 12px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 11px; border-radius: 999px;
+    background: rgba(8, 8, 12, 0.66);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #fff; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
+    opacity: 0; transition: opacity 200ms ease, transform 200ms ease;
+  }
+  .hiw-step__shot--btn:hover .hiw-zoomhint,
+  .hiw-step__shot--btn:focus-visible .hiw-zoomhint { opacity: 0.95; transform: translateY(-1px); }
 
   @media (prefers-reduced-motion: no-preference) {
     .hiw-step__shot { transition: transform 0.3s ease, box-shadow 0.3s ease; }
