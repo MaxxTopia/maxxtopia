@@ -16,8 +16,11 @@ type Props = {
    *  Array enables per-visit random variant selection (one is picked
    *  client-side on each page load and swapped into the <video> element). */
   video?: DemoVariant | DemoVariant[];
+  /** Cap the figure width (centered) for near-square / tall shots that would
+   *  otherwise dominate the hero at full container width. e.g. '680px'. */
+  maxWidth?: string;
 };
-const { src, alt, extras = [], video } = Astro.props;
+const { src, alt, extras = [], video, maxWidth } = Astro.props;
 const all = [src, ...extras];
 const variants: DemoVariant[] = video ? (Array.isArray(video) ? video : [video]) : [];
 const initialVideo: DemoVariant | undefined = variants[0];
@@ -25,7 +28,10 @@ const variantsJson = variants.length > 1 ? JSON.stringify(variants) : '';
 const isGrid = all.length > 1 && !initialVideo;
 ---
 
-<figure class={`product-screenshot ${isGrid ? 'product-screenshot--grid' : ''}`}>
+<figure
+  class={`product-screenshot ${isGrid ? 'product-screenshot--grid' : ''}`}
+  style={maxWidth ? `max-width: ${maxWidth}; margin-left: auto; margin-right: auto;` : undefined}
+>
   <div class="product-screenshot__frame">
     {initialVideo ? (
       <video
