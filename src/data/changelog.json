@@ -3,6 +3,20 @@
     "date": "2026-06-25",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
+    "version": "v0.1.30",
+    "title": "A real soundboard, with hotkeys.",
+    "body": "Drop sound effects on stream the way streamers actually do it. The Soundboard is now a grid of clickable pads, and you can bind a global hotkey to any sound - so you can fire it mid-game without ever leaving Fortnite.",
+    "items": [
+      "Soundboard pads: click to play a sound on stream instantly.",
+      "Global hotkeys: bind any key to a sound, works even in-game.",
+      "Hotkeys fire from a cold launch - no need to open the app first.",
+      "Per-pad volume, rename, and channel-point redeem in one place."
+    ]
+  },
+  {
+    "date": "2026-06-25",
+    "product": "streammaxxing",
+    "productSlug": "streammaxxing",
     "version": "v0.1.29",
     "title": "Built to run all night, unattended.",
     "body": "A deep reliability pass so streammaxxing keeps working through long streams no matter what happens. Overlays now heal themselves the instant the app reconnects, the core auto-restarts if anything ever hiccups, your settings can't be corrupted by a crash, and the stream report only counts real events - never your own test alerts.",
