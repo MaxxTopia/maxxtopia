@@ -1,0 +1,12 @@
+name = "clipmaxxer-apply"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+account_id = "98ca5ae76db3b442988d9bec91a63f04"
+
+# Intake inbox for the done-for-you clipmaxxer service.
+# Secret: ADMIN_KEY  ->  set via:  echo <key> | wrangler secret put ADMIN_KEY
+# Read applicants at: https://clipmaxxer-apply.<subdomain>.workers.dev/admin?key=<ADMIN_KEY>
+
+[[kv_namespaces]]
+binding = "APPLIES"
+id = "ab5bbd685c2e4b22962a9be1197b0b1e"

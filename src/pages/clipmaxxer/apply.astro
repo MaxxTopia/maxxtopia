@@ -1,0 +1,128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Aurora from '../../components/Aurora.astro';
+
+/**
+ * Clipmaxxer - done-for-you clipping service. APPLY-first flow:
+ * streamers submit channel + audience + socials; Diggy reviews who he can
+ * automate, then onboards + bills. Form POSTs to the clipmaxxer-apply worker
+ * (KV inbox; read at /admin?key=). No accounts/payments on the page.
+ *
+ * PRICE: one flat monthly price. Diggy -> set PRICE below (the only number to change).
+ */
+const PRICE = '$49 / mo';          // <-- DIGGY: set your flat monthly price here (placeholder)
+const APPLY_ENDPOINT = 'https://clipmaxxer-apply.maxxtopia.workers.dev/apply';
+---
+
+<Layout title="Clipmaxxer - done-for-you clips" description="You stream. We clip your best moments and post them to your socials. Vertical, captioned, hands-off. Apply for the managed beta.">
+  <Aurora />
+  <main class="mx-auto max-w-3xl px-6 py-16 md:py-24">
+    <a href="/clipmaxxer" class="text-sm" style="color:var(--color-cyan)">&larr; clipmaxxer</a>
+
+    <h1 class="font-display mt-6" style="font-size:clamp(48px,9vw,104px);line-height:.92">
+      You stream.<br>We post your shorts.
+    </h1>
+    <p class="mt-5 text-lg" style="color:#cfc8da;max-width:38ch">
+      Done-for-you. Your best moments get cut to vertical 9:16, face kept in frame,
+      captions burned in &mdash; and posted to your TikTok, Shorts &amp; Reels. You don't
+      touch an editor.
+    </p>
+
+    <div class="mt-8 flex items-baseline gap-3">
+      <span class="font-display" style="font-size:clamp(40px,7vw,72px);color:var(--color-magenta)">{PRICE}</span>
+      <span style="color:#9a93a8">flat &middot; managed &middot; cancel anytime</span>
+    </div>
+
+    <ul class="mt-8 space-y-2" style="color:#cfc8da">
+      <li>&bull; You connect your channel once. We pull your best moments going forward.</li>
+      <li>&bull; Per-frame face-tight reframe &mdash; you're never cropped out.</li>
+      <li>&bull; Captions burned in, cut to the moment, hook on top.</li>
+      <li>&bull; Posted for you, on schedule. Nothing to install.</li>
+      <li>&bull; Built for streamers with an audience already rolling.</li>
+    </ul>
+
+    <!-- APPLY -->
+    <section id="apply" class="mt-14 rounded-2xl p-6 md:p-8" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)">
+      <h2 class="font-display" style="font-size:clamp(28px,5vw,40px)">Apply</h2>
+      <p class="mt-2" style="color:#9a93a8">
+        Tell us your channel + audience. We'll reach out, confirm we can automate your
+        posting, and get you onboarded. Limited spots while in beta.
+      </p>
+
+      <form id="applyForm" class="mt-6 grid gap-4">
+        <label class="grid gap-1">
+          <span class="cm-lab">Your channel <span style="color:var(--color-magenta)">*</span></span>
+          <input name="channel" required placeholder="twitch.tv/yourname or youtube.com/@you" class="cm-in" />
+        </label>
+        <label class="grid gap-1">
+          <span class="cm-lab">Audience size</span>
+          <input name="audience" placeholder="e.g. 8k followers / ~300 avg viewers" class="cm-in" />
+        </label>
+        <label class="grid gap-1">
+          <span class="cm-lab">Post to</span>
+          <input name="platforms" placeholder="TikTok, YouTube Shorts, Reels" class="cm-in" />
+        </label>
+        <label class="grid gap-1">
+          <span class="cm-lab">How do we reach you? <span style="color:var(--color-magenta)">*</span></span>
+          <input name="contact" required placeholder="Discord handle or email" class="cm-in" />
+        </label>
+        <label class="grid gap-1">
+          <span class="cm-lab">Anything else?</span>
+          <textarea name="notes" rows="3" placeholder="Game, goals, links..." class="cm-in"></textarea>
+        </label>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />
+        <button type="submit" id="applyBtn" class="cm-btn">Apply for the beta</button>
+        <p id="applyMsg" class="text-sm" style="color:#9a93a8;min-height:1.2em"></p>
+      </form>
+    </section>
+
+    <p class="mt-8 text-sm" style="color:#6f6880">
+      Free for your own clips? Use <a href="/clipmaxxer" style="color:var(--color-cyan)">clipmaxxer</a> /
+      MontageMaxxer yourself. This page is the done-for-you service.
+    </p>
+  </main>
+
+  <style>
+    .cm-lab{font-size:13px;color:#b7b0c4;letter-spacing:.02em}
+    .cm-in{width:100%;background:#0d0a16;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+      padding:11px 13px;color:#fff;font-size:15px;outline:none}
+    .cm-in:focus{border-color:var(--color-magenta)}
+    .cm-btn{margin-top:4px;background:var(--color-magenta);color:#11020f;font-weight:700;border:none;
+      border-radius:10px;padding:13px 18px;font-size:16px;cursor:pointer}
+    .cm-btn:disabled{opacity:.6;cursor:default}
+  </style>
+
+  <script define:vars={{ APPLY_ENDPOINT }}>
+    const form = document.getElementById('applyForm');
+    const btn = document.getElementById('applyBtn');
+    const msg = document.getElementById('applyMsg');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (fd.get('website')) return;                 // honeypot: bots fill it, humans don't
+      const body = {
+        channel: fd.get('channel'), audience: fd.get('audience'),
+        platforms: fd.get('platforms'), contact: fd.get('contact'), notes: fd.get('notes'),
+      };
+      btn.disabled = true; msg.style.color = '#9a93a8'; msg.textContent = 'Sending...';
+      try {
+        const r = await fetch(APPLY_ENDPOINT, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+        });
+        const d = await r.json();
+        if (d.ok) {
+          form.style.display = 'none';
+          msg.style.color = '#5dff9b';
+          msg.textContent = "You're in the queue. Diggy will reach out at the contact you gave. Talk soon.";
+          msg.style.display = 'block';
+        } else {
+          btn.disabled = false; msg.style.color = '#ff6b6b';
+          msg.textContent = d.error || 'Something went wrong - try again.';
+        }
+      } catch {
+        btn.disabled = false; msg.style.color = '#ff6b6b';
+        msg.textContent = "Couldn't send - check your connection and retry.";
+      }
+    });
+  </script>
+</Layout>

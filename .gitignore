@@ -39,3 +39,7 @@ public/screenshots/**/_v1_clips/concat.txt
 public/screenshots/**/_v8_clips/concat.txt
 public/screenshots/**/_silent.mp4
 public/screenshots/**/_master.wav
+
+# clipmaxxer-apply worker admin key (NEVER commit)
+*.local.txt
+.admin-key.local.txt

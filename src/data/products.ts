@@ -416,11 +416,11 @@ export const products: Product[] = [
     category: 'Content',
     status: 'beta',
     version: cmRelease.version ?? undefined,
-    tagline: 'Send your channel. Get shorts back.',
+    tagline: 'You stream. We post your shorts.',
     description:
-      "Free while in beta. Drop your Twitch in the Discord — your best moments come back as vertical, captioned shorts ready to post.",
+      "Done-for-you clipping for streamers. Your best moments — cut to vertical, captioned, and posted to your socials. You don't touch an editor.",
     longDescription:
-      "Hands-on beta: you send your channel in the Discord, your clips run through the editor — auto-reframed to 9:16, face kept in frame, captions burned in — and the finished shorts come back to you. No editing on your end, no software to install. Free while we dial it in.",
+      "A managed service: connect your channel, and your top moments get reframed to 9:16, face kept in frame, captioned, and posted to your TikTok, Shorts and Reels on schedule. Built for streamers with an audience already rolling. Apply for the beta.",
     features: [
       {
         title: 'Per-niche playbook.',
@@ -435,8 +435,8 @@ export const products: Product[] = [
         body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound.',
       },
     ],
-    primaryCta: { label: 'Get free clips — in Discord', href: 'https://discord.gg/S78eecbWdx', external: true },
-    secondaryCta: { label: 'How it works', href: 'https://discord.gg/S78eecbWdx', external: true },
+    primaryCta: { label: 'Apply — done-for-you', href: '/clipmaxxer/apply', external: false },
+    secondaryCta: { label: 'See the offer', href: '/clipmaxxer/apply', external: false },
     glyph: '✂',
     icon: '/logos/clipmaxxer-icon.svg',
     accentHex: '#00d4ff',
@@ -444,7 +444,7 @@ export const products: Product[] = [
     // looked cropped in the 3-up 9:16 grid and aren't shippable marketing.
     // queue-vod.png reappears once below in the "Queue" zone where it fits
     // a 16:10 frame correctly. Real marketing screenshots land before launch.
-    heroStat: { value: 'Free', label: 'while in beta · shorts sent back to you' },
+    heroStat: { value: 'Done-for-you', label: 'we clip + post to your socials' },
     zones: [
       {
         eyebrow: '01 · The Playbook',
