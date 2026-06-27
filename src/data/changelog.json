@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-06-26",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.4.0",
+    "title": "Ad-free YouTube that just turns itself on.",
+    "body": "The YouTube Reclaim companion - the piece that beats YouTube's server-side ad enforcement - no longer needs starting by hand. Run it once, and from then on your browser launches it automatically whenever Reclaim is on. Set it up on a second PC in under a minute.",
+    "items": [
+      "Companion auto-starts: the browser launches it for you when Reclaim is on.",
+      "No more Startup-folder setup or remembering to run it.",
+      "One-time setup per PC, then ad-free YouTube every session.",
+      "Reclaim player keeps its custom seek bar and controls."
+    ]
+  },
+  {
     "date": "2026-06-25",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
