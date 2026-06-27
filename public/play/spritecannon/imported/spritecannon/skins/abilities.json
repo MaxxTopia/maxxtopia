@@ -1,0 +1,29 @@
+{
+  "applejuice":    {"name":"Apple Juice", "cost":1000},
+  "nonchalant":    {"name":"Nonchalant",  "cost":1000},
+  "slurpy":        {"name":"Slurpy",      "cost":1000},
+  "gas_mask":      {"name":"Gas Mask",    "cost":1000},
+  "imaworkersir":  {"name":"im a worker sir", "cost":1000},
+  "klombo":        {"name":"Klombo",      "cost":1000},
+  "munch":         {"name":"Munch",       "cost":1000},
+  "blackhole":     {"name":"Black Hole",  "cost":1000},
+  "foxspirit":     {"name":"Fox Spirit",  "cost":1000},
+  "rager":         {"name":"Rager",       "cost":1000},
+  "snowman":       {"name":"Snowy",       "cost":1000},
+
+  "greedy":        {"name":"Queen",       "ability":"greedy",      "cost":11500},
+  "revive":        {"name":"Revive",      "ability":"revive",      "cost":10000},
+  "turtle":        {"name":"Turtle",      "ability":"turtle",      "cost":10000},
+  "magnet":        {"name":"Magnet",      "ability":"magnetburst", "cost":10000},
+  "raptor_sprite": {"name":"Raptor",      "ability":"windboost",   "cost":5000},
+  "dragon":        {"name":"Dragon",      "ability":"dragon",      "cost":4200},
+  "lightning":     {"name":"Lightning",   "ability":"lightning",   "cost":10000},
+  "crashout":      {"name":"Nitro",       "ability":"crashout",    "cost":10000},
+  "chrome":        {"name":"Chrome",      "ability":"chrome",      "cost":10000},
+  "fallout":       {"name":"Fallout",     "ability":"fallout",     "cost":6900},
+  "inferno":       {"name":"Inferno",     "ability":"flamejet",    "cost":10000},
+  "zeropoint":     {"name":"Zero Point",  "ability":"teleport",    "cost":10000},
+  "bananna":       {"name":"Peely",       "ability":"split",       "cost":10000},
+
+  "chowder":       {"name":"Screech",     "secret":true, "cost":0}
+}
