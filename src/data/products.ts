@@ -414,13 +414,13 @@ export const products: Product[] = [
     slug: 'clipmaxxer',
     name: 'Clipmaxxer',
     category: 'Content',
-    status: 'soon',
+    status: 'beta',
     version: cmRelease.version ?? undefined,
-    tagline: 'Stream. Sleep. Wake up posted.',
+    tagline: 'Send your channel. Get shorts back.',
     description:
-      "Turns your streams into TikToks while you sleep. Three clips on your phone by morning — no editing.",
+      "Free while in beta. Drop your Twitch in the Discord — your best moments come back as vertical, captioned shorts ready to post.",
     longDescription:
-      "Per-niche playbook distilled from real viral creators in your game. Stream tonight; overnight queue scores your VOD against those patterns. Three platform-ready drafts on your phone by morning.",
+      "Hands-on beta: you send your channel in the Discord, your clips run through the editor — auto-reframed to 9:16, face kept in frame, captions burned in — and the finished shorts come back to you. No editing on your end, no software to install. Free while we dial it in.",
     features: [
       {
         title: 'Per-niche playbook.',
@@ -435,12 +435,8 @@ export const products: Product[] = [
         body: 'TikTok, Shorts, Reels — each its own length, hook, caption, sound.',
       },
     ],
-    primaryCta: cmRelease.installerUrl
-        ? { label: 'Download for Windows', href: cmRelease.installerUrl, external: true }
-        : { label: 'Get notified on launch', href: waitlistUrl('clipmaxxer'), external: true },
-    secondaryCta: cmRelease.releasePageUrl
-        ? { label: 'Release notes', href: cmRelease.releasePageUrl, external: true }
-        : undefined,
+    primaryCta: { label: 'Get free clips — in Discord', href: 'https://discord.gg/S78eecbWdx', external: true },
+    secondaryCta: { label: 'How it works', href: 'https://discord.gg/S78eecbWdx', external: true },
     glyph: '✂',
     icon: '/logos/clipmaxxer-icon.svg',
     accentHex: '#00d4ff',
@@ -448,7 +444,7 @@ export const products: Product[] = [
     // looked cropped in the 3-up 9:16 grid and aren't shippable marketing.
     // queue-vod.png reappears once below in the "Queue" zone where it fits
     // a 16:10 frame correctly. Real marketing screenshots land before launch.
-    heroStat: { value: '3 clips', label: 'on your phone by morning' },
+    heroStat: { value: 'Free', label: 'while in beta · shorts sent back to you' },
     zones: [
       {
         eyebrow: '01 · The Playbook',
@@ -957,7 +953,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.31',
+    version: '0.1.32',
     tagline: "Everything you stream with, in one free app.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
