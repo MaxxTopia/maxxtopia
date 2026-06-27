@@ -416,11 +416,11 @@ export const products: Product[] = [
     category: 'Content',
     status: 'beta',
     version: cmRelease.version ?? undefined,
-    tagline: 'You stream. We post your shorts.',
+    tagline: 'You stream. We cut your shorts.',
     description:
-      "Done-for-you clipping for streamers. Your best moments — cut to vertical, captioned, and posted to your socials. You don't touch an editor.",
+      "Done-for-you clip editing for streamers. Your best moments — cut to vertical, captioned, delivered ready to post. You don't touch an editor.",
     longDescription:
-      "A managed service: connect your channel, and your top moments get reframed to 9:16, face kept in frame, captioned, and posted to your TikTok, Shorts and Reels on schedule. Built for streamers with an audience already rolling. Apply for the beta.",
+      "A managed service: you send your channel, and your top moments get reframed to 9:16, face kept in frame, captioned, and delivered to you ready to post (or dropped straight into your drafts). Built for streamers with an audience already rolling. Apply for the beta.",
     features: [
       {
         title: 'Per-niche playbook.',

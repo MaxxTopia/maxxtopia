@@ -20,12 +20,12 @@ const APPLY_ENDPOINT = 'https://clipmaxxer-apply.maxxtopia.workers.dev/apply';
     <a href="/clipmaxxer" class="text-sm" style="color:var(--color-cyan)">&larr; clipmaxxer</a>
 
     <h1 class="font-display mt-6" style="font-size:clamp(48px,9vw,104px);line-height:.92">
-      You stream.<br>We post your shorts.
+      You stream.<br>We cut your shorts.
     </h1>
     <p class="mt-5 text-lg" style="color:#cfc8da;max-width:38ch">
-      Done-for-you. Your best moments get cut to vertical 9:16, face kept in frame,
-      captions burned in &mdash; and posted to your TikTok, Shorts &amp; Reels. You don't
-      touch an editor.
+      Done-for-you editing. Your best moments get cut to vertical 9:16, face kept in
+      frame, captions burned in &mdash; delivered to you ready to post. You don't touch
+      an editor.
     </p>
 
     <div class="mt-8 flex items-baseline gap-3">
@@ -34,10 +34,10 @@ const APPLY_ENDPOINT = 'https://clipmaxxer-apply.maxxtopia.workers.dev/apply';
     </div>
 
     <ul class="mt-8 space-y-2" style="color:#cfc8da">
-      <li>&bull; You connect your channel once. We pull your best moments going forward.</li>
+      <li>&bull; You send your channel. We pull your best moments and edit them.</li>
       <li>&bull; Per-frame face-tight reframe &mdash; you're never cropped out.</li>
       <li>&bull; Captions burned in, cut to the moment, hook on top.</li>
-      <li>&bull; Posted for you, on schedule. Nothing to install.</li>
+      <li>&bull; Delivered ready to post &mdash; or dropped straight into your drafts. Nothing to install.</li>
       <li>&bull; Built for streamers with an audience already rolling.</li>
     </ul>
 
@@ -103,6 +103,7 @@ const APPLY_ENDPOINT = 'https://clipmaxxer-apply.maxxtopia.workers.dev/apply';
       const body = {
         channel: fd.get('channel'), audience: fd.get('audience'),
         platforms: fd.get('platforms'), contact: fd.get('contact'), notes: fd.get('notes'),
+        website: fd.get('website'),   // honeypot (hidden) -> server rejects if filled
       };
       btn.disabled = true; msg.style.color = '#9a93a8'; msg.textContent = 'Sending...';
       try {

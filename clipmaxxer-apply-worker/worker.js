@@ -34,23 +34,41 @@ async function handleApply(request, env) {
   let b;
   try { b = await request.json(); } catch { return json({ ok: false, error: 'bad json' }, 400); }
 
+  // Honeypot: bots fill the hidden "website" field; real users never see it.
+  // Pretend success + store nothing, so the bot doesn't retry.
+  if (clean(b.website, 50)) return json({ ok: true });
+
   const channel = clean(b.channel, 200);
   const contact = clean(b.contact, 200);
   if (!channel || !contact) {
     return json({ ok: false, error: 'channel and contact are required' }, 400);
   }
+
+  // Light per-IP rate limit (~5/hr) to blunt spam floods. KV is eventually
+  // consistent so this is approximate -- fine for abuse-blunting, not security.
+  const ip = request.headers.get('CF-Connecting-IP') || 'anon';
+  try {
+    const n = parseInt((await env.APPLIES.get(`rl:${ip}`)) || '0', 10);
+    if (n >= 5) return json({ ok: false, error: 'too many submissions, try again later' }, 429);
+    await env.APPLIES.put(`rl:${ip}`, String(n + 1), { expirationTtl: 3600 });
+  } catch (_) { /* rate-limit is best-effort; never block a real applicant on it */ }
+
   const rec = {
     name: clean(b.name, 120),
     channel,                                  // twitch/youtube handle or URL
     audience: clean(b.audience, 120),         // rough follower / avg-viewer count
-    platforms: clean(b.platforms, 200),       // where to auto-post (tiktok/shorts/reels)
+    platforms: clean(b.platforms, 200),       // where to post (tiktok/shorts/reels)
     contact,                                  // discord/email to reach them
     notes: clean(b.notes, 1000),
     at: new Date().toISOString(),
     ua: clean(request.headers.get('user-agent') || '', 200),
   };
   const id = `apply:${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  await env.APPLIES.put(id, JSON.stringify(rec));
+  try {
+    await env.APPLIES.put(id, JSON.stringify(rec));
+  } catch (_) {
+    return json({ ok: false, error: 'could not save right now, please retry' }, 503);
+  }
   return json({ ok: true });
 }
 
