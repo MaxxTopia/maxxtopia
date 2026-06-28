@@ -7,12 +7,16 @@
   "bacca": {
     "name": "Bacca",
     "cost": 3500,
-    "rarity": "epic"
+    "rarity": "epic",
+    "ability": "rocketstart",
+    "abilityDesc": "Launches you out of the cannon with extra power."
   },
   "baldy": {
     "name": "Baldy",
     "cost": 3000,
-    "rarity": "epic"
+    "rarity": "epic",
+    "ability": "rage",
+    "abilityDesc": "Unleash Spartan Rage - a sweeping smash clears nearby hazards and launches you up and forward. 13s cooldown."
   },
   "bananna": {
     "name": "Peely",
@@ -242,15 +246,17 @@
   },
   "shark": {
     "name": "Shark",
-    "cost": 2222,
+    "cost": 1500,
     "rarity": "rare",
     "ability": "waterimmune",
     "abilityDesc": " Immune to water damage (passive)"
   },
   "secretskin": {
-    "name": "The Stranger",
+    "name": "Phantom",
     "cost": 0,
     "rarity": "mythic",
+    "ability": "phantom",
+    "abilityDesc": "Wraith form: turn intangible and slip through every hazard unharmed for 3.5s. 15s cooldown.",
     "secret": true,
     "unlock": { "type": "reach_distance", "value": 25000, "label": "" }
   },

@@ -153,6 +153,7 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
 .skin:hover::after{ opacity:1; animation:scShine .8s ease; }
 .skin .nm{ font-size:13px; font-weight:800; color:#fff; text-align:center; line-height:1.15; }
 .skin .sc-ab{ font-size:10.5px; font-weight:800; color:#cdb8ff; text-align:center; }
+.skin .sc-styles-badge{ font:800 8.5px 'Orbitron',sans-serif; letter-spacing:.08em; color:#0c0a16; background:linear-gradient(90deg,#7fe9ff,#b97bff); border-radius:999px; padding:2px 8px; align-self:center; margin-top:1px; box-shadow:0 0 10px rgba(127,233,255,.35); }
 .skin .cost{ font:900 13px 'Orbitron',sans-serif; color:#ffd34d; display:flex; align-items:center; gap:4px; flex-direction:column; }
 .skin .cost .sc-line{ display:flex; align-items:center; gap:4px; }
 .skin .cost.owned{ color:var(--ac); }
@@ -601,7 +602,7 @@ function _computeSkinBox(id,img){ try{
 }catch(e){} }
 let skinList=[{id:"default",name:"Kitty",cost:0,img:null}];
 // ability skins (cost more): a skin gets an ability + custom cost/name via imported/spritecannon/skins/abilities.json
-const ABILITY_LABELS={ ninelives:"start +1 life", doubleflap:"+2 flaps", featherfall:"floaty fall", goldcat:"2x coins", rocketstart:"big launch", shield:"1-hit shield", magnet:"coin magnet", bouncy:"super bounce", greedy:"5x coins", revive:"up to 4 lives", turtle:"shell shield", magnetburst:"10s coin magnet", flamejet:"flame dash", windboost:"wind launch", chrome:"chrome plating (3 hits)", dragon:"draft relaunch + flap regen", lightning:"thunder dash", fallout:"momentum + critical mass", teleport:"blink (regens 1/7s, max 3)", split:"Flying Raijin teleport", crashout:"NITRO smash (recharges 15s)", spicyspeed:"SPICY SPEED", buildwall:"BUILD THE WALL", slowmo:"SLOWED & THROWED", screech:"SONIC SCREAM", GodSpeed:"GOD SPEED", godmode:"MAN OF STEEL", bartman:"BARTMAN", waterimmune:"WATER WALKER", thedrop:"THE DROP" };
+const ABILITY_LABELS={ ninelives:"start +1 life", doubleflap:"+2 flaps", featherfall:"floaty fall", goldcat:"2x coins", rocketstart:"big launch", shield:"1-hit shield", magnet:"coin magnet", bouncy:"super bounce", greedy:"5x coins", revive:"up to 4 lives", turtle:"shell shield", magnetburst:"10s coin magnet", flamejet:"flame dash", windboost:"wind launch", chrome:"chrome plating (3 hits)", dragon:"draft relaunch + flap regen", lightning:"thunder dash", fallout:"momentum + critical mass", teleport:"blink (regens 1/7s, max 3)", split:"Flying Raijin teleport", crashout:"NITRO smash (recharges 15s)", spicyspeed:"SPICY SPEED", buildwall:"BUILD THE WALL", slowmo:"SLOWED & THROWED", screech:"SONIC SCREAM", GodSpeed:"GOD SPEED", godmode:"MAN OF STEEL", bartman:"BARTMAN", waterimmune:"WATER WALKER", thedrop:"THE DROP", phantom:"wraith form (3.5s)", rage:"Spartan Rage" };
 const ABILITY_DESC={
   greedy:"Earns 5x coins from everything you collect.",
   revive:"Respawn on the spot up to 4 times before it's game over.",
@@ -623,7 +624,9 @@ const ABILITY_DESC={
   rocketstart:"Launches you out of the cannon with extra power.",
   shield:"A shield blocks the first hit that would end your run.",
   magnet:"Continuously draws nearby coins toward you.",
-  bouncy:"Bounce higher off every surface for big rebounds."
+  bouncy:"Bounce higher off every surface for big rebounds.",
+  phantom:"Wraith form: turn intangible and slip through every hazard unharmed for 3.5 seconds. 15s cooldown.",
+  rage:"Unleash Spartan Rage - a sweeping smash clears nearby hazards and launches you up and forward. 13s cooldown."
 };
 function ab(){ const s=skinList.find(x=>x.id===save.skin); return (s&&s.ability)||null; }
 function baseFlaps(){ const a=ab(); return cfg.flaps + (a==="doubleflap"||a==="bartman"?2:0); } // bartman: +2 bonus flaps (like doubleflap)
@@ -643,13 +646,13 @@ function splashFx(x,y){ for(let i=0;i<22;i++) parts.push({x:x+rand(-14,14)*DPR,y
 function maxLives(){ return ab()==="revive"?4:3; }
 // ---- ACTIVE abilities: fired via Shift key / on-screen ability button (Diggy's pick) ----
 const ACTIVE_AB={ magnetburst:{label:"MAGNET",uses:1,cd:0,dur:10}, flamejet:{label:"FLAME",uses:Infinity,cd:1.5,dur:0}, windboost:{label:"WIND",uses:Infinity,cd:5,dur:0.9}, teleport:{label:"BLINK",uses:3,cd:0.3,dur:0}, split:{label:"RAIJIN",uses:Infinity,cd:3.5,dur:0}, crashout:{label:"NITRO",uses:Infinity,cd:15,dur:2.5}, dragon:{label:"DRAFT",uses:1,cd:0,dur:0}, lightning:{label:"DASH",uses:Infinity,cd:5,dur:0},
-  spicyspeed:{label:"SPICY",uses:5,cd:1.2,dur:0}, buildwall:{label:"WALL",uses:Infinity,cd:8,dur:0}, slowmo:{label:"SLOW",uses:Infinity,cd:18,dur:3.5}, screech:{label:"SCREAM",uses:Infinity,cd:12,dur:0}, thedrop:{label:"DROP",uses:Infinity,cd:11,dur:0}, GodSpeed:{label:"SUPER",uses:Infinity,cd:25,dur:4} };
+  spicyspeed:{label:"SPICY",uses:5,cd:1.2,dur:0}, buildwall:{label:"WALL",uses:Infinity,cd:8,dur:0}, slowmo:{label:"SLOW",uses:Infinity,cd:18,dur:3.5}, screech:{label:"SCREAM",uses:Infinity,cd:12,dur:0}, thedrop:{label:"DROP",uses:Infinity,cd:11,dur:0}, GodSpeed:{label:"SUPER",uses:Infinity,cd:25,dur:4}, phantom:{label:"WRAITH",uses:Infinity,cd:15,dur:3.5}, rage:{label:"RAGE",uses:Infinity,cd:13,dur:0} };
 let abUses=0, abCd=0, magnetT=0, glideT=0, abRegen=0, flameTrailT=0, crashT=0; // abRegen: teleport regen 7s; flameTrailT: inferno trail; crashT: nitro smash window
-let spicyT=0, slowT=0, superT=0, superCoast=0, starT=0, flightMeter=1, abHeld=false, wallFx=null, shockwaves=[]; // spicy dash / slow-mo / GodSpeed super (+coast) / godmode metered flight / buildwall sweep + screech rings
+let spicyT=0, slowT=0, phaseT=0, superT=0, superCoast=0, starT=0, flightMeter=1, abHeld=false, wallFx=null, shockwaves=[]; // spicy dash / slow-mo / GodSpeed super (+coast) / godmode metered flight / buildwall sweep + screech rings
 let abilityKey="ShiftLeft", capturingKey=false; try{ const _k=localStorage.getItem("sm.spritecannon.abkey"); if(_k) abilityKey=_k; }catch{}
 function keyLabel(c){ if(!c) return "None"; return c.replace("ShiftLeft","L-Shift").replace("ShiftRight","R-Shift").replace("ControlLeft","L-Ctrl").replace("ControlRight","R-Ctrl").replace("AltLeft","L-Alt").replace("AltRight","R-Alt").replace(/^Key/,"").replace(/^Digit/,"").replace("ArrowUp","Up").replace("ArrowDown","Down").replace("ArrowLeft","Left").replace("ArrowRight","Right"); }
 let dragonUsed=false, dragonRegen=0, staticMeter=0, overchargeT=0, falloutBounces=0, falloutCharge=0; // dragon / lightning / fallout
-function piercing(){ return crashT>0 || superT>0 || starT>0 || (ab()==="lightning" && overchargeT>0); } // blow through hazards: nitro = the active smash window (was speed-based = never died); lightning = overcharge; GodSpeed super = invincible
+function piercing(){ return crashT>0 || superT>0 || phaseT>0 || starT>0 || (ab()==="lightning" && overchargeT>0); } // blow through hazards: nitro = the active smash window (was speed-based = never died); lightning = overcharge; GodSpeed super = invincible
 function falloutCriticalMass(){ falloutCharge=0; shake=Math.max(shake,22*DPR); hitstop=2; kitty.vx+=20*DPR; kitty.vy=Math.min(kitty.vy,-6*DPR); pop(kitty.x,kitty.y-52*DPR,"CRITICAL MASS!"); snd("reboot");
   for(const o of obstacles){ if(Math.abs(o.x-kitty.x)<360*DPR && (o.type==="spike"||o.type==="tnt"||o.type==="doghouse")) o.hit=true; } // clear nearby hazards
   for(let i=0;i<40;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-10,10)*DPR,vy:rand(-10,10)*DPR,life:1,c:i%3?"#ff7a1a":(i%2?"#ffd34d":"#fff"),r:rand(2,6)*DPR}); }
@@ -698,6 +701,12 @@ function activateAbility(){
     for(let i=0;i<28;i++) parts.push({x:kitty.x+rand(-30,30)*DPR,y:kitty.y+rand(-10,20)*DPR,vx:rand(-8,8)*DPR,vy:rand(-12,-2)*DPR,life:rand(0.4,0.9),c:(i%3?"#b56bff":"#ffd34d"),r:rand(2,5)*DPR}); }
   else if(id==="GodSpeed"){ superT=c.dur; kitty.vx=Math.min(62*DPR,Math.max(kitty.vx,52*DPR)); kitty.vy=Math.min(kitty.vy,-3*DPR); kitty.sx=1.6; kitty.sy=0.6; shake=Math.max(shake,16*DPR); hitstop=Math.max(hitstop,2); snd("reboot"); pop(kitty.x,kitty.y-52*DPR,"GOD SPEED!"); // invincible + near-max speed + free flight while superT>0 (sprite transforms in drawKitty)
     for(let i=0;i<30;i++) parts.push({x:kitty.x-rand(0,26)*DPR,y:kitty.y+rand(-12,12)*DPR,vx:rand(-12,-2)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.9),c:(i%2?"#ffd34d":"#fff2c0"),r:rand(3,6)*DPR}); }
+  else if(id==="phantom"){ phaseT=c.dur; kitty.sx=1.2; kitty.sy=0.86; shake=Math.max(shake,6*DPR); snd("token"); pop(kitty.x,kitty.y-48*DPR,"WRAITH!"); // ghost out: intangible, pass through every hazard while phaseT>0
+    for(let i=0;i<26;i++) parts.push({x:kitty.x+rand(-24,24)*DPR,y:kitty.y+rand(-18,18)*DPR,vx:rand(-3,3)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.95),c:(i%3?"#9b8cff":"#2c2350"),r:rand(2,5)*DPR}); }
+  else if(id==="rage"){ let cleared=0; const R=340*DPR; // SPARTAN RAGE (kratos): sweep nearby hazards + launch up/forward
+    for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && Math.abs(o.x-kitty.x)<R){ o.hit=true; cleared++; for(let i=0;i<8;i++) parts.push({x:o.x,y:o.y-(o.h||30*DPR)*0.5,vx:rand(-7,7)*DPR,vy:rand(-9,1)*DPR,life:0.8,c:i%2?"#ff5a2a":"#ffd34d",r:rand(2,5)*DPR}); } }
+    shockwaves.push({x:kitty.x,y:kitty.y,r:20*DPR,life:1}); kitty.vy=-19*DPR; kitty.vx=Math.min(62*DPR,kitty.vx+13*DPR); kitty.sx=1.6; kitty.sy=0.55; shake=Math.max(shake,20*DPR); hitstop=Math.max(hitstop,3); snd("reboot"); pop(kitty.x,kitty.y-54*DPR,"SPARTAN RAGE!");
+    for(let i=0;i<28;i++) parts.push({x:kitty.x+rand(-30,30)*DPR,y:kitty.y+rand(-10,20)*DPR,vx:rand(-8,8)*DPR,vy:rand(-12,-2)*DPR,life:rand(0.4,0.9),c:(i%3?"#ff5a2a":"#ffd34d"),r:rand(2,5)*DPR}); }
 }
 let shielded=false, chromePlates=0; // chrome: absorbs the first N hazard hits (chrome plating)
 function hazard(){ if(shielded){ shielded=false; kitty.vy=-13*DPR; kitty.vx=Math.max(kitty.vx,5*DPR); shake=10*DPR; pop(kitty.x,kitty.y-30*DPR,"SHIELD!"); for(let i=0;i<16;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-4,4)*DPR,vy:rand(-5,-1)*DPR,life:1,c:i%2?"#7fe7ff":"#fff",r:rand(2,4)*DPR}); snd("token"); return true; }
@@ -745,7 +754,7 @@ function reset(){
   ufo=null; infurno=null; infCoins=[]; infurnoUsedThisRun=false; ufoBiomeMark=""; shielded=(ab()==="shield"||ab()==="turtle"); chromePlates=(ab()==="chrome"?3:0); if(ab()==="ninelives"||ab()==="revive") lives=1; // revive/ninelives start the run with 1 heart already; chrome = 3 armor plates
   gauntlet=null; gHaz=[]; gauntletUsed={fire:false,water:false};
   { const _c=ACTIVE_AB[ab()]; abUses=_c?_c.uses:0; } abCd=0; abRegen=0; flameTrailT=0; crashT=0; magnetT=0; glideT=0; dragonUsed=false; dragonRegen=0; staticMeter=0; overchargeT=0; falloutBounces=0; falloutCharge=0;
-  spicyT=0; slowT=0; superT=0; superCoast=0; starT=0; flightMeter=1; abHeld=false; wallFx=null; shockwaves=[]; // new-ability per-run state
+  spicyT=0; slowT=0; phaseT=0; superT=0; superCoast=0; starT=0; flightMeter=1; abHeld=false; wallFx=null; shockwaves=[]; // new-ability per-run state
   kitty={ x:90*DPR, y:GROUND()-30*DPR, vx:0, vy:0, r:22*DPR, rest:false, sx:1, sy:1, spin:0 };
   hitstop=0; flashT=0; lastMile=0; popTexts=[]; prevBest=save.best; beatBest=false; stopBark();
   if(Math.random()<0.45){ const sM=rand(280,1100); waterStart=90*DPR+sM*24*DPR; waterEnd=waterStart+rand(2600,4200)*DPR; } else { waterStart=waterEnd=-1; } waterCd=0; // ~45% of runs: a lethal water stretch
@@ -836,7 +845,7 @@ if(IS_TOUCH){ document.body.classList.add("is-touch");
 function update(){
   if(shake>0) shake*=0.86;
   if(abCd>0) abCd-=1/60; if(magnetT>0) magnetT-=1/60; if(glideT>0) glideT-=1/60; if(overchargeT>0) overchargeT-=1/60; if(waterCd>0) waterCd-=1/60; if(crashT>0) crashT-=1/60;
-  if(spicyT>0) spicyT-=1/60; if(slowT>0) slowT-=1/60; if(superT>0){ superT-=1/60; if(superT<=0) superCoast=1.3; } if(superCoast>0) superCoast-=1/60; if(starT>0) starT-=1/60; // GodSpeed leaves a momentum-coast window; Super Star invincibility ticks down
+  if(spicyT>0) spicyT-=1/60; if(slowT>0) slowT-=1/60; if(phaseT>0) phaseT-=1/60; if(superT>0){ superT-=1/60; if(superT<=0) superCoast=1.3; } if(superCoast>0) superCoast-=1/60; if(starT>0) starT-=1/60; // GodSpeed leaves a momentum-coast window; Super Star invincibility ticks down
   if(wallFx){ wallFx.life-=1/60; if(wallFx.life<=0) wallFx=null; }
   if(shockwaves.length){ for(const s of shockwaves){ s.r+=14*DPR; s.life-=1/60*2; } shockwaves=shockwaves.filter(s=>s.life>0); }
   if(ab()==="teleport"){ const _cap=ACTIVE_AB.teleport.uses; if(abUses<_cap){ abRegen+=1/60; if(abRegen>=7){ abRegen=0; abUses=Math.min(_cap,abUses+1); } } else abRegen=0; } // zeropoint: regen one blink charge every 7s, cap 3
@@ -870,7 +879,7 @@ function update(){
     if(kitty.y+kitty.r>g){ kitty.y=g-kitty.r;
       const onPlat = inWater() && nearFloat(); // landing on a float/diveboard = safe (the float bounce below handles it), never a splash death
       if(onPlat){ /* water platform: no splash penalty; obstacle loop bounces you */ }
-      else if(inWater() && !(ab()==="waterimmune" || superT>0)){ // splashed into the lethal water -> costs a life (not insta-kill); WATER WALKER / GodSpeed = immune (small splash, no penalty)
+      else if(inWater() && !(ab()==="waterimmune" || superT>0 || phaseT>0)){ // splashed into the lethal water -> costs a life (not insta-kill); WATER WALKER / GodSpeed = immune (small splash, no penalty)
         if(waterCd<=0){ waterCd=0.9; flashT=1; shake=14*DPR; snd("spike"); splashFx(kitty.x,g);
           if(lives>0){ lives--; kitty.vy=-13*DPR; kitty.vx*=0.65; pop(kitty.x,kitty.y-42*DPR,"SPLASH! -1 life"); } else { tryEnd(); } }
         else { kitty.vy=Math.min(kitty.vy,-8*DPR); kitty.vx*=0.9; } // brief grace: bounce out, no extra loss
@@ -1154,39 +1163,39 @@ const ZONES = [
   { name:"Dawnpurr",   d:0,     sky:["#6cb7f2","#a9d6ff","#dcefe0"], ac:"#7ed957", fx:"none" },
   { name:"Emberglide", d:1000,  sky:["#ff2d6b","#ff6b2c","#ffc23d"], ac:"#21e6ff", fx:"none" },
   { name:"Sporebloom", d:2000,  sky:["#b6ff1a","#3ae06b","#0ea5a0"], ac:"#ff2ec4", fx:"none" },
-  { name:"Mushroom Hollow", d:3000,  sky:["#2f9e76","#136055","#06222b"], ac:"#5cffcf", fx:"none" },
+  { name:"Meowshroom Hollow", d:3000,  sky:["#2f9e76","#136055","#06222b"], ac:"#5cffcf", fx:"none" },
   { name:"Abyssline",  d:4500,  sky:["#0b36c9","#0e7ae6","#16e0c8"], ac:"#ffe03d", fx:"rain" },
   { name:"Sky Kingdom", d:5500, sky:["#6db8f0","#cfeaff","#ffe9b8"], ac:"#ffe6a3", fx:"none" },
   { name:"Funland",    d:6250,  sky:["#ff8fb8","#ffd36b","#9be3ff"], ac:"#ff4fa6", fx:"none" },
   { name:"Voltloom",   d:7000,  sky:["#7a0fe0","#d518c9","#ff3d8a"], ac:"#2bffe6", fx:"lightning" },
-  { name:"Sunspire",   d:8000,  sky:["#ffb200","#ff7a00","#ff3d5e"], ac:"#27e1ff", fx:"lava" },
+  { name:"Sunspurr",   d:8000,  sky:["#ffb200","#ff7a00","#ff3d5e"], ac:"#27e1ff", fx:"lava" },
   { name:"Candyland",  d:9000,  sky:["#ffd6ec","#ffb4d8","#bfe9ff"], ac:"#ff5fa6", fx:"none" },
-  { name:"Starwhisk",  d:10500, sky:["#1a0a47","#5a1ad6","#16d6ff"], ac:"#ff5cf0", fx:"none" },
+  { name:"Starwhisker",  d:10500, sky:["#1a0a47","#5a1ad6","#16d6ff"], ac:"#ff5cf0", fx:"none" },
   { name:"Sakura Grove", d:11500, sky:["#a98fd6","#e89bc7","#ffc9b0"], ac:"#ff9ecb", fx:"none" },
   { name:"Jungle Ruins",    d:13000, sky:["#4fb87a","#23734f","#0c2c26"], ac:"#ffd75c", fx:"none" },
-  { name:"Mango Mirage",    d:14500, sky:["#ff8a3d","#ff5a6e","#7b2ff7"], ac:"#fff15c", fx:"none" },
+  { name:"Mango Meowrage",    d:14500, sky:["#ff8a3d","#ff5a6e","#7b2ff7"], ac:"#fff15c", fx:"none" },
   { name:"Underwater Reef", d:15500, sky:["#27d8cf","#0f86c4","#08305f"], ac:"#22e6d0", fx:"none" },
   { name:"Downpurr",        d:17000, sky:["#2fd6ff","#2a7bd6","#16306b"], ac:"#a8f3ff", fx:"rain" },
-  { name:"Neon Cyber-City", d:18000, sky:["#241046","#52137f","#0b0a1f"], ac:"#27e0ff", fx:"none" },
+  { name:"Neon Cyber-Kitty", d:18000, sky:["#241046","#52137f","#0b0a1f"], ac:"#27e0ff", fx:"none" },
   { name:"Voltcrest",       d:19500, sky:["#b14dff","#5e2bd6","#190a4d"], ac:"#fff04a", fx:"lightning" },
-  { name:"Clockwork City",  d:20500, sky:["#d9a85c","#9a5e2c","#241712"], ac:"#7fe0ff", fx:"none" },
-  { name:"Aurora Verge",    d:22000, sky:["#1de2b0","#2360c4","#171a4a"], ac:"#7dffd0", fx:"none" },
-  { name:"Haunted Graveyard", d:23000, sky:["#39463f","#352f4a","#0c0e13"], ac:"#8f7fc0", fx:"none" },
-  { name:"Glacier Howl",    d:24500, sky:["#9be7ff","#6a7bff","#262a66"], ac:"#e8fbff", fx:"none" },
-  { name:"Desert Pyramids", d:25500, sky:["#7fb8e0","#eab15c","#f4cf86"], ac:"#ffd27a", fx:"none" },
-  { name:"Emberfall Canyon",d:27000, sky:["#ff6a2c","#c11e4a","#3a0a2a"], ac:"#ffd23f", fx:"lava" },
+  { name:"Clockwork Kitty",  d:20500, sky:["#d9a85c","#9a5e2c","#241712"], ac:"#7fe0ff", fx:"none" },
+  { name:"Aurora Purrge",    d:22000, sky:["#1de2b0","#2360c4","#171a4a"], ac:"#7dffd0", fx:"none" },
+  { name:"Purrgatory", d:23000, sky:["#39463f","#352f4a","#0c0e13"], ac:"#8f7fc0", fx:"none" },
+  { name:"Glacier Meowl",    d:24500, sky:["#9be7ff","#6a7bff","#262a66"], ac:"#e8fbff", fx:"none" },
+  { name:"Desert Purramids", d:25500, sky:["#7fb8e0","#eab15c","#f4cf86"], ac:"#ffd27a", fx:"none" },
+  { name:"Emberfall Catyon",d:27000, sky:["#ff6a2c","#c11e4a","#3a0a2a"], ac:"#ffd23f", fx:"lava" },
   { name:"Magmacore",       d:28000, sky:["#ff5a1f","#a1102b","#180306"], ac:"#ffcf3a", fx:"lava" },
-  { name:"Storm Spire",     d:29000, sky:["#3a4170","#222748","#070912"], ac:"#9fd6ff", fx:"lightning" },
-  { name:"Stormcrown",      d:30500, sky:["#6f4dff","#2a1f7a","#0a0726"], ac:"#9affef", fx:"lightning" },
-  { name:"Frozen Aurora",   d:31500, sky:["#0c1a44","#1f4f8f","#9fe0ef"], ac:"#7dffc4", fx:"none" },
+  { name:"Storm Spurr",     d:29000, sky:["#3a4170","#222748","#070912"], ac:"#9fd6ff", fx:"lightning" },
+  { name:"Stormclaw",      d:30500, sky:["#6f4dff","#2a1f7a","#0a0726"], ac:"#9affef", fx:"lightning" },
+  { name:"Frozen Purrora",   d:31500, sky:["#0c1a44","#1f4f8f","#9fe0ef"], ac:"#7dffc4", fx:"none" },
   { name:"The Hush Below",  d:33000, sky:["#7a2bff","#3a0f8c","#0b0420"], ac:"#ff5ce0", fx:"rain" },
-  { name:"Singularity",     d:34000, sky:["#b026ff","#3d0a66","#040208"], ac:"#00f0ff", fx:"lightning" },
+  { name:"Singularitty",     d:34000, sky:["#b026ff","#3d0a66","#040208"], ac:"#00f0ff", fx:"lightning" },
   { name:"Elysium",             d:5800,  sky:["#ffd9a8","#ffb482","#a9d2ef"], ac:"#ffe6a3", fx:"none" },
   { name:"Rainbow Road",        d:12500, sky:["#0b1038","#2a1c63","#04030e"], ac:"#5cf0ff", fx:"none" },
-  { name:"Vaporwave",           d:13800, sky:["#caa6f0","#ff9ed8","#8fe6e0"], ac:"#ff5fc8", fx:"none" },
+  { name:"Vapurrwave",           d:13800, sky:["#caa6f0","#ff9ed8","#8fe6e0"], ac:"#ff5fc8", fx:"none" },
   { name:"Synthwave Grid",      d:16500, sky:["#241046","#4a0e6e","#120627"], ac:"#ff2d95", fx:"none" },
   { name:"Bioluminescent Abyss",d:21000, sky:["#0a2b4e","#06182f","#020812"], ac:"#22e6ff", fx:"none" },
-  { name:"Cosmic Nebula",       d:26500, sky:["#241654","#120a33","#060314"], ac:"#35e8ff", fx:"none" },
+  { name:"Cosmic Mewbula",      d:26500, sky:["#241654","#120a33","#060314"], ac:"#35e8ff", fx:"none" },
   { name:"Geometric Void",      d:32000, sky:["#05070e","#0a1020","#0e1834"], ac:"#22e6ff", fx:"none" },
 ];
 ZONES.sort((a,b)=>a.d-b.d); // keep zones ordered by distance after appending the new environments
@@ -3597,6 +3606,7 @@ function drawKitty(){
     ctx.quadraticCurveTo(r*0.22,r*0.2,r*0.5,-r*0.9); ctx.closePath(); ctx.fill();
     ctx.strokeStyle="rgba(120,124,170,.3)"; ctx.lineWidth=r*0.05; ctx.stroke();
   }
+  if(phaseT>0){ ctx.globalAlpha=0.4+0.16*Math.sin(t*15); ctx.filter="brightness(.7) saturate(.5)"; } // PHASE: spectral translucent shimmer while intangible
   const _super=(superT>0 && save.skin==="fastboi" && skinImgs["fastboi__super"]); // GodSpeed literally transforms the fastboi sprite while super is active (overrides the chosen style)
   const img=_super?skinImgs["fastboi__super"]:skinImgFor(save.skin);
   if(starT>0) ctx.filter="saturate(2.2) brightness(1.2) hue-rotate("+Math.round((performance.now()/4)%360)+"deg)"; // SUPER STAR: rainbow shimmer applied ONLY to the sprite draw below (canvas filter is isolated to these pixels; the old source-atop fill bled onto the whole world)
@@ -3605,6 +3615,7 @@ function drawKitty(){
     ctx.drawImage(img,-ccx*s,-ccy*s,img.width*s,img.height*s); } // center on creature
   else drawKittyArt(ctx, kitty.r);
   if(starT>0) ctx.filter="none";
+  if(phaseT>0){ ctx.globalAlpha=1; ctx.filter="none"; }
   ctx.restore();
 }
 function drawGauntletBg(type,t){
@@ -3885,6 +3896,7 @@ function unlockHint(sk){ return (sk.unlock&&sk.unlock.label) ? sk.unlock.label :
 let _shopFilter="all", _shopSort="rarity";
 function openShop(){ if(state!=="start"&&state!=="result") return; prevState=state; buildShop(); show("shopCard",true); state="shop"; } // no shop mid-run
 function closeShopFn(){ show("shopCard",false); state=prevState; if(state==="start") show("startCard",true); else if(state==="result") show("resultCard",true); }
+function pickableStyles(sk){ return (sk.styles||[]).filter(st=>st.id!=="fastboi__super"); } // fastboi__super is the GodSpeed transform, not a chooseable cosmetic
 function buildShop(){
   const grid=document.getElementById("skinGrid"); grid.innerHTML="";
   document.getElementById("coins").textContent=save.coins+runCoins;
@@ -3941,6 +3953,7 @@ function buildShop(){
     el.appendChild(thumb);
     const nm=document.createElement("div"); nm.className="nm"; nm.textContent= hideSecret? "???" : sk.name; el.appendChild(nm);
     if(sk.ability && !hideSecret){ const abl=document.createElement("div"); abl.className="sc-ab"; abl.textContent="⚡ "+(ABILITY_LABELS[sk.ability]||sk.ability); el.appendChild(abl); }
+    if(!hideSecret && pickableStyles(sk).length>1){ const stb=document.createElement("div"); stb.className="sc-styles-badge"; stb.textContent="◐ "+pickableStyles(sk).length+" STYLES"; el.appendChild(stb); } // surface that this skin has multiple chooseable looks
     const cost=document.createElement("div"); cost.className="cost"+(owned?" owned":"");
     if(sk.secret && locked){
       const line=document.createElement("div"); line.className="sc-line"; line.innerHTML="🔒 "+pal.name; cost.appendChild(line);
@@ -4029,9 +4042,10 @@ function openSkinDetail(sk){
   else { const have=save.coins+runCoins; buyBtn.style.display="inline-flex"; buyBtn.innerHTML= sk.cost>0 ? ("&#10003; BUY "+sk.cost+" ⛁") : "&#10003; CLAIM"; costEl.textContent= sk.cost>0 ? (have<sk.cost ? (sk.cost-have)+" coins to go" : sk.cost+" ⛁") : "Unlocked ✦"; if(sk.cost>0 && have<sk.cost) costEl.style.color="#cdd6ea"; }
   const stylesEl=document.getElementById("detailStyles"); // Fortnite-style edit-styles: clickable chips for owned skins with >1 variant
   if(stylesEl){ stylesEl.innerHTML="";
-    if(owned && sk.styles && sk.styles.length>1 && !hideSecret){ stylesEl.style.display="flex";
+    const stys=pickableStyles(sk);
+    if(owned && stys.length>1 && !hideSecret){ stylesEl.style.display="flex";
       const cur=(save.style&&save.style[sk.id])||sk.id;
-      for(const st of sk.styles){ const chip=document.createElement("div"); chip.className="sc-chip"+((st.id===cur)?" sel":""); chip.textContent=st.name;
+      for(const st of stys){ const chip=document.createElement("div"); chip.className="sc-chip"+((st.id===cur)?" sel":""); chip.textContent=st.name;
         chip.onclick=()=>{ snd("ui"); save.style[sk.id]=st.id; persist(); openSkinDetail(sk); buildShop(); }; stylesEl.appendChild(chip); } }
     else stylesEl.style.display="none"; }
   show("skinDetailCard",true);
