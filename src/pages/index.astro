@@ -82,10 +82,10 @@ const liveSorted = [...liveProducts].sort(
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
       <a
         href="/play"
-        class="group block relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[linear-gradient(110deg,rgba(226,91,255,0.10),rgba(0,212,255,0.07))] transition-colors hover:border-[var(--color-magenta)]/55"
+        class="arcade-banner group block relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[linear-gradient(110deg,rgba(226,91,255,0.10),rgba(0,212,255,0.07))] transition-colors hover:border-[var(--color-magenta)]/55"
         aria-label="Play Sprite Cannon — the free Maxxtopia Arcade game"
       >
-        <div class="relative flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:p-8">
+        <div class="relative z-[1] flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:p-8">
           <div class="flex-1">
             <p class="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-cyan)]">&#9670; Maxxtopia Arcade</p>
             <h2 class="text-[26px] font-semibold leading-[1.08] tracking-[-0.025em] sm:text-[34px]"><span class="gradient-text">We build serious tools.</span> <span class="serif-accent gradient-suite">And one ridiculous game.</span></h2>
@@ -96,6 +96,33 @@ const liveSorted = [...liveProducts].sort(
       </a>
     </div>
   </section>
+
+  <style>
+    /* Arcade banner: flowing aurora + sheen so it reads as the one "alive,
+       playful" panel on an otherwise calm page. */
+    .arcade-banner { box-shadow: 0 12px 44px -22px rgba(226, 91, 255, 0.4); transition: box-shadow 320ms ease, border-color 200ms ease; }
+    .arcade-banner::before {
+      content: ""; position: absolute; inset: -45% -12%; z-index: 0; pointer-events: none;
+      background: conic-gradient(from 0deg,
+        transparent 0deg, rgba(226, 91, 255, 0.20) 60deg, transparent 120deg,
+        rgba(0, 212, 255, 0.18) 200deg, transparent 250deg, rgba(76, 81, 247, 0.18) 320deg, transparent 360deg);
+      filter: blur(30px); opacity: 0.85;
+      animation: arcadeFlow 13s linear infinite;
+    }
+    .arcade-banner::after {
+      content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background: linear-gradient(110deg, transparent 24%, rgba(255, 255, 255, 0.05) 42%, rgba(0, 212, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 58%, transparent 78%);
+      background-size: 230% 100%; background-position: 200% 0;
+      animation: arcadeSheen 7.5s ease-in-out infinite;
+    }
+    .arcade-banner:hover { box-shadow: 0 16px 54px -18px rgba(226, 91, 255, 0.6); }
+    .arcade-banner:hover::after { animation-duration: 3.4s; }
+    @keyframes arcadeFlow { to { transform: rotate(1turn); } }
+    @keyframes arcadeSheen { 0% { background-position: 200% 0; } 100% { background-position: -130% 0; } }
+    @media (prefers-reduced-motion: reduce) {
+      .arcade-banner::before, .arcade-banner::after { animation: none; }
+    }
+  </style>
 
   <!-- Principles -->
   <section id="principles" class="relative">

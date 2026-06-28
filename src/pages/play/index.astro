@@ -40,7 +40,9 @@ const rarity: Record<string, { c: string; label: string }> = {
 const rarityOrder = ['common', 'rare', 'epic', 'legendary', 'mythic'];
 
 // Curated gallery — every rarity represented, the flashy ones up front.
-const skins: { k: string; n: string; r: string }[] = [
+// secret:true skins get the shop's "locked" treatment: a solid-black Pokémon
+// silhouette + a "???" name, so the hidden unlocks aren't spoiled.
+const skins: { k: string; n: string; r: string; secret?: boolean }[] = [
   { k: 'greedy', n: 'Queen', r: 'legendary' },
   { k: 'fastboi', n: 'Fastboi', r: 'mythic' },
   { k: 'dragon', n: 'Dragon', r: 'epic' },
@@ -52,14 +54,14 @@ const skins: { k: string; n: string; r: string }[] = [
   { k: 'zeropoint', n: 'Zero Point', r: 'legendary' },
   { k: 'purpdrank', n: 'Purpdrank', r: 'legendary' },
   { k: 'bananna', n: 'Peely', r: 'legendary' },
-  { k: 'turtle', n: 'Turtle', r: 'legendary' },
-  { k: 'bartholomew', n: 'Bartholomew', r: 'mythic' },
-  { k: 'superbob', n: 'Superbob', r: 'mythic' },
-  { k: 'secretskin', n: 'The Stranger', r: 'mythic' },
+  { k: 'fallout', n: 'Fallout', r: 'legendary' },
+  { k: 'bartholomew', n: 'Bartholomew', r: 'mythic', secret: true },
+  { k: 'superbob', n: 'Superbob', r: 'mythic', secret: true },
+  { k: 'secretskin', n: 'Phantom', r: 'mythic', secret: true },
   { k: 'pepper', n: 'Pepper', r: 'epic' },
   { k: 'boba', n: 'Boba', r: 'epic' },
   { k: 'raptor_sprite', n: 'Raptor', r: 'epic' },
-  { k: 'tscott', n: 'Tscott', r: 'epic' },
+  { k: 'tscott', n: 'Tscott', r: 'epic', secret: true },
   { k: 'shark', n: 'Shark', r: 'rare' },
   { k: 'klombo', n: 'Klombo', r: 'rare' },
   { k: 'snowman', n: 'Snowy', r: 'rare' },
@@ -67,14 +69,15 @@ const skins: { k: string; n: string; r: string }[] = [
   { k: 'cute', n: 'Cute', r: 'common' },
 ];
 
-// Signature abilities — each card is a real skin + its real in-game ability text.
+// Signature abilities — each card is a real, NON-secret skin + its real in-game
+// ability text (secret skins stay hidden, so they aren't featured here).
 const sigAbilities: { k: string; skin: string; label: string; r: string; desc: string }[] = [
   { k: 'fastboi', skin: 'Fastboi', label: 'GodSpeed', r: 'mythic', desc: 'Transform for ~4s: invincible, max speed, free flight — the sprite even swaps to its Super Sonic form.' },
   { k: 'purpdrank', skin: 'Purpdrank', label: 'Slow-Mo', r: 'legendary', desc: 'Take a sip and the whole world slows to ~40% with a woozy purple wobble.' },
   { k: 'donlad', skin: 'Donlad', label: 'Build Wall', r: 'legendary', desc: 'Deploy a golden wall that plows straight through the hazards ahead.' },
-  { k: 'tscott', skin: 'Tscott', label: 'The Drop', r: 'epic', desc: 'Bass-drop: launch up and forward as a shockwave clears the hazards near you.' },
+  { k: 'chrome', skin: 'Chrome', label: 'Chrome Plating', r: 'legendary', desc: 'Start the run armored — three chrome plates soak three hits before you feel a thing.' },
   { k: 'pepper', skin: 'Pepper', label: 'Spicy Speed', r: 'epic', desc: 'A quick movement boost on tap — five spicy dashes every match.' },
-  { k: 'bartholomew', skin: 'Bartholomew', label: 'Bartman', r: 'mythic', desc: 'Caped glider: permanent slow-fall plus two bonus flaps, the whole run.' },
+  { k: 'shark', skin: 'Shark', label: 'Waterproof', r: 'rare', desc: 'Immune to water damage — splash straight through what would sink anyone else.' },
 ];
 
 // "What's in the cannon" — four pillars, each a real claim.
@@ -186,7 +189,7 @@ const steps = [
         <div>
           <p class="font-mono text-[12px] uppercase tracking-[0.12em] text-[var(--color-cyan)]">&#9670; The cabinet</p>
           <h2 class="mt-2 text-[26px] sm:text-[38px] font-semibold tracking-[-0.025em] leading-[1.04]">
-            <span class="gradient-text">Drop a coin.</span> <span class="serif-accent gradient-suite">It’s already running.</span>
+            <span class="gradient-text">Hit play.</span> <span class="serif-accent gradient-suite">It’s game time.</span>
           </h2>
         </div>
         <p class="font-mono text-[12px] text-[var(--color-subtle)] max-w-xs">
@@ -276,7 +279,7 @@ const steps = [
       <div class="reveal-on-scroll mt-14">
         <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
           <h3 class="text-[22px] sm:text-[30px] font-semibold tracking-[-0.02em] leading-[1.05]">
-            <span class="gradient-text">50+ skins.</span> <span class="serif-accent gradient-suite">Real cats to launch.</span>
+            <span class="gradient-text">50+ skins.</span> <span class="serif-accent gradient-suite">Real sprites to launch.</span>
           </h3>
           <div class="flex flex-wrap gap-x-4 gap-y-1.5 font-mono text-[11px]">
             {rarityOrder.map((r) => (
@@ -290,17 +293,21 @@ const steps = [
         <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-2.5 sm:gap-3">
           {skins.map((s) => (
             <div
-              class="group flex flex-col items-center rounded-xl border bg-[var(--color-bg-card)] p-2.5 transition-transform hover:-translate-y-0.5"
+              class="group relative flex flex-col items-center rounded-xl border bg-[var(--color-bg-card)] p-2.5 transition-transform hover:-translate-y-0.5"
               style={`border-color:${rarity[s.r].c}33`}
-              title={`${s.n} · ${rarity[s.r].label}`}
+              title={s.secret ? `??? · ${rarity[s.r].label} · secret unlock` : `${s.n} · ${rarity[s.r].label}`}
             >
+              {s.secret && (
+                <span class="absolute right-1.5 top-1.5 text-[11px] leading-none opacity-80" aria-hidden="true">&#128274;</span>
+              )}
               <img
                 src={`${skinBase}/${s.k}.png`}
-                alt={`${s.n} skin`}
+                alt={s.secret ? 'Locked secret skin' : `${s.n} skin`}
                 width="56" height="56" loading="lazy" decoding="async"
                 class="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-110"
+                style={s.secret ? `filter: brightness(0) drop-shadow(0 0 5px ${rarity[s.r].c}88);` : ''}
               />
-              <p class="mt-1.5 w-full truncate text-center text-[11px] font-medium text-[var(--color-text-mid)]">{s.n}</p>
+              <p class="mt-1.5 w-full truncate text-center text-[11px] font-medium text-[var(--color-text-mid)]">{s.secret ? '???' : s.n}</p>
               <span class="mt-1 h-1 w-6 rounded-full" style={`background:${rarity[s.r].c}`}></span>
             </div>
           ))}
@@ -403,6 +410,28 @@ const steps = [
         ))}
       </div>
 
+      <!-- LIVE global leaderboard — pulled from the Cloudflare worker the game submits to -->
+      <div class="reveal-on-scroll mt-9 overflow-hidden rounded-2xl border border-[var(--color-line-strong)] bg-[var(--color-bg-card)]">
+        <div class="flex items-center justify-between gap-3 border-b border-[var(--color-line)] px-6 py-4">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-magenta)]">&#9670; Global leaderboard</p>
+            <h3 class="mt-1 text-[20px] sm:text-[26px] font-semibold tracking-tight">
+              <span class="gradient-text">The top spot.</span> <span class="serif-accent gradient-suite">Hunted in real time.</span>
+            </h3>
+          </div>
+          <span class="inline-flex shrink-0 items-center gap-2 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-bg)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted)]">
+            <span class="flex h-2 w-2 rounded-full" style="background:#4ade80;box-shadow:0 0 10px #4ade80;animation:pulse 2s ease-in-out infinite"></span>
+            Live
+          </span>
+        </div>
+        <ol id="sc-lb" class="sc-lb-list">
+          <li class="sc-lb-skel"></li><li class="sc-lb-skel" style="opacity:.7"></li><li class="sc-lb-skel" style="opacity:.45"></li>
+        </ol>
+        <div class="border-t border-[var(--color-line)] px-6 py-3 text-center font-mono text-[11.5px] uppercase tracking-[0.08em] text-[var(--color-subtle)]">
+          Top 10 worldwide · set yours in the cabinet above
+        </div>
+      </div>
+
       <!-- Discord / leaderboard loop -->
       <div class="reveal-on-scroll mt-9 relative overflow-hidden rounded-2xl border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] p-7 sm:p-9">
         <div class="absolute inset-0 opacity-50 bg-grid pointer-events-none"></div>
@@ -421,7 +450,7 @@ const steps = [
               </svg>
             </a>
             <a href="/#apps" class="btn-secondary">See the full suite</a>
-            <a href="#play" class="btn-secondary">Back to the cabinet &#9650;</a>
+            <a href="#play" class="btn-secondary">Back to the game &#9650;</a>
           </div>
         </div>
       </div>
@@ -446,6 +475,25 @@ const steps = [
       height: auto;
       max-height: none;
     }
+
+    /* Live leaderboard rows (built by JS, so styled globally). */
+    .sc-lb-list { list-style: none; margin: 0; padding: 0; }
+    .sc-lb-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 24px; border-top: 1px solid var(--color-line);
+    }
+    .sc-lb-row:first-child { border-top: 0; }
+    .sc-lb-row.is-top { background: color-mix(in srgb, var(--color-warm) 6%, transparent); }
+    .sc-lb-rank { width: 30px; text-align: center; font-family: var(--font-mono); font-size: 15px; color: var(--color-subtle); }
+    .sc-lb-rank .m { font-size: 19px; }
+    .sc-lb-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: 15px; color: var(--color-text); }
+    .sc-lb-you { margin-left: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; color: var(--color-cyan); border: 1px solid color-mix(in srgb, var(--color-cyan) 45%, transparent); border-radius: 999px; padding: 1px 6px; }
+    .sc-lb-dist { font-family: var(--font-display); font-size: 24px; line-height: 1; }
+    .sc-lb-u { font-family: var(--font-mono); font-size: 12px; color: var(--color-subtle); margin-left: 2px; }
+    .sc-lb-msg { padding: 26px 24px; text-align: center; font-size: 14px; color: var(--color-subtle); }
+    .sc-lb-skel { height: 47px; border-top: 1px solid var(--color-line); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-line) 55%, transparent), transparent); background-size: 200% 100%; animation: scLbShimmer 1.2s linear infinite; }
+    .sc-lb-skel:first-child { border-top: 0; }
+    @keyframes scLbShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   </style>
 
   <script is:inline>
@@ -473,6 +521,66 @@ const steps = [
       const sync = () => { label.textContent = isFs() ? 'Exit fullscreen' : 'Fullscreen'; };
       document.addEventListener('fullscreenchange', sync);
       document.addEventListener('webkitfullscreenchange', sync);
+    })();
+  </script>
+
+  <!-- Cursor / focus recovery: the embedded game can leave the page feeling
+       "stuck" — keyboard focus parked in the iframe, or (after fullscreen) the
+       OS cursor auto-hidden. Reassert control whenever the pointer leaves the
+       cabinet or fullscreen toggles, so the page cursor always comes back. -->
+  <script is:inline>
+    (() => {
+      const cab = document.getElementById('sc-cabinet');
+      const frame = document.getElementById('sc-frame');
+      if (!cab) return;
+      const reclaim = () => {
+        try { document.documentElement.style.cursor = ''; document.body.style.cursor = ''; } catch (e) {}
+        try { if (frame && document.activeElement === frame) { frame.blur(); window.focus(); } } catch (e) {}
+      };
+      cab.addEventListener('mouseleave', reclaim);
+      cab.addEventListener('pointerleave', reclaim);
+      document.addEventListener('fullscreenchange', reclaim);
+      document.addEventListener('webkitfullscreenchange', reclaim);
+      // Belt-and-suspenders: if the page cursor ever got hidden, the first real
+      // pointer move over the page restores it.
+      document.addEventListener('pointermove', () => {
+        if (getComputedStyle(document.body).cursor === 'none') document.body.style.cursor = 'auto';
+      }, { passive: true });
+    })();
+  </script>
+
+  <!-- Live global leaderboard — polls the same Cloudflare worker the game submits to. -->
+  <script is:inline>
+    (() => {
+      const LB = 'https://spritecannon-lb.maxxtopia.workers.dev';
+      const list = document.getElementById('sc-lb');
+      if (!list) return;
+      const medal = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
+      const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const fmt = (d) => Math.max(0, Math.round(+d || 0)).toLocaleString('en-US');
+      let me = '';
+      try { me = (localStorage.getItem('sm.spritecannon.name') || '').trim().toLowerCase(); } catch (e) {}
+      const msg = (t) => { list.innerHTML = '<li class="sc-lb-msg">' + esc(t) + '</li>'; };
+      const render = (top) => {
+        if (!top || !top.length) { msg('No scores yet — be the first to claim the top spot.'); return; }
+        list.innerHTML = top.slice(0, 10).map((e, i) => {
+          const rank = i < 3 ? '<span class="m">' + medal[i] + '</span>' : (i + 1);
+          const you = me && (e.name || '').trim().toLowerCase() === me ? '<span class="sc-lb-you">YOU</span>' : '';
+          return '<li class="sc-lb-row' + (i < 3 ? ' is-top' : '') + '">'
+            + '<span class="sc-lb-rank">' + rank + '</span>'
+            + '<span class="sc-lb-name">' + esc(e.name || 'anon') + you + '</span>'
+            + '<span><span class="sc-lb-dist gradient-suite">' + fmt(e.dist) + '</span><span class="sc-lb-u">m</span></span>'
+            + '</li>';
+        }).join('');
+      };
+      const load = () => {
+        fetch(LB + '/top?scope=global', { cache: 'no-store' })
+          .then((r) => r.json())
+          .then((d) => render(d.top || []))
+          .catch(() => { if (!list.querySelector('.sc-lb-row')) msg('Leaderboard offline — back shortly.'); });
+      };
+      load();
+      setInterval(load, 30000);
     })();
   </script>
 </Layout>
