@@ -570,7 +570,6 @@ const steps = [
     .sc-you__fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, var(--sc, var(--color-cyan)), var(--scn, var(--color-magenta))); box-shadow: 0 0 10px color-mix(in srgb, var(--scn, var(--color-magenta)) 60%, transparent); }
     .sc-you__togo { font-family: var(--font-mono); font-size: 11.5px; color: var(--color-text-mid); }
     .sc-you__togo b { color: var(--scn, var(--color-magenta)); }
-    .sc-you__emblem { height: 17px; width: auto; vertical-align: middle; margin: -2px 4px 0 2px; }
     .sc-you__cta { color: var(--color-cyan); text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 2px; }
 
     @media (prefers-reduced-motion: reduce) { .sc-throne::before, .sc-lb-skel { animation: none; } }
@@ -648,7 +647,7 @@ const steps = [
       // The prestige ladder — distance (m) -> named rank, escalating colour/flair.
       const TIERS = [
         { name: 'Recruit', min: 0,     c: '#9a90b8' },
-        { name: 'Amateur', min: 2500,  c: '#4ade80', img: '/ranks/ama.png' },
+        { name: 'Amateur', min: 2500,  c: '#4ade80' },
         { name: 'Veteran', min: 5000,  c: '#00d4ff' },
         { name: 'Elite',   min: 9000,  c: '#4c51f7' },
         { name: 'Master',  min: 14000, c: '#e25bff' },
@@ -700,7 +699,7 @@ const steps = [
         if (nx) {
           const prog = Math.max(0, Math.min(1, (myBest - t.min) / (nx.min - t.min)));
           bar = '<div class="sc-you__bar"><span class="sc-you__fill" style="width:' + (prog * 100).toFixed(1) + '%"></span></div>';
-          togo = '<div class="sc-you__togo"><b>' + fmt(nx.min - myBest) + 'm</b> to ' + (nx.img ? '<img class="sc-you__emblem" src="' + nx.img + '" alt="">' : '') + nx.name + '</div>';
+          togo = '<div class="sc-you__togo"><b>' + fmt(nx.min - myBest) + 'm</b> to ' + nx.name + '</div>';
         } else {
           bar = '<div class="sc-you__bar"><span class="sc-you__fill" style="width:100%"></span></div>';
           togo = '<div class="sc-you__togo">Top tier reached — now take the throne.</div>';
