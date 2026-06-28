@@ -476,10 +476,12 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
 <div class="card hidden" id="lbCard">
   <div class="shop">
     <h2>&#127942; LEADERBOARD</h2>
-    <div class="shopTabs" id="lbTabs" style="display:none;gap:8px;justify-content:center;margin:0 0 8px">
-      <div class="pill" id="lbTabStream">THIS STREAM</div>
+    <div class="shopTabs" id="lbTabs" style="display:flex;gap:8px;justify-content:center;margin:0 0 8px">
+      <div class="pill ghost" id="lbTabStream" style="display:none">THIS STREAM</div>
       <div class="pill ghost" id="lbTabGlobal">GLOBAL</div>
+      <div class="pill ghost" id="lbTabWeekly">&#128176; WEEKLY</div>
     </div>
+    <div id="lbWeeklyInfo" style="display:none;margin:-2px auto 8px;max-width:340px;font-size:12px;color:#ffd34d;font-weight:700;line-height:1.45"></div>
     <div class="muted" id="lbStatus">Loading&hellip;</div>
     <div class="lb-list" id="lbList"></div>
     <div class="lb-name" id="lbNameRow" style="display:none">
@@ -487,6 +489,16 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
       <div class="pill" id="lbSubmit">Submit best</div>
     </div>
     <div style="margin-top:16px"><div class="pill ghost" id="lbClose">&larr; BACK</div></div>
+  </div>
+</div>
+
+<!-- Weekly leaderboard PRIZE: shown once when a returning player placed top-3 last week (coins auto-credited). -->
+<div class="card hidden" id="rewardCard" style="z-index:40;background:rgba(5,7,13,.74);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)">
+  <div style="text-align:center;pointer-events:auto;padding:34px 50px 26px;border-radius:22px;max-width:90vw;background:linear-gradient(160deg, rgba(14,10,26,.98), rgba(8,6,16,.99));box-shadow:0 0 0 1px rgba(255,255,255,.10), inset 0 0 0 1px color-mix(in srgb,var(--ac) 16%, transparent), 0 30px 80px rgba(0,0,0,.6)">
+    <div style="font-size:56px;line-height:1;margin-bottom:4px">&#127942;</div>
+    <h2 id="rewardTitle" style="margin:0 0 6px">WEEKLY PRIZE!</h2>
+    <div id="rewardBody" style="font-weight:700;font-size:15px;color:#ffe27a"></div>
+    <div style="margin-top:18px"><div class="pill" id="rewardOk" style="background:linear-gradient(180deg,#ffe27a,#ffc23d);color:#06140f;font-weight:800">&#128176; SWEET!</div></div>
   </div>
 </div>
 
@@ -503,9 +515,21 @@ if (STANDALONE && "serviceWorker" in navigator) {
   window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
 }
 const cv = document.getElementById("game"), ctx = cv.getContext("2d");
-let W=0, H=0, DPR=Math.min(2, window.devicePixelRatio||1);
-function resize(){ W=cv.width=Math.floor(innerWidth*DPR); H=cv.height=Math.floor(innerHeight*DPR);
-  cv.style.width=innerWidth+"px"; cv.style.height=innerHeight+"px"; }
+// Resolution independence. CRISP = retina sharpness (canvas pixels per CSS pixel - backing-store only).
+// DPR = the GAMEPLAY unit scale = CRISP * a viewport-fit factor, so the SAME play area is shown at any
+// window size. Below the reference design box the world zooms OUT (small window => you see the same world,
+// not "everything whips by and the kitty flies off the top"); at/above it the fit is capped to 1 so DPR
+// == CRISP and fullscreen/OBS is byte-for-byte unchanged. Every gameplay constant is in *DPR units, so
+// scaling this one value rescales the whole game (speeds, sizes, gravity, camera, world spawn).
+const CRISP=Math.min(2, window.devicePixelRatio||1);
+const REF_W=1600, REF_H=900; // CSS-px design target the game was tuned at (full-window 16:9 feel)
+let W=0, H=0, DPR=CRISP;
+function resize(){
+  cv.style.width=innerWidth+"px"; cv.style.height=innerHeight+"px";
+  W=cv.width=Math.floor(innerWidth*CRISP); H=cv.height=Math.floor(innerHeight*CRISP);
+  const fit=Math.min(1, innerWidth/REF_W, innerHeight/REF_H); // contain both axes; never upscale past design
+  DPR=CRISP*fit;
+}
 addEventListener("resize", resize); resize();
 
 let cfg = { accent:"#22d3a0", gravity:0.42, power:54, flapPower:9, flaps:3 };
@@ -561,7 +585,7 @@ let barkInst=null;
 function stopBark(){ if(barkInst){ try{ barkInst.pause(); barkInst.currentTime=0; }catch(e){} barkInst=null; } }
 function playCustom(name,v){ const a=customAudio[name]; if(!a||vol<=0) return false; try{ const c=a.cloneNode(); c.volume=Math.max(0,Math.min(1,(v==null?0.85:v)*(vol/100))); c.play().catch(()=>{}); if(name==="bark"){ stopBark(); barkInst=c; setTimeout(()=>{ if(barkInst===c){ try{c.pause();}catch(e){} barkInst=null; } },1100); } }catch(e){} return true; }
 // ---- background music: up to 4 songs (drop into imported/spritecannon/music/ as song1..song4) mapped to escalating distance tiers, crossfaded ----
-const MUS={ on:true, vol:0.5, songs:[null,null,null,null], cur:-1, started:false };
+const MUS={ on:true, vol:0.1, songs:[null,null,null,null], cur:-1, started:false }; // default 10% (chill bg level); returning users keep their saved musicVol below
 try{ MUS.on=localStorage.getItem("sm.spritecannon.musicOn")!=="0"; const mv=localStorage.getItem("sm.spritecannon.musicVol"); if(mv!=null) MUS.vol=Math.max(0,Math.min(1,Number(mv)/100)); }catch{}
 function loadSongs(){ for(let i=0;i<4;i++){ (function(idx){ const exts=["mp3","ogg","m4a","wav"]; let e=0; (function tn(){ if(e>=exts.length) return; const a=new Audio(AB+"spritecannon/music/song"+(idx+1)+"."+exts[e]); a.loop=true; a.preload="auto"; a.volume=0; a.addEventListener("canplaythrough",()=>{ MUS.songs[idx]=a; },{once:true}); a.addEventListener("error",()=>{ e++; tn(); },{once:true}); })(); })(i); } }
 function songsLoaded(){ return MUS.songs.some(s=>s); }
@@ -4144,25 +4168,36 @@ function updateAbilityBtn(){ const b=document.getElementById("abilityBtn"); if(!
 const LB_URL="https://spritecannon-lb.maxxtopia.workers.dev";
 let prevLbState="start";
 function streamChannel(){ return (Q.get("ch")||cfg.channel||"").toString().toLowerCase().replace(/[^\w\-]/g,"").slice(0,32); } // who owns this stream's board (OBS ?ch= or app config)
-let lbScope="stream"; // default to the streamer's own board; forced to global when no channel
-function setLbScope(scope){ lbScope=scope;
-  const s=document.getElementById("lbTabStream"), g=document.getElementById("lbTabGlobal");
-  if(s) s.classList.toggle("ghost", scope!=="stream"); if(g) g.classList.toggle("ghost", scope!=="global"); loadLB(); }
+let lbScope=null; // chosen on first open: streamer's own board if a channel exists, else WEEKLY (the payout board)
+function _lbTabEls(){ return { stream:document.getElementById("lbTabStream"), global:document.getElementById("lbTabGlobal"), weekly:document.getElementById("lbTabWeekly") }; }
+function _lbSyncTabs(){ const t=_lbTabEls(); for(const k in t){ if(t[k]) t[k].classList.toggle("ghost", lbScope!==k); } }
+function setLbScope(scope){ lbScope=scope; _lbSyncTabs(); loadLB(); }
 function openLB(){ snd("ui"); prevLbState=(state==="result")?"result":"start"; show("startCard",false); show("resultCard",false); show("shopCard",false); show("lbCard",true); state="lb";
   try{ document.getElementById("lbName").value=localStorage.getItem("sm.spritecannon.name")||""; }catch{}
-  const ch=streamChannel(); const tabs=document.getElementById("lbTabs"); if(tabs) tabs.style.display = ch?"flex":"none"; if(!ch) lbScope="global";
-  const s=document.getElementById("lbTabStream"), g=document.getElementById("lbTabGlobal");
-  if(s) s.classList.toggle("ghost", lbScope!=="stream"); if(g) g.classList.toggle("ghost", lbScope!=="global");
+  const ch=streamChannel(), t=_lbTabEls(); if(t.stream) t.stream.style.display = ch?"":"none";
+  if(lbScope===null || (lbScope==="stream" && !ch)) lbScope = ch ? "stream" : "weekly"; // default + heal an invalid scope
+  _lbSyncTabs();
   document.getElementById("lbNameRow").style.display = save.best>0 ? "flex":"none"; loadLB(); }
 function closeLB(){ snd("ui"); show("lbCard",false); state=prevLbState; if(state==="result") show("resultCard",true); else { state="start"; show("startCard",true); } }
 function fmtDist(d){ return Math.max(0, Math.round(+d || 0)).toLocaleString("en-US"); }
 function _lbMe(){ try{ return (localStorage.getItem("sm.spritecannon.name")||"").trim().toLowerCase(); }catch{ return ""; } }
-function loadLB(){ const st=document.getElementById("lbStatus"); st.textContent="Loading...";
-  const list=document.getElementById("lbList");
+function _lbOffline(st){ st.textContent="Leaderboard offline."; document.getElementById("lbList").innerHTML='<div class="lb-state"><div class="lb-ico">&#128268;</div><div>Leaderboard offline</div><div class="muted" style="font-weight:600;letter-spacing:.02em">Can&#39;t reach the board yet.</div></div>'; }
+function _fmtLeft(ms){ ms=Math.max(0,ms); const d=Math.floor(ms/86400000), h=Math.floor(ms/3600000)%24, m=Math.floor(ms/60000)%60; return d>0?(d+"d "+h+"h"):(h>0?(h+"h "+m+"m"):(m+"m")); }
+let lbReq=0; // request token: a tab switch invalidates any in-flight fetch so a stale response can't clobber the view
+function loadLB(){ const my=++lbReq; const st=document.getElementById("lbStatus"); st.textContent="Loading...";
+  const list=document.getElementById("lbList"), winfo=document.getElementById("lbWeeklyInfo");
   list.innerHTML='<div class="lb-skel"></div><div class="lb-skel" style="opacity:.7"></div><div class="lb-skel" style="opacity:.45"></div>';
+  if(winfo) winfo.style.display="none";
+  if(lbScope==="weekly"){
+    fetch(LB_URL+"/top?scope=weekly",{cache:"no-store"}).then(r=>r.json()).then(d=>{ if(my!==lbReq) return; renderLB(d.top||[]);
+      const p=d.payout||[2000,1000,500];
+      if(winfo){ winfo.style.display="block"; winfo.innerHTML="&#128176; Top 3 each week win <b>"+p[0].toLocaleString()+"</b> / <b>"+p[1].toLocaleString()+"</b> / <b>"+p[2].toLocaleString()+"</b> coins"+(d.endsTs?(" &middot; resets in "+_fmtLeft(d.endsTs-Date.now())):""); }
+      st.textContent=(d.top&&d.top.length)?("Your best: "+save.best+"m (this week)"):("No scores yet this week - be the first!"); }).catch(()=>{ if(my===lbReq) _lbOffline(st); });
+    return;
+  }
   const ch=streamChannel(), onStream=(lbScope==="stream"&&ch), label=onStream?"this stream":"global";
   const q = onStream ? ("?scope=stream&ch="+encodeURIComponent(ch)) : "?scope=global";
-  fetch(LB_URL+"/top"+q,{cache:"no-store"}).then(r=>r.json()).then(d=>{ renderLB(d.top||[]); st.textContent=(d.top&&d.top.length)?("Your best: "+save.best+"m ("+label+")"):("No scores yet ("+label+") - be the first!"); }).catch(()=>{ st.textContent="Leaderboard offline."; document.getElementById("lbList").innerHTML='<div class="lb-state"><div class="lb-ico">&#128268;</div><div>Leaderboard offline</div><div class="muted" style="font-weight:600;letter-spacing:.02em">Can&#39;t reach the board yet.</div></div>'; }); }
+  fetch(LB_URL+"/top"+q,{cache:"no-store"}).then(r=>r.json()).then(d=>{ if(my!==lbReq) return; renderLB(d.top||[]); st.textContent=(d.top&&d.top.length)?("Your best: "+save.best+"m ("+label+")"):("No scores yet ("+label+") - be the first!"); }).catch(()=>{ if(my===lbReq) _lbOffline(st); }); }
 function renderLB(top){ const list=document.getElementById("lbList"); list.innerHTML="";
   if(!top || !top.length){ list.innerHTML='<div class="lb-state"><div class="lb-ico">&#127942;</div><div>No scores yet</div><div class="muted" style="font-weight:600;letter-spacing:.02em">Be the first to claim the top spot!</div></div>'; return; }
   const me=_lbMe(), medals=["&#128081;","&#129352;","&#129353;"];
@@ -4180,12 +4215,12 @@ function renderLB(top){ const list=document.getElementById("lbList"); list.inner
   list.appendChild(frag); }
 function submitLB(){ const n=(document.getElementById("lbName").value||"").trim()||"anon"; try{ localStorage.setItem("sm.spritecannon.name",n); }catch{}
   const st=document.getElementById("lbStatus"); st.textContent="Submitting..."; snd("ui"); const ch=streamChannel(), onStream=(lbScope==="stream"&&ch);
-  fetch(LB_URL+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:n,dist:save.best,channel:ch})}).then(r=>r.json()).then(d=>{
+  fetch(LB_URL+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:n,dist:save.best,channel:ch,pid:save.pid})}).then(r=>r.json()).then(d=>{
     if(onStream && d.streamTop) renderLB(d.streamTop); else if(d.top) renderLB(d.top);
     const rank = onStream ? d.streamRank : d.rank; st.textContent= rank?("You're #"+rank+(onStream?" on this stream!":" globally!")):"Submitted!"; }).catch(()=>{ st.textContent="Couldn't submit (offline)."; }); }
 function _postRank(el, name){ const ch=streamChannel(), onStream=!!ch;
   el.style.display="block"; el.textContent="Posting your rank...";
-  fetch(LB_URL+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,dist:save.best,channel:ch})}).then(r=>r.json()).then(d=>{
+  fetch(LB_URL+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,dist:save.best,channel:ch,pid:save.pid})}).then(r=>r.json()).then(d=>{
     const rank = onStream ? d.streamRank : d.rank;
     if(rank){ el.style.display="block"; el.innerHTML='&#127942; #'+rank+(onStream?(' on '+ch):' worldwide'); }
     else el.style.display="none";
@@ -4214,6 +4249,21 @@ document.getElementById("lbClose").onclick=closeLB;
 document.getElementById("lbSubmit").onclick=submitLB;
 document.getElementById("lbTabStream").onclick=()=>{ snd("ui"); setLbScope("stream"); };
 document.getElementById("lbTabGlobal").onclick=()=>{ snd("ui"); setLbScope("global"); };
+document.getElementById("lbTabWeekly").onclick=()=>{ snd("ui"); setLbScope("weekly"); };
+document.getElementById("rewardOk").onclick=()=>{ snd("ui"); show("rewardCard",false); };
+// Weekly prize auto-claim: ask the worker if our anon pid placed top-3 LAST week; if so, credit coins locally once
+// (server dedups per pid+week, so calling every load is safe) and celebrate. Graceful + silent when offline.
+function claimWeekly(){ if(!save.pid) return;
+  fetch(LB_URL+"/claim",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pid:save.pid})}).then(r=>r.json()).then(d=>{
+    if(!d||!d.ok||!(d.coins>0)) return;
+    save.coins=(save.coins||0)+d.coins; persist();
+    const c=document.getElementById("coins"); if(c) c.textContent=save.coins+runCoins; if(typeof refreshStartCard==="function") refreshStartCard();
+    const rt=document.getElementById("rewardTitle"), rb=document.getElementById("rewardBody");
+    if(rt) rt.textContent="YOU PLACED #"+d.rank+" LAST WEEK!";
+    if(rb) rb.innerHTML="+"+d.coins.toLocaleString()+" coins dropped into your stash. &#128081;";
+    show("rewardCard",true); try{ snd("newbest"); }catch(e){}
+  }).catch(()=>{}); }
+setTimeout(claimWeekly, 900); // let the start screen settle first
 
 document.getElementById("best").innerHTML=save.best+'<span class="u">m</span>';
 document.getElementById("coins").textContent=save.coins;
