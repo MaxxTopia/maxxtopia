@@ -21,11 +21,61 @@ const heroStats = [
   { value: 0,  prefix: '$', label: 'Forever' },
 ];
 
-// Hand-built parallax worlds — only the real, named ones, then an honest tail.
-const worlds = ['Rainbow Road', 'Synthwave', 'Cosmic Nebula', 'Sunspire', "Dante's Infurno", '+ 25 more worlds'];
+// Hand-built parallax worlds — cat-pun display names for the arcade marquee,
+// then an honest tail (35+ worlds in-game; "Downpurr" / "Dante's Infurno" are
+// the real names, the rest are meowified flavor of real biomes).
+const worlds = ['Downpurr', 'Sunspurr', 'Cosmic Mewbula', "Dante's Infurno", 'Clawckwork City', 'Candyland', 'Neon Cyber-Catty', '+ 28 more worlds'];
 
-// A real slice of the ability roster (the full set is 20+ in-game).
-const abilities = ['Super Star', 'Thunder-Dash', 'Flying Raijin', 'Nitro Smash', 'Dragon Draft', 'Chrome Plating'];
+// Skin/ability showcase — real art + real data straight from the game's
+// abilities.json (54 skins, served under /play/spritecannon/...). Nothing here
+// is fabricated: names, rarities and ability text are the in-game values.
+const skinBase = '/play/spritecannon/imported/spritecannon/skins';
+const rarity: Record<string, { c: string; label: string }> = {
+  common:    { c: '#9a90b8', label: 'Common' },
+  rare:      { c: '#00d4ff', label: 'Rare' },
+  epic:      { c: '#e25bff', label: 'Epic' },
+  legendary: { c: '#ffb23e', label: 'Legendary' },
+  mythic:    { c: '#ff6b8b', label: 'Mythic' },
+};
+const rarityOrder = ['common', 'rare', 'epic', 'legendary', 'mythic'];
+
+// Curated gallery — every rarity represented, the flashy ones up front.
+const skins: { k: string; n: string; r: string }[] = [
+  { k: 'greedy', n: 'Queen', r: 'legendary' },
+  { k: 'fastboi', n: 'Fastboi', r: 'mythic' },
+  { k: 'dragon', n: 'Dragon', r: 'epic' },
+  { k: 'chrome', n: 'Chrome', r: 'legendary' },
+  { k: 'inferno', n: 'Inferno', r: 'legendary' },
+  { k: 'lightning', n: 'Lightning', r: 'legendary' },
+  { k: 'crashout', n: 'Nitro', r: 'legendary' },
+  { k: 'magnet', n: 'Magnet', r: 'legendary' },
+  { k: 'zeropoint', n: 'Zero Point', r: 'legendary' },
+  { k: 'purpdrank', n: 'Purpdrank', r: 'legendary' },
+  { k: 'bananna', n: 'Peely', r: 'legendary' },
+  { k: 'turtle', n: 'Turtle', r: 'legendary' },
+  { k: 'bartholomew', n: 'Bartholomew', r: 'mythic' },
+  { k: 'superbob', n: 'Superbob', r: 'mythic' },
+  { k: 'secretskin', n: 'The Stranger', r: 'mythic' },
+  { k: 'pepper', n: 'Pepper', r: 'epic' },
+  { k: 'boba', n: 'Boba', r: 'epic' },
+  { k: 'raptor_sprite', n: 'Raptor', r: 'epic' },
+  { k: 'tscott', n: 'Tscott', r: 'epic' },
+  { k: 'shark', n: 'Shark', r: 'rare' },
+  { k: 'klombo', n: 'Klombo', r: 'rare' },
+  { k: 'snowman', n: 'Snowy', r: 'rare' },
+  { k: 'foxspirit', n: 'Fox Spirit', r: 'common' },
+  { k: 'cute', n: 'Cute', r: 'common' },
+];
+
+// Signature abilities — each card is a real skin + its real in-game ability text.
+const sigAbilities: { k: string; skin: string; label: string; r: string; desc: string }[] = [
+  { k: 'fastboi', skin: 'Fastboi', label: 'GodSpeed', r: 'mythic', desc: 'Transform for ~4s: invincible, max speed, free flight — the sprite even swaps to its Super Sonic form.' },
+  { k: 'purpdrank', skin: 'Purpdrank', label: 'Slow-Mo', r: 'legendary', desc: 'Take a sip and the whole world slows to ~40% with a woozy purple wobble.' },
+  { k: 'donlad', skin: 'Donlad', label: 'Build Wall', r: 'legendary', desc: 'Deploy a golden wall that plows straight through the hazards ahead.' },
+  { k: 'tscott', skin: 'Tscott', label: 'The Drop', r: 'epic', desc: 'Bass-drop: launch up and forward as a shockwave clears the hazards near you.' },
+  { k: 'pepper', skin: 'Pepper', label: 'Spicy Speed', r: 'epic', desc: 'A quick movement boost on tap — five spicy dashes every match.' },
+  { k: 'bartholomew', skin: 'Bartholomew', label: 'Bartman', r: 'mythic', desc: 'Caped glider: permanent slow-fall plus two bonus flaps, the whole run.' },
+];
 
 // "What's in the cannon" — four pillars, each a real claim.
 const pillars = [
@@ -39,13 +89,13 @@ const pillars = [
     n: '02',
     num: 20, suffix: '+',
     title: 'Abilities in flight',
-    body: 'Thunder-Dash, Flying Raijin, Nitro smash-and-go, dragon draft. Each skin flies its own way — then the rare Super Star tips the run.',
+    body: 'Slow-Mo the world, GodSpeed past hazards, Nitro smash-and-go, build a golden wall. Each skin flies its own way — then the rare Super Star tips the run.',
   },
   {
     n: '03',
     num: 30, suffix: '+',
     title: 'Hand-built worlds',
-    body: 'Every backdrop is its own parallax scene. Rainbow Road, Synthwave, Cosmic Nebula, Sunspire — the run never looks the same twice.',
+    body: 'Every backdrop is its own parallax scene. Downpurr, Sunspurr, Cosmic Mewbula, Dante\'s Infurno — the run never looks the same twice.',
   },
   {
     n: '04',
@@ -89,7 +139,7 @@ const steps = [
       </h1>
 
       <p class="reveal reveal-3 mt-7 max-w-xl text-[18px] sm:text-[22px] leading-[1.4] text-[var(--color-text-mid)]">
-        Launch the cat. Fly forever. An original arcade game running in the tab you already have open — <span class="serif-accent gradient-suite">flappy meets geometry-dash.</span> <span class="font-semibold text-[var(--color-text)]">Just a high score to beat.</span>
+        Launch the cat. Fly forever. An original arcade game running in the tab you already have open — <span class="serif-accent gradient-suite">one button. one more run.</span> <span class="font-semibold text-[var(--color-text)]">Just a high score to beat — and skins to unlock.</span>
       </p>
 
       <div class="reveal reveal-4 mt-9 flex flex-wrap items-center gap-3">
@@ -222,25 +272,87 @@ const steps = [
         ))}
       </div>
 
-      <!-- Abilities chip row + Super Star callout -->
-      <div class="mt-9 grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div class="reveal-on-scroll lg:col-span-2 rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg-card)] p-6 sm:p-7">
-          <p class="font-mono text-[11.5px] uppercase tracking-[0.1em] text-[var(--color-subtle)]">A taste of the ability roster</p>
-          <div class="mt-4 flex flex-wrap gap-2.5">
-            {abilities.map((a) => (
-              <span class="inline-flex items-center rounded-full border border-[var(--color-line-strong)] bg-[rgba(0,212,255,0.05)] px-3.5 py-1.5 text-[13px] font-medium text-[var(--color-text-mid)]">
-                {a}
+      <!-- ── The skin gallery — real art, not a chip list ── -->
+      <div class="reveal-on-scroll mt-14">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <h3 class="text-[22px] sm:text-[30px] font-semibold tracking-[-0.02em] leading-[1.05]">
+            <span class="gradient-text">50+ skins.</span> <span class="serif-accent gradient-suite">Real cats to launch.</span>
+          </h3>
+          <div class="flex flex-wrap gap-x-4 gap-y-1.5 font-mono text-[11px]">
+            {rarityOrder.map((r) => (
+              <span class="inline-flex items-center gap-1.5 text-[var(--color-subtle)]">
+                <span class="h-2 w-2 rounded-full" style={`background:${rarity[r].c}`}></span>{rarity[r].label}
               </span>
             ))}
-            <span class="inline-flex items-center rounded-full border border-[var(--color-line)] px-3.5 py-1.5 text-[13px] text-[var(--color-subtle)] font-mono">
-              + 14 more
-            </span>
           </div>
         </div>
 
-        <div class="reveal-on-scroll reveal-delay-2 relative overflow-hidden rounded-2xl border border-[rgba(255,178,62,0.4)] bg-[color-mix(in_srgb,var(--color-warm)_8%,var(--color-bg-card))] p-6 sm:p-7">
-          <p class="font-display text-[40px] leading-none text-[var(--color-warm)]">&#9733; Super Star</p>
-          <p class="mt-3 text-[14px] leading-relaxed text-[var(--color-text-mid)]">
+        <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-2.5 sm:gap-3">
+          {skins.map((s) => (
+            <div
+              class="group flex flex-col items-center rounded-xl border bg-[var(--color-bg-card)] p-2.5 transition-transform hover:-translate-y-0.5"
+              style={`border-color:${rarity[s.r].c}33`}
+              title={`${s.n} · ${rarity[s.r].label}`}
+            >
+              <img
+                src={`${skinBase}/${s.k}.png`}
+                alt={`${s.n} skin`}
+                width="56" height="56" loading="lazy" decoding="async"
+                class="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-110"
+              />
+              <p class="mt-1.5 w-full truncate text-center text-[11px] font-medium text-[var(--color-text-mid)]">{s.n}</p>
+              <span class="mt-1 h-1 w-6 rounded-full" style={`background:${rarity[s.r].c}`}></span>
+            </div>
+          ))}
+          <a
+            href="/play/spritecannon/" target="_blank" rel="noopener"
+            class="flex flex-col items-center justify-center rounded-xl border border-[var(--color-line)] bg-[var(--color-bg-card)] p-2.5 text-center transition-colors hover:bg-[var(--color-bg-card-hover)]"
+          >
+            <span class="font-display text-[26px] gradient-suite leading-none">+30</span>
+            <span class="mt-1 text-[10px] font-mono uppercase tracking-[0.08em] text-[var(--color-subtle)]">more skins</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── Signature abilities — shown, not just named ── -->
+      <div class="reveal-on-scroll mt-14">
+        <div class="mb-6">
+          <h3 class="text-[22px] sm:text-[30px] font-semibold tracking-[-0.02em] leading-[1.05]">
+            <span class="gradient-text">Every skin</span> <span class="serif-accent gradient-suite">flies its own way.</span>
+          </h3>
+          <p class="mt-2 max-w-2xl text-[14.5px] leading-relaxed text-[var(--color-text-mid)]">
+            20+ abilities, each tied to a skin. A few of the loud ones — the rest you unlock in the cannon.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
+          {sigAbilities.map((a) => (
+            <div class="flex items-start gap-4 bg-[var(--color-bg-card)] p-5 sm:p-6 transition-colors hover:bg-[var(--color-bg-card-hover)]">
+              <img
+                src={`${skinBase}/${a.k}.png`}
+                alt={`${a.skin} skin`}
+                width="64" height="64" loading="lazy" decoding="async"
+                class="h-16 w-16 shrink-0 object-contain"
+              />
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h4 class="text-[16px] font-semibold tracking-tight">{a.label}</h4>
+                  <span
+                    class="rounded-full px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.06em]"
+                    style={`color:${rarity[a.r].c};border:1px solid ${rarity[a.r].c}55;background:${rarity[a.r].c}14`}
+                  >{rarity[a.r].label}</span>
+                </div>
+                <p class="mt-0.5 text-[11.5px] font-mono text-[var(--color-subtle)]">{a.skin}</p>
+                <p class="mt-2 text-[13.5px] leading-relaxed text-[var(--color-text-mid)]">{a.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Super Star — the rare in-flight power-up -->
+        <div class="reveal-on-scroll mt-5 flex flex-col gap-3 rounded-2xl border border-[rgba(255,178,62,0.4)] bg-[color-mix(in_srgb,var(--color-warm)_8%,var(--color-bg-card))] p-6 sm:p-7 sm:flex-row sm:items-center">
+          <p class="font-display text-[34px] sm:text-[40px] leading-none text-[var(--color-warm)] whitespace-nowrap">&#9733; Super Star</p>
+          <p class="text-[14px] leading-relaxed text-[var(--color-text-mid)]">
             The rare power-up everyone chases. Snag it mid-flight and the run tilts in your favor — the difference between a good score and a board-topper.
           </p>
         </div>

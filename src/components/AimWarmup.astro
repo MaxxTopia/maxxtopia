@@ -1,91 +1,125 @@
 ---
 /**
  * AimWarmup — aimmaxxer's interim resource section. Until the real trainer (v2)
- * ships, the page earns its keep: the community-standard KovaaK's warm-up per
- * game (sorted by the aim each game demands — clicking / tracking / mixed), a
- * brief honest take on mouse skates, and a "v2, the real deal" teaser.
+ * ships, the page earns its keep: the community's best KovaaK's warm-up routines,
+ * each as a one-click-copy SHARE CODE you paste into KovaaK's to import. Sorted by
+ * the game (and the aim each game demands — clicking / tracking / mixed), plus a
+ * "drill one skill" library, an honest mouse-skate note, and the v2 teaser.
  *
- * Scenario picks reflect community consensus + the canonical Voltaic benchmark
- * vocabulary; exact in-trainer spellings vary by uploaded copy. Not fabricated —
- * sourced from kovaaks.com playlists, the Voltaic benchmarks, and aim-trainer
- * community routines.
+ * Every share code below was resolved live against the official kovaaks.com
+ * backend (2026-06-28) — each `playlistCode` matched exactly, so these are real,
+ * currently-importable tokens, not guesses. Sub counts are the real subscriber
+ * counts from that API. These are *curated community routines* (individual
+ * creators: COLD, Shah, m0narcS, higheuphoria, AveryPvP), not official Voltaic
+ * benchmarks — labelled as such on purpose. Nothing here is fabricated.
  */
 type Props = { accentHex: string };
 const { accentHex } = Astro.props;
+
+const fmtSubs = (n: number): string =>
+  n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(n);
+
+type Routine = { name: string; code: string; subs: number };
 
 type Game = {
   game: string;
   style: 'Clicking' | 'Tracking' | 'Mixed';
   why: string;
-  scenarios: { name: string; warms: string }[];
+  routine: Routine;
 };
 
+// One import per game — the community routine that warms the aim that game leans on.
 const games: Game[] = [
+  {
+    game: 'Fortnite',
+    style: 'Mixed',
+    why: 'Box-fight shotgun flicks, 180s, and air tracking.',
+    routine: { name: 'COLD SHOTGUN GOD', code: 'KovaaKsPullingChestnutMap', subs: 70 },
+  },
   {
     game: 'Valorant',
     style: 'Clicking',
-    why: 'One-taps + crosshair placement win rounds.',
-    scenarios: [
-      { name: '1wall6targets', warms: 'static one-tap precision' },
-      { name: 'Pasu', warms: 'reactive flicks + trigger discipline' },
-      { name: 'Tile Frenzy', warms: 'fast target acquisition' },
-    ],
+    why: 'One-taps, micro-adjust, crosshair placement.',
+    routine: { name: 'Shah · RADIANT Warm Up', code: 'KovaaKsBuyingStaticInitiator', subs: 522 },
   },
   {
     game: 'CS2',
     style: 'Clicking',
-    why: 'Static precision and peek flicks.',
-    scenarios: [
-      { name: '1wall6targets', warms: 'spray transfer + static aim' },
-      { name: 'Tile Frenzy', warms: 'peek flicks under pressure' },
-      { name: 'VDIM Clicking', warms: 'a full clicking day' },
-    ],
+    why: 'Static precision and wide peek flicks.',
+    routine: { name: 'm0narcS · TacFPS Euphoria', code: 'KovaaKsBouncingFedSuper', subs: 1474 },
   },
   {
     game: 'Apex Legends',
     style: 'Tracking',
-    why: 'Hold the beam on a strafing target.',
-    scenarios: [
-      { name: 'Smoothbot', warms: 'smooth beam tracking' },
-      { name: 'Air', warms: 'long + mid-air tracking' },
-      { name: 'Close Long Strafes', warms: 'reactive close tracking' },
-    ],
+    why: 'Hold the beam — long and mid-air tracking.',
+    routine: { name: 'higheuphoria · air', code: 'KovaaKsBloomingFastPerk', subs: 191 },
   },
   {
     game: 'Overwatch 2',
     style: 'Tracking',
-    why: 'Hitscan beams + flanker duels.',
-    scenarios: [
-      { name: 'VT Suavetrack', warms: 'smooth hitscan tracking' },
-      { name: 'Pilltrack', warms: 'precise tracking at range' },
-      { name: 'Close Long Strafes', warms: 'Tracer / Genji duels' },
-    ],
-  },
-  {
-    game: 'Fortnite',
-    style: 'Mixed',
-    why: 'Box-fight flicks + open-field tracking.',
-    scenarios: [
-      { name: '1wall6targets', warms: 'box-fight flicks' },
-      { name: 'Smoothbot', warms: 'tracking in the open' },
-      { name: 'Sphereswitch', warms: 'fast target switching' },
-    ],
+    why: 'Close hitscan tracking and flanker duels.',
+    routine: { name: 'higheuphoria · control', code: 'KovaaKsBlinkingFastAce', subs: 228 },
   },
   {
     game: 'Call of Duty',
     style: 'Mixed',
-    why: 'Close-range beams + quick flicks.',
-    scenarios: [
-      { name: 'Smoothbot', warms: 'close-range beam control' },
-      { name: 'Tile Frenzy', warms: 'quick acquisition' },
-      { name: '1w6ts (switch)', warms: 'multi-enemy transfers' },
-    ],
+    why: 'Close beams and quick flicks — an all-round daily.',
+    routine: { name: 'Andrew · Daily Mix', code: 'KovaaKsPeekingFastQuaker', subs: 370 },
   },
+];
+
+type Skill = { name: string; trains: string; tag: 'Clicking' | 'Tracking' | 'Mixed' | 'Switching'; routine: Routine };
+
+// The rest of the verified library — isolate one skill instead of a game mix.
+const skillRoutines: Skill[] = [
+  {
+    name: "('C_C) · Lite",
+    trains: 'A full clicking day — static, micro, flick, cluster.',
+    tag: 'Clicking',
+    routine: { name: "('C_C) · Lite", code: 'KovaaKsParachutingFarIdentity', subs: 975 },
+  },
+  {
+    name: 'higheuphoria · dynamic',
+    trains: 'Dynamic clicking — Pasu, Bounce 180, Popcorn.',
+    tag: 'Clicking',
+    routine: { name: 'higheuphoria · dynamic', code: 'KovaaKsBombingRoyalpurpleSniper', subs: 201 },
+  },
+  {
+    name: 'higheuphoria · static',
+    trains: 'Static clicking — 1wXtX, reload, multiclick.',
+    tag: 'Clicking',
+    routine: { name: 'higheuphoria · static', code: 'KovaaKsBoomstickingSalmonInventory', subs: 201 },
+  },
+  {
+    name: 'Switching Fundamentals',
+    trains: 'Pure target switching — the skill nobody drills.',
+    tag: 'Switching',
+    routine: { name: 'm0narcS · Switching Fundamentals', code: 'KovaaKsLosingCornflowerGod', subs: 495 },
+  },
+  {
+    name: 'Shah · Microtech 2026',
+    trains: 'Micro-tracking and micro-clicking precision.',
+    tag: 'Mixed',
+    routine: { name: 'Shah · Microtech 2026', code: 'KovaaKsRevolvingGoodFlashbang', subs: 959 },
+  },
+  {
+    name: 'FN Shotty Routine',
+    trains: 'Fortnite shotgun warmup — SYW, micro-dash, pasu.',
+    tag: 'Mixed',
+    routine: { name: 'FN Shotty Routine', code: 'KovaaKsRevolvingScaredReset', subs: 1106 },
+  },
+];
+
+const importSteps = [
+  { n: '01', t: 'Copy the code', d: 'Hit copy on any routine above.' },
+  { n: '02', t: 'Open ONLINE PLAYLISTS', d: "In KovaaK's, open the Online Playlists tab." },
+  { n: '03', t: 'ENTER SHARECODE', d: 'Paste, subscribe, play. Ten minutes, then queue.' },
 ];
 
 const skates = [
   { name: 'X-Raypad Jade', kind: 'PTFE · speed', best: 'The cloth speed pick. Fastest PTFE on an Artisan pad — boardzy & Mighty’s cloth favorite. Near-zero brake, so it’s pure glide.' },
   { name: 'Tiger Ice V2', kind: 'PTFE · balanced', best: 'Same top tier as Jade but more controlled — the flick-and-stop middle for build/edit. (Magic Ice is the same class.)' },
+  { name: 'Tiger Arc', kind: 'PTFE · universal', best: 'The 2026 "fits almost every mouse" pick — controlled PTFE in the Corepad class with a huge cut catalog. The safe default if you don’t want to overthink it.' },
   { name: 'Corepad Skatez', kind: 'PTFE · control', best: 'More braking, the most durable soft PTFE. The control end of the cloth range.' },
   { name: 'X-Raypad Obsidian', kind: 'glass-first', best: 'Hardened PTFE built for glass / hard pads. On cloth the reviewers say it adds tug or nothing — skip it unless you switch to glass.' },
 ];
@@ -100,8 +134,8 @@ const skates = [
       </h2>
       <p class="aim-warmup__sub">
         Aim is three skills — clicking, tracking, switching — and the right warmup is the one
-        your game leans on. Ten minutes in KovaaK's before you queue. These are the
-        community-standard picks for each.
+        your game leans on. We picked the community routine for each. Copy the KovaaK's share
+        code, paste it in, and you're warming up in ten — no scenario hunting.
       </p>
     </header>
 
@@ -113,22 +147,94 @@ const skates = [
             <span class:list={['aim-warmup__tag', `aim-warmup__tag--${g.style.toLowerCase()}`]}>{g.style}</span>
           </div>
           <p class="aim-warmup__why">{g.why}</p>
-          <ul class="aim-warmup__scn">
-            {g.scenarios.map((s) => (
-              <li class="aim-warmup__scn-row">
-                <span class="aim-warmup__scn-name">{s.name}</span>
-                <span class="aim-warmup__scn-warms">{s.warms}</span>
-              </li>
-            ))}
-          </ul>
+
+          <div class="aim-warmup__routine">
+            <div class="aim-warmup__routine-head">
+              <span class="aim-warmup__routine-label">Run</span>
+              <span class="aim-warmup__routine-name">{g.routine.name}</span>
+              <span class="aim-warmup__subs">{fmtSubs(g.routine.subs)} subs</span>
+            </div>
+            <div class="aim-warmup__code">
+              <code class="aim-warmup__code-text">{g.routine.code}</code>
+              <button
+                type="button"
+                class="aim-warmup__copy"
+                data-copy={g.routine.code}
+                aria-label={`Copy the ${g.routine.name} KovaaK's share code`}
+              >
+                <svg class="aim-warmup__copy-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                <span class="aim-warmup__copy-label">Copy</span>
+              </button>
+            </div>
+          </div>
         </article>
       ))}
+    </div>
+
+    <!-- How to import — the copy/paste/play loop -->
+    <div class="aim-warmup__import reveal-on-scroll">
+      <div class="aim-warmup__import-head">
+        <p class="aim-warmup__eyebrow">How to import</p>
+        <h3 class="aim-warmup__import-title">Copy. Paste. Play.</h3>
+      </div>
+      <ol class="aim-warmup__steps">
+        {importSteps.map((s) => (
+          <li class="aim-warmup__step">
+            <span class="aim-warmup__step-num">{s.n}</span>
+            <div class="aim-warmup__step-body">
+              <p class="aim-warmup__step-t">{s.t}</p>
+              <p class="aim-warmup__step-d">{s.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="aim-warmup__import-foot">
+        Don't see it in-game? Paste the code at
+        <a href="https://kovaaks.com/kovaaks/playlists" target="_blank" rel="noopener">kovaaks.com/playlists</a>,
+        read the routine's name, then search that name under Online Playlists.
+      </p>
+    </div>
+
+    <!-- Skill library — drill one thing -->
+    <div class="aim-warmup__skill">
+      <header class="aim-warmup__skill-header reveal-on-scroll">
+        <p class="aim-warmup__eyebrow">Train one skill</p>
+        <h3 class="aim-warmup__skill-title">Or drill what's <span class="aim-warmup__accent">actually broken.</span></h3>
+        <p class="aim-warmup__skill-sub">
+          The four core aim skills — static, dynamic, control, air — plus switching and micro,
+          each isolated in its own routine. Same import, one click.
+        </p>
+      </header>
+      <div class="aim-warmup__grid aim-warmup__grid--skill">
+        {skillRoutines.map((s) => (
+          <article class="aim-warmup__card reveal-on-scroll">
+            <div class="aim-warmup__card-head">
+              <h4 class="aim-warmup__routine-name aim-warmup__routine-name--lg">{s.name}</h4>
+              <span class:list={['aim-warmup__tag', `aim-warmup__tag--${s.tag.toLowerCase()}`]}>{s.tag}</span>
+            </div>
+            <p class="aim-warmup__why">{s.trains}</p>
+            <div class="aim-warmup__code">
+              <code class="aim-warmup__code-text">{s.routine.code}</code>
+              <button
+                type="button"
+                class="aim-warmup__copy"
+                data-copy={s.routine.code}
+                aria-label={`Copy the ${s.routine.name} KovaaK's share code`}
+              >
+                <svg class="aim-warmup__copy-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                <span class="aim-warmup__copy-label">Copy</span>
+              </button>
+            </div>
+            <p class="aim-warmup__subs aim-warmup__subs--foot">{fmtSubs(s.routine.subs)} subs</p>
+          </article>
+        ))}
+      </div>
     </div>
 
     <p class="aim-warmup__system reveal-on-scroll">
       Want one system, not a pick-list? Run the <strong>Voltaic Daily Improvement Method (VDIM)</strong> —
       clicking-weighted for tac-shooters, tracking-weighted for Apex / Overwatch. Benchmark, drill your
-      worst skill, repeat.
+      worst skill, repeat. The routines above are curated community picks, not the official Voltaic benchmark.
     </p>
 
     <!-- Brief gear note: mouse skates -->
@@ -138,9 +244,9 @@ const skates = [
         <h3 class="aim-warmup__skates-title">On cloth it's glide vs brake — and both are PTFE.</h3>
         <p class="aim-warmup__skates-tradeoff">
           On an <strong>Artisan</strong> cloth pad you want <strong>PTFE</strong>; the real choice is speed
-          vs control. <strong>Jade</strong> is the fastest (almost no stopping power); <strong>Tiger Ice V2</strong>
-          and <strong>Corepad</strong> add the brake a build-and-edit flicker needs. The glass-first skates —
-          <strong>Obsidian</strong>, Pulsar Superglide — belong on hard / glass pads, not cloth.
+          vs control. <strong>Jade</strong> is the fastest (almost no stopping power); <strong>Tiger Ice V2</strong>,
+          <strong>Tiger Arc</strong> and <strong>Corepad</strong> add the brake a build-and-edit flicker needs.
+          The glass-first skates — <strong>Obsidian</strong>, Pulsar Superglide — belong on hard / glass pads, not cloth.
         </p>
       </div>
       <div class="aim-warmup__skates-grid">
@@ -157,8 +263,8 @@ const skates = [
       <p class="aim-warmup__skates-tip">
         The hype, corrected: Jade and Obsidian are both X-Raypad flagships, but opposites — Jade is fast PTFE
         built for cloth; Obsidian is a hardened control skate built for glass. On your Artisan cloth, run Jade
-        for glide or Tiger Ice V2 for control. Grab the Superstrike / Superlight 2 cut (sold for both) or
-        universal dots; for the Finalmouse ULX Prophecy use universal dots (S12 / UL2 / ULX). No pro publishes
+        for glide, Tiger Ice V2 / Tiger Arc for control. Grab the Superstrike / Superlight 2 cut (sold for both)
+        or universal dots; for the Finalmouse ULX Prophecy use universal dots (S12 / UL2 / ULX). No pro publishes
         their feet — this is reviewer + community consensus (boardzy, Mighty, r/MouseReview), not a "pro uses X" claim.
       </p>
     </div>
@@ -167,6 +273,7 @@ const skates = [
     <div class="aim-warmup__v2 reveal-on-scroll" style="--aim-accent: #e11d2b;">
       <p class="aim-warmup__v2-eyebrow">What's coming</p>
       <h3 class="aim-warmup__v2-title">Aimmaxxer <span class="aim-warmup__accent">v2.</span> The real deal.</h3>
+      <p class="aim-warmup__v2-body">The real trainer is in the lab. Not a pick-list — an AI that drills the aim that's actually holding you back.</p>
       <a class="aim-warmup__v2-cta" href="https://discord.gg/S78eecbWdx" target="_blank" rel="noopener">
         DM Diggy personally to purchase
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -174,6 +281,36 @@ const skates = [
     </div>
   </div>
 </section>
+
+<script>
+  (() => {
+    if ((window as any).__aimCopy) return;
+    (window as any).__aimCopy = true;
+    document.addEventListener('click', async (e) => {
+      const btn = (e.target as HTMLElement).closest('[data-copy]') as HTMLButtonElement | null;
+      if (!btn) return;
+      const code = btn.getAttribute('data-copy');
+      if (!code) return;
+      const label = btn.querySelector('.aim-warmup__copy-label');
+      try {
+        await navigator.clipboard.writeText(code);
+      } catch {
+        const t = document.createElement('textarea');
+        t.value = code; t.style.position = 'fixed'; t.style.opacity = '0';
+        document.body.appendChild(t); t.select();
+        try { document.execCommand('copy'); } catch {}
+        t.remove();
+      }
+      btn.classList.add('is-copied');
+      if (label) label.textContent = 'Copied!';
+      window.clearTimeout((btn as any)._t);
+      (btn as any)._t = window.setTimeout(() => {
+        btn.classList.remove('is-copied');
+        if (label) label.textContent = 'Copy';
+      }, 1600);
+    });
+  })();
+</script>
 
 <style>
   .aim-warmup {
@@ -226,6 +363,8 @@ const skates = [
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
   .aim-warmup__card {
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--color-line);
     background: var(--color-bg-card);
     border-radius: 16px;
@@ -271,7 +410,8 @@ const skates = [
     border-color: rgba(0, 212, 255, 0.32);
     background: rgba(0, 212, 255, 0.08);
   }
-  .aim-warmup__tag--mixed {
+  .aim-warmup__tag--mixed,
+  .aim-warmup__tag--switching {
     color: #e25bff;
     border-color: rgba(226, 91, 255, 0.32);
     background: rgba(226, 91, 255, 0.08);
@@ -282,37 +422,186 @@ const skates = [
     line-height: 1.45;
     margin: 0 0 14px;
   }
-  .aim-warmup__scn {
+
+  /* Routine block — name + share code + copy. */
+  .aim-warmup__routine {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-line);
+  }
+  .aim-warmup__routine-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0 0 10px;
+  }
+  .aim-warmup__routine-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-subtle);
+  }
+  .aim-warmup__routine-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: -0.005em;
+    line-height: 1.2;
+  }
+  .aim-warmup__routine-name--lg { font-size: 15px; }
+  .aim-warmup__subs {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--color-subtle);
+    white-space: nowrap;
+  }
+  .aim-warmup__subs--foot {
+    margin: 10px 0 0;
+    text-align: right;
+  }
+  .aim-warmup__code {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .aim-warmup__code-text {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--aim-accent) 8%, var(--color-bg));
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: 7px 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .aim-warmup__code-text::-webkit-scrollbar { display: none; }
+  .aim-warmup__copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--aim-accent);
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--aim-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--aim-accent) 6%, transparent);
+    border-radius: 999px;
+    padding: 7px 12px;
+    white-space: nowrap;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+  .aim-warmup__copy:hover { background: color-mix(in srgb, var(--aim-accent) 16%, transparent); }
+  .aim-warmup__copy:active { transform: scale(0.97); }
+  .aim-warmup__copy.is-copied {
+    color: var(--color-success, #4ade80);
+    border-color: rgba(74, 222, 128, 0.5);
+    background: rgba(74, 222, 128, 0.1);
+  }
+  .aim-warmup__copy-ico { flex-shrink: 0; }
+
+  /* How to import. */
+  .aim-warmup__import {
+    margin: 28px 0 0;
+    padding: 26px 24px;
+    border-radius: 18px;
+    border: 1px solid var(--color-line);
+    background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--aim-accent) 7%, transparent), transparent 55%),
+      var(--color-bg-card);
+  }
+  .aim-warmup__import-head { margin: 0 0 18px; }
+  .aim-warmup__import-title {
+    font-size: clamp(20px, 2.6vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 8px 0 0;
+  }
+  .aim-warmup__steps {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 8px;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
-  .aim-warmup__scn-row {
+  .aim-warmup__step {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+    align-items: flex-start;
     gap: 12px;
-    padding-top: 8px;
-    border-top: 1px solid var(--color-line);
   }
-  .aim-warmup__scn-name {
+  .aim-warmup__step-num {
     font-family: var(--font-mono);
     font-size: 13px;
-    color: var(--color-text);
-    letter-spacing: 0.01em;
-    white-space: nowrap;
+    font-weight: 600;
+    color: var(--aim-accent);
+    padding-top: 1px;
   }
-  .aim-warmup__scn-warms {
-    font-size: 12.5px;
+  .aim-warmup__step-t {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 3px;
+  }
+  .aim-warmup__step-d {
+    font-size: 13px;
+    line-height: 1.45;
     color: var(--color-text-mid);
-    text-align: right;
-    line-height: 1.35;
+    margin: 0;
+  }
+  .aim-warmup__import-foot {
+    margin: 18px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-line);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-muted);
+  }
+  .aim-warmup__import-foot a {
+    color: var(--aim-accent);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+  }
+
+  /* Skill library. */
+  .aim-warmup__skill {
+    margin: 56px 0 0;
+    padding-top: 44px;
+    border-top: 1px solid var(--color-line);
+  }
+  .aim-warmup__skill-header {
+    max-width: 680px;
+    margin: 0 0 28px;
+  }
+  .aim-warmup__skill-title {
+    font-family: var(--font-sans);
+    font-size: clamp(24px, 3.4vw, 36px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 14px;
+  }
+  .aim-warmup__skill-sub {
+    color: var(--color-text-mid);
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: 58ch;
+    margin: 0;
   }
 
   .aim-warmup__system {
-    margin: 24px 0 0;
+    margin: 40px 0 0;
     color: var(--color-text-mid);
     font-size: 14.5px;
     line-height: 1.6;
