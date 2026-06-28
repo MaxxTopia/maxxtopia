@@ -1,29 +1,337 @@
 {
-  "applejuice":    {"name":"Apple Juice", "cost":1000},
-  "nonchalant":    {"name":"Nonchalant",  "cost":1000},
-  "slurpy":        {"name":"Slurpy",      "cost":1000},
-  "gas_mask":      {"name":"Gas Mask",    "cost":1000},
-  "imaworkersir":  {"name":"im a worker sir", "cost":1000},
-  "klombo":        {"name":"Klombo",      "cost":1000},
-  "munch":         {"name":"Munch",       "cost":1000},
-  "blackhole":     {"name":"Black Hole",  "cost":1000},
-  "foxspirit":     {"name":"Fox Spirit",  "cost":1000},
-  "rager":         {"name":"Rager",       "cost":1000},
-  "snowman":       {"name":"Snowy",       "cost":1000},
-
-  "greedy":        {"name":"Queen",       "ability":"greedy",      "cost":11500},
-  "revive":        {"name":"Revive",      "ability":"revive",      "cost":10000},
-  "turtle":        {"name":"Turtle",      "ability":"turtle",      "cost":10000},
-  "magnet":        {"name":"Magnet",      "ability":"magnetburst", "cost":10000},
-  "raptor_sprite": {"name":"Raptor",      "ability":"windboost",   "cost":5000},
-  "dragon":        {"name":"Dragon",      "ability":"dragon",      "cost":4200},
-  "lightning":     {"name":"Lightning",   "ability":"lightning",   "cost":10000},
-  "crashout":      {"name":"Nitro",       "ability":"crashout",    "cost":10000},
-  "chrome":        {"name":"Chrome",      "ability":"chrome",      "cost":10000},
-  "fallout":       {"name":"Fallout",     "ability":"fallout",     "cost":6900},
-  "inferno":       {"name":"Inferno",     "ability":"flamejet",    "cost":10000},
-  "zeropoint":     {"name":"Zero Point",  "ability":"teleport",    "cost":10000},
-  "bananna":       {"name":"Peely",       "ability":"split",       "cost":10000},
-
-  "chowder":       {"name":"Screech",     "secret":true, "cost":0}
+  "applejuice": {
+    "name": "Apple Juice",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "bacca": {
+    "name": "Bacca",
+    "cost": 3500,
+    "rarity": "epic"
+  },
+  "baldy": {
+    "name": "Baldy",
+    "cost": 3000,
+    "rarity": "epic"
+  },
+  "bananna": {
+    "name": "Peely",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "split"
+  },
+  "bartholomew": {
+    "name": "Bartholomew",
+    "cost": 1000,
+    "rarity": "mythic",
+    "ability": "bartman",
+    "abilityDesc": " Caped glider — permanent slow-fall + 2 bonus flaps (passive)",
+    "secret": true,
+    "unlock": {
+      "type": "total_runs",
+      "value": 50,
+      "label": ""
+    }
+  },
+  "blackhole": {
+    "name": "Black Hole",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "boba": {
+    "name": "Boba",
+    "cost": 3000,
+    "rarity": "epic"
+  },
+  "bonez": {
+    "name": "Bonez",
+    "cost": 2000,
+    "rarity": "epic"
+  },
+  "burger": {
+    "name": "Burger",
+    "cost": 115,
+    "rarity": "common"
+  },
+  "chowder": {
+    "name": "Screech",
+    "cost": 0,
+    "rarity": "mythic",
+    "ability": "screech",
+    "abilityDesc": "Sonic Scream — wipes every hazard on screen + launches you (active)",
+    "secret": true,
+    "unlock": {
+      "type": "own_ability_skins",
+      "value": 10,
+      "label": ""
+    }
+  },
+  "chrome": {
+    "name": "Chrome",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "chrome"
+  },
+  "crashout": {
+    "name": "Nitro",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "crashout"
+  },
+  "crystal": {
+    "name": "Crystal",
+    "cost": 935,
+    "rarity": "common"
+  },
+  "cute": {
+    "name": "Cute",
+    "cost": 666,
+    "rarity": "common"
+  },
+  "dillan": {
+    "name": "Dillan",
+    "cost": 67,
+    "rarity": "common"
+  },
+  "donlad": {
+    "name": "Donlad",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "buildwall",
+    "abilityDesc": "Deploy a golden wall that plows through the hazards ahead"
+  },
+  "dragon": {
+    "name": "Dragon",
+    "cost": 4200,
+    "rarity": "epic",
+    "ability": "dragon"
+  },
+  "fallout": {
+    "name": "Fallout",
+    "cost": 6900,
+    "rarity": "legendary",
+    "ability": "fallout"
+  },
+  "fastboi": {
+    "name": "Fastboi",
+    "cost": 11500,
+    "rarity": "mythic",
+    "ability": "GodSpeed",
+    "abilityDesc": " Transform ~4s: invincible, max speed, free flight — and the sprite swaps to your Super Sonic style (active)"
+  },
+  "fishy": {
+    "name": "Fishy",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "foxspirit": {
+    "name": "Fox Spirit",
+    "cost": 777,
+    "rarity": "common"
+  },
+  "frozone": {
+    "name": "Frozone",
+    "cost": 333,
+    "rarity": "rare",
+    "secret": true,
+    "unlock": {
+      "type": "own_ability_skins",
+      "value": 10,
+      "label": ""
+    }
+  },
+  "gas_mask": {
+    "name": "Gas Mask",
+    "cost": 100,
+    "rarity": "common"
+  },
+  "greedy": {
+    "name": "Queen",
+    "cost": 11500,
+    "rarity": "legendary",
+    "ability": "greedy"
+  },
+  "imaworkersir": {
+    "name": "im a worker sir",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "inferno": {
+    "name": "Inferno",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "flamejet"
+  },
+  "job": {
+    "name": "J*b",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "klombo": {
+    "name": "Klombo",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "lightning": {
+    "name": "Lightning",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "lightning"
+  },
+  "llamma": {
+    "name": "Llamma",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "magnet": {
+    "name": "Magnet",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "magnetburst"
+  },
+  "mrmeeseeks": {
+    "name": "Mrmeeseeks",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "munch": {
+    "name": "Munch",
+    "cost": 500,
+    "rarity": "common"
+  },
+  "nonchalant": {
+    "name": "Nonchalant",
+    "cost": 500,
+    "rarity": "common"
+  },
+  "pepper": {
+    "name": "Pepper",
+    "cost": 4000,
+    "rarity": "epic",
+    "ability": "spicyspeed",
+    "abilityDesc": "Spicy speed — a quick movement boost, 5 times a match."
+  },
+  "purpdrank": {
+    "name": "Purpdrank",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "slowmo",
+    "abilityDesc": "take a sip — the whole world slows to ~40% for ~3–4s with a woozy purple wobble,"
+  },
+  "rager": {
+    "name": "Rager",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "raptor_sprite": {
+    "name": "Raptor",
+    "cost": 5000,
+    "rarity": "epic",
+    "ability": "windboost"
+  },
+  "reboot": {
+    "name": "Reboot",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "revive": {
+    "name": "Revive",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "revive"
+  },
+  "shark": {
+    "name": "Shark",
+    "cost": 2222,
+    "rarity": "rare",
+    "ability": "waterimmune",
+    "abilityDesc": " Immune to water damage (passive)"
+  },
+  "secretskin": {
+    "name": "The Stranger",
+    "cost": 0,
+    "rarity": "mythic",
+    "secret": true,
+    "unlock": { "type": "reach_distance", "value": 25000, "label": "" }
+  },
+  "slurpy": {
+    "name": "Slurpy",
+    "cost": 100,
+    "rarity": "common"
+  },
+  "snowman": {
+    "name": "Snowy",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "spongey": {
+    "name": "Spongey",
+    "cost": 1000,
+    "rarity": "rare",
+    "secret": true,
+    "unlock": {
+      "type": "total_runs",
+      "value": 15,
+      "label": ""
+    }
+  },
+  "spookyszn": {
+    "name": "Spookyszn",
+    "cost": 500,
+    "rarity": "common",
+    "secret": true,
+    "unlock": {
+      "type": "own_skins",
+      "value": 5,
+      "label": ""
+    }
+  },
+  "superbob": {
+    "name": "Superbob",
+    "cost": 1000,
+    "rarity": "mythic",
+    "ability": "godmode",
+    "abilityDesc": "metered flight",
+    "secret": true,
+    "unlock": {
+      "type": "reach_distance",
+      "value": 10000,
+      "label": "Reach 10,000m in a single run"
+    }
+  },
+  "toneguy": {
+    "name": "Toneguy",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "tscott": {
+    "name": "Tscott",
+    "cost": 5000,
+    "rarity": "epic",
+    "ability": "thedrop",
+    "abilityDesc": "Bass-drop: launch up + forward and a shockwave clears nearby hazards.",
+    "secret": true,
+    "unlock": {
+      "type": "own_skins",
+      "value": 25,
+      "label": "own 25 skins"
+    }
+  },
+  "turtle": {
+    "name": "Turtle",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "turtle"
+  },
+  "ying": {
+    "name": "Ying",
+    "cost": 1000,
+    "rarity": "rare"
+  },
+  "zeropoint": {
+    "name": "Zero Point",
+    "cost": 10000,
+    "rarity": "legendary",
+    "ability": "teleport"
+  }
 }
