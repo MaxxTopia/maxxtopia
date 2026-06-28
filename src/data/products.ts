@@ -619,7 +619,7 @@ export const products: Product[] = [
     version: amRelease.version ?? undefined,
     tagline: 'Warm up right. Per game.',
     description:
-      "The community's best KovaaK's warmup for your game — clicking, tracking, or both — plus a straight answer on mouse skates. Free. Aimmaxxer v2, the real trainer, is in the lab.",
+      "The community's best aim routines to warm up for your game. - Aimmaxxer V2 The Real Deal, is in the lab.",
     longDescription:
       "Ten minutes in KovaaK's before you queue, with the right scenarios for the aim your game actually demands. Plus the gear that moves your aim more than a new mouse. The real trainer is coming.",
     features: [
@@ -992,7 +992,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.36',
+    version: '0.1.37',
     tagline: "Everything you stream with, in one free app.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
