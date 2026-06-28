@@ -826,6 +826,12 @@ addEventListener("keydown",(e)=>{
 addEventListener("keyup",(e)=>{ if(e.code==="Space"){ e.preventDefault(); release(); } else if(e.code==="ArrowUp"){ aimUp=false; } else if(e.code==="ArrowDown"){ aimDown=false; } else if(e.code==="ArrowLeft"){ infLeft=false; } else if(e.code==="ArrowRight"){ infRight=false; } else if(e.code===abilityKey){ abHeld=false; } });
 cv.addEventListener("mousedown",(e)=>{ e.preventDefault(); press(); });
 addEventListener("mouseup",()=>{ release(); });
+// --- touch: tap-and-hold to charge/flap; preventDefault kills the synthetic mouse double-fire (and page scroll/zoom) ---
+const IS_TOUCH = ('ontouchstart' in window) || navigator.maxTouchPoints>0;
+if(IS_TOUCH){ document.body.classList.add("is-touch");
+  cv.addEventListener("touchstart",(e)=>{ e.preventDefault(); press(); },{passive:false});
+  cv.addEventListener("touchend",(e)=>{ e.preventDefault(); release(); },{passive:false});
+  cv.addEventListener("touchcancel",()=>{ release(); }); }
 
 function update(){
   if(shake>0) shake*=0.86;
@@ -3735,6 +3741,7 @@ function drawWing(wx,wy,s,on){
 function frame(){
   const t=performance.now()*0.001;
   updateAbilityBtn();
+  document.body.dataset.scState=state; // drives touch-control visibility (aim -> AIM pad, infurno/gauntlet -> MOVE pad)
   const biome=biomeAt(distM); ACX=biome.ac;
   INTEN=intensityAt(distM); ODX=overdriveAt(distM); _pulse=pulseAt(t); // escalating-intensity per-frame scalars
   document.documentElement.style.setProperty("--ac", biome.ac);
@@ -3896,12 +3903,14 @@ function buildShop(){
       if(secretList.length) s += " · <span class='sec'>+ "+ownSec+"/"+secretList.length+" secret</span>"; nEl.innerHTML=s; }
   })();
   let ordered=skinList.slice();
+  // only LOCKED secrets sink to the bottom; once a secret is owned/revealed it sorts by its real rarity like any skin
+  const lockedSec=s=>!!s.secret && !(DEV||save.owned.includes(s.id)) && !unlockMet(s);
   if(_shopSort==="price"){
     ordered.sort((a,b)=>{ if(a.id==="default") return -1; if(b.id==="default") return 1;
-      if(a.secret&&!b.secret) return 1; if(b.secret&&!a.secret) return -1; return (a.cost||0)-(b.cost||0); });
+      const la=lockedSec(a), lb=lockedSec(b); if(la&&!lb) return 1; if(lb&&!la) return -1; return (a.cost||0)-(b.cost||0); });
   } else {
     ordered.sort((a,b)=>{ if(a.id==="default") return -1; if(b.id==="default") return 1;
-      if(a.secret&&!b.secret) return 1; if(b.secret&&!a.secret) return -1;
+      const la=lockedSec(a), lb=lockedSec(b); if(la&&!lb) return 1; if(lb&&!la) return -1;
       const dr=RARITY_RANK[rarityOf(a)]-RARITY_RANK[rarityOf(b)]; if(dr) return dr; return (a.cost||0)-(b.cost||0); }); // ascending: least-rare on top -> rarest at the bottom
   }
   let shown=0;
@@ -4080,6 +4089,14 @@ document.head.insertAdjacentHTML("beforeend","<style>@keyframes scPulse{0%,100%{
 document.head.insertAdjacentHTML("beforeend","<style>.abilityBtn{position:fixed;right:18px;bottom:64px;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:26px;cursor:pointer;background:radial-gradient(circle at 35% 30%,#b59cff,#6b3fd6);color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.25);user-select:none;z-index:30;transition:opacity .15s}.abilityBtn.hidden{display:none}.abilityBtn .abn{position:absolute;right:-3px;bottom:-3px;font-size:12px;font-weight:900;background:#06140f;border-radius:50%;width:20px;height:20px;display:grid;place-items:center}.abilityBtn::before{content:'';position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(var(--ring,#ffd34d) calc(var(--prog,1)*1turn), rgba(255,255,255,.16) 0);z-index:-1}</style>");
 (function(){ document.body.insertAdjacentHTML("beforeend","<div id='abilityBtn' class='abilityBtn hidden'>⚡</div>"); const _b=document.getElementById("abilityBtn"); if(_b){ _b.onclick=(e)=>{ e.preventDefault(); activateAbility(); }; // press = fire active abilities
     _b.addEventListener("pointerdown",(e)=>{ e.preventDefault(); abHeld=true; }); ["pointerup","pointerleave","pointercancel"].forEach(ev=>_b.addEventListener(ev,()=>{ abHeld=false; })); } })(); // hold = MAN OF STEEL flight (touch/mouse)
+// --- on-screen touch pads: AIM (aim state) + MOVE (infurno/gauntlet). Only ever visible on touch devices, and only in the relevant state. ---
+document.head.insertAdjacentHTML("beforeend","<style>.scPad{position:fixed;left:14px;bottom:24px;display:none;flex-direction:column;gap:10px;z-index:30}body.is-touch[data-sc-state='aim'] #scAim{display:flex}body.is-touch[data-sc-state='infurno'] #scMove,body.is-touch[data-sc-state='gauntlet'] #scMove{display:flex}#scMove{flex-direction:row;gap:14px}.scBtn{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:30px;font-weight:900;color:#fff;background:rgba(20,16,40,.62);box-shadow:0 4px 16px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,255,255,.22);user-select:none;-webkit-user-select:none;touch-action:none;transition:transform .08s,background .12s}.scBtn:active,.scBtn.on{transform:scale(.92);background:rgba(120,90,255,.7)}</style>");
+document.body.insertAdjacentHTML("beforeend","<div id='scAim' class='scPad'><div class='scBtn' data-sc='up'>▲</div><div class='scBtn' data-sc='down'>▼</div></div><div id='scMove' class='scPad'><div class='scBtn' data-sc='left'>◀</div><div class='scBtn' data-sc='right'>▶</div></div>");
+(function(){ const set={ up:v=>aimUp=v, down:v=>aimDown=v, left:v=>infLeft=v, right:v=>infRight=v };
+  document.querySelectorAll(".scBtn[data-sc]").forEach(b=>{ const k=b.dataset.sc;
+    const on=(e)=>{ e.preventDefault(); e.stopPropagation(); set[k](true); b.classList.add("on"); };
+    const off=(e)=>{ if(e) e.stopPropagation(); set[k](false); b.classList.remove("on"); };
+    b.addEventListener("touchstart",on,{passive:false}); ["touchend","touchcancel"].forEach(ev=>b.addEventListener(ev,off)); }); })();
 function updateAbilityBtn(){ const b=document.getElementById("abilityBtn"); if(!b) return; const c=activeCfg();
   if(state==="fly" && ab()==="godmode"){ b.classList.remove("hidden"); b.style.setProperty("--prog", flightMeter.toFixed(3)); b.style.setProperty("--ring", flightMeter>0.05?"#6fb0ff":"#7d6bd0"); b.style.opacity = flightMeter>0.05?"1":"0.6"; b.innerHTML="🕊"; return; } // MAN OF STEEL: hold the button/key to fly; ring = flight meter
   if(!(state==="fly" && c)){ b.classList.add("hidden"); return; }
