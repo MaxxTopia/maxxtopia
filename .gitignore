@@ -43,3 +43,4 @@ public/screenshots/**/_master.wav
 # clipmaxxer-apply worker admin key (NEVER commit)
 *.local.txt
 .admin-key.local.txt
+.bot-setup.local.env.bak
