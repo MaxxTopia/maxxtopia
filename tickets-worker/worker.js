@@ -130,6 +130,13 @@ export default {
           data: { flags: MSG_FLAG_EPHEMERAL },
         })
       }
+      if (name === 'sccoins') {
+        ctx.waitUntil(handleSccoins(env, interaction))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
     }
 
     // Anything else — not implemented in v1.
@@ -724,6 +731,98 @@ async function handleFounderStatus(env, interaction) {
   await editFollowup(interaction.application_id, interaction.token, {
     content: `👑 **Founder pool**: ${remaining} of 33 unused.\n` +
       (remaining === 0 ? 'All handed out. Mint more if you want to extend beyond 33 (but the cap is enforced at claim by vip-worker — 34th claim returns 410).' : ''),
+    flags: MSG_FLAG_EPHEMERAL,
+  })
+}
+
+/**
+ * /sccoins amount:<int> [uses:<int>] [user:<@id>] [note:<str>]
+ *
+ * Mints a SPRITE CANNON coin code via the spritecannon-codes worker
+ * (POST /admin/gen, Bearer SC_CODES_ADMIN_TOKEN). Players redeem it
+ * in-game (Settings → enter code) for local coins. Single-use by
+ * default; `uses` lets one code be claimed by N different players
+ * (deduped per-player by the codes worker). Diggy-only.
+ *
+ * Unlike /gen (VIP tier codes in KV here), this calls the EXTERNAL
+ * Sprite Cannon code worker — coins live client-side, the code is the
+ * unforgeable server-authorized grant.
+ */
+async function handleSccoins(env, interaction) {
+  if (!(await requireDiggy(env, interaction))) return
+  const appId = interaction.application_id
+  const token = interaction.token
+
+  const amount = parseInt(getOption(interaction, 'amount'), 10)
+  const uses = parseInt(getOption(interaction, 'uses') ?? 1, 10) || 1
+  const targetUserId = getOption(interaction, 'user') ?? ''
+  const note = (getOption(interaction, 'note') ?? '').toString().slice(0, 100)
+
+  if (!(amount >= 1 && amount <= 1000000)) {
+    await editFollowup(appId, token, { content: '⚠ Amount must be 1–1,000,000 coins.', flags: MSG_FLAG_EPHEMERAL })
+    return
+  }
+  if (!env.SC_CODES_ADMIN_TOKEN) {
+    await editFollowup(appId, token, {
+      content: '⚠ `SC_CODES_ADMIN_TOKEN` secret not set on this worker. Run `wrangler secret put SC_CODES_ADMIN_TOKEN` in maxxtopia/tickets-worker.',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  const base = env.SC_CODES_URL || 'https://spritecannon-codes.maxxtopia.workers.dev'
+  const callerId = interaction.member?.user?.id ?? interaction.user?.id ?? 'unknown'
+  let res
+  try {
+    const r = await fetch(base + '/admin/gen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + env.SC_CODES_ADMIN_TOKEN },
+      body: JSON.stringify({ coins: amount, uses, note: note || ('discord /sccoins by ' + callerId) }),
+    })
+    res = await r.json().catch(() => ({}))
+    if (!r.ok || !res.ok || !res.code) {
+      await editFollowup(appId, token, {
+        content: `⚠ Code worker rejected the mint (HTTP ${r.status}): ${res.error || 'unknown error'}.`,
+        flags: MSG_FLAG_EPHEMERAL,
+      })
+      return
+    }
+  } catch (e) {
+    await editFollowup(appId, token, {
+      content: '⚠ Could not reach the Sprite Cannon code worker: ' + (e?.message ?? e),
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  const code = res.code
+  const usesLabel = uses > 1 ? ` (usable by ${uses} different players)` : ' (single-use)'
+  const amt = amount.toLocaleString()
+
+  if (targetUserId && /^\d+$/.test(targetUserId)) {
+    const dmText =
+      `🪙 Your **Sprite Cannon** coin code — **${amt} coins**${usesLabel}:\n\n` +
+      '```\n' + code + '\n```\n' +
+      'Redeem it in **Sprite Cannon → Settings (⚙) → enter code**.\n' +
+      'Play: https://maxxtopia.com/play/spritecannon\n\n' +
+      'Stuck? https://discord.gg/S78eecbWdx'
+    const ok = await dmUser(env, targetUserId, dmText)
+    if (ok) {
+      await editFollowup(appId, token, {
+        content: `✓ DMed a **${amt}**-coin code${usesLabel} to <@${targetUserId}>.\n\nCode (for your records): \`${code}\``,
+        flags: MSG_FLAG_EPHEMERAL,
+      })
+      return
+    }
+    await editFollowup(appId, token, {
+      content: `⚠ Could NOT DM <@${targetUserId}> (DMs closed). Hand-deliver this **${amt}**-coin code${usesLabel}:\n\n` + '```\n' + code + '\n```',
+      flags: MSG_FLAG_EPHEMERAL,
+    })
+    return
+  }
+
+  await editFollowup(appId, token, {
+    content: `🪙 Minted a **${amt}**-coin Sprite Cannon code${usesLabel}:\n\n` + '```\n' + code + '\n```\n' + 'Redeem in-game: Settings (⚙) → enter code.',
     flags: MSG_FLAG_EPHEMERAL,
   })
 }

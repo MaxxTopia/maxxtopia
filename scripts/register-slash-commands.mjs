@@ -42,7 +42,8 @@ try {
         const m = line.match(/^([A-Z_]+)\s*=\s*(.+?)\s*$/);
         if (!m) continue;
         if (m[1] === 'DISCORD_BOT_TOKEN') TOKEN = m[2].replace(/^['"]|['"]$/g, '');
-        if (m[1] === 'DISCORD_GUILD_ID') GUILD_ID = m[2].replace(/^['"]|['"]$/g, '');
+        // Digits-only: tolerate a malformed env line (e.g. another KEY=val glued on without a newline).
+        if (m[1] === 'DISCORD_GUILD_ID') GUILD_ID = (m[2].match(/\d+/) || [''])[0];
     }
 } catch {
     console.error(`[register] Missing ${envPath}`);
@@ -68,6 +69,7 @@ if (DRY) console.log('[register] DRY RUN — no changes. Pass --execute to commi
 // ─── Commands ──────────────────────────────────────────────────────────────
 // Discord application command option types
 const OPT_STRING = 3;
+const OPT_INTEGER = 4;
 const OPT_USER = 6;
 
 // default_member_permissions = "0" hides the command from non-admins in
@@ -145,6 +147,42 @@ const COMMANDS = [
         description: 'Show how many of the 33 Founder codes are still in the pool (Diggy-only).',
         default_member_permissions: DEFAULT_MOD_ONLY,
         dm_permission: false,
+    },
+    {
+        name: 'sccoins',
+        description: 'Mint a Sprite Cannon coin code and DM it to a player (Diggy-only).',
+        default_member_permissions: DEFAULT_MOD_ONLY,
+        dm_permission: false,
+        options: [
+            {
+                type: OPT_INTEGER,
+                name: 'amount',
+                description: 'Coins this code grants when redeemed in-game.',
+                required: true,
+                min_value: 1,
+                max_value: 1000000,
+            },
+            {
+                type: OPT_INTEGER,
+                name: 'uses',
+                description: 'How many different players can redeem it. Defaults to 1 (single-use).',
+                required: false,
+                min_value: 1,
+                max_value: 100000,
+            },
+            {
+                type: OPT_USER,
+                name: 'user',
+                description: 'Optional: DM the code directly. If omitted, the code is returned to you ephemerally.',
+                required: false,
+            },
+            {
+                type: OPT_STRING,
+                name: 'note',
+                description: 'Optional internal note (shows in the code worker admin list).',
+                required: false,
+            },
+        ],
     },
 ];
 
