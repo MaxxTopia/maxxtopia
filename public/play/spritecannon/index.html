@@ -1086,7 +1086,7 @@ function endRun(){
   if(state!=="fly") return;
   state="result";
   const coinMult = ab()==="greedy"?5:(ab()==="goldcat"?2:1); // Queen=5x, goldcat=2x
-  const baseCoins = Math.floor(distM/10) + (coinMult>1 ? Math.round(runCoins/coinMult) : runCoins); // raw (pre-multiplier) total: distance bonus + un-multiplied pickups
+  const baseCoins = Math.floor(distM/20) + (coinMult>1 ? Math.round(runCoins/coinMult) : runCoins); // raw (pre-multiplier) total: distance bonus (1 coin / 20m) + un-multiplied pickups
   const earned = baseCoins*coinMult; save.coins+=earned; runCoins=0; // multiplier now applies to EVERYTHING incl. the distance bonus (was: pickups only). Bank then ZERO runCoins (shop opens from result without reset())
   const wasBest=save.best, isBest=distM>0 && distM>wasBest; if(isBest) save.best=distM; persist(); // 1 coin / 10m + pickup bonus
   const nearMiss=!isBest && prevBest>0 && distM<prevBest && distM>=Math.floor(prevBest*0.9); // within 10% of your best
@@ -4166,6 +4166,24 @@ function updateAbilityBtn(){ const b=document.getElementById("abilityBtn"); if(!
 
 // ---- global leaderboard (Cloudflare worker; graceful offline) ----
 const LB_URL="https://spritecannon-lb.maxxtopia.workers.dev";
+// Light anti-cheat: sign each score (name|dist|pid) with a shared key so the worker can tell a real
+// submit from a curl/console fake. Key is necessarily in the client (extractable) -> stops drive-by
+// cheating, not a determined source-reader. crypto.subtle needs a secure context (https/localhost);
+// if unavailable it sends unsigned and the worker graces it (until enforcement is flipped on).
+const SC_SIG_KEY="eee6add3bfbb0f71a1399d0e9fa99d1880d6f8ce12b8c4e8";
+async function signScore(name, dist, pid){
+  try{ if(!crypto||!crypto.subtle) return null; const enc=new TextEncoder();
+    const k=await crypto.subtle.importKey("raw", enc.encode(SC_SIG_KEY), {name:"HMAC",hash:"SHA-256"}, false, ["sign"]);
+    const buf=await crypto.subtle.sign("HMAC", k, enc.encode(name+"|"+dist+"|"+pid));
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  }catch(e){ return null; }
+}
+function scSubmit(name, ch){ // sign -> POST; returns the parsed JSON promise
+  return signScore(name, save.best, save.pid).then(sig=>{
+    const body={ name, dist:save.best, channel:ch, pid:save.pid }; if(sig) body.sig=sig;
+    return fetch(LB_URL+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(r=>r.json());
+  });
+}
 let prevLbState="start";
 function streamChannel(){ return (Q.get("ch")||cfg.channel||"").toString().toLowerCase().replace(/[^\w\-]/g,"").slice(0,32); } // who owns this stream's board (OBS ?ch= or app config)
 let lbScope=null; // chosen on first open: streamer's own board if a channel exists, else WEEKLY (the payout board)
@@ -4190,8 +4208,8 @@ function loadLB(){ const my=++lbReq; const st=document.getElementById("lbStatus"
   if(winfo) winfo.style.display="none";
   if(lbScope==="weekly"){
     fetch(LB_URL+"/top?scope=weekly",{cache:"no-store"}).then(r=>r.json()).then(d=>{ if(my!==lbReq) return; renderLB(d.top||[]);
-      const p=d.payout||[2000,1000,500];
-      if(winfo){ winfo.style.display="block"; winfo.innerHTML="&#128176; Top 3 each week win <b>"+p[0].toLocaleString()+"</b> / <b>"+p[1].toLocaleString()+"</b> / <b>"+p[2].toLocaleString()+"</b> coins"+(d.endsTs?(" &middot; resets in "+_fmtLeft(d.endsTs-Date.now())):""); }
+      const p=d.payout||[2000,1000,500,250,100];
+      if(winfo){ winfo.style.display="block"; winfo.innerHTML="&#128176; Top "+p.length+" each week win <b>"+p.map(c=>c.toLocaleString()).join("</b> / <b>")+"</b> coins"+(d.endsTs?(" &middot; resets in "+_fmtLeft(d.endsTs-Date.now())):""); }
       st.textContent=(d.top&&d.top.length)?("Your best: "+save.best+"m (this week)"):("No scores yet this week - be the first!"); }).catch(()=>{ if(my===lbReq) _lbOffline(st); });
     return;
   }
@@ -4215,12 +4233,12 @@ function renderLB(top){ const list=document.getElementById("lbList"); list.inner
   list.appendChild(frag); }
 function submitLB(){ const n=(document.getElementById("lbName").value||"").trim()||"anon"; try{ localStorage.setItem("sm.spritecannon.name",n); }catch{}
   const st=document.getElementById("lbStatus"); st.textContent="Submitting..."; snd("ui"); const ch=streamChannel(), onStream=(lbScope==="stream"&&ch);
-  fetch(LB_URL+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:n,dist:save.best,channel:ch,pid:save.pid})}).then(r=>r.json()).then(d=>{
+  scSubmit(n, ch).then(d=>{
     if(onStream && d.streamTop) renderLB(d.streamTop); else if(d.top) renderLB(d.top);
     const rank = onStream ? d.streamRank : d.rank; st.textContent= rank?("You're #"+rank+(onStream?" on this stream!":" globally!")):"Submitted!"; }).catch(()=>{ st.textContent="Couldn't submit (offline)."; }); }
 function _postRank(el, name){ const ch=streamChannel(), onStream=!!ch;
   el.style.display="block"; el.textContent="Posting your rank...";
-  fetch(LB_URL+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,dist:save.best,channel:ch,pid:save.pid})}).then(r=>r.json()).then(d=>{
+  scSubmit(name, ch).then(d=>{
     const rank = onStream ? d.streamRank : d.rank;
     if(rank){ el.style.display="block"; el.innerHTML='&#127942; #'+rank+(onStream?(' on '+ch):' worldwide'); }
     else el.style.display="none";
