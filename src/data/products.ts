@@ -835,18 +835,6 @@ export const products: Product[] = [
         title: 'Works on your phone, too.',
         body: "Mobile can't run extensions — but Brave on Android and iOS take our custom filter list, blocking ad and tracker domains across the web. One URL, paste it in Shields.",
       },
-      {
-        title: 'Performance mode: get your RAM back.',
-        body: 'Suspends idle background tabs after a timeout you choose, so a wall of open tabs stops eating memory and the browser stays snappy. It quietly doubles as a lightweight browser tune-up — not just an ad filter.',
-      },
-      {
-        title: 'Twitch, fully loaded.',
-        body: 'Beyond killing the ads: a fullscreen chat overlay so you can read chat without leaving fullscreen, a lock-to-source-quality toggle, and a built-in Sprite Cannon mini-game you can pop open over any stream.',
-      },
-      {
-        title: 'Skip the sponsor segments, too.',
-        body: 'Built-in SponsorBlock skips the in-video "this video is sponsored by..." reads on YouTube — pick which categories to auto-skip and only watch what you came for.',
-      },
     ],
     stats: [
       { label: 'Browsers', value: '4' },
@@ -919,6 +907,45 @@ export const products: Product[] = [
             { label: 'AdBlockMaxxer mobile list on Brave', value: 'domains blocked', emphasize: true },
           ],
           caption: 'Brave · Android + iOS · Shields → Content filtering → add custom list',
+        },
+      },
+      {
+        eyebrow: '06 · The Tune-up',
+        headline: "It's a tab suspender, too — get your RAM back.",
+        body: "Open tabs quietly eat memory all day. Performance mode suspends idle background tabs after a timeout you set, freeing the RAM and keeping the browser snappy — the kind of thing people install a second extension for, already built in here.",
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: '100 tabs, none suspended — memory creeps up', value: 'sluggish' },
+            { label: 'Performance mode — idle tabs suspended', value: 'RAM back', emphasize: true },
+          ],
+          caption: 'Options → Performance mode → suspend idle tabs after N minutes',
+        },
+      },
+      {
+        eyebrow: '07 · The Extras',
+        headline: 'Twitch, fully loaded — chat overlay, quality lock, and a game.',
+        body: "Beyond killing the ads: a fullscreen chat overlay so you can read chat without leaving fullscreen, a lock-to-source-quality toggle so Twitch can't quietly auto-downgrade you, and a built-in Sprite Cannon mini-game you can pop open right over any stream during the boring parts.",
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Fullscreen chat overlay + source-quality lock', value: 'built in' },
+            { label: 'Sprite Cannon — a free game over any stream', value: 'play now', emphasize: true },
+          ],
+          caption: 'Options → Twitch extras · the game also lives at maxxtopia.com/play/spritecannon',
+        },
+      },
+      {
+        eyebrow: '08 · The Skip',
+        headline: 'Skip the in-video sponsor reads, too.',
+        body: "Ad-blocking handles the ads the network serves — SponsorBlock handles the ones the creator reads out loud. Choose which segment types to auto-skip (sponsor, intro, self-promo) and the player jumps right past them, so you only watch what you came for.",
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: '"And this video is sponsored by..." — every video', value: 'sat through' },
+            { label: 'SponsorBlock — auto-skipped by category', value: 'gone', emphasize: true },
+          ],
+          caption: 'Options → SponsorBlock categories',
         },
       },
     ],
