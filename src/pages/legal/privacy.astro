@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const updated = 'June 28, 2026';
+---
+
+<Layout
+  title="Privacy Policy — Maxxtopia"
+  description="How Maxxtopia and its apps, extensions, and games handle your data. Short version: we collect as little as possible and never sell it."
+>
+  <article class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-24 pb-24 prose-legal">
+    <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">Legal</p>
+    <h1 class="mt-3 text-[36px] sm:text-[52px] font-semibold tracking-[-0.03em] leading-[1.02] gradient-text">Privacy Policy</h1>
+    <p class="mt-3 text-sm text-white/50">Last updated: {updated}</p>
+
+    <div class="mt-10 space-y-6 text-white/75 leading-relaxed text-[15px]">
+      <p><strong class="text-white">The short version.</strong> Maxxtopia builds free, local-first tools. We collect as little data as possible, we don't sell it, we don't run third-party ad trackers, and most of our software runs entirely on your own device.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Who we are</h2>
+      <p>"Maxxtopia" ("we", "us") operates the website <a href="https://maxxtopia.com">maxxtopia.com</a> and a suite of apps, browser extensions, and games, including the <strong class="text-white">Sprite Cannon</strong> Twitch Extension. Contact: <a href="mailto:dtman@maxxtopia.com">dtman@maxxtopia.com</a>.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Sprite Cannon (Twitch Extension)</h2>
+      <p>Sprite Cannon is a play-while-you-watch game that runs as an overlay on a streamer's channel. It collects only what's needed to run a per-channel leaderboard:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong class="text-white">A display name you choose</strong> when you submit a score (you type it; it does not have to be your real name).</li>
+        <li><strong class="text-white">Your best distance score</strong> for that play session.</li>
+        <li><strong class="text-white">The Twitch channel ID</strong> of the stream you're playing on, so your score posts to that streamer's leaderboard.</li>
+      </ul>
+      <p>This data is stored on Cloudflare infrastructure and shown publicly on the in-game leaderboard by design. We do <strong class="text-white">not</strong> request or store your Twitch identity (the extension does not use Twitch Identity Linking), we do <strong class="text-white">not</strong> read Twitch chat, and we do <strong class="text-white">not</strong> collect email, payment, or location data. There are no ads and no third-party advertising or analytics trackers inside the extension.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Desktop apps</h2>
+      <p>Our desktop apps are local-first: your media, settings, and accounts stay on your device. Where an app offers optional usage telemetry, it is <strong class="text-white">off by default</strong> and anonymous when enabled.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Website</h2>
+      <p>maxxtopia.com is a static site hosted on Cloudflare Pages. Standard server logs (such as IP address and request metadata) may be processed by our hosting provider to deliver and secure the site. We do not place advertising cookies.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">How we use data</h2>
+      <p>Only to provide the feature you're using (e.g., showing leaderboard scores) and to keep our services secure and working. We do not sell or rent your data to anyone.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Retention &amp; your choices</h2>
+      <p>Leaderboard entries persist so scores can be displayed and ranked. To have a leaderboard entry removed, email <a href="mailto:dtman@maxxtopia.com">dtman@maxxtopia.com</a> with the channel and the name you used and we'll remove it. You can stop all data collection at any time by not submitting a score / uninstalling the extension or app.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Children</h2>
+      <p>Our products are not directed to children under 13, and we do not knowingly collect personal information from them.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Third parties</h2>
+      <p>When you use the extension on Twitch, Twitch's own <a href="https://www.twitch.tv/p/legal/privacy-notice/">Privacy Notice</a> also applies to your use of Twitch. Our infrastructure runs on Cloudflare.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Changes</h2>
+      <p>We may update this policy; material changes will be reflected by the "Last updated" date above.</p>
+
+      <p class="pt-4">Questions? <a href="mailto:dtman@maxxtopia.com">dtman@maxxtopia.com</a>.</p>
+    </div>
+
+    <p class="mt-12 text-sm"><a href="/legal/terms" class="text-[var(--color-cyan)]">Terms of Service →</a></p>
+  </article>
+</Layout>

@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const updated = 'June 28, 2026';
+---
+
+<Layout
+  title="Terms of Service — Maxxtopia"
+  description="The terms for using Maxxtopia apps, extensions, and games. Free to use, provided as-is, be cool."
+>
+  <article class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-24 pb-24">
+    <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">Legal</p>
+    <h1 class="mt-3 text-[36px] sm:text-[52px] font-semibold tracking-[-0.03em] leading-[1.02] gradient-text">Terms of Service</h1>
+    <p class="mt-3 text-sm text-white/50">Last updated: {updated}</p>
+
+    <div class="mt-10 space-y-6 text-white/75 leading-relaxed text-[15px]">
+      <p>These Terms govern your use of Maxxtopia's website, apps, browser extensions, and games, including the <strong class="text-white">Sprite Cannon</strong> Twitch Extension (collectively, the "Services"). By using the Services you agree to these Terms.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">License to use</h2>
+      <p>The Services are provided free of charge for your personal, non-commercial entertainment use. We grant you a limited, revocable, non-transferable license to use them. You may not resell the Services, or copy, decompile, or modify them except where permitted by their open-source license (where applicable).</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Acceptable use</h2>
+      <p>Don't use the Services to break the law, harass others, submit hateful, obscene, or infringing content (including leaderboard names), attempt to disrupt or game the leaderboard or our infrastructure, or interfere with anyone else's use. We may remove content (such as a leaderboard name) and revoke access for violations.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Twitch</h2>
+      <p>When using the Sprite Cannon extension on Twitch, you must also comply with Twitch's <a href="https://www.twitch.tv/p/legal/terms-of-service/">Terms of Service</a> and Community Guidelines. Twitch is not the provider of this extension and is not responsible for it.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">No warranty</h2>
+      <p>The Services are provided "AS IS" and "AS AVAILABLE", without warranties of any kind, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that the Services will be uninterrupted, error-free, or secure.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Limitation of liability</h2>
+      <p>To the maximum extent permitted by law, Maxxtopia and its operator will not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of data, profits, or goodwill, arising from your use of the Services. Because the Services are provided free of charge, our total liability for any claim is limited to USD $0.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Changes &amp; termination</h2>
+      <p>We may update, suspend, or discontinue any part of the Services at any time. We may update these Terms; material changes are reflected by the "Last updated" date. Continued use after a change means you accept the updated Terms.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Contact</h2>
+      <p>Questions about these Terms: <a href="mailto:dtman@maxxtopia.com">dtman@maxxtopia.com</a>.</p>
+    </div>
+
+    <p class="mt-12 text-sm"><a href="/legal/privacy" class="text-[var(--color-cyan)]">Privacy Policy →</a></p>
+  </article>
+</Layout>
