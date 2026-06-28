@@ -3,6 +3,20 @@
     "date": "2026-06-28",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
+    "version": "v1.4.6",
+    "title": "Weekly arcade leaderboard with coin prizes.",
+    "body": "Refreshed the filter lists, and the built-in Sprite Cannon arcade now runs a weekly leaderboard that pays coins to the top 5 each week, with rebalanced earning and cheat-resistant scores.",
+    "items": [
+      "Weekly leaderboard: top 5 win coins every week (2000/1000/500/250/100).",
+      "Sprite Cannon coins rebalanced (1 per 20m).",
+      "Cheat-resistant signed score submissions.",
+      "Latest EasyList/EasyPrivacy + Twitch quality fix."
+    ]
+  },
+  {
+    "date": "2026-06-28",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
     "version": "v1.4.5",
     "title": "Fresh filters and a bigger built-in arcade.",
     "body": "Refreshed EasyList/EasyPrivacy and the Twitch fix, and updated the built-in Sprite Cannon arcade with new abilities, shop polish, and a wave of new map names.",
