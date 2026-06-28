@@ -23,29 +23,6 @@ const liveSorted = [...liveProducts].sort(
 
   <SuiteMarquee />
 
-  <!-- Arcade front door: the free in-browser game -->
-  <section class="relative">
-    <div class="mx-auto max-w-7xl px-5 sm:px-8 pt-14">
-      <a
-        href="/play/spritecannon/"
-        class="group block relative overflow-hidden rounded-2xl border border-[var(--color-line-strong)] bg-[linear-gradient(110deg,rgba(226,91,255,0.10),rgba(0,212,255,0.08))] transition-colors hover:border-[var(--color-magenta)]/60"
-        aria-label="Play Sprite Cannon — free in-browser arcade game"
-      >
-        <div class="relative flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:p-8">
-          <div class="flex-1">
-            <div class="mb-2.5 flex flex-wrap items-center gap-2.5">
-              <span class="rounded-full bg-[var(--color-magenta)]/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-magenta)]">Free to play</span>
-              <span class="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-cyan)]">New · Maxxtopia Arcade</span>
-            </div>
-            <h2 class="text-[30px] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[40px]"><span class="gradient-text">Sprite Cannon</span></h2>
-            <p class="mt-2 max-w-xl text-[15px] leading-relaxed text-[var(--color-text-mid)]">Launch the cat, fly forever. 50+ skins, 20+ abilities, 30+ hand-built worlds. No install, no signup — it plays right in your browser.</p>
-          </div>
-          <span class="inline-flex shrink-0 items-center gap-2 rounded-full bg-[linear-gradient(180deg,#7ee59a,#34c46a)] px-7 py-3.5 text-[15px] font-semibold text-[#08110a] shadow-[0_8px_22px_rgba(52,196,106,0.4)] transition-transform group-hover:scale-[1.03]">&#9654; Play now</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
   <!-- Apps -->
   <section id="apps" class="relative spotlight">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-28">
@@ -97,6 +74,26 @@ const liveSorted = [...liveProducts].sort(
           </div>
         </div>
       )}
+    </div>
+  </section>
+
+  <!-- Arcade strip: palette-correct, placed AFTER the apps grid so it reinforces the suite instead of intercepting the product funnel -->
+  <section class="relative">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <a
+        href="/play"
+        class="group block relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[linear-gradient(110deg,rgba(226,91,255,0.10),rgba(0,212,255,0.07))] transition-colors hover:border-[var(--color-magenta)]/55"
+        aria-label="Play Sprite Cannon — the free Maxxtopia Arcade game"
+      >
+        <div class="relative flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:p-8">
+          <div class="flex-1">
+            <p class="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-cyan)]">&#9670; Maxxtopia Arcade</p>
+            <h2 class="text-[26px] font-semibold leading-[1.08] tracking-[-0.025em] sm:text-[34px]"><span class="gradient-text">We build serious tools.</span> <span class="serif-accent gradient-suite">And one ridiculous game.</span></h2>
+            <p class="mt-2.5 max-w-xl text-[14.5px] leading-relaxed text-[var(--color-text-mid)]">Sprite Cannon — free, in your browser, no signup. 50+ skins, a global leaderboard, zero reason not to.</p>
+          </div>
+          <span class="inline-flex shrink-0 items-center gap-2 rounded-full border border-[var(--color-magenta)]/40 bg-[var(--color-magenta)]/12 px-6 py-3 text-[14.5px] font-semibold text-[var(--color-text)] transition-colors group-hover:bg-[var(--color-magenta)]/20">&#9654; Play Sprite Cannon</span>
+        </div>
+      </a>
     </div>
   </section>
 
