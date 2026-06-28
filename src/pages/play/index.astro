@@ -502,6 +502,8 @@ const steps = [
       color: var(--rc); border: 1px solid color-mix(in srgb, var(--rc) 45%, transparent);
       background: color-mix(in srgb, var(--rc) 12%, transparent);
     }
+    .sc-lb-emblem { flex-shrink: 0; height: 30px; width: auto; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5)); }
+    .sc-ladder__emblem { height: 17px; width: auto; object-fit: contain; }
     .sc-lb-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: 15px; color: var(--color-text); }
     .sc-lb-you { margin-left: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; color: var(--color-cyan); border: 1px solid color-mix(in srgb, var(--color-cyan) 45%, transparent); border-radius: 999px; padding: 1px 6px; }
     .sc-lb-dist { font-family: var(--font-display); font-size: 23px; line-height: 1; color: var(--rc); }
@@ -647,7 +649,7 @@ const steps = [
       // The prestige ladder — distance (m) -> named rank, escalating colour/flair.
       const TIERS = [
         { name: 'Recruit', min: 0,     c: '#9a90b8' },
-        { name: 'Amateur', min: 2500,  c: '#4ade80' },
+        { name: 'Amateur', min: 2500,  c: '#4ade80', img: '/ranks/ama.png' },
         { name: 'Veteran', min: 5000,  c: '#00d4ff' },
         { name: 'Elite',   min: 9000,  c: '#4c51f7' },
         { name: 'Master',  min: 14000, c: '#e25bff' },
@@ -665,7 +667,8 @@ const steps = [
 
       // tier ladder — built once
       if (ladderEl) ladderEl.innerHTML = TIERS.map((t) =>
-        '<span class="sc-ladder__step" style="--sc:' + t.c + '"><span class="sc-ladder__dot"></span>' + t.name +
+        '<span class="sc-ladder__step" style="--sc:' + t.c + '">' +
+        (t.img ? '<img class="sc-ladder__emblem" src="' + t.img + '" alt="">' : '<span class="sc-ladder__dot"></span>') + t.name +
         (t.min > 0 ? ' <span class="sc-ladder__min">' + fmt(t.min) + '</span>' : '') + '</span>').join('');
 
       const msg = (t) => { list.innerHTML = '<li class="sc-lb-msg">' + esc(t) + '</li>'; };
@@ -717,7 +720,7 @@ const steps = [
           const rank = pos <= 3 ? '<span class="m">' + medal[pos - 1] + '</span>' : pos;
           return '<li class="sc-lb-row' + (you ? ' is-you' : '') + '" style="--rc:' + t.c + '">' +
             '<span class="sc-lb-rank">' + rank + '</span>' +
-            '<span class="sc-lb-tier">' + t.name + '</span>' +
+            (t.img ? '<img class="sc-lb-emblem" src="' + t.img + '" alt="' + t.name + '" title="' + t.name + '">' : '<span class="sc-lb-tier">' + t.name + '</span>') +
             '<span class="sc-lb-name">' + esc(e.name || 'anon') + (you ? '<span class="sc-lb-you">YOU</span>' : '') + '</span>' +
             '<span><span class="sc-lb-dist">' + fmt(e.dist) + '</span><span class="sc-lb-u">m</span></span>' +
             '</li>';
