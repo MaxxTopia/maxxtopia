@@ -103,6 +103,10 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
           class={`relative transition-colors hover:text-[var(--color-text)] ${path === '/' ? 'text-[var(--color-text)]' : ''}`}
         >Apps</a>
         <a
+          href="/play/spritecannon/"
+          class="relative transition-colors text-[var(--color-magenta)] hover:text-[var(--color-text)]"
+        >Play</a>
+        <a
           href="/why"
           class={`relative transition-colors hover:text-[var(--color-text)] ${isActive('/why') ? 'text-[var(--color-text)]' : ''}`}
         >Why</a>
