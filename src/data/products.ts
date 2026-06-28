@@ -801,11 +801,11 @@ export const products: Product[] = [
     category: 'Browser Extension',
     status: 'live',
     version: '1.4.0',
-    tagline: "The ad blocker they couldn't ban.",
+    tagline: "Way more than an ad blocker.",
     description:
-      "No more ads on YouTube, Spotify or Twitch. Works in every browser, keeps Twitch in full HD, and costs nothing.",
+      "Kills ads on YouTube, Spotify & Twitch — then keeps going: a performance mode that frees up RAM, SponsorBlock skipping, Twitch in full HD with a fullscreen chat overlay, even a built-in game. One free extension, every browser.",
     longDescription:
-      "One extension. Four browsers. YouTube, Spotify, Twitch + 21,370 filter rules — and Twitch quality comes back to source after each break (optional auto-downgrade lock).",
+      "Ad blocking is just the start. 21,370 filter rules across YouTube, Spotify, Twitch & the web — plus a tab-suspending performance mode, YouTube SponsorBlock skipping, a Twitch fullscreen-chat overlay, a built-in arcade game, and a quality-lock that restores Twitch to source after every ad break. Four browsers, zero cost.",
     features: [
       {
         title: 'Beats YouTube\'s server-side ad enforcement.',
@@ -834,6 +834,18 @@ export const products: Product[] = [
       {
         title: 'Works on your phone, too.',
         body: "Mobile can't run extensions — but Brave on Android and iOS take our custom filter list, blocking ad and tracker domains across the web. One URL, paste it in Shields.",
+      },
+      {
+        title: 'Performance mode: get your RAM back.',
+        body: 'Suspends idle background tabs after a timeout you choose, so a wall of open tabs stops eating memory and the browser stays snappy. It quietly doubles as a lightweight browser tune-up — not just an ad filter.',
+      },
+      {
+        title: 'Twitch, fully loaded.',
+        body: 'Beyond killing the ads: a fullscreen chat overlay so you can read chat without leaving fullscreen, a lock-to-source-quality toggle, and a built-in Sprite Cannon mini-game you can pop open over any stream.',
+      },
+      {
+        title: 'Skip the sponsor segments, too.',
+        body: 'Built-in SponsorBlock skips the in-video "this video is sponsored by..." reads on YouTube — pick which categories to auto-skip and only watch what you came for.',
       },
     ],
     stats: [
