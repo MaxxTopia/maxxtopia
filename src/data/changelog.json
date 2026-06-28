@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-06-28",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.4.5",
+    "title": "Fresh filters and a bigger built-in arcade.",
+    "body": "Refreshed EasyList/EasyPrivacy and the Twitch fix, and updated the built-in Sprite Cannon arcade with new abilities, shop polish, and a wave of new map names.",
+    "items": [
+      "Latest EasyList/EasyPrivacy + Twitch quality fix.",
+      "Sprite Cannon: new Phantom, Bacca, and Baldy abilities.",
+      "Shop now flags skins that have multiple styles.",
+      "17 freshly themed map names to fly through."
+    ]
+  },
+  {
     "date": "2026-06-26",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
