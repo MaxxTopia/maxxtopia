@@ -469,23 +469,20 @@ const steps = [
     </div>
   </section>
 
-  <!-- Fullscreen state: make the iframe fill the screen when the cabinet
-       is fullscreened (hides the control bar's height constraint). -->
+  <!-- Fullscreen: we fullscreen the IFRAME itself (not the wrapping cabinet
+       div). Fullscreening a container that holds an iframe renders the iframe
+       black in Chromium and leaves it stuck after exit; fullscreening the
+       iframe element makes the game fill the screen natively and restore
+       cleanly. These rules force it to fill and override the boxed sizing. -->
   <style is:global>
-    #sc-cabinet:fullscreen,
-    #sc-cabinet:-webkit-full-screen {
-      width: 100vw;
-      height: 100vh;
-      border-radius: 0;
-      display: flex;
-      flex-direction: column;
-      background: var(--color-bg);
-    }
-    #sc-cabinet:fullscreen #sc-frame,
-    #sc-cabinet:-webkit-full-screen #sc-frame {
-      flex: 1 1 auto;
-      height: auto;
-      max-height: none;
+    #sc-frame:fullscreen,
+    #sc-frame:-webkit-full-screen {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: none !important;
+      min-height: 0 !important;
+      border: 0;
+      background: #05070d;
     }
 
     /* ===== Prestige leaderboard "The Climb" (rows built by JS, styled globally) ===== */
@@ -580,16 +577,18 @@ const steps = [
 
   <script is:inline>
     (() => {
-      const cab = document.getElementById('sc-cabinet');
+      const frame = document.getElementById('sc-frame');
       const btn = document.getElementById('sc-fs-btn');
       const label = document.getElementById('sc-fs-label');
-      if (!cab || !btn || !label) return;
+      if (!frame || !btn || !label) return;
 
       const isFs = () => document.fullscreenElement || document.webkitFullscreenElement;
 
+      // Fullscreen the iframe element itself — not the cabinet wrapper — so the
+      // game fills the screen natively instead of rendering black.
       const enter = () => {
-        if (cab.requestFullscreen) return cab.requestFullscreen();
-        if (cab.webkitRequestFullscreen) return cab.webkitRequestFullscreen();
+        if (frame.requestFullscreen) return frame.requestFullscreen();
+        if (frame.webkitRequestFullscreen) return frame.webkitRequestFullscreen();
       };
       const exit = () => {
         if (document.exitFullscreen) return document.exitFullscreen();
@@ -617,7 +616,10 @@ const steps = [
       if (!cab) return;
       const reclaim = () => {
         try { document.documentElement.style.cursor = ''; document.body.style.cursor = ''; } catch (e) {}
-        try { if (frame && document.activeElement === frame) { frame.blur(); window.focus(); } } catch (e) {}
+        // Never yank focus out of the game while it's the fullscreen element —
+        // you're playing it. Only reclaim focus when it's the boxed embed.
+        const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+        try { if (frame && document.activeElement === frame && fsEl !== frame) { frame.blur(); window.focus(); } } catch (e) {}
       };
       cab.addEventListener('mouseleave', reclaim);
       cab.addEventListener('pointerleave', reclaim);
