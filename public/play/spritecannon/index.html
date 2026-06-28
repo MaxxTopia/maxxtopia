@@ -2,7 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0d0820">
 <title>streammaxxing · sprite cannon</title>
+<!-- PWA / Add-to-Home-Screen (effective only on the standalone web build; harmless 404s elsewhere) -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sprite Cannon">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Saira+Semi+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
@@ -487,6 +497,11 @@ const Q = new URLSearchParams(location.search);
 const DEV = Q.has("dev"); // dev test mode (?dev): every skin unlocked to preview - never set for shipped users
 const STANDALONE = (window.SC_STANDALONE===true) || (location.port!=="4747" && !/^(127\.0\.0\.1|localhost)$/.test(location.hostname)); // hosted web build (injected flag, or any non-hub host) vs in-app OBS hub; the hub always serves on :4747 so treat that port as in-app even via LAN IP
 const AB = STANDALONE ? "imported/" : "/imported/"; // asset base: relative when hosted standalone, absolute under the app hub
+// PWA: register the service worker ONLY on the hosted standalone web build (Add-to-Home-Screen + offline).
+// Skipped on the in-app/OBS hub so the desktop overlay path is untouched. Failures are swallowed.
+if (STANDALONE && "serviceWorker" in navigator) {
+  window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+}
 const cv = document.getElementById("game"), ctx = cv.getContext("2d");
 let W=0, H=0, DPR=Math.min(2, window.devicePixelRatio||1);
 function resize(){ W=cv.width=Math.floor(innerWidth*DPR); H=cv.height=Math.floor(innerHeight*DPR);
