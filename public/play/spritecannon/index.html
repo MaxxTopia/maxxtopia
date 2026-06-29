@@ -120,6 +120,12 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
   .r-best, .r-coins-row, #resultRank{ font-size:12px !important; margin:1px 0 !important; }
   .r-btns{ margin-top:8px !important; }
   .sc-startpanel{ gap:6px !important; padding:12px 18px !important; }
+  /* SHOP in landscape: use the wide screen, shrink the header + tiles so the grid actually has room. */
+  .shop{ width:97vw !important; max-height:94vh !important; padding:8px 12px 8px !important; }
+  .shop > h2, #shopCard h2{ font-size:15px !important; margin:0 0 2px !important; }
+  .shopTabs{ margin:0 0 4px !important; }
+  .grid{ grid-template-columns:repeat(auto-fill,minmax(88px,1fr)) !important; gap:7px !important; margin-top:6px !important; }
+  .skin{ padding:6px 6px 8px !important; }
 }
 .title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(36px,7vw,78px); letter-spacing:.04em;
   background:linear-gradient(180deg,#fff, color-mix(in srgb,var(--ac) 60%, #9fb0cf));
@@ -599,7 +605,7 @@ const CRISP=Math.min(2, window.devicePixelRatio||1);
 // much smaller box so the world doesn't zoom way out (tiny sprites + everything crawling = "hella slow"); a
 // smaller reference = bigger sprites + punchier scroll. (IS_TOUCH is defined later, so detect inline here.)
 const _touchDev = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-const REF_W = _touchDev ? 640 : 1600, REF_H = _touchDev ? 460 : 900; // phones: punchy zoom (the follow-camera keeps the kitty on screen, so we no longer need to reserve the full launch arc vertically)
+const REF_W = _touchDev ? 520 : 1600, REF_H = _touchDev ? 400 : 900; // phones: punchy zoom (the follow-camera keeps the kitty on screen, so we no longer need to reserve the full launch arc vertically)
 let W=0, H=0, DPR=CRISP;
 function resize(){
   // Measure the canvas's ACTUAL on-screen box. #game is position:fixed inset:0, so CSS keeps it exactly
@@ -1059,7 +1065,9 @@ function update(){
     cam += ((kitty.x-260*DPR)-cam)*0.12; if(cam<0) cam=0;
     // follow-camera: only engages once the kitty climbs into the top band; pans up to keep it on screen,
     // eases back to 0 as it descends. Render-only (collisions/positions stay in world space).
-    { const band=H*0.20, tgt=Math.max(0, band-kitty.y); camY += (tgt-camY)*0.14; if(camY<0.5) camY=0; }
+    { const band=H*0.26, tgt=Math.max(0, band-kitty.y); camY += (tgt-camY)*0.25; // smooth follow into a top band
+      const hardMin=Math.max(0, 12*DPR - kitty.y); if(camY<hardMin) camY=hardMin; // HARD clamp: kitty can NEVER leave the top, even on a fast launch the ease can't catch
+      if(camY<0.5) camY=0; }
     const nd=Math.floor((kitty.x-90*DPR)/(24*DPR)); distM=Math.max(distM,nd);
     if(distM>2000){ const _sp=Math.hypot(kitty.vx,kitty.vy); if(_sp>10*DPR && parts.length<240) parts.push({x:kitty.x-kitty.vx*0.4,y:kitty.y,vx:0,vy:-0.05*DPR,life:0.45,c:getAccent(0.45),r:(2+Math.random()*2.5)*DPR}); } // deep-run speed trail
     if(ab()==="lightning" && overchargeT>0 && parts.length<260){ for(let i=0;i<2;i++) parts.push({x:kitty.x-kitty.vx*0.35+rand(-6,6)*DPR,y:kitty.y+rand(-9,9)*DPR,vx:0,vy:0,life:0.4,c:i%2?"#7fe7ff":"#ffffff",r:(2.5+Math.random()*3)*DPR}); } // Thunder Dash lightning trail (dash fired via ability key, see activateAbility)
@@ -3954,7 +3962,11 @@ function frame(){
   // FOLLOW-CAMERA: pan the whole world layer up by camY so a high-flying kitty stays on screen. Fill the
   // revealed top strip with the sky's top colour first so there's no gap. HUD (arrows/banners/distance)
   // is drawn AFTER ctx.restore() so it stays screen-fixed.
-  if(camY>0.5){ ctx.fillStyle=(biome.sky&&biome.sky[0])||"#0a0a16"; ctx.fillRect(-60,-(camY+60),W+120,camY+120); }
+  if(camY>0.5){ // paint a full-screen sky backdrop so panning up never reveals black; the translated world's
+                // own sky/ground draws on top of it (and slides off the bottom as you climb).
+    const sky=biome.sky||["#0a0a16","#0a0a16"]; const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0, sky[0]); g.addColorStop(1, sky[Math.min(1,sky.length-1)]||sky[0]);
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H); }
   ctx.save(); ctx.translate(0, camY);
   drawBackground(t,biome);
   drawObstacles(t);
