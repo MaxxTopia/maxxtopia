@@ -84,10 +84,23 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
 .tut.hidden{ opacity:0; }
 .tut-k{ display:inline-block; background:var(--ac); color:#06140f; font-weight:800; padding:1px 7px; border-radius:6px; font-size:11px; letter-spacing:.04em; margin-right:5px; }
 
-.card{ position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:safe center;
+.card{ position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
   gap:14px; z-index:8; text-align:center; pointer-events:none; overflow-y:auto;
   padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom); }
+/* center when content fits, but stay scrollable (top reachable) when it's taller than the screen -
+   works on all iOS, unlike justify-content:safe center which needs Safari 17+ */
+.card::before, .card::after{ content:""; margin-block:auto; flex:0 0 0; }
 .card.hidden{ display:none; }
+/* MOBILE: shrink the desktop-sized panels so the whole card (incl. PLAY / Play-Again / Shop+LB buttons
+   and the skin preview+name+price) fits a phone screen instead of overflowing / looking "too zoomed". */
+@media (max-width:600px), (max-height:560px){
+  .sc-startpanel{ padding:16px 18px 14px !important; gap:9px !important; }
+  .sc-play{ font-size:19px; padding:13px 38px; }
+  .sc-controls{ font-size:11.5px; }
+  .rpanel{ padding:18px 20px 16px !important; }
+  .shop{ width:95vw; max-height:90vh; }
+  .sc-detail-stage{ width:144px; height:144px; }
+}
 .title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(36px,7vw,78px); letter-spacing:.04em;
   background:linear-gradient(180deg,#fff, color-mix(in srgb,var(--ac) 60%, #9fb0cf));
   -webkit-background-clip:text;background-clip:text;color:transparent; text-shadow:0 0 50px color-mix(in srgb,var(--ac) 30%, transparent); margin:0; }
@@ -101,8 +114,9 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.18); font-weight:700; margin:0 2px; }
 .pill{ pointer-events:auto; display:inline-flex; gap:8px; align-items:center; padding:11px 22px; border-radius:999px; cursor:pointer;
   font-family:'Orbitron',sans-serif; font-weight:800; font-size:16px; letter-spacing:.04em;
+  background:var(--ac); /* solid fallback for Safari without color-mix() -> button stays visible */
   background:linear-gradient(180deg, color-mix(in srgb,var(--ac) 88%, #fff), color-mix(in srgb,var(--ac) 70%, #000));
-  color:#06140f; box-shadow:0 10px 26px color-mix(in srgb,var(--ac) 30%, transparent); }
+  color:#06140f; box-shadow:0 10px 26px rgba(0,0,0,.3); box-shadow:0 10px 26px color-mix(in srgb,var(--ac) 30%, transparent); }
 .pill.ghost{ background:rgba(255,255,255,.08); color:#fff; box-shadow:inset 0 0 0 1px rgba(255,255,255,.16); }
 /* ---- START SCREEN (premium arcade lockup) ---- */
 [hidden]{ display:none !important; }
@@ -598,6 +612,15 @@ try{ const sv=localStorage.getItem("sm.spritecannon.vol"); if(sv!=null) vol=Math
 function actx(){ if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
     masterGain=audioCtx.createGain(); masterGain.gain.value=vol/100; masterGain.connect(audioCtx.destination); }
   if(audioCtx.state==="suspended") audioCtx.resume(); return audioCtx; }
+// iOS/mobile keep Web Audio locked until a REAL user gesture. Resume the context + play a 1-sample
+// silent buffer on the first tap/click/key (the standard unlock), then start music. Without this = no sound on phones.
+(function(){ let unlocked=false;
+  function unlock(){ if(unlocked) return; const c=actx(); if(!c) return;
+    if(c.state==="suspended") c.resume();
+    try{ const b=c.createBuffer(1,1,22050), s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); s.start(0); }catch(e){}
+    if(c.state!=="suspended"){ unlocked=true; ["pointerdown","touchend","click","keydown"].forEach(function(ev){ removeEventListener(ev,unlock); });
+      try{ if(typeof musicStart==="function") musicStart(); }catch(e){} } }
+  ["pointerdown","touchend","click","keydown"].forEach(function(ev){ addEventListener(ev,unlock,{passive:true}); }); })();
 function pctx(ctx){ return new Proxy(ctx,{ get(tg,p){ if(p==="destination") return masterGain; const v=tg[p]; return typeof v==="function"? v.bind(tg): v; } }); }
 function snd(name){ if(vol<=0) return; const c=actx(); if(!c||!SND[name]) return; try{ SND[name](pctx(c)); }catch(e){} }
 function noiseBuf(ctx,dur,shape){ const len=Math.max(1,Math.floor(ctx.sampleRate*dur)); const b=ctx.createBuffer(1,len,ctx.sampleRate); const d=b.getChannelData(0); for(let i=0;i<len;i++){ const x=i/len; d[i]=(Math.random()*2-1)*(shape?shape(x):1); } return b; }
@@ -902,6 +925,7 @@ function fire(){ charging=false; stopCharge(); snd("fire"); musicStart(); const 
 
 addEventListener("keydown",(e)=>{
   if(e.repeat) return;
+  { const _t=e.target; if(_t && (_t.tagName==="INPUT"||_t.tagName==="TEXTAREA"||_t.isContentEditable)) return; } // typing a name/code -> don't trigger r=restart / s=shop / space=fire
   if(capturingKey){ e.preventDefault(); if(e.code!=="Escape") { abilityKey=e.code; try{ localStorage.setItem("sm.spritecannon.abkey",abilityKey); }catch{} } capturingKey=false; const b=document.getElementById("abKeyBtn"); if(b) b.textContent=keyLabel(abilityKey); return; }
   if(e.code==="Space"){ e.preventDefault(); press(); }
   else if(e.code==="ArrowUp"){ e.preventDefault(); aimUp=true; }
