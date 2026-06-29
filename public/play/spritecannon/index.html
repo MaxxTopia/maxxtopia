@@ -599,7 +599,7 @@ const CRISP=Math.min(2, window.devicePixelRatio||1);
 // much smaller box so the world doesn't zoom way out (tiny sprites + everything crawling = "hella slow"); a
 // smaller reference = bigger sprites + punchier scroll. (IS_TOUCH is defined later, so detect inline here.)
 const _touchDev = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-const REF_W = _touchDev ? 1100 : 1600, REF_H = _touchDev ? 600 : 900;
+const REF_W = _touchDev ? 700 : 1600, REF_H = _touchDev ? 600 : 900;
 let W=0, H=0, DPR=CRISP;
 function resize(){
   // Measure the canvas's ACTUAL on-screen box. #game is position:fixed inset:0, so CSS keeps it exactly
