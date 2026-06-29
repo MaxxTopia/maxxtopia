@@ -773,7 +773,7 @@ const ABILITY_DESC={
 };
 function ab(){ const s=skinList.find(x=>x.id===save.skin); return (s&&s.ability)||null; }
 function baseFlaps(){ const a=ab(); return cfg.flaps + (a==="doubleflap"||a==="bartman"?2:0); } // bartman: +2 bonus flaps (like doubleflap)
-function grav(){ const a=ab(); return cfg.gravity*(glideT>0?0.4:(a==="featherfall"||a==="bartman"?0.62:1)); } // bartman: permanent floaty slow-fall
+function grav(){ const a=ab(); const lg=biomeAt(distM).lowGrav||1; return cfg.gravity*lg*(glideT>0?0.4:(a==="featherfall"||a==="bartman"?0.62:1)); } // lg = Zero-G world low-gravity multiplier; bartman: permanent floaty slow-fall
 function skinImgFor(id){ const v=save.style&&save.style[id]; return (v&&skinImgs[v])?skinImgs[v]:skinImgs[id]; } // chosen style variant -> its image (fallback to base)
 function skinBoxFor(id){ const v=save.style&&save.style[id]; return (v&&skinBox[v])?skinBox[v]:skinBox[id]; }
 function coinAmt(n){ return ab()==="greedy"? n*5 : ab()==="goldcat"? n*2 : n; }
@@ -922,6 +922,16 @@ function spawnObstacleAt(x){
     if(Math.random()<0.05) obstacles.push({type:"bolt",x:x+rand(-40,60)*DPR,y:GROUND()-rand(140,280)*DPR,r:18*DPR,got:false});
     return;
   }
+  if(biomeAt(dm).floaty){ // ZERO-G WORLD: everything floats. Mid-air launch pads to chain through the sky,
+    // hazards that bob up/down to dodge, and treasure strung through the air. Low gravity keeps you hanging.
+    obstacles.push({type:"updraft",x,y:GROUND()-rand(120,400)*DPR,r:26*DPR,hit:false}); // floating high-launch pad (always one)
+    if(t<0.62) obstacles.push({type:"balloon",x:x+rand(50,150)*DPR,y:GROUND()-rand(120,340)*DPR,r:26*DPR,pop:false}); // floating bounce-balloon
+    if(dm>150 && t<0.5){ const by=GROUND()-rand(150,360)*DPR; obstacles.push({type:"spike",x:x+rand(-20,70)*DPR,y:by,w:50*DPR,h:30*DPR,hit:false,bob:{amp:rand(45,95)*DPR,spd:rand(0.7,1.4),ph:rand(0,6.283),base:by}}); } // bobbing hazard to dodge
+    if(Math.random()<0.55) obstacles.push({type:"comet",x:x+rand(-50,90)*DPR,y:GROUND()-rand(150,400)*DPR,r:20*DPR,got:false}); // floating coins
+    if(Math.random()<0.14) obstacles.push({type:"star",x:x+rand(-40,70)*DPR,y:GROUND()-rand(180,360)*DPR,r:22*DPR,got:false}); // rare invincibility
+    if(Math.random()<0.12) obstacles.push({type:"token",x:x+rand(-50,80)*DPR,y:GROUND()-rand(130,330)*DPR,r:18*DPR,got:false}); // +life heart
+    return;
+  }
   const _funland=biomeAt(dm).name==="Funland";
   let placedSlide=false;
   if(_funland && t<0.55){ obstacles.push({type:"slide",x,y:GROUND(),w:150*DPR,h:42*DPR}); placedSlide=true; } // Funland: ridable boost slide (suppresses the co-spawned tnt/doghouse below so no HIDDEN hazard sits inside the slide footprint)
@@ -1036,8 +1046,9 @@ function update(){
         else { kitty.vy=0; kitty.vx*=(_lowfric?0.997:0.86); if(Math.abs(kitty.vx)<0.4*DPR){ tryEnd(); } }
       }
     }
-    const pr=pickR(), bm=(ab()==="bouncy"?1.28:1);
+    const pr=pickR(), bm=(ab()==="bouncy"?1.28:1), _bobT=performance.now()*0.001;
     for(const o of obstacles){
+      if(o.bob){ o.y = o.bob.base + Math.sin(_bobT*o.bob.spd + o.bob.ph)*o.bob.amp; } // Zero-G: hazards drift up/down (collision follows, so you really must dodge)
       if(magnetT>0 && !o.got && !o.pop && (o.type==="token"||o.type==="bolt"||o.type==="comet"||o.type==="balloon")){ const _dx=kitty.x-o.x, _dy=kitty.y-o.y; if(Math.hypot(_dx,_dy)<460*DPR){ o.x+=_dx*0.2; o.y+=_dy*0.2; } } // magnetburst pull
       if(o.type==="token"){ if(!o.got && segNear(o.x,o.y,pr+o.r)){ o.got=true; lives=Math.min(maxLives(),lives+1); runCoins+=coinAmt(3); tokenFx(o.x,o.y); snd("token"); playCustom("purr",0.6); } continue; }
       if(o.type==="bolt"){ if(!o.got && segNear(o.x,o.y,pr+o.r)){ o.got=true; flapsLeft=baseFlaps(); runCoins+=coinAmt(2); boltFx(o.x,o.y); snd("token"); } continue; }
@@ -1346,8 +1357,13 @@ const ZONES = [
   { name:"Bioluminescent Abyss",d:21000, sky:["#0a2b4e","#06182f","#020812"], ac:"#22e6ff", fx:"none" },
   { name:"Cosmic Mewbula",      d:26500, sky:["#241654","#120a33","#060314"], ac:"#35e8ff", fx:"none" },
   { name:"Geometric Void",      d:32000, sky:["#05070e","#0a1020","#0e1834"], ac:"#22e6ff", fx:"none" },
+  // ZERO-G WORLD: low gravity + floating bounce-pads + bobbing hazards. Neon palette, fast-but-floaty.
+  // lowGrav = gravity multiplier; floaty = spawn mid-air pads/hazards instead of the ground set.
+  { name:"Zero Purravity",      d:1500,  sky:["#1a0a52","#6f1ad6","#0a0524"], ac:"#19f0ff", fx:"none", lowGrav:0.40, floaty:true },
 ];
 ZONES.sort((a,b)=>a.d-b.d); // keep zones ordered by distance after appending the new environments
+const _ZG = ZONES.find(z=>z.name==="Zero Purravity"); // Zero-G zone (for the ?zerog test-jump)
+const _forceZeroG = (typeof Q!=="undefined") && Q.has("zerog"); // ?zerog forces the Zero-G world from the start (testing)
 function _h2r(h){ const n=parseInt(h.slice(1),16); return [n>>16&255,n>>8&255,n&255]; }
 function _r2h(r,g,b){ return "#"+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0")).join(""); }
 function _mix(a,b,t){ const A=_h2r(a),B=_h2r(b); return _r2h(A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t); }
@@ -1361,10 +1377,11 @@ function proceduralBiome(k){ const hue=(210+k*137.508)%360, darken=Math.min(0.12
     sky:[hslHex(hue,0.88,0.54-darken), hslHex(hue+20,0.92,0.38-darken), hslHex(hue+42,0.96,0.20-darken*0.6)],
     ac:hslHex(hue+180,0.97,0.64), fx:_PFX[((k%_PFX.length)+_PFX.length)%_PFX.length] }; }
 function biomeAt(dist){ const last=ZONES.length-1;
+  if(_forceZeroG && _ZG){ return { name:_ZG.name, sky:_ZG.sky.slice(), ac:_ZG.ac, fx:_ZG.fx, lowGrav:_ZG.lowGrav, floaty:_ZG.floaty }; } // ?zerog test-jump
   if(dist<=ZONES[last].d){ let i=0; while(i<last && dist>=ZONES[i+1].d) i++; const A=ZONES[i], B=ZONES[Math.min(i+1,last)]; const t=B.d>A.d?_sm((dist-A.d)/(B.d-A.d)):0; const near=t<0.5?A:B;
-    return { name:near.name, sky:[_mix(A.sky[0],B.sky[0],t),_mix(A.sky[1],B.sky[1],t),_mix(A.sky[2],B.sky[2],t)], ac:_mix(A.ac,B.ac,t), fx:near.fx||"none" }; }
+    return { name:near.name, sky:[_mix(A.sky[0],B.sky[0],t),_mix(A.sky[1],B.sky[1],t),_mix(A.sky[2],B.sky[2],t)], ac:_mix(A.ac,B.ac,t), fx:near.fx||"none", lowGrav:near.lowGrav, floaty:near.floaty }; }
   const over=dist-ZONES[last].d, SP=1500, k=Math.floor(over/SP); const A=(k===0)?ZONES[last]:proceduralBiome(k-1), B=proceduralBiome(k); const t=_sm((over%SP)/SP); const near=t<0.5?A:B;
-  return { name:near.name, sky:[_mix(A.sky[0],B.sky[0],t),_mix(A.sky[1],B.sky[1],t),_mix(A.sky[2],B.sky[2],t)], ac:_mix(A.ac,B.ac,t), fx:near.fx||"none" }; }
+  return { name:near.name, sky:[_mix(A.sky[0],B.sky[0],t),_mix(A.sky[1],B.sky[1],t),_mix(A.sky[2],B.sky[2],t)], ac:_mix(A.ac,B.ac,t), fx:near.fx||"none", lowGrav:near.lowGrav, floaty:near.floaty }; }
 let lastBiome="", bannerT=0, bannerName="";
 
 // ---- background: user image (parallax) OR original Geometry-Dash-style neon world ----
