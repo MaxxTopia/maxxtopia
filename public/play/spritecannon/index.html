@@ -595,7 +595,11 @@ const cv = document.getElementById("game"), ctx = cv.getContext("2d");
 // == CRISP and fullscreen/OBS is byte-for-byte unchanged. Every gameplay constant is in *DPR units, so
 // scaling this one value rescales the whole game (speeds, sizes, gravity, camera, world spawn).
 const CRISP=Math.min(2, window.devicePixelRatio||1);
-const REF_W=1600, REF_H=900; // CSS-px design target the game was tuned at (full-window 16:9 feel)
+// Reference "design window" the world scales to fit. Desktop = wide 1600x900 cabinet framing. PHONES use a
+// much smaller box so the world doesn't zoom way out (tiny sprites + everything crawling = "hella slow"); a
+// smaller reference = bigger sprites + punchier scroll. (IS_TOUCH is defined later, so detect inline here.)
+const _touchDev = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+const REF_W = _touchDev ? 1100 : 1600, REF_H = _touchDev ? 600 : 900;
 let W=0, H=0, DPR=CRISP;
 function resize(){
   // Measure the canvas's ACTUAL on-screen box. #game is position:fixed inset:0, so CSS keeps it exactly
