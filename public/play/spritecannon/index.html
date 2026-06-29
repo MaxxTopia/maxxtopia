@@ -100,10 +100,26 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
   .rpanel{ padding:18px 20px 16px !important; }
   .shop{ width:95vw; max-height:90vh; }
   .sc-detail-stage{ width:144px; height:144px; }
-  /* iOS Safari fails to PAINT an element with will-change/transform-animation inside a scrollable fixed
-     card -> PLAY + Play-Again rendered invisible while the static Shop/LB pills showed. Kill the breathe
-     animation + compositing hint on phones so they paint normally. */
-  .sc-play, .r-again{ animation:none !important; will-change:auto !important; transform:none !important; }
+  /* PLAY + Play-Again were invisible on iOS: their green bg is a linear-gradient with color-mix() stops,
+     which some Safari versions parse-as-valid (overriding any fallback) but PAINT as nothing -> dark text
+     on the dark card = invisible (Shop/LB stayed visible only because they're ghost pills with WHITE text).
+     Force a PLAIN solid accent background (no gradient, no color-mix) + kill the breathe animation. */
+  .sc-play, .r-again{ animation:none !important; will-change:auto !important; transform:none !important;
+    background:var(--ac) !important; background-image:none !important; color:#06140f !important;
+    box-shadow:0 8px 22px rgba(0,0,0,.4) !important; }
+  /* DEATH/RESULT screen on phones: the staggered row animations (transform/opacity) hit the same iOS
+     paint bug, and the panel is too tall for landscape. Kill the row anims + trim it so it fits + scrolls. */
+  .rpanel > *{ animation:none !important; opacity:1 !important; transform:none !important; }
+  .rpanel{ gap:2px !important; }
+  .r-goal{ display:none !important; } /* drop the next-skin teaser line to save vertical space */
+}
+/* very short (landscape phone) — make the death panel genuinely compact so Play-Again is reachable */
+@media (max-height:430px){
+  .rpanel{ padding:10px 22px 12px !important; }
+  .r-where{ font-size:11px !important; } .r-msg{ font-size:13px !important; margin:2px 0 !important; }
+  .r-best, .r-coins-row, #resultRank{ font-size:12px !important; margin:1px 0 !important; }
+  .r-btns{ margin-top:8px !important; }
+  .sc-startpanel{ gap:6px !important; padding:12px 18px !important; }
 }
 .title{ font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(36px,7vw,78px); letter-spacing:.04em;
   background:linear-gradient(180deg,#fff, color-mix(in srgb,var(--ac) 60%, #9fb0cf));
