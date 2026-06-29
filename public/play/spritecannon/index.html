@@ -599,7 +599,7 @@ const CRISP=Math.min(2, window.devicePixelRatio||1);
 // much smaller box so the world doesn't zoom way out (tiny sprites + everything crawling = "hella slow"); a
 // smaller reference = bigger sprites + punchier scroll. (IS_TOUCH is defined later, so detect inline here.)
 const _touchDev = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-const REF_W = _touchDev ? 700 : 1600, REF_H = _touchDev ? 600 : 900;
+const REF_W = _touchDev ? 640 : 1600, REF_H = _touchDev ? 460 : 900; // phones: punchy zoom (the follow-camera keeps the kitty on screen, so we no longer need to reserve the full launch arc vertically)
 let W=0, H=0, DPR=CRISP;
 function resize(){
   // Measure the canvas's ACTUAL on-screen box. #game is position:fixed inset:0, so CSS keeps it exactly
@@ -872,7 +872,7 @@ async function loadManifests(){
 
 const GROUND=()=>H-70*DPR;
 let state="start";
-let cam=0;
+let cam=0, camY=0; // camY = vertical follow-camera (pans up so a high-flying kitty stays on screen)
 let kitty, obstacles=[], parts=[], shake=0, flapsLeft=0, comboN=0, comboT=0;
 let ufo=null, infurno=null, infurnoUsedThisRun=false, savedRun=null, infCoins=[], infHaz=[], ufoBiomeMark="";
 let gauntlet=null, gHaz=[], gauntletUsed={fire:false,water:false}; // survival gauntlet (lethal secret levels)
@@ -886,7 +886,7 @@ function hashY(k){ return frac(Math.sin(k*12.9898)*43758.5453); }
 function hashS(k){ return frac(Math.cos(k*7.131)*1234.567); }
 
 function reset(){
-  cam=0; obstacles=[]; parts=[]; shake=0; runCoins=0; distM=0; stall=0; lives=0; rebootFx=null;
+  cam=0; camY=0; obstacles=[]; parts=[]; shake=0; runCoins=0; distM=0; stall=0; lives=0; rebootFx=null;
   aimAngle=42; power=0; charging=false; powerDir=1; stopCharge(); comboN=0; { const _ab=document.getElementById("againBtn"); if(_ab) _ab.classList.remove("sc-pulse"); } flapsLeft=baseFlaps();
   ufo=null; infurno=null; infCoins=[]; infurnoUsedThisRun=false; ufoBiomeMark=""; shielded=(ab()==="shield"||ab()==="turtle"); chromePlates=(ab()==="chrome"?3:0); if(ab()==="ninelives"||ab()==="revive") lives=1; // revive/ninelives start the run with 1 heart already; chrome = 3 armor plates
   gauntlet=null; gHaz=[]; gauntletUsed={fire:false,water:false};
@@ -1057,6 +1057,9 @@ function update(){
       }
     }
     cam += ((kitty.x-260*DPR)-cam)*0.12; if(cam<0) cam=0;
+    // follow-camera: only engages once the kitty climbs into the top band; pans up to keep it on screen,
+    // eases back to 0 as it descends. Render-only (collisions/positions stay in world space).
+    { const band=H*0.20, tgt=Math.max(0, band-kitty.y); camY += (tgt-camY)*0.14; if(camY<0.5) camY=0; }
     const nd=Math.floor((kitty.x-90*DPR)/(24*DPR)); distM=Math.max(distM,nd);
     if(distM>2000){ const _sp=Math.hypot(kitty.vx,kitty.vy); if(_sp>10*DPR && parts.length<240) parts.push({x:kitty.x-kitty.vx*0.4,y:kitty.y,vx:0,vy:-0.05*DPR,life:0.45,c:getAccent(0.45),r:(2+Math.random()*2.5)*DPR}); } // deep-run speed trail
     if(ab()==="lightning" && overchargeT>0 && parts.length<260){ for(let i=0;i<2;i++) parts.push({x:kitty.x-kitty.vx*0.35+rand(-6,6)*DPR,y:kitty.y+rand(-9,9)*DPR,vx:0,vy:0,life:0.4,c:i%2?"#7fe7ff":"#ffffff",r:(2.5+Math.random()*3)*DPR}); } // Thunder Dash lightning trail (dash fired via ability key, see activateAbility)
@@ -3948,6 +3951,11 @@ function frame(){
     requestAnimationFrame(frame);
     return;
   }
+  // FOLLOW-CAMERA: pan the whole world layer up by camY so a high-flying kitty stays on screen. Fill the
+  // revealed top strip with the sky's top colour first so there's no gap. HUD (arrows/banners/distance)
+  // is drawn AFTER ctx.restore() so it stays screen-fixed.
+  if(camY>0.5){ ctx.fillStyle=(biome.sky&&biome.sky[0])||"#0a0a16"; ctx.fillRect(-60,-(camY+60),W+120,camY+120); }
+  ctx.save(); ctx.translate(0, camY);
   drawBackground(t,biome);
   drawObstacles(t);
   drawCannon();
@@ -3970,8 +3978,9 @@ function frame(){
   biomeFX(biome,t);
   if(state==="abduct" && ufo){ const cx=ufo.sx; drawTractorBeam(cx, ufo.ufoY+18*DPR, Math.min(GROUND(), kitty.y+12*DPR), ufo.beam, t); drawBigUfo(cx, ufo.ufoY, t, 1.15); }
   for(const q of popTexts){ ctx.globalAlpha=Math.max(0,q.life); ctx.fillStyle="#fff"; ctx.strokeStyle="rgba(0,0,0,.6)"; ctx.lineWidth=3*DPR; ctx.font=`900 ${15*DPR}px Orbitron`; ctx.textAlign="center"; ctx.strokeText(q.txt,q.x-cam,q.y); ctx.fillText(q.txt,q.x-cam,q.y); } ctx.globalAlpha=1;
-  // off-screen-up arrow: when the kitten flies above the view, show where + how high
-  if(state==="fly" && kitty.y<30*DPR){ const ax=Math.max(40*DPR,Math.min(W-40*DPR,kitty.x-cam)), alt=Math.max(0,Math.floor((30*DPR-kitty.y)/(24*DPR)));
+  ctx.restore(); // end follow-camera; HUD below is screen-fixed
+  // off-screen-up arrow: only if the kitty is STILL above the view after the camera pan (rare now)
+  if(state==="fly" && (kitty.y+camY)<30*DPR){ const ax=Math.max(40*DPR,Math.min(W-40*DPR,kitty.x-cam)), alt=Math.max(0,Math.floor((30*DPR-kitty.y)/(24*DPR)));
     ctx.save(); ctx.textAlign="center"; ctx.fillStyle=biome.ac; ctx.beginPath(); ctx.moveTo(ax,12*DPR); ctx.lineTo(ax-12*DPR,32*DPR); ctx.lineTo(ax+12*DPR,32*DPR); ctx.closePath(); ctx.fill();
     ctx.fillStyle="#fff"; ctx.shadowColor="rgba(0,0,0,.7)"; ctx.shadowBlur=5*DPR; ctx.font=`800 ${13*DPR}px Orbitron`; ctx.fillText(alt+"m up", ax, 52*DPR); ctx.restore(); }
   if(state==="fly"){ ctx.save(); ctx.shadowColor="rgba(0,0,0,.7)"; ctx.shadowBlur=6*DPR; ctx.textAlign="left";
