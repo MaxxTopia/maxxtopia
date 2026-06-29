@@ -2,7 +2,7 @@
    Scope = the directory this file is served from (e.g. /play/spritecannon/).
    Bump CACHE when shipping a new build so clients pull the fresh shell. */
 "use strict";
-var CACHE = "sprite-cannon-v3";
+var CACHE = "sprite-cannon-v4";
 var SHELL = [
   "./",
   "index.html",
@@ -45,7 +45,7 @@ self.addEventListener("fetch", function (e) {
   if (req.mode === "navigate") {
     e.respondWith(
       fetch(req).then(function (res) {
-        caches.open(CACHE).then(function (c) { c.put(req, res.clone()); });
+        if (res && res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); }); } // only cache SUCCESSFUL navigations (a transient 4xx/5xx during a redeploy must not become the cached offline shell)
         return res;
       }).catch(function () {
         return caches.match(req).then(function (m) { return m || caches.match("index.html") || caches.match("./"); });

@@ -165,7 +165,7 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
 .sc-play .sc-play-ic{ font-size:18px; }
 .sc-play:hover{ animation-play-state:paused; transform:translateY(-2px) scale(1.045); box-shadow:0 16px 40px color-mix(in srgb,var(--ac) 52%, transparent); }
 .sc-play:active{ transform:translateY(0) scale(.99); }
-.sc-secondary{ display:flex; gap:10px; justify-content:center; }
+.sc-secondary{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
 .sc-sec{ font-size:14px; padding:9px 18px; opacity:.92; transition:opacity .15s, transform .15s, box-shadow .15s; }
 .sc-sec:hover{ opacity:1; transform:translateY(-1px); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ac) 50%, rgba(255,255,255,.2)); }
 .sc-iconbtn{ padding:9px 15px; font-size:16px; }
@@ -433,8 +433,11 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
       <div class="pill sc-play" id="playBtn"><span class="sc-play-ic">&#9654;</span>PLAY</div>
       <div class="sc-secondary">
         <div class="pill ghost sc-sec" id="shopBtn">&#128722; SHOP</div>
+        <div class="pill ghost sc-sec" id="questBtn">&#127919; QUESTS</div>
+        <div class="pill ghost sc-sec" id="worldsBtn">&#128506;&#65039; WORLDS</div>
         <div class="pill ghost sc-sec sc-iconbtn" id="lbBtn" title="Leaderboard">&#127942;</div>
       </div>
+      <div class="pill sc-daily" id="scDaily" hidden style="margin-top:10px;font-weight:800;font-size:13px;letter-spacing:.02em;background:linear-gradient(180deg,#ffe27a,#ffc23d);color:#06140f;box-shadow:0 6px 22px rgba(255,200,60,.34)"></div>
     </div>
     <p class="hint sc-controls">Aim <span class="kbd">&uarr;</span><span class="kbd">&darr;</span> &nbsp;&middot;&nbsp; <b>hold</b> <span class="kbd">Space</span> to charge, release to <b>FIRE</b> &nbsp;&middot;&nbsp; tap to <b>FLAP</b></p>
     <a href="https://maxxtopia.com" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.5);text-decoration:none">created by <b style="color:var(--ac)">Diggy</b> &middot; maxxtopia.com</a>
@@ -457,6 +460,8 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
     <div class="r-btns">
       <div class="pill r-again" id="againBtn">&#8635; AGAIN</div>
       <div class="pill ghost" id="shop2Btn">&#128722; SHOP</div>
+      <div class="pill ghost" id="quest2Btn" title="Quests">&#127919;</div>
+      <div class="pill ghost" id="worlds2Btn" title="Worlds">&#128506;&#65039;</div>
       <div class="pill ghost" id="lb2Btn">&#127942;</div>
     </div>
   </div>
@@ -552,6 +557,24 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
   </div>
 </div>
 
+<div class="card hidden" id="questCard">
+  <div class="shop">
+    <h2>&#127919; QUESTS</h2>
+    <div class="sc-shop-sub" style="margin:-4px 0 10px">Complete missions &middot; earn coins &middot; new ones keep coming</div>
+    <div id="questList" style="max-width:380px;margin:0 auto"></div>
+    <div style="margin-top:16px"><div class="pill ghost" id="questClose">&larr; BACK</div></div>
+  </div>
+</div>
+
+<div class="card hidden" id="worldsCard">
+  <div class="shop">
+    <h2>&#128506;&#65039; WORLDS</h2>
+    <div class="sc-shop-sub" id="worldsSub" style="margin:-4px 0 10px">Climb higher &middot; reach the deepest world</div>
+    <div id="worldsList" style="max-width:430px;margin:0 auto;max-height:60vh;overflow-y:auto;padding-right:4px"></div>
+    <div style="margin-top:14px"><div class="pill ghost" id="worldsClose">&larr; BACK</div></div>
+  </div>
+</div>
+
 <!-- Weekly leaderboard PRIZE: shown once when a returning player placed top-3 last week (coins auto-credited). -->
 <div class="card hidden" id="rewardCard" style="z-index:40;background:rgba(5,7,13,.74);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)">
   <div style="text-align:center;pointer-events:auto;padding:34px 50px 26px;border-radius:22px;max-width:90vw;background:linear-gradient(160deg, rgba(14,10,26,.98), rgba(8,6,16,.99));box-shadow:0 0 0 1px rgba(255,255,255,.10), inset 0 0 0 1px color-mix(in srgb,var(--ac) 16%, transparent), 0 30px 80px rgba(0,0,0,.6)">
@@ -620,6 +643,18 @@ function resize(){
   H = cv.height = Math.floor(ch*CRISP);
   const fit = Math.min(1, cw/REF_W, ch/REF_H); // contain both axes; never upscale past design
   DPR = CRISP*fit;
+  // DPR changed mid-run (e.g. phone rotation) -> gameplay coords are stored in DPR-scaled px, but GROUND()=H-70*DPR
+  // moves; rescale every live entity by the ratio so the cat/obstacles stay glued to the ground (no float / unfair hit).
+  try{ const _od=resize._dpr||DPR; resize._dpr=DPR; const s=DPR/_od;
+    if(s!==1 && s>0 && isFinite(s) && (state==="fly"||state==="aim"||state==="abduct"||state==="infurno"||state==="gauntlet")){
+      if(typeof kitty!=="undefined" && kitty){ ["x","y","px","py","vx","vy","r"].forEach(k=>{ if(typeof kitty[k]==="number") kitty[k]*=s; }); }
+      cam*=s; camY*=s; worldX*=s; if(waterStart>0){ waterStart*=s; waterEnd*=s; }
+      for(const o of obstacles){ ["x","y","w","h","r"].forEach(k=>{ if(typeof o[k]==="number") o[k]*=s; }); if(o.bob){ o.bob.amp*=s; o.bob.base*=s; } }
+      for(const p of parts){ p.x*=s; p.y*=s; p.vx*=s; p.vy*=s; if(typeof p.r==="number") p.r*=s; }
+      for(const q of popTexts){ q.x*=s; q.y*=s; }
+      for(const arr of [infCoins,infHaz,gHaz]){ if(arr) for(const h of arr){ ["x","y","vx","vy","r","w","h"].forEach(k=>{ if(typeof h[k]==="number") h[k]*=s; }); } }
+      if(savedRun){ savedRun.x*=s; savedRun.y*=s; savedRun.vx*=s; savedRun.vy*=s; savedRun.cam*=s; }
+    } }catch(e){}
 }
 addEventListener("resize", resize);
 addEventListener("orientationchange", function(){ resize(); setTimeout(resize, 250); setTimeout(resize, 600); }); // iOS reports new dims a tick AFTER the rotation event
@@ -631,7 +666,7 @@ let cfg = { accent:"#22d3a0", gravity:0.42, power:54, flapPower:9, flaps:3 };
 function applyCfg(c){ if(c) cfg=Object.assign(cfg,c); document.documentElement.style.setProperty("--ac", cfg.accent||"#22d3a0"); }
 
 const SAVE="sm.spritecannon";
-let save = { coins:0, best:0, owned:["default"], skin:"default", runs:0, style:{} };
+let save = { coins:0, best:0, owned:["default"], skin:"default", runs:0, style:{}, daily:{streak:0,lastClaim:0}, quests:null, totalDist:0, coinsEarned:0 };
 try{ const s=JSON.parse(localStorage.getItem(SAVE)); if(s) save=Object.assign(save,s); }catch{}
 function persist(){ try{ localStorage.setItem(SAVE, JSON.stringify(save)); }catch{} }
 if(!save.pid){ save.pid="p_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36); persist(); } // stable anon id for code redemption (per-player dedup)
@@ -751,10 +786,10 @@ const ABILITY_DESC={
   revive:"Respawn on the spot up to 4 times before it's game over.",
   turtle:"A shell shield absorbs one crash without ending your run.",
   magnetburst:"Pulls in every nearby coin for a 10-second burst.",
-  flamejet:"Ignites a flame dash that blasts you forward through hazards.",
+  flamejet:"Ignites a flame dash that launches you up and forward, over hazards.",
   windboost:"Catches a gust for an extra-long launch off the cannon.",
   chrome:"Chrome plating absorbs your first 3 hazard hits - smash through and keep going.",
-  dragon:"Shrug off one crash per run, and regrow a wing-flap every 3 seconds.",
+  dragon:"Tap your ability key for a Dragon Draft relaunch (once per run), and regrow a wing-flap every 3 seconds.",
   crashout:"NITRO! Smash straight through everything for a few seconds. One charge, recharges every 15s.",
   lightning:"Tap your ability key for a THUNDER DASH - a huge piercing forward burst. 5s cooldown.",
   fallout:"Builds momentum to critical mass for a devastating long run.",
@@ -884,7 +919,7 @@ let ufo=null, infurno=null, infurnoUsedThisRun=false, savedRun=null, infCoins=[]
 let gauntlet=null, gHaz=[], gauntletUsed={fire:false,water:false}; // survival gauntlet (lethal secret levels)
 let lives=0, rebootFx=null, stall=0;
 let aimAngle=42, charging=false, power=0, powerDir=1, aimUp=false, aimDown=false, infLeft=false, infRight=false;
-let runCoins=0, distM=0, worldX=0, hitstop=0, flashT=0, lastMile=0, popTexts=[], prevBest=0, beatBest=false;
+let runCoins=0, distM=0, worldX=0, hitstop=0, flashT=0, lastMile=0, popTexts=[], prevBest=0, beatBest=false, skimCd=0;
 
 function rand(a,b){ return a+Math.random()*(b-a); }
 function frac(v){ return v-Math.floor(v); }
@@ -899,14 +934,14 @@ function reset(){
   { const _c=ACTIVE_AB[ab()]; abUses=_c?_c.uses:0; } abCd=0; abRegen=0; flameTrailT=0; crashT=0; magnetT=0; glideT=0; dragonUsed=false; dragonRegen=0; staticMeter=0; overchargeT=0; falloutBounces=0; falloutCharge=0;
   spicyT=0; slowT=0; phaseT=0; superT=0; superCoast=0; starT=0; flightMeter=1; abHeld=false; wallFx=null; shockwaves=[]; // new-ability per-run state
   kitty={ x:90*DPR, y:GROUND()-30*DPR, vx:0, vy:0, r:22*DPR, rest:false, sx:1, sy:1, spin:0 };
-  hitstop=0; flashT=0; lastMile=0; popTexts=[]; prevBest=save.best; beatBest=false; stopBark();
+  hitstop=0; flashT=0; lastMile=0; popTexts=[]; prevBest=save.best; beatBest=false; skimCd=0; stopBark();
   if(Math.random()<0.45){ const sM=rand(280,1100); waterStart=90*DPR+sM*24*DPR; waterEnd=waterStart+rand(2600,4200)*DPR; } else { waterStart=waterEnd=-1; } waterCd=0; // ~45% of runs: a lethal water stretch
   slideT=0;
   buildWorld(); aimKitty();
   if(bgImgs.length) bgIdx=(bgIdx+1)%bgImgs.length;
   state="aim";
   show("startCard",false); show("resultCard",false); show("shopCard",false);
-  show("lbCard",false); show("confirmCard",false); show("skinDetailCard",false); if(typeof closeUnlock==="function") closeUnlock(); // R / reset must not start a run stranded behind a leftover modal
+  show("lbCard",false); show("confirmCard",false); show("skinDetailCard",false); show("questCard",false); show("rewardCard",false); show("worldsCard",false); if(typeof closeUnlock==="function") closeUnlock(); // R / reset must not start a run stranded behind a leftover modal (questCard/rewardCard/worldsCard included)
   if(!tutSeen){ const te=document.getElementById("tut"); if(te) te.classList.remove("hidden"); }
 }
 function aimKitty(){ const a=aimAngle*Math.PI/180, L=72*DPR; kitty.x=90*DPR+Math.cos(a)*L; kitty.y=GROUND()-Math.sin(a)*L-4*DPR; kitty.spin=0; }
@@ -932,8 +967,10 @@ function spawnObstacleAt(x){
     if(Math.random()<0.12) obstacles.push({type:"token",x:x+rand(-50,80)*DPR,y:GROUND()-rand(130,330)*DPR,r:18*DPR,got:false}); // +life heart
     return;
   }
-  const _funland=biomeAt(dm).name==="Funland";
+  const _bn=biomeAt(dm).name, _funland=_bn==="Funland", _desert=_bn==="Desert Purramids";
   let placedSlide=false;
+  if(_desert && Math.random()<0.34){ const n=3+Math.floor(Math.random()*4); // DESERT = treasure run: a buried-gold ARC of coins (variable count 3-6 = variable-ratio reward; collecting the line chains the combo / rising-pitch coin ladder)
+    for(let i=0;i<n;i++){ const px=x+rand(-30,40)*DPR+i*rand(40,56)*DPR, py=GROUND()-(150+Math.sin(i/(n-1)*Math.PI)*160)*DPR; obstacles.push({type:"comet",x:px,y:py,r:20*DPR,got:false}); } }
   if(_funland && t<0.55){ obstacles.push({type:"slide",x,y:GROUND(),w:150*DPR,h:42*DPR}); placedSlide=true; } // Funland: ridable boost slide (suppresses the co-spawned tnt/doghouse below so no HIDDEN hazard sits inside the slide footprint)
   else if(t<0.30-0.14*diff) obstacles.push({type:"pad",x,y:GROUND(),w:90*DPR,h:18*DPR});
   else if(t<0.50-0.14*diff) obstacles.push({type:"spring",x,y:GROUND(),w:42*DPR,h:46*DPR});
@@ -942,6 +979,7 @@ function spawnObstacleAt(x){
   else obstacles.push({type:"spike",x,y:GROUND(),w:54*DPR,h:30*DPR,hit:false});
   if(!_funland && dm>800 && Math.random()<0.03) obstacles.push({type:"slide",x:x+rand(150,210)*DPR,y:GROUND(),w:150*DPR,h:42*DPR}); // rare ridable-slide treat outside Funland (offset far so it can't overlap)
   if(Math.random()<0.10) obstacles.push({type:"token",x:x+rand(-70,90)*DPR,y:GROUND()-rand(120,320)*DPR,r:18*DPR,got:false});     // hearts: +3% (Diggy)
+  if(dm>200 && Math.random()<(_desert?0.05:0.013)) obstacles.push({type:"jackpot",x:x+rand(-30,70)*DPR,y:GROUND(),w:86*DPR,h:20*DPR,hit:false}); // RARE jackpot pad: bounce = variable big coin payout + fanfare (slot-machine reward). Desert = golden treasure theme -> ~4x denser.
   if(dm>300 && Math.random()<0.055) obstacles.push({type:"bolt",x:x+rand(-60,80)*DPR,y:GROUND()-rand(140,300)*DPR,r:18*DPR,got:false});     // stamina bolt: rare
   if(dm>350 && Math.random()<0.08) obstacles.push({type:"rocket",x:x+rand(-60,80)*DPR,y:GROUND()-rand(150,330)*DPR,r:22*DPR,hit:false});    // rocket: explodes, big launch
   if(dm>400 && Math.random()<0.05) obstacles.push({type:"updraft",x:x+rand(-60,80)*DPR,y:GROUND()-rand(150,340)*DPR,r:26*DPR,hit:false});   // updraft: floating, launches you HIGHER than a trampoline
@@ -966,7 +1004,7 @@ function fire(){ charging=false; stopCharge(); snd("fire"); musicStart(); const 
 addEventListener("keydown",(e)=>{
   if(e.repeat) return;
   { const _t=e.target; if(_t && (_t.tagName==="INPUT"||_t.tagName==="TEXTAREA"||_t.isContentEditable)) return; } // typing a name/code -> don't trigger r=restart / s=shop / space=fire
-  if(capturingKey){ e.preventDefault(); if(e.code!=="Escape") { abilityKey=e.code; try{ localStorage.setItem("sm.spritecannon.abkey",abilityKey); }catch{} } capturingKey=false; const b=document.getElementById("abKeyBtn"); if(b) b.textContent=keyLabel(abilityKey); return; }
+  if(capturingKey){ e.preventDefault(); const _RESV=["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight","KeyR","KeyS","Escape"]; if(e.code!=="Escape" && _RESV.indexOf(e.code)<0) { abilityKey=e.code; try{ localStorage.setItem("sm.spritecannon.abkey",abilityKey); }catch{} } capturingKey=false; const b=document.getElementById("abKeyBtn"); if(b) b.textContent=keyLabel(abilityKey); return; } // reserved keys (Space/arrows/R/S) are used by game controls -> refuse to bind the ability to them (else the ability silently never fires)
   if(e.code==="Space"){ e.preventDefault(); press(); }
   else if(e.code==="ArrowUp"){ e.preventDefault(); aimUp=true; }
   else if(e.code==="ArrowDown"){ e.preventDefault(); aimDown=true; }
@@ -981,12 +1019,15 @@ addEventListener("keydown",(e)=>{
     if(!document.getElementById("skinDetailCard").classList.contains("hidden")) show("skinDetailCard",false);
     else if(!document.getElementById("confirmCard").classList.contains("hidden")) show("confirmCard",false);
     else if(state==="shop") closeShopFn();
+    else if(state==="quest") closeQuests();
+    else if(state==="worlds") closeWorlds();
     else if(state==="lb") closeLB();
-    else if(state==="result"||state==="aim"){ charging=false; stopCharge(); show("resultCard",false); show("shopCard",false); show("lbCard",false); show("startCard",true); state="start"; } } // stop charge riser so it doesn't loop on the menu
+    else if(state==="result"||state==="aim"){ charging=false; stopCharge(); show("resultCard",false); show("shopCard",false); show("lbCard",false); show("questCard",false); show("rewardCard",false); show("worldsCard",false); show("startCard",true); state="start"; } } // stop charge riser so it doesn't loop on the menu
   else if(e.code===abilityKey){ e.preventDefault(); abHeld=true; activateAbility(); } // abHeld powers MAN OF STEEL held flight; activateAbility fires the press-style actives
   else if(e.key==="m"||e.key==="M"){ toggleMute(); }
 });
 addEventListener("keyup",(e)=>{ if(e.code==="Space"){ e.preventDefault(); release(); } else if(e.code==="ArrowUp"){ aimUp=false; } else if(e.code==="ArrowDown"){ aimDown=false; } else if(e.code==="ArrowLeft"){ infLeft=false; } else if(e.code==="ArrowRight"){ infRight=false; } else if(e.code===abilityKey){ abHeld=false; } });
+addEventListener("blur",()=>{ abHeld=false; aimUp=aimDown=infLeft=infRight=false; if(charging){ charging=false; if(typeof stopCharge==="function") stopCharge(); } }); // focus loss can swallow the keyup -> drop all held-input so godmode flight/aim/charge don't stick on alt-tab
 cv.addEventListener("mousedown",(e)=>{ e.preventDefault(); press(); });
 addEventListener("mouseup",()=>{ release(); });
 // --- touch: tap-and-hold to charge/flap; preventDefault kills the synthetic mouse double-fire (and page scroll/zoom) ---
@@ -994,11 +1035,12 @@ const IS_TOUCH = ('ontouchstart' in window) || navigator.maxTouchPoints>0;
 if(IS_TOUCH){ document.body.classList.add("is-touch");
   cv.addEventListener("touchstart",(e)=>{ e.preventDefault(); press(); },{passive:false});
   cv.addEventListener("touchend",(e)=>{ e.preventDefault(); release(); },{passive:false});
-  cv.addEventListener("touchcancel",()=>{ release(); }); }
+  cv.addEventListener("touchcancel",()=>{ if(charging){ charging=false; if(typeof stopCharge==="function") stopCharge(); } else release(); }); } // a CANCELLED touch (palm/edge reject, notification shade, call) must abort the charge, not commit a launch (mirrors the window-blur cancel)
 
 function update(){
   if(shake>0) shake*=0.86;
   if(abCd>0) abCd-=1/60; if(magnetT>0) magnetT-=1/60; if(glideT>0) glideT-=1/60; if(overchargeT>0) overchargeT-=1/60; if(waterCd>0) waterCd-=1/60; if(crashT>0) crashT-=1/60;
+  if(skimCd>0) skimCd-=1/60;
   if(spicyT>0) spicyT-=1/60; if(slowT>0) slowT-=1/60; if(phaseT>0) phaseT-=1/60; if(superT>0){ superT-=1/60; if(superT<=0) superCoast=1.3; } if(superCoast>0) superCoast-=1/60; if(starT>0) starT-=1/60; // GodSpeed leaves a momentum-coast window; Super Star invincibility ticks down
   if(wallFx){ wallFx.life-=1/60; if(wallFx.life<=0) wallFx=null; }
   if(shockwaves.length){ for(const s of shockwaves){ s.r+=14*DPR; s.life-=1/60*2; } shockwaves=shockwaves.filter(s=>s.life>0); }
@@ -1033,7 +1075,7 @@ function update(){
     if(kitty.y+kitty.r>g){ kitty.y=g-kitty.r;
       const onPlat = inWater() && nearFloat(); // landing on a float/diveboard = safe (the float bounce below handles it), never a splash death
       if(onPlat){ /* water platform: no splash penalty; obstacle loop bounces you */ }
-      else if(inWater() && !(ab()==="waterimmune" || superT>0 || phaseT>0)){ // splashed into the lethal water -> costs a life (not insta-kill); WATER WALKER / GodSpeed = immune (small splash, no penalty)
+      else if(inWater() && !(ab()==="waterimmune" || superT>0 || phaseT>0 || starT>0)){ // splashed into the lethal water -> costs a life (not insta-kill); WATER WALKER / GodSpeed / WRAITH / SUPER STAR = immune (starT pierces hazards via piercing(), so it must skim water too -> consistent invincibility)
         if(waterCd<=0){ waterCd=0.9; flashT=1; shake=14*DPR; snd("spike"); splashFx(kitty.x,g);
           if(lives>0){ lives--; kitty.vy=-13*DPR; kitty.vx*=0.65; pop(kitty.x,kitty.y-42*DPR,"SPLASH! -1 life"); } else { tryEnd(); } }
         else { kitty.vy=Math.min(kitty.vy,-8*DPR); kitty.vx*=0.9; } // brief grace: bounce out, no extra loss
@@ -1057,9 +1099,13 @@ function update(){
       if(o.type==="rocket"){ if(!o.hit && segNear(o.x,o.y,kitty.r+o.r)){ o.hit=true; kitty.vx+=24*DPR; kitty.vy=Math.min(kitty.vy,-12*DPR); kitty.sx=1.5; kitty.sy=0.7; shake=18*DPR; hitstop=3; runCoins+=coinAmt(4); rocketFx(o.x,o.y); pop(o.x,o.y,"BOOST!"); snd("reboot"); } continue; }
       if(o.type==="updraft"){ if(!o.hit && segNear(o.x,o.y,kitty.r+o.r)){ o.hit=true; kitty.vy=-32*DPR; kitty.vx+=4*DPR; kitty.sy=0.55; kitty.sx=1.5; shake=14*DPR; hitstop=2; updraftFx(o.x,o.y); pop(o.x,o.y,"WHOOSH!"); snd("spring"); } continue; } // floating updraft: launches you higher than a tramp
       if(o.type==="balloon"){ if(!o.pop && segNear(o.x,o.y,pr+o.r)){ o.pop=true; kitty.vx+=13*DPR; kitty.vy=Math.min(kitty.vy-3*DPR,-9*DPR); kitty.sx=1.5; kitty.sy=0.7; shake=14*DPR; hitstop=2; runCoins+=coinAmt(5); grenadeFx(o.x,o.y); pop(o.x,o.y,"BLAST!"); snd("balloon"); } continue; } // grenade balloon: blast forward + a bit higher
-      if(o.w && Math.max(kitty.px,kitty.x)>o.x-o.w/2 && Math.min(kitty.px,kitty.x)<o.x+o.w/2 && kitty.y+kitty.r>o.y-o.h && (kitty.vy>=0 || fellThisFrame)){ // swept-x + fellThisFrame: catches fast roll-past AND fast drops the ground-clamp already negated (anti-tunnel)
+      if(o.w && Math.max(kitty.px,kitty.x)>o.x-o.w/2 && Math.min(kitty.px,kitty.x)<o.x+o.w/2 && kitty.y+kitty.r>o.y-o.h && kitty.y-kitty.r<o.y && (kitty.vy>=0 || fellThisFrame)){ // swept-x + fellThisFrame: catches fast roll-past AND fast drops the ground-clamp already negated (anti-tunnel). The `kitty.y-kitty.r<o.y` lower bound confines the hit to the obstacle's band so an AIRBORNE bobbing spike (Zero-G) can't phantom-kill a cat flying entirely beneath it.
         if(ab()==="fallout"){ falloutCharge++; if(falloutCharge>=3) falloutCriticalMass(); } // fallout Critical Mass: 3 obstacle hits -> shockwave
         if(o.type==="pad"){ kitty.vy=mbounce(16,bm); kitty.vx+=2*DPR; kitty.sy=0.6; kitty.sx=1.4; dust(kitty.x,o.y); shake=8*DPR; snd("pad"); }
+        else if(o.type==="jackpot"){ kitty.vy=mbounce(20,bm); kitty.vx+=3*DPR; kitty.sy=0.55; kitty.sx=1.5; dust(kitty.x,o.y); // golden bounce pad: bounces every time, pays a VARIABLE jackpot once
+          if(!o.hit){ o.hit=true; const roll=Math.random(), mega=roll>=0.97; const amt= roll<0.78? coinAmt(80) : mega? coinAmt(1000) : coinAmt(250); runCoins+=amt; hitstop=2; const cb=bumpCombo();
+            pop(o.x,o.y-32*DPR,(mega?"⭐ MEGA JACKPOT +":"JACKPOT +")+amt); jackpotFx(o.x,o.y,mega); coinChime(Math.min(cb-1,12)); snd("newbest"); }
+          else { shake=Math.max(shake,8*DPR); snd("pad"); } }
         else if(o.type==="tramp"){ kitty.vy=mbounce(24,bm); kitty.vx+=3*DPR; kitty.sy=0.55; kitty.sx=1.5; dust(kitty.x,o.y); shake=11*DPR; snd("pad"); }
         else if(o.type==="float"){ kitty.vy=mbounce(15,bm); kitty.vx+=2*DPR; kitty.sy=0.6; kitty.sx=1.4; splashFx(kitty.x,o.y); shake=7*DPR; snd("pad"); } // water float platform
         else if(o.type==="diveboard"){ kitty.vy=mbounce(27,bm); kitty.vx+=4*DPR; kitty.sy=0.5; kitty.sx=1.5; dust(kitty.x,o.y); shake=12*DPR; snd("spring"); } // diving board: big launch
@@ -1071,6 +1117,13 @@ function update(){
           for(let i=0;i<46;i++) parts.push({x:o.x,y:o.y-o.h*0.5,vx:rand(-8,8)*DPR,vy:rand(-10,2)*DPR,life:1,c:i%3?"#ff7a1a":(i%2?"#ffd34d":"#ff2d4f"),r:rand(2,6)*DPR}); tryEnd(); } }
         else if(o.type==="doghouse" && !o.hit){ o.hit=true; if(piercing()){ shake=Math.max(shake,8*DPR); kitty.vx*=0.8; kitty.vy*=0.92; } else if(!hazard()){ shake=18*DPR; hitstop=6; flashT=1; if(!playCustom("bark")) snd("spike"); pop(o.x,o.y-o.h,"GULP!");
           for(let i=0;i<24;i++) parts.push({x:o.x,y:o.y-o.h*0.5,vx:rand(-4,4)*DPR,vy:rand(-5,0)*DPR,life:1,c:i%2?"#6b4a2a":"#caa15a",r:rand(2,5)*DPR}); tryEnd(); } }
+      }
+      // hazard-skim near-miss: cleared a GROUND hazard by a whisker (genuine only — tight clearance band, ascending or level, throttled, deep enough). A manufactured-win dopamine beat, never spammed.
+      if(skimCd<=0 && distM>180 && !o.hit && (o.type==="spike"||o.type==="tnt"||o.type==="doghouse")){
+        const _dx=Math.abs(kitty.x-o.x), _clr=(o.y-o.h)-(kitty.y+kitty.r);
+        if(_dx < o.w*0.5+kitty.r*0.6 && _clr>2*DPR && _clr<20*DPR && kitty.vx>3*DPR && kitty.vy<6*DPR){
+          skimCd=1.6; pop(kitty.x,kitty.y-46*DPR,"PHEW!"); snd("flap");
+          for(let i=0;i<8;i++) parts.push({x:kitty.x,y:kitty.y+10*DPR,vx:rand(-3,3)*DPR,vy:rand(-1,2)*DPR,life:0.5,c:"#bfefff",r:rand(1.5,3)*DPR}); }
       }
     }
     cam += ((kitty.x-260*DPR)-cam)*0.12; if(cam<0) cam=0;
@@ -1210,13 +1263,17 @@ function endRun(){
   const coinMult = ab()==="greedy"?5:(ab()==="goldcat"?2:1); // Queen=5x, goldcat=2x
   const baseCoins = Math.floor(distM/20) + (coinMult>1 ? Math.round(runCoins/coinMult) : runCoins); // raw (pre-multiplier) total: distance bonus (1 coin / 20m) + un-multiplied pickups
   const earned = baseCoins*coinMult; save.coins+=earned; runCoins=0; // multiplier now applies to EVERYTHING incl. the distance bonus (was: pickups only). Bank then ZERO runCoins (shop opens from result without reset())
-  const wasBest=save.best, isBest=distM>0 && distM>wasBest; if(isBest) save.best=distM; persist(); // 1 coin / 10m + pickup bonus
-  const nearMiss=!isBest && prevBest>0 && distM<prevBest && distM>=Math.floor(prevBest*0.9); // within 10% of your best
+  const wasBest=save.best, isBest=distM>0 && distM>wasBest; if(isBest) save.best=distM;
+  const hsBonus = isBest ? (wasBest>0 ? Math.min(1000, 150+Math.round((distM-wasBest)*0.5)) : 150) : 0; // beat your best -> bonus coins (scales with margin, first record = flat 150)
+  if(hsBonus) save.coins+=hsBonus;
+  save.runs=(save.runs||0)+1; save.totalDist=(save.totalDist||0)+distM; save.coinsEarned=(save.coinsEarned||0)+earned+hsBonus; // lifetime stats feed quests + secret-skin unlocks (save.runs was never incremented before)
+  questOnRun(distM, earned+hsBonus); persist(); // 1 coin / 20m + pickup bonus
+  const nearMiss=!isBest && prevBest>=120 && distM<prevBest && distM>=Math.floor(prevBest*0.9); // within 10% of a real best (>=120m so tiny scores don't spam it)
   document.getElementById("resultWhere").textContent=biomeAt(distM).name;
   { const _de=document.getElementById("resultDist"); if(_de){ _de.textContent="0"; setTimeout(function(){ countUp(_de, distM); }, 200); } } // hero count-up after panel scale-in
   const msgEl=document.getElementById("resultMsg"); msgEl.className="r-msg"+(isBest?" best":(nearMiss?" near":""));
   msgEl.textContent = isBest ? "NEW BEST! \u{1F3C6}" : (nearMiss ? "SO CLOSE — "+(prevBest-distM)+"m short!" : pickMsg(distM));
-  const bestEl=document.getElementById("resultBest"); bestEl.className="r-best"+(isBest?" nb":""); bestEl.textContent= isBest? "⭐ NEW RECORD" : ("BEST "+save.best+"m");
+  const bestEl=document.getElementById("resultBest"); bestEl.className="r-best"+(isBest?" nb":""); bestEl.textContent= isBest? ("⭐ NEW RECORD  +"+hsBonus+" ⛁") : ("BEST "+save.best+"m");
   { const _ce=document.getElementById("resultCoins"); if(coinMult>1 && baseCoins>0) countUpMult(_ce, baseCoins, coinMult); else countUp(_ce, earned, "+"); }
   showResultRank(distM, isBest);
   document.getElementById("resultGoal").innerHTML=nextSkinTeaser();
@@ -1224,6 +1281,8 @@ function endRun(){
   const _ab=document.getElementById("againBtn"); if(_ab) _ab.classList.toggle("sc-pulse", nearMiss); // pulse AGAIN on a near-miss
   { const _rp=document.querySelector("#resultCard .rpanel"); if(_rp){ _rp.classList.toggle("is-best", isBest); _rp.classList.toggle("is-near", nearMiss); } } // gold-hero + burst on a new best
   setTimeout(function(){ snd(isBest?"newbest":"coin"); },170);
+  if(nearMiss) setTimeout(function(){ try{ snd("spring"); }catch(e){} },360); // soft "so close" cue
+  refreshQuestBtn(); // pulse the QUESTS button on the result card if a mission is ready to claim
   show("resultCard",true);
   if(isBest) rConfetti();
 }
@@ -1261,8 +1320,119 @@ function nextSkinTeaser(){ let best=null; for(const sk of skinList){ if(sk.id===
 function refreshStartCard(){ // best-score badge + collection teaser on the start screen (only when relevant)
   const bb=document.getElementById("scBestBadge"); if(bb){ if(save.best>0){ document.getElementById("scBestVal").textContent=save.best+"m"; bb.hidden=false; } else bb.hidden=true; }
   const cb=document.getElementById("scCollBadge"); if(cb){ const list=skinList.filter(s=>!s.secret); const owned=list.filter(s=>s.id==="default"||save.owned.includes(s.id)).length;
-    if(list.length>1){ document.getElementById("scCollVal").textContent=owned+"/"+list.length; cb.hidden=false; } else cb.hidden=true; } }
+    if(list.length>1){ document.getElementById("scCollVal").textContent=owned+"/"+list.length; cb.hidden=false; } else cb.hidden=true; }
+  refreshDaily(); refreshQuestBtn(); }
 function pickMsg(d){ if(d<60) return "Barely cleared the cannon..."; if(d<200) return "Decent launch!"; if(d<400) return "Now we're flying!"; return "MONSTER distance!"; }
+
+// ===== shared reward + coin helpers =====
+function updateCoinHUD(){ const c=document.getElementById("coins"); if(c) c.textContent=save.coins+runCoins; }
+function showReward(title, body){ const rt=document.getElementById("rewardTitle"), rb=document.getElementById("rewardBody"); if(rt) rt.textContent=title; if(rb) rb.textContent=body; show("rewardCard",true); try{ snd("newbest"); }catch(e){} }
+function jackpotFx(x,y,mega){ const n=mega?60:34; for(let i=0;i<n;i++) parts.push({x,y,vx:rand(-7,7)*DPR,vy:rand(-11,2)*DPR,life:rand(0.6,1.2),c:i%3?"#ffd34d":(i%2?"#fff2c0":"#ff8a3c"),r:rand(2,6)*DPR}); shake=Math.max(shake,(mega?20:13)*DPR); if(mega) flashT=Math.max(flashT,0.7); }
+
+// ===== DAILY CATNIP: escalating daily-claim rewards, reset on a missed day (habit hook) =====
+function scDayIndex(){ const d=new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset()*60000)/86400000); } // local-day index
+const DAILY_TIERS=[0,60,90,120,180,260,360]; // reward for streak day 1..6; day 7+ = guaranteed jackpot
+function dailyReward(day){ return day>=7 ? 500 : (DAILY_TIERS[day]||60); }
+function dailyState(){ const today=scDayIndex(), d=save.daily||{streak:0,lastClaim:0};
+  if(d.lastClaim===today) return { claimed:true, day:d.streak||1, streak:d.streak||1 };
+  const cont=(d.lastClaim===today-1), streak=cont ? (d.streak||0)+1 : 1; // consecutive day -> grow; gap -> reset to day 1
+  return { claimed:false, day:streak, streak:streak }; }
+function claimDaily(){ const st=dailyState(); if(st.claimed) return; const amt=dailyReward(st.day);
+  save.daily={ streak:st.streak, lastClaim:scDayIndex() }; save.coins+=amt; persist(); updateCoinHUD();
+  showReward("\u{1F43E} DAILY CATNIP", "Day "+st.streak+" streak · +"+amt+" coins"+(st.day>=7?"  — JACKPOT!":""));
+  refreshDaily(); }
+function refreshDaily(){ const el=document.getElementById("scDaily"); if(!el) return; const st=dailyState();
+  if(!st.claimed){ el.hidden=false; el.classList.add("sc-pulse"); el.style.cursor="pointer";
+    el.innerHTML="\u{1F43E} DAILY CATNIP · Day "+st.day+" · +"+dailyReward(st.day)+" ⛁ — CLAIM"; }
+  else { el.hidden=false; el.classList.remove("sc-pulse"); el.style.cursor="default";
+    el.innerHTML="\u{1F43E} "+st.streak+"-day streak · back tomorrow for more"; } }
+
+// ===== QUESTS: 3 rotating missions, coins for tasks; claim -> respawn a fresh one =====
+const QUEST_DEFS=[
+  { type:"dist_run",   pick:[300,500,800,1200,1800], reward:t=>Math.round(t*0.3)+60, label:q=>"Reach "+q.target+"m in one run" },
+  { type:"runs",       pick:[3,5,8,12],              reward:t=>t*45,                  label:q=>"Play "+q.target+" runs" },
+  { type:"coins",      pick:[600,1200,2500],         reward:t=>Math.round(t*0.4),     label:q=>"Earn "+q.target+" coins" },
+  { type:"dist_total", pick:[2500,5000,9000],        reward:t=>Math.round(t*0.15),    label:q=>"Fly "+q.target+"m total" },
+  { type:"skins",      pick:[1],                     reward:t=>350,                   label:q=>"Unlock a new skin" }
+];
+function genQuest(avoid){ const _maxSkins=skinList.filter(s=>s.id!=="default").length, _skinsDead=ownedSkinCount()>=_maxSkins; // a "skins" quest is uncompletable once every skin is owned -> never roll it then
+  const _ok=d=>(!avoid||avoid.indexOf(d.type)<0) && !(d.type==="skins"&&_skinsDead);
+  let pool=QUEST_DEFS.filter(_ok); if(!pool.length) pool=QUEST_DEFS.filter(d=>!(d.type==="skins"&&_skinsDead)); if(!pool.length) pool=QUEST_DEFS;
+  const d=pool[Math.floor(Math.random()*pool.length)]; const base=d.pick[Math.floor(Math.random()*d.pick.length)];
+  const q={ type:d.type, target:base, reward:d.reward(base), prog:0 };
+  if(d.type==="skins"){ q.target=ownedSkinCount()+base; q.prog=ownedSkinCount(); }
+  return q; }
+function ensureQuests(){ if(!Array.isArray(save.quests)||save.quests.length<3){ const qs=Array.isArray(save.quests)?save.quests.slice(0,3):[]; while(qs.length<3) qs.push(genQuest(qs.map(q=>q.type))); save.quests=qs; persist(); }
+  for(const q of save.quests){ if(q.type==="skins") q.prog=Math.max(q.prog||0,ownedSkinCount()); } } // skins progress reflects live ownership
+function questLabel(q){ const d=QUEST_DEFS.find(x=>x.type===q.type); return d?d.label(q):"Mission"; }
+function questDone(q){ return (q.prog||0)>=q.target; }
+function anyQuestDone(){ ensureQuests(); return save.quests.some(questDone); }
+function questOnRun(dist, earned){ ensureQuests();
+  for(const q of save.quests){
+    if(q.type==="dist_run") q.prog=Math.max(q.prog||0, dist);
+    else if(q.type==="runs") q.prog=(q.prog||0)+1;
+    else if(q.type==="coins") q.prog=(q.prog||0)+earned;
+    else if(q.type==="dist_total") q.prog=(q.prog||0)+dist;
+    else if(q.type==="skins") q.prog=ownedSkinCount();
+  } persist(); }
+function claimQuest(i){ ensureQuests(); const q=save.quests[i]; if(!q||!questDone(q)) return; const r=q.reward;
+  save.coins+=r; const others=save.quests.filter((_,j)=>j!==i).map(x=>x.type); save.quests[i]=genQuest(others); persist(); updateCoinHUD();
+  showReward("✅ QUEST COMPLETE", "+"+r+" coins · new mission unlocked"); buildQuests(); refreshQuestBtn(); }
+function refreshQuestBtn(){ const claimable=anyQuestDone();
+  ["questBtn","quest2Btn"].forEach(id=>{ const b=document.getElementById(id); if(b) b.classList.toggle("sc-pulse",claimable); }); }
+function buildQuests(){ ensureQuests(); const host=document.getElementById("questList"); if(!host) return; host.innerHTML="";
+  save.quests.forEach((q,i)=>{ const done=questDone(q), prog=Math.min(q.target,q.prog||0), pct=Math.round(100*prog/q.target);
+    const row=document.createElement("div");
+    row.style.cssText="text-align:left;background:rgba(255,255,255,.05);border-radius:12px;padding:12px 14px;margin:8px 0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)"+(done?";box-shadow:inset 0 0 0 1px rgba(255,211,77,.5)":"");
+    row.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px">'
+      +'<span style="font-weight:700;font-size:14px;color:#eef3ff">'+questLabel(q)+'</span>'
+      +'<span style="font-family:Orbitron,sans-serif;font-weight:800;font-size:13px;color:#ffd34d;white-space:nowrap">+'+q.reward+' ⛁</span></div>'
+      +'<div style="height:9px;border-radius:6px;background:rgba(0,0,0,.35);overflow:hidden"><div style="height:100%;width:'+pct+'%;border-radius:6px;background:'+(done?"linear-gradient(90deg,#ffe27a,#ffc23d)":"linear-gradient(90deg,var(--ac),#7fe7ff)")+';transition:width .3s"></div></div>'
+      +'<div style="margin-top:7px;min-height:22px">'+(done
+        ? '<button class="pill" data-i="'+i+'" style="pointer-events:auto;cursor:pointer;padding:5px 18px;font-size:13px;background:linear-gradient(180deg,#ffe27a,#ffc23d);color:#06140f;font-weight:800;border:none">⛁ CLAIM</button>'
+        : '<span style="font-size:12px;color:#9fb0c9;font-weight:600">'+prog+' / '+q.target+'</span>')+'</div>';
+    host.appendChild(row); });
+  host.querySelectorAll("button[data-i]").forEach(b=>{ b.onclick=()=>{ snd("ui"); claimQuest(+b.dataset.i); }; }); }
+let prevQuestState="start";
+function openQuests(){ if(state!=="start"&&state!=="result") return; prevQuestState=state; snd("ui");
+  show("startCard",false); show("resultCard",false); show("shopCard",false); show("lbCard",false);
+  ensureQuests(); buildQuests(); show("questCard",true); state="quest"; }
+function closeQuests(){ snd("ui"); show("questCard",false); state=prevQuestState; if(state==="result") show("resultCard",true); else { state="start"; show("startCard",true); } }
+
+// ===== WORLDS / ATLAS: a trophy-road of every biome; reached worlds revealed, the next a named goal, deeper ones a mystery. Aim for the highest world. =====
+let prevWorldsState="start";
+function openWorlds(){ if(state!=="start"&&state!=="result") return; prevWorldsState=state; snd("ui");
+  show("startCard",false); show("resultCard",false); show("shopCard",false); show("lbCard",false); show("questCard",false);
+  buildWorlds(); show("worldsCard",true); state="worlds"; }
+function closeWorlds(){ snd("ui"); show("worldsCard",false); state=prevWorldsState; if(state==="result") show("resultCard",true); else { state="start"; show("startCard",true); } }
+function buildWorlds(){
+  const host=document.getElementById("worldsList"); if(!host) return; host.innerHTML="";
+  const best=save.best||0, zs=ZONES.slice().sort((a,b)=>a.d-b.d);
+  const reachedList=zs.filter(z=>best>=z.d), reachedCount=reachedList.length, highest=reachedList[reachedList.length-1]||zs[0];
+  const nextIdx=zs.findIndex(z=>best<z.d); const nextZone=nextIdx>=0?zs[nextIdx]:null;
+  const sub=document.getElementById("worldsSub");
+  if(sub) sub.innerHTML="Highest: <b style='color:var(--ac)'>"+highest.name+"</b> &middot; Best <b>"+best.toLocaleString()+"m</b> &middot; "+reachedCount+"/"+zs.length+" worlds";
+  let nextRow=null;
+  zs.slice().reverse().forEach(z=>{ // DEEPEST at top = a peak to climb toward (Clash-Royale trophy road)
+    const reached=best>=z.d, isNext=(z===nextZone);
+    const grad="linear-gradient(135deg,"+z.sky[0]+" 0%,"+z.sky[1]+" 50%,"+z.sky[2]+" 100%)";
+    const row=document.createElement("div");
+    row.style.cssText="display:flex;align-items:center;gap:12px;padding:9px 12px;margin:7px 0;border-radius:12px;text-align:left;"
+      +(isNext?"box-shadow:inset 0 0 0 2px var(--ac);background:rgba(255,255,255,.07);"
+        :reached?"box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);background:rgba(255,255,255,.045);"
+        :"box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);background:rgba(255,255,255,.02);opacity:.72;");
+    const swBg=(reached||isNext)?grad:"#0e1120", swRing=reached?z.ac:(isNext?"var(--ac)":"rgba(255,255,255,.12)");
+    const icon=reached?"":(isNext?"&#9650;":"&#128274;");
+    const nm=reached?z.name:(isNext?z.name:"? ? ?");
+    const det=reached?("Reached &middot; "+z.d.toLocaleString()+"m")
+             :isNext?("<b style='color:var(--ac)'>"+(z.d-best).toLocaleString()+"m to go</b>")
+             :("Reach "+z.d.toLocaleString()+"m");
+    row.innerHTML="<div style='width:46px;height:46px;border-radius:10px;flex:0 0 auto;background:"+swBg+";box-shadow:inset 0 0 0 2px "+swRing+";display:flex;align-items:center;justify-content:center;font-size:19px'>"+icon+"</div>"
+      +"<div style='flex:1;min-width:0'><div style='font-family:Orbitron,sans-serif;font-weight:800;font-size:15px;color:"+(reached?"#eef3ff":isNext?"#fff":"#8290a8")+"'>"+nm+(reached?" <span style=\"color:#5cff9e\">&#10003;</span>":"")+"</div><div style='font-size:12px;font-weight:600;color:"+(isNext?"#cfe0ff":"#8290a8")+"'>"+det+"</div></div>";
+    host.appendChild(row); if(isNext) nextRow=row;
+  });
+  if(nextRow) setTimeout(function(){ try{ nextRow.scrollIntoView({block:"center"}); }catch(e){} },30); // land on the player's next goal
+}
 // ---- ABDUCTION + DANTE'S INFURNO secret level (research: rare variable-ratio jackpot) ----
 const INFURNO_DUR=14;
 function startAbduction(){ if(state!=="fly") return; infurnoUsedThisRun=true;
@@ -1296,7 +1466,7 @@ function gauntletFlap(){ kitty.vy=-9*DPR; snd("flap");
 function endGauntlet(survived){
   if(!survived) return; // death path is handled inline (state="fly"; endRun()) on hazard hit
   const nm = gauntlet?gauntlet.name:"GAUNTLET";
-  save.coins += 5000; persist();                                   // owner spec: flat 5000-coin survival bonus
+  save.coins += 5000; save.coinsEarned=(save.coinsEarned||0)+5000; questOnRun(0,5000); persist(); // owner spec: flat 5000-coin survival bonus (routed through coinsEarned + an "earn coins" quest, like every other coin source)
   if(savedRun){ cam=savedRun.cam; kitty.x=savedRun.x; kitty.y=Math.min(savedRun.y,GROUND()-40*DPR); kitty.vx=Math.max(savedRun.vx,6*DPR); kitty.vy=savedRun.vy; }
   kitty.sx=kitty.sy=1; kitty.rest=false; gHaz=[]; gauntlet=null; state="fly";
   shake=16*DPR; snd("newbest");
@@ -1327,7 +1497,7 @@ const ZONES = [
   { name:"Meowshroom Hollow", d:3000,  sky:["#2f9e76","#136055","#06222b"], ac:"#5cffcf", fx:"none" },
   { name:"Abyssline",  d:4500,  sky:["#0b36c9","#0e7ae6","#16e0c8"], ac:"#ffe03d", fx:"rain" },
   { name:"Sky Kingdom", d:5500, sky:["#6db8f0","#cfeaff","#ffe9b8"], ac:"#ffe6a3", fx:"none" },
-  { name:"Funland",    d:6250,  sky:["#ff8fb8","#ffd36b","#9be3ff"], ac:"#ff4fa6", fx:"none" },
+  { name:"Funland",    d:6250,  sky:["#0b0a2e","#180f3e","#281a52"], ac:"#ff4fa6", fx:"none" }, // NIGHT amusement park: dark navy->purple sky, hot-pink neon accent drives the glowing ride lights
   { name:"Voltloom",   d:7000,  sky:["#7a0fe0","#d518c9","#ff3d8a"], ac:"#2bffe6", fx:"lightning" },
   { name:"Sunspurr",   d:8000,  sky:["#ffb200","#ff7a00","#ff3d5e"], ac:"#27e1ff", fx:"lava" },
   { name:"Candyland",  d:9000,  sky:["#ffd6ec","#ffb4d8","#bfe9ff"], ac:"#ff5fa6", fx:"none" },
@@ -1363,6 +1533,11 @@ const ZONES = [
   { name:"Zero Purravity",      d:1500,  sky:["#1a0a52","#6f1ad6","#0a0524"], ac:"#19f0ff", fx:"none", lowGrav:0.40, floaty:true },
   { name:"Petal Purradise",     d:4200,  sky:["#ff9ec7","#ffc1de","#ffe6f2"], ac:"#ff4f9e", fx:"none" }, // all-pink cherry-blossom world (Naruto-Sakura vibe; sakura/petals are generic)
   { name:"Crimson Dawn",        d:21500, sky:["#2a0810","#5e0e1a","#0a0306"], ac:"#ff2d4a", fx:"none" }, // ominous red clouds on dark crimson (Akatsuki-inspired but original shapes + non-identical shade)
+  { name:"Hyperpurr",           d:36000, sky:["#12022e","#2a0540","#05010f"], ac:"#ff2bd0", fx:"none" }, // CHAOTIC neon rave: cycling color washes + sweeping lasers + pulsing EQ skyline (deep-run euphoric payoff; reduced-motion safe)
+  { name:"Gotham",              d:38000, sky:["#0a0e1f","#0f1530","#05060f"], ac:"#5b8dff", fx:"none" }, // noir city: near-black skyscrapers, lit windows, neon billboards, searchlight
+  { name:"Hollywood",           d:40000, sky:["#5bb8f0","#a8dcff","#ffe8c8"], ac:"#ff4f8a", fx:"none" }, // LA daytime: Hollywood Hills+sign, palms, Melrose boutiques + pink wall; floor = Walk of Fame stars
+  { name:"Neon Tokyo",          d:42000, sky:["#0a0a2e","#1a0f3e","#2a1a4e"], ac:"#ff2d6b", fx:"none" }, // Shibuya night: Tokyo Tower, dense neon signboards, lanterns
+  { name:"Senpai Skies",        d:44000, sky:["#2a5cff","#7fb0ff","#ffd9a8"], ac:"#ffe27a", fx:"none" }, // Makoto-Shinkai anime sky: lens-flare sun, dramatic clouds, torii + telephone poles
 ];
 ZONES.sort((a,b)=>a.d-b.d); // keep zones ordered by distance after appending the new environments
 // World test-jump: ?world=<substring> (or legacy ?zerog) forces a world from the start, for previewing.
@@ -2003,14 +2178,20 @@ function scapeDesert(biome,horizon,t){
           ctx.beginPath(); ctx.moveTo(px-bw, horizon); ctx.lineTo(px, top); ctx.lineTo(px, horizon); ctx.closePath(); ctx.fill();
         }
       } else {
-        const hh=horizon*0.14, bw=gap*0.30, top=horizon-hh;
-        ctx.fillStyle=silhouetteColor(biome.sky[1], 0.40, 0.66);
-        rr(ctx, x-bw, top+hh*0.42, bw*1.7, hh*0.58, hh*0.10); ctx.fill();
-        ctx.fillRect(x+bw*0.2, horizon-hh*0.22, bw*0.9, hh*0.22);
+        // GREAT SPHINX silhouette: reclining body + outstretched front paws + nemes-headdress head (faces the direction of travel)
+        const bh=horizon*0.14, bw=gap*0.32, baseY=horizon;
+        ctx.fillStyle=silhouetteColor(biome.sky[1], 0.40, 0.70);
+        rr(ctx, x-bw, baseY-bh*0.92, bw*1.85, bh*0.92, bh*0.16); ctx.fill();                 // haunches / body
+        rr(ctx, x+bw*0.55, baseY-bh*0.36, bw*1.0, bh*0.36, bh*0.07); ctx.fill();             // outstretched front paws
+        ctx.beginPath();                                                                      // chest rising to the head
+        ctx.moveTo(x+bw*0.46, baseY-bh*0.36); ctx.lineTo(x+bw*0.58, baseY-bh*1.16);
+        ctx.lineTo(x+bw*1.06, baseY-bh*1.16); ctx.lineTo(x+bw*1.22, baseY-bh*0.36); ctx.closePath(); ctx.fill();
+        const hx=x+bw*0.84, hy=baseY-bh*1.16, hw=bw*0.52, hht=bh*0.62;                        // head + nemes headdress (trapezoid)
         ctx.beginPath();
-        ctx.moveTo(x-bw, top+hh*0.45); ctx.lineTo(x-bw*1.05, top+hh*0.02);
-        ctx.lineTo(x-bw*0.52, top-hh*0.04); ctx.lineTo(x-bw*0.38, top+hh*0.5);
-        ctx.closePath(); ctx.fill();
+        ctx.moveTo(hx-hw*0.55, hy); ctx.lineTo(hx-hw*0.34, hy-hht);
+        ctx.lineTo(hx+hw*0.34, hy-hht); ctx.lineTo(hx+hw*0.64, hy); ctx.closePath(); ctx.fill();
+        ctx.fillStyle=silhouetteColor(biome.sky[2], 0.30, 1.10);                              // face nub poking past the headdress
+        rr(ctx, hx+hw*0.30, hy-hht*0.58, hw*0.36, hht*0.52, hht*0.10); ctx.fill();
       }
     }
   }
@@ -2466,6 +2647,19 @@ function scapeStormSpire(biome,horizon,t){
   }
 }
 function scapeFunland(biome,horizon,t){
+  // ---- NIGHT SKY: twinkling stars + glowing crescent moon ----
+  { ctx.save(); ctx.globalCompositeOperation="lighter";
+    for(let i=0;i<72;i++){ const px=(((hashS(i*1.7)*W*1.6 - cam*0.02)%W)+W)%W, py=hashY(i*2.3)*horizon*0.84, tw=0.5+0.5*Math.sin(t*2+i*1.3), a=0.22+0.6*tw*tw, r=(hashY(i*5)<0.12?1.9:1.0)*DPR;
+      ctx.fillStyle="rgba(222,236,255,"+a+")"; ctx.beginPath(); ctx.arc(px,py,r,0,6.283); ctx.fill(); }
+    ctx.restore(); }
+  { const mx=W*0.80 - cam*0.03, my=horizon*0.24, mr=32*DPR;
+    let mg=ctx.createRadialGradient(mx,my,mr*0.4,mx,my,mr*2.7); mg.addColorStop(0,"rgba(255,247,210,.45)"); mg.addColorStop(0.5,"rgba(255,230,170,.10)"); mg.addColorStop(1,"rgba(255,230,170,0)");
+    ctx.fillStyle=mg; ctx.beginPath(); ctx.arc(mx,my,mr*2.7,0,6.283); ctx.fill();
+    ctx.fillStyle="#fdf3cf"; ctx.beginPath(); ctx.arc(mx,my,mr,0,6.283); ctx.fill();
+    ctx.fillStyle=silhouetteColor(biome.sky[0],1,0.7); ctx.beginPath(); ctx.arc(mx+mr*0.55,my-mr*0.32,mr*0.86,0,6.283); ctx.fill(); }
+  // neon ride-light palette (cycles per bulb)
+  const _NEON=["#ff3df0","#27e6ff","#ffe14d","#5cff9e","#ff5a3c","#b06bff"];
+  const _glow=(gx,gy,gr,col,a)=>{ ctx.save(); ctx.globalCompositeOperation="lighter"; let g=ctx.createRadialGradient(gx,gy,0,gx,gy,gr); g.addColorStop(0,silhouetteColor(col,a,1.4)); g.addColorStop(1,silhouetteColor(col,0,1)); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(gx,gy,gr,0,6.283); ctx.fill(); ctx.restore(); };
   // far rolling park grounds (distant haze layer)
   {
     const gap=240*DPR, f=0.10, shift=cam*f;
@@ -2514,7 +2708,7 @@ function scapeFunland(biome,horizon,t){
         const rot=t*0.25*(hashS(k)>0.5?1:-1) + k;
         ctx.strokeStyle=silhouetteColor(biome.sky[1],0.42,0.85); ctx.lineWidth=4*DPR; ctx.lineCap='round';
         ctx.beginPath(); ctx.moveTo(x-R*0.5,horizon); ctx.lineTo(x,cyc); ctx.lineTo(x+R*0.5,horizon); ctx.stroke();
-        ctx.lineWidth=3*DPR; ctx.strokeStyle=silhouetteColor(biome.sky[1],0.46,1.10);
+        ctx.lineWidth=3*DPR; ctx.strokeStyle=getAccent(0.55); // neon-glowing wheel rim at night
         ctx.beginPath(); ctx.arc(x,cyc,R,0,6.283); ctx.stroke();
         const N=10;
         for(let s=0;s<N;s++){
@@ -2523,8 +2717,7 @@ function scapeFunland(biome,horizon,t){
           ctx.beginPath(); ctx.moveTo(x,cyc); ctx.lineTo(ex,ey); ctx.stroke();
           ctx.fillStyle=silhouetteColor(biome.sky[2],0.40,1.20);
           ctx.beginPath(); ctx.arc(ex,ey,R*0.10,0,6.283); ctx.fill();
-          ctx.fillStyle=getAccent(0.18+0.30*(0.5+0.5*Math.sin(t*4+s*1.3+k)));
-          ctx.beginPath(); ctx.arc(ex,ey,2.4*DPR,0,6.283); ctx.fill();
+          { const _c=_NEON[((s+k)%_NEON.length+_NEON.length)%_NEON.length], _b=0.5+0.5*Math.sin(t*4+s*1.3+k); _glow(ex,ey,9*DPR*(0.6+0.5*_b),_c,0.45+0.4*_b); ctx.fillStyle=silhouetteColor(_c,1,1.7); ctx.beginPath(); ctx.arc(ex,ey,2.6*DPR,0,6.283); ctx.fill(); }
         }
         ctx.fillStyle=silhouetteColor(biome.sky[1],0.50,0.9); ctx.beginPath(); ctx.arc(x,cyc,R*0.08,0,6.283); ctx.fill();
       }else if(pick<0.66){
@@ -2534,8 +2727,7 @@ function scapeFunland(biome,horizon,t){
         for(let s=top; s<horizon; s+=th*0.14){ ctx.beginPath(); ctx.moveTo(x-tw*0.5,s); ctx.lineTo(x+tw*0.5,s+th*0.07); ctx.stroke(); }
         ctx.fillStyle=silhouetteColor(biome.sky[2],0.42,1.20);
         ctx.beginPath(); ctx.moveTo(x-tw,top); ctx.lineTo(x+tw,top); ctx.lineTo(x,top-tw*1.2); ctx.closePath(); ctx.fill();
-        ctx.fillStyle=getAccent(0.28+0.30*(0.5+0.5*Math.sin(t*3+k)));
-        ctx.beginPath(); ctx.arc(x,top-tw*1.2,3*DPR,0,6.283); ctx.fill();
+        { const _b=0.5+0.5*Math.sin(t*3+k); _glow(x,top-tw*1.2,12*DPR*(0.6+0.5*_b),"#ff3df0",0.5+0.4*_b); ctx.fillStyle=silhouetteColor("#ff3df0",1,1.7); ctx.beginPath(); ctx.arc(x,top-tw*1.2,3.2*DPR,0,6.283); ctx.fill(); }
         const carY=top+th*(0.15+0.70*(0.5+0.5*Math.sin(t*0.9+k*1.3)));
         ctx.fillStyle=silhouetteColor(biome.sky[2],0.40,1.0); rr(ctx, x-tw*0.9, carY, tw*1.8, tw*0.7, 2*DPR); ctx.fill();
       }
@@ -2564,7 +2756,7 @@ function scapeFunland(biome,horizon,t){
 }
 function drawFloorPark(biome,t){
   const D=DPR, gy=GROUND(), gh=H-gy;
-  let g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,"#c79a64"); g.addColorStop(1,"#9c7242"); ctx.fillStyle=g; ctx.fillRect(0,gy,W,gh);
+  let g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,"#241a37"); g.addColorStop(1,"#120b1f"); ctx.fillStyle=g; ctx.fillRect(0,gy,W,gh); // NIGHT boardwalk: dark planks lit by neon
   ctx.save(); ctx.beginPath(); ctx.rect(0,gy,W,gh); ctx.clip();
   const plank=40*D, off=((cam)%plank+plank)%plank;
   for(let x=-off,i=0; x<W+plank; x+=plank,i++){ const col=Math.round((cam-off)/plank)+i;
@@ -2578,9 +2770,14 @@ function drawFloorPark(biome,t){
   for(let x=-so-bandH,i=0; x<W+bandH; x+=sw,i++){ const col=((Math.round((cam-so)/sw)+i)%4+4)%4;
     ctx.fillStyle=silhouetteColor(hues[col],0.85,1.0);
     ctx.beginPath(); ctx.moveTo(x,gy+bandH); ctx.lineTo(x+sw,gy+bandH); ctx.lineTo(x+sw+bandH,gy); ctx.lineTo(x+bandH,gy); ctx.closePath(); ctx.fill(); }
-  ctx.fillStyle=getAccent(.5); ctx.fillRect(0,gy,W,2*D);
-  for(let i=0;i<12;i++){ const px=(((i*129*D - cam*1.0)%W)+W)%W, py=H-6*D, tw=0.5+0.5*Math.sin(t*3+i*1.7);
-    ctx.fillStyle="rgba(255,240,180,"+(0.25+0.5*tw)+")"; ctx.beginPath(); ctx.arc(px,py,2.4*D,0,7); ctx.fill(); }
+  ctx.fillStyle=getAccent(.7); ctx.fillRect(0,gy,W,2*D); // glowing neon curb line
+  // neon string-lights running along the boardwalk edge (additive glow, cycling colors)
+  const _NL=["#ff3df0","#27e6ff","#ffe14d","#5cff9e","#b06bff"], lspc=44*D, lo=((cam*1.0)%lspc+lspc)%lspc;
+  ctx.save(); ctx.globalCompositeOperation="lighter";
+  for(let x=-lo,i=0; x<W+lspc; x+=lspc,i++){ const col=Math.round((cam-lo)/lspc)+i, c=_NL[((col%5)+5)%5], tw=0.45+0.55*Math.sin(t*4+col*0.9), py=gy+5*D;
+    let lg=ctx.createRadialGradient(x,py,0,x,py,11*D); lg.addColorStop(0,silhouetteColor(c,0.5+0.45*tw,1.5)); lg.addColorStop(1,silhouetteColor(c,0,1)); ctx.fillStyle=lg; ctx.beginPath(); ctx.arc(x,py,11*D,0,7); ctx.fill();
+    ctx.fillStyle=silhouetteColor(c,1,1.7); ctx.beginPath(); ctx.arc(x,py,2.2*D,0,7); ctx.fill(); }
+  ctx.restore();
   ctx.restore();
 }
 // ===== NEW ENVIRONMENTS (06-27, subagent-designed) =====
@@ -2739,8 +2936,162 @@ function scapeRedClouds(biome,horizon,t){
       const y=horizon*(L.y+(hashY(i*2.7)-0.5)*0.10)+Math.sin(t*0.4+i)*4*DPR; const s=horizon*L.sz*(0.7+0.6*hashY(i*5));
       _redCloud(x,y,s,L.c,L.rim,L.a); } }
 }
+// ---- HYPERPURR: chaotic neon rave (cycling color washes + sweeping lasers + pulsing EQ skyline + light motes). Reduced-motion safe; gameplay layer stays readable on top. ----
+let _PREF_REDUCE=false; try{ _PREF_REDUCE = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }catch(e){}
+function scapeHyperpurr(biome,horizon,t){
+  const beat=Math.sin(t*Math.PI*2*2.0), pulse=0.5+0.5*beat, flash=_PREF_REDUCE?0.28:1.0; // ~120BPM; reduced-motion calms the flashing
+  const HUES=[330,190,50,140,270,12], hueAt=i=>HUES[((i%HUES.length)+HUES.length)%HUES.length];
+  // 1) full-screen cycling club-light color wash (beat-synced, subtle)
+  { ctx.save(); ctx.globalCompositeOperation="lighter"; const h=(t*55)%360, a=(0.05+0.10*pulse)*flash;
+    ctx.fillStyle="hsla("+h+",100%,55%,"+a+")"; ctx.fillRect(0,0,W,horizon);
+    ctx.fillStyle="hsla("+((h+165)%360)+",100%,55%,"+(a*0.7)+")"; ctx.fillRect(0,horizon*0.45,W,horizon*0.6); ctx.restore(); }
+  // 2) sweeping laser fan from a glowing pivot
+  { const px=W*0.5, py=-horizon*0.12, N=7; ctx.save(); ctx.globalCompositeOperation="lighter";
+    for(let i=0;i<N;i++){ const ang=-Math.PI/2+Math.sin(t*0.6+i*0.9)*1.15+(i-N/2)*0.05, len=horizon*2.1, ex=px+Math.cos(ang)*len, ey=py+Math.sin(ang)*len, hu=hueAt(i);
+      const g=ctx.createLinearGradient(px,py,ex,ey); g.addColorStop(0,"hsla("+hu+",100%,65%,"+(0.30*flash)+")"); g.addColorStop(1,"hsla("+hu+",100%,65%,0)");
+      ctx.strokeStyle=g; ctx.lineWidth=(2+3*pulse)*DPR; ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(ex,ey); ctx.stroke(); }
+    const dg=ctx.createRadialGradient(px,py,0,px,py,64*DPR); dg.addColorStop(0,"hsla("+((t*80)%360)+",100%,70%,"+(0.5*flash)+")"); dg.addColorStop(1,"hsla(0,0%,100%,0)"); ctx.fillStyle=dg; ctx.beginPath(); ctx.arc(px,py,64*DPR,0,6.283); ctx.fill(); ctx.restore(); }
+  // 3) pulsing neon equalizer skyline (bars bounce to the beat)
+  { const bw=46*DPR, off=((cam*0.5)%bw+bw)%bw; let bi=0;
+    for(let x=-off; x<W+bw; x+=bw, bi++){ const col=Math.round((cam*0.5-off)/bw)+bi, c=hueAt(col), lv=0.28+0.55*(0.5+0.5*Math.sin(t*6+col*0.7)*(0.6+0.4*pulse)), bh=horizon*lv;
+      ctx.fillStyle="rgba(8,4,18,0.85)"; ctx.fillRect(x+2*DPR, horizon-bh, bw-4*DPR, bh);
+      ctx.save(); ctx.globalCompositeOperation="lighter";
+      const bg=ctx.createLinearGradient(0,horizon-bh,0,horizon); bg.addColorStop(0,"hsla("+c+",100%,60%,"+(0.55*flash)+")"); bg.addColorStop(0.3,"hsla("+c+",100%,55%,"+(0.12*flash)+")"); bg.addColorStop(1,"hsla("+c+",100%,55%,0)");
+      ctx.fillStyle=bg; ctx.fillRect(x+2*DPR, horizon-bh, bw-4*DPR, bh);
+      ctx.fillStyle="hsla("+c+",100%,72%,"+(0.6+0.4*pulse)+")"; ctx.fillRect(x+2*DPR, horizon-bh-3*DPR, bw-4*DPR, 4*DPR); ctx.restore(); } }
+  // 4) floating light motes rising
+  { ctx.save(); ctx.globalCompositeOperation="lighter";
+    for(let i=0;i<34;i++){ const span=W+60*DPR, x=(((i*87*DPR - cam*0.6)%span)+span)%span - 30*DPR, y=horizon-(((t*30*DPR + i*40*DPR)%(horizon*1.05))), c=hueAt(i+Math.floor(t*2)), r=(1.4+1.6*hashY(i*3))*DPR, a=Math.max(0.12,(0.3+0.5*Math.sin(t*3+i))*flash);
+      ctx.fillStyle="hsla("+c+",100%,66%,"+a+")"; ctx.beginPath(); ctx.arc(x,y,r,0,6.283); ctx.fill(); } ctx.restore(); }
+}
+// ---- GOTHAM: brooding noir city. Big near-black skyscrapers, lit windows, blinking antennas, neon rooftop billboards, a sweeping searchlight. ----
+function scapeGotham(biome,horizon,t){
+  // hazy city glow + bat-signal searchlight
+  { ctx.save(); ctx.globalCompositeOperation="lighter"; const gg=ctx.createRadialGradient(W*0.5,horizon,0,W*0.5,horizon,horizon*1.2); gg.addColorStop(0,"rgba(120,150,210,0.10)"); gg.addColorStop(1,"rgba(120,150,210,0)"); ctx.fillStyle=gg; ctx.fillRect(0,0,W,horizon);
+    const px=W*0.22-cam*0.02, py=horizon*0.96, ang=-Math.PI/2+Math.sin(t*0.22)*0.5, len=horizon*1.5, sp=0.055;
+    ctx.fillStyle="rgba(200,220,255,0.05)"; ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px+Math.cos(ang-sp)*len,py+Math.sin(ang-sp)*len); ctx.lineTo(px+Math.cos(ang+sp)*len,py+Math.sin(ang+sp)*len); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  const layers=[{f:0.08,hmin:0.30,hmax:0.55,gap:92,win:false,body:silhouetteColor(biome.sky[1]||"#0f1530",0.7,0.7)},
+                {f:0.18,hmin:0.42,hmax:0.78,gap:124,win:true,body:"#0b0d1a"},
+                {f:0.34,hmin:0.55,hmax:0.96,gap:154,win:true,body:"#06070f"}];
+  for(let li=0; li<layers.length; li++){ const L=layers[li], gap=L.gap*DPR, shift=cam*L.f, i0=Math.floor((shift-gap)/gap), i1=Math.ceil((shift+W+gap)/gap);
+    for(let k=i0;k<=i1;k++){ const x=k*gap-shift, w=gap*(0.72+0.2*hashS(k*1.7)), h=horizon*(L.hmin+(L.hmax-L.hmin)*hashY(k*2.3)), top=horizon-h, bx=x-w/2;
+      ctx.fillStyle=L.body; ctx.fillRect(bx,top,w,h);
+      if(hashS(k*5)>0.7){ ctx.fillRect(x-1.5*DPR, top-h*0.10, 3*DPR, h*0.10); ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.fillStyle="rgba(255,60,60,"+(0.4+0.6*(0.5+0.5*Math.sin(t*4+k)))+")"; ctx.beginPath(); ctx.arc(x,top-h*0.10,2.6*DPR,0,6.283); ctx.fill(); ctx.restore(); } // blinking red antenna light
+      if(L.win){ const cols=Math.max(2,Math.floor(w/(12*DPR))), rows=Math.max(3,Math.floor(h/(16*DPR))), cw=w/cols, rh=h/rows;
+        for(let c2=0;c2<cols;c2++) for(let r2=0;r2<rows;r2++){ if(hashY(k*13+c2*7+r2*3.1)<0.55) continue;
+          const flick=(hashS(k*3+c2+r2)>0.92)?(0.35+0.65*(0.5+0.5*Math.sin(t*9+c2+r2))):1, warm=hashS(k*2+c2*5+r2)>0.32;
+          ctx.fillStyle= warm? "rgba(255,212,120,"+(0.55*flick)+")" : "rgba(150,200,255,"+(0.45*flick)+")"; ctx.fillRect(bx+c2*cw+cw*0.22, top+r2*rh+rh*0.20, cw*0.56, rh*0.55); }
+        if(li>=2 && hashS(k*7+3)>0.6){ const bbw=w*0.72, bbh=h*0.13, bbx=x-bbw/2, bby=top-bbh-5*DPR, hue=((k*47)%360+t*18)%360;
+          ctx.save(); ctx.globalCompositeOperation="lighter"; const bg=ctx.createLinearGradient(bbx,bby,bbx,bby+bbh); bg.addColorStop(0,"hsla("+hue+",100%,60%,0.5)"); bg.addColorStop(1,"hsla("+hue+",100%,50%,0.14)"); ctx.fillStyle=bg; ctx.fillRect(bbx,bby,bbw,bbh); ctx.restore();
+          ctx.strokeStyle="hsla("+hue+",100%,72%,"+(0.6+0.4*Math.sin(t*5+k))+")"; ctx.lineWidth=2*DPR; ctx.strokeRect(bbx,bby,bbw,bbh);
+          ctx.fillStyle="hsla("+hue+",100%,76%,0.85)"; for(let s=0;s<3;s++) ctx.fillRect(bbx+bbw*0.16+s*bbw*0.25, bby+bbh*0.4, bbw*0.15, bbh*0.2); } } } }
+}
+function drawFloorStreet(biome,t){ const D=DPR, gy=GROUND(), gh=H-gy;
+  let g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,"#0c0e18"); g.addColorStop(1,"#05060d"); ctx.fillStyle=g; ctx.fillRect(0,gy,W,gh); // wet night asphalt
+  ctx.save(); ctx.beginPath(); ctx.rect(0,gy,W,gh); ctx.clip();
+  ctx.globalCompositeOperation="lighter"; // neon reflections shimmering on the wet road
+  for(let i=0;i<16;i++){ const px=(((i*101*D - cam*0.9)%W)+W)%W, hue=((i*53)+t*18)%360, a=0.04+0.06*(0.5+0.5*Math.sin(t*2+i));
+    const rg=ctx.createLinearGradient(px,gy,px,H); rg.addColorStop(0,"hsla("+hue+",100%,60%,"+a+")"); rg.addColorStop(1,"hsla("+hue+",100%,60%,0)"); ctx.fillStyle=rg; ctx.fillRect(px-6*D,gy,12*D,gh); }
+  ctx.globalCompositeOperation="source-over";
+  ctx.fillStyle="rgba(220,200,120,.45)"; const dl=46*D, doff=((cam*1.0)%dl+dl)%dl; for(let x=-doff; x<W; x+=dl) ctx.fillRect(x, gy+gh*0.5, dl*0.4, 3*D); // center-line dashes
+  ctx.restore(); }
+// ---- VOLCANO: erupting cones with glowing craters + lava streaks + rising embers (serves Emberglide/Sunspurr/Emberfall Catyon/Magmacore; recolors per palette) ----
+function scapeVolcano(biome,horizon,t){
+  { ctx.save(); ctx.globalCompositeOperation="lighter"; const g=ctx.createLinearGradient(0,horizon*0.5,0,horizon); g.addColorStop(0,getAccent(0)); g.addColorStop(1,getAccent(0.20)); ctx.fillStyle=g; ctx.fillRect(0,horizon*0.5,W,horizon*0.5); ctx.restore(); } // hot horizon haze
+  const layers=[{f:0.10,a:0.5,h:0.42,gap:430},{f:0.22,a:0.82,h:0.64,gap:540}];
+  for(const L of layers){ const gap=L.gap*DPR, shift=cam*L.f, i0=Math.floor((shift-gap)/gap), i1=Math.ceil((shift+W+gap)/gap);
+    for(let k=i0;k<=i1;k++){ const x=k*gap-shift, vh=horizon*L.h*(0.7+0.5*hashY(k*3)), vw=vh*1.25, top=horizon-vh;
+      ctx.fillStyle=silhouetteColor(biome.sky[2],L.a,0.5);
+      ctx.beginPath(); ctx.moveTo(x-vw,horizon); ctx.lineTo(x-vw*0.18,top); ctx.lineTo(x+vw*0.18,top); ctx.lineTo(x+vw,horizon); ctx.closePath(); ctx.fill();
+      ctx.save(); ctx.globalCompositeOperation="lighter"; const cg=ctx.createRadialGradient(x,top,0,x,top,vw*0.42); cg.addColorStop(0,"rgba(255,190,70,"+(0.5+0.3*Math.sin(t*1.5+k))+")"); cg.addColorStop(1,"rgba(255,80,20,0)"); ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(x,top,vw*0.42,0,6.283); ctx.fill(); ctx.restore(); // glowing crater
+      ctx.strokeStyle=getAccent(0.5); ctx.lineWidth=2*DPR; ctx.lineCap="round"; for(let s=-1;s<=1;s++){ ctx.beginPath(); ctx.moveTo(x+s*vw*0.10, top+vh*0.10); ctx.lineTo(x+s*vw*0.42, horizon); ctx.stroke(); } } } // lava streaks
+  { ctx.save(); ctx.globalCompositeOperation="lighter"; for(let i=0;i<30;i++){ const span=W+60*DPR, x=(((i*73*DPR - cam*0.4)%span)+span)%span, y=horizon-(((t*42*DPR+i*47*DPR)%(horizon*0.92))), a=0.55*(1-(horizon-y)/(horizon*0.92));
+    ctx.fillStyle="rgba(255,"+(120+Math.floor(90*hashY(i)))+",40,"+Math.max(0,a)+")"; ctx.beginPath(); ctx.arc(x,y,(1+1.4*hashY(i*3))*DPR,0,6.283); ctx.fill(); } ctx.restore(); } // rising embers
+}
+// ---- RAIN: low storm clouds + rain-veiled distant ridge + bg drizzle + lightning glow (serves Abyssline/Downpurr/The Hush Below; the fx:'rain' overlay adds foreground rain) ----
+function scapeRain(biome,horizon,t){
+  const layers=[{f:0.05,y:0.16,a:0.5,sz:0.10,n:5,spd:5},{f:0.12,y:0.30,a:0.72,sz:0.14,n:5,spd:9}];
+  for(const L of layers){ const span=W*1.6, drift=cam*L.f+t*L.spd*DPR; ctx.fillStyle=silhouetteColor(biome.sky[2],L.a,0.65);
+    for(let i=0;i<L.n*2;i++){ const bx=hashS(i*3.1+L.f*53)*span, x=(((bx-drift)%span)+span)%span-span*0.2, y=horizon*L.y+Math.sin(t*0.3+i)*4*DPR, s=horizon*L.sz*(0.7+0.6*hashY(i*5));
+      ctx.beginPath(); ctx.ellipse(x,y,s*1.9,s,0,0,6.283); ctx.fill(); } } // clouds
+  { const gap=200*DPR, shift=cam*0.18, i0=Math.floor((shift-gap)/gap), i1=Math.ceil((shift+W+gap)/gap); ctx.fillStyle=silhouetteColor(biome.sky[1],0.55,0.55);
+    ctx.beginPath(); ctx.moveTo(i0*gap-shift,horizon); for(let k=i0;k<=i1;k++){ const x=k*gap-shift, h=horizon*(0.18+0.16*hashY(k)); ctx.lineTo(x,horizon-h); ctx.lineTo(x+gap*0.5,horizon-h*0.6); } ctx.lineTo(i1*gap-shift,horizon); ctx.closePath(); ctx.fill(); } // veiled ridge
+  { ctx.save(); ctx.globalAlpha=0.16; ctx.strokeStyle=silhouetteColor(biome.sky[0],1,1.7); ctx.lineWidth=1.2*DPR;
+    for(let i=0;i<44;i++){ const x=(((i*53*DPR - t*230*DPR)%W)+W)%W, y=((i*37*DPR + t*230*DPR)%horizon); ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-4*DPR,y+16*DPR); ctx.stroke(); } ctx.restore(); } // bg drizzle
+  { const fl=Math.sin(t*0.7)*Math.sin(t*3.3); if(fl>0.86){ ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.fillStyle="rgba(180,200,255,"+((fl-0.86)*1.3)+")"; ctx.fillRect(0,0,W,horizon); ctx.restore(); } } // lightning flash
+}
+// ---- HOLLYWOOD: Hollywood Hills + sign, tall LA palms, a Melrose boutique row (pink wall + angel-wings murals). Floor = Walk of Fame. ----
+function scapeHollywood(biome,horizon,t){
+  { const f=0.05, shift=cam*f, ridge=horizon*0.60; ctx.fillStyle=silhouetteColor(biome.sky[2],0.5,0.78); // Hollywood Hills
+    ctx.beginPath(); ctx.moveTo(0,horizon); for(let x=0;x<=W;x+=50*DPR){ const y=ridge+Math.sin((x+shift)*0.004)*22*DPR+Math.sin((x+shift)*0.011)*9*DPR; ctx.lineTo(x,y); } ctx.lineTo(W,horizon); ctx.closePath(); ctx.fill();
+    const sx=(((W*0.55 - cam*f)%(W*2))+W*2)%(W*2)-W*0.5, sy=ridge-16*DPR; ctx.fillStyle="rgba(248,248,252,0.95)"; ctx.font="800 "+(15*DPR)+"px Arial,Helvetica,sans-serif"; ctx.textAlign="left"; ctx.textBaseline="alphabetic"; ctx.fillText("HOLLYWOOD", sx, sy); } // the sign
+  { const gap=270*DPR, f=0.18, shift=cam*f, i0=Math.floor((shift-gap)/gap), i1=Math.ceil((shift+W+gap)/gap); // LA palms
+    for(let k=i0;k<=i1;k++){ if(hashS(k*3)<0.42) continue; const x=k*gap-shift, th=horizon*(0.44+0.2*hashY(k*5)), top=horizon-th, hx=x+(hashS(k)-0.5)*22*DPR;
+      ctx.strokeStyle=silhouetteColor(biome.sky[1],0.5,0.5); ctx.lineWidth=4*DPR; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(x,horizon); ctx.quadraticCurveTo(x+6*DPR,top+th*0.4,hx,top); ctx.stroke();
+      const sway=Math.sin(t*0.8+k)*0.08; ctx.lineWidth=3*DPR; for(let fi=0;fi<7;fi++){ const a=(fi/6-0.5)*2.6+sway, fl=th*0.30; ctx.beginPath(); ctx.moveTo(hx,top); ctx.quadraticCurveTo(hx+Math.sin(a)*fl*0.6,top-Math.cos(a)*fl*0.5,hx+Math.sin(a)*fl,top-Math.cos(a)*fl*0.4+10*DPR); ctx.stroke(); } } }
+  { const gap=200*DPR, f=0.34, shift=cam*f, i0=Math.floor((shift-gap)/gap), i1=Math.ceil((shift+W+gap)/gap), cols=["#ff4f8a","#ffd24d","#4fc6ff","#7ee08a","#b06bff","#ff8a4f"]; // Melrose storefronts
+    for(let k=i0;k<=i1;k++){ const x=k*gap-shift, w=gap*0.96, h=horizon*(0.30+0.12*hashY(k*2)), top=horizon-h, c=cols[((k%cols.length)+cols.length)%cols.length];
+      ctx.fillStyle=silhouetteColor(c,0.88,1.05); ctx.fillRect(x,top,w,h);
+      ctx.fillStyle=silhouetteColor(c,1,0.65); ctx.fillRect(x,top,w,11*DPR); ctx.fillStyle="rgba(255,255,255,.55)"; for(let s=0;s<Math.floor(w/(16*DPR));s++) if(s&1) ctx.fillRect(x+s*16*DPR,top,8*DPR,11*DPR); // awning
+      ctx.fillStyle="rgba(18,22,38,.42)"; ctx.fillRect(x+w*0.12,top+h*0.45,w*0.76,h*0.5); // window
+      if(hashS(k*7)>0.7){ ctx.strokeStyle="rgba(255,255,255,.85)"; ctx.lineWidth=2.5*DPR; const mx=x+w*0.5,my=top+h*0.42; for(const sgn of [-1,1]){ ctx.beginPath(); ctx.moveTo(mx,my); for(let fi=0;fi<5;fi++){ const a=fi/4*Math.PI*0.5; ctx.lineTo(mx+sgn*Math.cos(a)*w*0.18*(1-fi*0.05),my-Math.sin(a)*h*0.22); } ctx.stroke(); } } } } // angel-wings mural
+}
+function drawFloorWalkOfFame(biome,t){ const D=DPR, gy=GROUND(), gh=H-gy;
+  let g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,"#3a3530"); g.addColorStop(1,"#241f1c"); ctx.fillStyle=g; ctx.fillRect(0,gy,W,gh); // charcoal terrazzo
+  ctx.save(); ctx.beginPath(); ctx.rect(0,gy,W,gh); ctx.clip();
+  for(let i=0;i<60;i++){ const px=(((i*61*D - cam)%W)+W)%W, py=gy+hashY(i*3)*gh; ctx.fillStyle="rgba(200,190,170,"+(0.05+0.06*hashS(i))+")"; ctx.beginPath(); ctx.arc(px,py,1.4*D,0,7); ctx.fill(); } // speckle
+  const sp=150*D, off=((cam)%sp+sp)%sp;
+  for(let x=-off; x<W+sp; x+=sp){ const cy=gy+gh*0.5, sz=42*D;
+    ctx.fillStyle="#c66b7a"; rr(ctx,x-sz/2,cy-sz/2,sz,sz,6*D); ctx.fill(); ctx.strokeStyle="#d9a24a"; ctx.lineWidth=3*D; rr(ctx,x-sz/2,cy-sz/2,sz,sz,6*D); ctx.stroke();
+    ctx.fillStyle="#f6d98a"; ctx.beginPath(); for(let s=0;s<10;s++){ const a=-Math.PI/2+s*Math.PI/5, r=(s&1)?sz*0.14:sz*0.30; const px=x+Math.cos(a)*r, py=cy+Math.sin(a)*r; s?ctx.lineTo(px,py):ctx.moveTo(px,py); } ctx.closePath(); ctx.fill(); } // brass-rimmed coral star
+  ctx.restore(); }
+// ---- NEON TOKYO: Tokyo Tower, dense neon signboards (mock kanji), lit windows, strung red lanterns. Floor = wet neon street. ----
+function scapeTokyo(biome,horizon,t){
+  { const f=0.08, tx=W*0.7-cam*f, th=horizon*0.78, base=horizon, topY=base-th, w=th*0.34; ctx.strokeStyle=silhouetteColor("#ff5a3c",0.85,1.05); ctx.lineWidth=3*DPR; ctx.lineCap="round"; // Tokyo Tower
+    ctx.beginPath(); ctx.moveTo(tx-w/2,base); ctx.lineTo(tx-w*0.10,topY+th*0.15); ctx.moveTo(tx+w/2,base); ctx.lineTo(tx+w*0.10,topY+th*0.15); ctx.stroke();
+    for(let s=0;s<6;s++){ const y0=base-(s/6)*th*0.85, y1=base-((s+1)/6)*th*0.85, ww0=w*(1-s/6*0.85), ww1=w*(1-(s+1)/6*0.85); ctx.beginPath(); ctx.moveTo(tx-ww0/2,y0); ctx.lineTo(tx+ww1/2,y1); ctx.moveTo(tx+ww0/2,y0); ctx.lineTo(tx-ww1/2,y1); ctx.moveTo(tx-ww1/2,y1); ctx.lineTo(tx+ww1/2,y1); ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(tx,topY+th*0.15); ctx.lineTo(tx,topY); ctx.stroke(); ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.fillStyle="rgba(255,80,60,"+(0.4+0.6*(0.5+0.5*Math.sin(t*4)))+")"; ctx.beginPath(); ctx.arc(tx,topY,3*DPR,0,7); ctx.fill(); ctx.restore(); }
+  { const gap=120*DPR, f=0.2, shift=cam*f, i0=Math.floor((shift-gap)/gap), i1=Math.ceil((shift+W+gap)/gap), NEON=["#ff2d6b","#27e6ff","#ffe14d","#5cff9e","#b06bff","#ff8a3c"]; // skyscrapers + neon
+    for(let k=i0;k<=i1;k++){ const x=k*gap-shift, w=gap*(0.74+0.2*hashS(k*1.7)), h=horizon*(0.4+0.45*hashY(k*2.3)), top=horizon-h, bx=x-w/2;
+      ctx.fillStyle=silhouetteColor(biome.sky[2],0.92,0.45); ctx.fillRect(bx,top,w,h);
+      if(hashS(k*5)>0.4){ const c=NEON[((k%NEON.length)+NEON.length)%NEON.length], sgx=bx+w*(0.18+0.5*hashY(k*7)), sgw=8*DPR, n=3+Math.floor(hashY(k*3)*4), sgy=top+h*0.10;
+        ctx.save(); ctx.globalCompositeOperation="lighter"; for(let s=0;s<n;s++){ const yy=sgy+s*11*DPR, fl=0.5+0.5*Math.sin(t*3+k+s); ctx.fillStyle=silhouetteColor(c,0.4+0.5*fl,1.45); ctx.fillRect(sgx,yy,sgw,8*DPR); } ctx.restore();
+        ctx.strokeStyle=silhouetteColor(c,0.6,1.3); ctx.lineWidth=1.5*DPR; ctx.strokeRect(sgx-2*DPR,sgy-2*DPR,sgw+4*DPR,n*11*DPR); } // vertical signboard
+      if(hashS(k*9)>0.55){ const c=NEON[((k*3%NEON.length)+NEON.length)%NEON.length]; ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.fillStyle=silhouetteColor(c,0.5+0.3*Math.sin(t*4+k),1.3); ctx.fillRect(bx+w*0.1,top+h*0.5,w*0.8,5*DPR); ctx.restore(); }
+      for(let wy=top+10*DPR; wy<horizon; wy+=14*DPR) for(let wx=bx+6*DPR; wx<bx+w-6*DPR; wx+=12*DPR){ if(hashY(k*13+wx*0.07+wy*0.07)<0.62) continue; ctx.fillStyle="rgba(255,220,150,0.5)"; ctx.fillRect(wx,wy,4*DPR,5*DPR); } } }
+  { const f=0.4, shift=cam*f, sp=92*DPR, off=((shift)%sp+sp)%sp; for(let x=-off,i=0; x<W+sp; x+=sp,i++){ const ly=horizon*0.12+Math.sin(t*0.6+i)*4*DPR; // red lanterns
+    ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.fillStyle="rgba(255,120,80,.4)"; ctx.beginPath(); ctx.arc(x,ly,14*DPR,0,7); ctx.fill(); ctx.restore();
+    ctx.fillStyle="#d62828"; ctx.beginPath(); ctx.ellipse(x,ly,9*DPR,12*DPR,0,0,7); ctx.fill(); ctx.fillStyle="rgba(255,180,80,.55)"; ctx.fillRect(x-9*DPR,ly-1*DPR,18*DPR,2*DPR); } }
+}
+// ---- SENPAI SKIES: Makoto-Shinkai dramatic anime sky. Lens-flare sun, volumetric clouds, distant town, torii gate + telephone poles, sparkles. Floor = grass. ----
+function scapeAnime(biome,horizon,t){
+  { const sx=W*0.72-cam*0.02, sy=horizon*0.30; ctx.save(); ctx.globalCompositeOperation="lighter"; // lens-flare sun
+    let g=ctx.createRadialGradient(sx,sy,0,sx,sy,horizon*0.5); g.addColorStop(0,"rgba(255,250,230,0.9)"); g.addColorStop(0.2,"rgba(255,235,180,0.4)"); g.addColorStop(1,"rgba(255,220,150,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(sx,sy,horizon*0.5,0,7); ctx.fill();
+    ctx.fillStyle="rgba(255,253,245,0.95)"; ctx.beginPath(); ctx.arc(sx,sy,16*DPR,0,7); ctx.fill();
+    for(let i=1;i<=4;i++){ const fx=sx+(W*0.5-sx)*(i/5), fy=sy+(horizon*0.7-sy)*(i/5); ctx.fillStyle="rgba(255,230,180,"+(0.12/i)+")"; ctx.beginPath(); ctx.arc(fx,fy,(6+i*4)*DPR,0,7); ctx.fill(); } ctx.restore(); }
+  const layers=[{f:0.05,y:0.20,a:0.85,sz:0.13,n:4},{f:0.12,y:0.34,a:0.95,sz:0.17,n:4}]; // dramatic clouds
+  for(const L of layers){ const span=W*1.6, drift=cam*L.f+t*3*DPR;
+    for(let i=0;i<L.n*2;i++){ const bx=hashS(i*3.1+L.f*53)*span, x=(((bx-drift)%span)+span)%span-span*0.2, y=horizon*L.y+Math.sin(t*0.25+i)*5*DPR, s=horizon*L.sz*(0.7+0.6*hashY(i*5));
+      ctx.fillStyle="rgba(255,255,255,"+(L.a*0.9)+")"; for(let p=0;p<4;p++){ const ox=(p-1.5)*s*0.7, oy=Math.sin(p)*s*0.2; ctx.beginPath(); ctx.arc(x+ox,y+oy,s*(0.6+0.2*hashY(i+p)),0,7); ctx.fill(); }
+      ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.fillStyle="rgba(255,220,150,0.25)"; ctx.beginPath(); ctx.arc(x+s*0.6,y-s*0.3,s*0.5,0,7); ctx.fill(); ctx.restore(); } }
+  { const gap=120*DPR, shift=cam*0.16, i0=Math.floor((shift-gap)/gap), i1=Math.ceil((shift+W+gap)/gap); ctx.fillStyle=silhouetteColor(biome.sky[2],0.5,0.6); for(let k=i0;k<=i1;k++){ const x=k*gap-shift, h=horizon*(0.08+0.10*hashY(k)); ctx.fillRect(x-gap*0.4,horizon-h,gap*0.8,h); } } // distant town
+  { const f=0.3, shift=cam*f, tx=(((W*0.4 - shift)%(W*2.2))+W*2.2)%(W*2.2)-W*0.6; // torii gate
+    if(tx>-120*DPR && tx<W+120*DPR){ const th=horizon*0.34, top=horizon-th, w=th*0.7; ctx.fillStyle=silhouetteColor("#d83a3a",0.85,0.92);
+      ctx.fillRect(tx-w/2-6*DPR,top,9*DPR,th); ctx.fillRect(tx+w/2-3*DPR,top,9*DPR,th); ctx.fillRect(tx-w/2-16*DPR,top-2*DPR,w+32*DPR,9*DPR); ctx.fillRect(tx-w/2-8*DPR,top+14*DPR,w+16*DPR,6*DPR); }
+    const sp=300*DPR, off=((shift)%sp+sp)%sp; let prevX=null,prevY=null; // telephone poles + wires
+    for(let x=-off; x<W+sp; x+=sp){ const ph=horizon*0.30, top=horizon-ph; ctx.fillStyle=silhouetteColor(biome.sky[2],0.6,0.5); ctx.fillRect(x-2*DPR,top,4*DPR,ph); ctx.fillRect(x-12*DPR,top+8*DPR,24*DPR,3*DPR); ctx.fillRect(x-9*DPR,top+16*DPR,18*DPR,3*DPR);
+      if(prevX!==null){ ctx.strokeStyle=silhouetteColor(biome.sky[2],0.6,0.5); ctx.lineWidth=2*DPR; ctx.beginPath(); ctx.moveTo(prevX,prevY); ctx.quadraticCurveTo((prevX+x)/2,top+24*DPR,x,top+10*DPR); ctx.stroke(); } prevX=x; prevY=top+10*DPR; } }
+  { ctx.save(); ctx.globalCompositeOperation="lighter"; for(let i=0;i<20;i++){ const x=(((i*97*DPR - cam*0.3)%W)+W)%W, y=hashY(i*3)*horizon*0.7, tw=0.5+0.5*Math.sin(t*3+i*1.7); ctx.fillStyle="rgba(255,255,240,"+(0.3*tw)+")"; ctx.beginPath(); ctx.arc(x,y,1.6*DPR,0,7); ctx.fill(); } ctx.restore(); } // sparkles
+}
 // ===== END NEW ENVIRONMENTS =====
-const THEMED_SCAPE = { "Dawnpurr":scapeMeadow, "Candyland":scapeCandyland, "Underwater Reef":scapeReef, "Neon Cyber-City":scapeCyberCity, "Haunted Graveyard":scapeGraveyard, "Sakura Grove":scapeSakura, "Desert Pyramids":scapeDesert, "Frozen Aurora":scapeFrozen, "Sky Kingdom":scapeSky, "Mushroom Hollow":scapeMushroom, "Jungle Ruins":scapeJungle, "Clockwork City":scapeClockwork, "Storm Spire":scapeStormSpire, "Funland":scapeFunland, "Rainbow Road":scapeRainbowRoad, "Synthwave Grid":scapeSynthwave, "Cosmic Nebula":scapeNebula, "Vaporwave":scapeVaporwave, "Geometric Void":scapeGeoVoid, "Bioluminescent Abyss":scapeAbyss, "Elysium":scapeElysium, "Zero Purravity":scapeNebula, "Petal Purradise":scapeSakura, "Crimson Dawn":scapeRedClouds };
+const THEMED_SCAPE = { "Dawnpurr":scapeMeadow, "Candyland":scapeCandyland, "Underwater Reef":scapeReef, "Neon Cyber-Kitty":scapeCyberCity, "Haunted Graveyard":scapeGraveyard, "Sakura Grove":scapeSakura, "Desert Purramids":scapeDesert, "Frozen Purrora":scapeFrozen, "Sky Kingdom":scapeSky, "Meowshroom Hollow":scapeMushroom, "Jungle Ruins":scapeJungle, "Clockwork Kitty":scapeClockwork, "Storm Spurr":scapeStormSpire, "Funland":scapeFunland, "Rainbow Road":scapeRainbowRoad, "Synthwave Grid":scapeSynthwave, "Cosmic Mewbula":scapeNebula, "Vapurrwave":scapeVaporwave, "Geometric Void":scapeGeoVoid, "Bioluminescent Abyss":scapeAbyss, "Elysium":scapeElysium, "Zero Purravity":scapeNebula, "Petal Purradise":scapeSakura, "Crimson Dawn":scapeRedClouds, "Hyperpurr":scapeHyperpurr, "Gotham":scapeGotham,
+  // every remaining world wired to a bespoke scenery (recolors per its own palette) so NONE fall back to the generic hash style:
+  "Emberglide":scapeVolcano, "Sunspurr":scapeVolcano, "Emberfall Catyon":scapeVolcano, "Magmacore":scapeVolcano,
+  "Voltloom":scapeStormSpire, "Voltcrest":scapeStormSpire, "Stormclaw":scapeStormSpire,
+  "Abyssline":scapeRain, "Downpurr":scapeRain, "The Hush Below":scapeRain,
+  "Sporebloom":scapeMushroom, "Starwhisker":scapeNebula, "Singularitty":scapeGeoVoid,
+  "Mango Meowrage":scapeVaporwave, "Aurora Purrge":scapeFrozen, "Glacier Meowl":scapeFrozen, "Purrgatory":scapeGraveyard,
+  "Hollywood":scapeHollywood, "Neon Tokyo":scapeTokyo, "Senpai Skies":scapeAnime }; // keys MUST match ZONES[].name verbatim (meowified spellings) or the bespoke scape silently falls back to the hash style
 function _zoneObj(z){ return { name:z.name, sky:z.sky, ac:z.ac, fx:z.fx||"none" }; }
 function zonePair(dist){ const last=ZONES.length-1; // the two biomes you're between + blend t (for crossfading the distant world)
   { const fz=_forcedZone(); if(fz){ return {A:_zoneObj(fz), B:_zoneObj(fz), tt:0}; } } // ?world=/?zerog: scenery matches the forced world
@@ -3184,7 +3535,7 @@ function drawBackground(t,biome){
   }}
 }
 const THEMED_FLOOR = {}; // biome name -> drawFloorX(biome,t); themed floors register here
-THEMED_FLOOR["Rainbow Road"]=drawFloorRainbowRoad; THEMED_FLOOR["Synthwave Grid"]=drawFloorSynthwave; THEMED_FLOOR["Vaporwave"]=drawFloorVaporwave; THEMED_FLOOR["Bioluminescent Abyss"]=drawFloorAbyss; THEMED_FLOOR["Elysium"]=drawFloorElysium;
+THEMED_FLOOR["Rainbow Road"]=drawFloorRainbowRoad; THEMED_FLOOR["Synthwave Grid"]=drawFloorSynthwave; THEMED_FLOOR["Vapurrwave"]=drawFloorVaporwave; THEMED_FLOOR["Bioluminescent Abyss"]=drawFloorAbyss; THEMED_FLOOR["Elysium"]=drawFloorElysium;
 THEMED_FLOOR["Zero Purravity"]=drawFloorSynthwave; // Zero-G = neon synthwave grid floor (no grass/trees)
 THEMED_FLOOR["Petal Purradise"]=drawFloorCandy;     // all-pink sakura = candy floor (pink, no grass)
 THEMED_FLOOR["Crimson Dawn"]=drawFloorAbyss;        // red-cloud world = dark void floor
@@ -3351,13 +3702,30 @@ function drawFloorIce(biome,t){
 }
 function drawFloorSand(biome,t){
   const D=DPR, gy=GROUND(), gh=H-gy;
-  let g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,"#e8c98c"); g.addColorStop(1,"#c89a5c"); ctx.fillStyle=g; ctx.fillRect(0,gy,W,gh);
+  let g=ctx.createLinearGradient(0,gy,0,H); g.addColorStop(0,"#f0d49a"); g.addColorStop(0.5,"#e0b46e"); g.addColorStop(1,"#bd8a4c"); ctx.fillStyle=g; ctx.fillRect(0,gy,W,gh);
   ctx.save(); ctx.beginPath(); ctx.rect(0,gy,W,gh); ctx.clip();
+  // soft back dune band (parallax)
+  ctx.fillStyle="#f4dca8"; ctx.beginPath(); ctx.moveTo(0,H); for(let x=0;x<=W;x+=12*D){ ctx.lineTo(x, gy+15*D+Math.sin((x+cam*0.5)*0.006)*11*D); } ctx.lineTo(W,H); ctx.closePath(); ctx.fill();
+  // front dune crest
   const crest=x=>gy+8*D+Math.sin((x+cam*0.8)*0.012)*6*D+Math.sin((x+cam*0.8)*0.045)*2*D;
   ctx.fillStyle="#f0d6a0"; ctx.beginPath(); ctx.moveTo(0,H); for(let x=0;x<=W;x+=10*D){ ctx.lineTo(x,crest(x)); } ctx.lineTo(W,H); ctx.closePath(); ctx.fill();
   ctx.strokeStyle="rgba(150,110,60,.4)"; ctx.lineWidth=2*D; ctx.beginPath(); for(let x=0;x<=W;x+=10*D){ x?ctx.lineTo(x,crest(x)):ctx.moveTo(0,crest(0)); } ctx.stroke();
+  // buried sandstone block course w/ carved glyph ticks (ancient ruins underfoot)
+  const tile=120*D, off=((cam*0.9)%tile+tile)%tile, by=gy+gh*0.60, bh=gh*0.17;
+  for(let x=-off; x<W+tile; x+=tile){
+    ctx.fillStyle="rgba(120,86,44,.26)"; ctx.fillRect(x+3*D, by, tile-6*D, bh);
+    ctx.strokeStyle="rgba(90,62,30,.34)"; ctx.lineWidth=1.4*D; ctx.strokeRect(x+3*D, by, tile-6*D, bh);
+    ctx.fillStyle="rgba(90,62,30,.40)"; const gx=x+tile*0.5;
+    ctx.fillRect(gx-11*D, by+bh*0.28, 4*D, 7*D); ctx.fillRect(gx+3*D, by+bh*0.28, 4*D, 7*D); ctx.fillRect(gx-5*D, by+bh*0.58, 9*D, 3*D);
+  }
+  // wind ripples over the sand
   ctx.strokeStyle="rgba(190,150,95,.45)"; ctx.lineWidth=1.2*D;
-  for(let r=1;r<=4;r++){ const ry=gy+gh*(0.35+r*0.15); ctx.beginPath(); for(let x=0;x<=W;x+=8*D){ const yy=ry+Math.sin((x+cam*1.2+r*30)*0.06)*2.2*D; x?ctx.lineTo(x,yy):ctx.moveTo(0,yy); } ctx.stroke(); }
+  for(let r=1;r<=4;r++){ const ry=gy+gh*(0.32+r*0.13); ctx.beginPath(); for(let x=0;x<=W;x+=8*D){ const yy=ry+Math.sin((x+cam*1.2+r*30)*0.06)*2.2*D; x?ctx.lineTo(x,yy):ctx.moveTo(0,yy); } ctx.stroke(); }
+  // golden treasure glints twinkling in the sand (free-ambience dopamine; below the play line = zero readability cost)
+  ctx.save(); ctx.globalCompositeOperation="lighter";
+  for(let i=0;i<18;i++){ const span=W+80*D; const px=(((i*113*D - cam*0.8)%span)+span)%span-40*D, py=gy+gh*(0.22+0.66*hashY(i*3)); const tw=0.5+0.5*Math.sin(t*3+i*1.7), a=0.08+0.30*tw*tw;
+    let cg=ctx.createRadialGradient(px,py,0.5*D,px,py,5*D); cg.addColorStop(0,"rgba(255,236,150,"+a+")"); cg.addColorStop(1,"rgba(255,236,150,0)"); ctx.fillStyle=cg; ctx.fillRect(px-5*D,py-5*D,10*D,10*D); }
+  ctx.restore();
   ctx.restore();
 }
 function drawFloorReef(biome,t){
@@ -3377,16 +3745,24 @@ function drawFloorReef(biome,t){
   ctx.restore();
 }
 // biome -> floor map
-THEMED_FLOOR["Neon Cyber-City"]=drawFloorCircuit; THEMED_FLOOR["Voltcrest"]=drawFloorCircuit;
-THEMED_FLOOR["Clockwork City"]=drawFloorMetal;
+THEMED_FLOOR["Neon Cyber-Kitty"]=drawFloorCircuit; THEMED_FLOOR["Voltcrest"]=drawFloorCircuit;
+THEMED_FLOOR["Clockwork Kitty"]=drawFloorMetal;
 THEMED_FLOOR["Sky Kingdom"]=drawFloorChess;
-THEMED_FLOOR["Mango Mirage"]=drawFloorRoad;
-THEMED_FLOOR["Starwhisk"]=drawFloorChecker;
+THEMED_FLOOR["Mango Meowrage"]=drawFloorRoad;
+THEMED_FLOOR["Starwhisker"]=drawFloorChecker;
 THEMED_FLOOR["Dawnpurr"]=drawFloorGrass;
 THEMED_FLOOR["Candyland"]=drawFloorCandy;
-THEMED_FLOOR["Magmacore"]=drawFloorLava; THEMED_FLOOR["Sunspire"]=drawFloorLava; THEMED_FLOOR["Emberfall Canyon"]=drawFloorLava;
-THEMED_FLOOR["Frozen Aurora"]=drawFloorIce; THEMED_FLOOR["Glacier Howl"]=drawFloorIce;
-THEMED_FLOOR["Desert Pyramids"]=drawFloorSand;
+THEMED_FLOOR["Magmacore"]=drawFloorLava; THEMED_FLOOR["Sunspurr"]=drawFloorLava; THEMED_FLOOR["Emberfall Catyon"]=drawFloorLava;
+THEMED_FLOOR["Frozen Purrora"]=drawFloorIce; THEMED_FLOOR["Glacier Meowl"]=drawFloorIce;
+THEMED_FLOOR["Desert Purramids"]=drawFloorSand;
+THEMED_FLOOR["Hyperpurr"]=drawFloorSynthwave; // neon dancefloor grid
+THEMED_FLOOR["Gotham"]=drawFloorStreet;       // wet neon-reflected asphalt
+THEMED_FLOOR["Hollywood"]=drawFloorWalkOfFame; THEMED_FLOOR["Neon Tokyo"]=drawFloorStreet; THEMED_FLOOR["Senpai Skies"]=drawFloorGrass;
+// remaining worlds: give each a themed floor (no more bare default) -- matched to theme
+THEMED_FLOOR["Emberglide"]=drawFloorLava; THEMED_FLOOR["Voltloom"]=drawFloorCircuit; THEMED_FLOOR["Stormclaw"]=drawFloorCircuit; THEMED_FLOOR["Storm Spurr"]=drawFloorMetal;
+THEMED_FLOOR["Sporebloom"]=drawFloorGrass; THEMED_FLOOR["Meowshroom Hollow"]=drawFloorGrass; THEMED_FLOOR["Jungle Ruins"]=drawFloorGrass; THEMED_FLOOR["Sakura Grove"]=drawFloorCandy;
+THEMED_FLOOR["Abyssline"]=drawFloorReef; THEMED_FLOOR["Downpurr"]=drawFloorReef; THEMED_FLOOR["Aurora Purrge"]=drawFloorIce;
+THEMED_FLOOR["Purrgatory"]=drawFloorAbyss; THEMED_FLOOR["Cosmic Mewbula"]=drawFloorAbyss; THEMED_FLOOR["The Hush Below"]=drawFloorAbyss; THEMED_FLOOR["Singularitty"]=drawFloorAbyss; THEMED_FLOOR["Geometric Void"]=drawFloorSynthwave;
 THEMED_FLOOR["Underwater Reef"]=drawFloorReef;
 THEMED_FLOOR["Funland"]=drawFloorPark;
 
@@ -3716,6 +4092,13 @@ function drawObstacles(t){
       ctx.strokeStyle="#3ee07f"; ctx.lineWidth=6*DPR; ctx.beginPath(); ctx.moveTo(x-hw+3*DPR,my+2*DPR); ctx.quadraticCurveTo(x,my+13*DPR,x+hw-3*DPR,my+2*DPR); ctx.stroke();
       const by=my-9*DPR + Math.sin(t*4+x)*3*DPR;
       ctx.strokeStyle="#eafff2"; ctx.lineWidth=3.5*DPR; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x-9*DPR,by+8*DPR); ctx.lineTo(x,by); ctx.lineTo(x+9*DPR,by+8*DPR); ctx.stroke(); }
+    else if(o.type==="jackpot"){ const hw=o.w/2, my=o.y-o.h; ctx.save(); if(o.hit) ctx.globalAlpha=0.55; // GOLDEN jackpot pad: glowing $ bouncer (variable big payout, once)
+      ctx.fillStyle="#7a5a14"; roundRect(x-hw,my-2*DPR,8*DPR,o.h+6*DPR,3*DPR); ctx.fill(); roundRect(x+hw-8*DPR,my-2*DPR,8*DPR,o.h+6*DPR,3*DPR); ctx.fill();
+      const glow=0.5+0.5*Math.sin(t*6+x); ctx.lineCap="round";
+      ctx.strokeStyle="rgba(255,211,77,"+(0.28+glow*0.4)+")"; ctx.lineWidth=15*DPR; ctx.beginPath(); ctx.moveTo(x-hw+3*DPR,my+2*DPR); ctx.quadraticCurveTo(x,my+14*DPR,x+hw-3*DPR,my+2*DPR); ctx.stroke();
+      ctx.strokeStyle="#ffd34d"; ctx.lineWidth=6*DPR; ctx.beginPath(); ctx.moveTo(x-hw+3*DPR,my+2*DPR); ctx.quadraticCurveTo(x,my+14*DPR,x+hw-3*DPR,my+2*DPR); ctx.stroke();
+      if(!o.hit){ ctx.fillStyle="#fff7d6"; ctx.font="900 "+(15*DPR)+"px Orbitron"; ctx.textAlign="center"; ctx.fillText("$", x, my-7*DPR+Math.sin(t*4+x)*2*DPR); }
+      ctx.restore(); ctx.globalAlpha=1; }
     else if(o.type==="spring"){ ctx.strokeStyle="#ffcf5a"; ctx.lineWidth=5*DPR; ctx.beginPath();
       for(let i=0;i<4;i++){ ctx.moveTo(x-14*DPR,o.y-i*11*DPR); ctx.lineTo(x+14*DPR,o.y-i*11*DPR-6*DPR); } ctx.stroke();
       ctx.fillStyle="#ffd96b"; roundRect(x-18*DPR,o.y-o.h-8*DPR,36*DPR,10*DPR,3*DPR); ctx.fill();
@@ -4036,7 +4419,7 @@ function frame(){
   for(const q of popTexts){ ctx.globalAlpha=Math.max(0,q.life); ctx.fillStyle="#fff"; ctx.strokeStyle="rgba(0,0,0,.6)"; ctx.lineWidth=3*DPR; ctx.font=`900 ${15*DPR}px Orbitron`; ctx.textAlign="center"; ctx.strokeText(q.txt,q.x-cam,q.y); ctx.fillText(q.txt,q.x-cam,q.y); } ctx.globalAlpha=1;
   ctx.restore(); // end follow-camera; HUD below is screen-fixed
   // off-screen-up arrow: only if the kitty is STILL above the view after the camera pan (rare now)
-  if(state==="fly" && (kitty.y+camY)<30*DPR){ const ax=Math.max(40*DPR,Math.min(W-40*DPR,kitty.x-cam)), alt=Math.max(0,Math.floor((30*DPR-kitty.y)/(24*DPR)));
+  if(state==="fly" && (kitty.y+camY)<30*DPR){ const ax=Math.max(40*DPR,Math.min(W-40*DPR,kitty.x-cam)), alt=Math.max(0,Math.floor((30*DPR-(kitty.y+camY))/(24*DPR)));
     ctx.save(); ctx.textAlign="center"; ctx.fillStyle=biome.ac; ctx.beginPath(); ctx.moveTo(ax,12*DPR); ctx.lineTo(ax-12*DPR,32*DPR); ctx.lineTo(ax+12*DPR,32*DPR); ctx.closePath(); ctx.fill();
     ctx.fillStyle="#fff"; ctx.shadowColor="rgba(0,0,0,.7)"; ctx.shadowBlur=5*DPR; ctx.font=`800 ${13*DPR}px Orbitron`; ctx.fillText(alt+"m up", ax, 52*DPR); ctx.restore(); }
   if(state==="fly"){ ctx.save(); ctx.shadowColor="rgba(0,0,0,.7)"; ctx.shadowBlur=6*DPR; ctx.textAlign="left";
@@ -4187,7 +4570,8 @@ function drawUnlockSkin(skId){
 }
 function _burstConfetti(big){
   const cv=document.getElementById("unlockFx"), D=Math.min(2,window.devicePixelRatio||1);
-  cv.width=Math.floor(innerWidth*D); cv.height=Math.floor(innerHeight*D); cv.style.width=innerWidth+"px"; cv.style.height=innerHeight+"px";
+  const _cw=cv.clientWidth||innerWidth, _ch=cv.clientHeight||innerHeight; // measure the actual full-screen box (CSS inset:0); innerWidth/Height are stale on iOS standalone PWAs -> off-center/clipped confetti
+  cv.width=Math.floor(_cw*D); cv.height=Math.floor(_ch*D);
   const g=cv.getContext("2d"), cx=cv.width/2, cy=cv.height*0.42;
   const cols=[_acHex(), "#ffd34d", "#ffffff", "#fff2c0"], N=big?170:95, P=[];
   for(let i=0;i<N;i++){ const a=Math.random()*6.283, sp=(2+Math.random()*7)*D*(big?1.3:1);
@@ -4263,6 +4647,15 @@ document.getElementById("playBtn").onclick=()=>{ snd("ui"); reset(); };
 document.getElementById("shopBtn").onclick=()=>{ snd("ui"); openShop(); };
 document.getElementById("againBtn").onclick=()=>{ snd("ui"); reset(); };
 document.getElementById("shop2Btn").onclick=()=>{ snd("ui"); openShop(); };
+document.getElementById("questBtn").onclick=openQuests;
+document.getElementById("quest2Btn").onclick=openQuests;
+document.getElementById("questClose").onclick=closeQuests;
+document.getElementById("worldsBtn").onclick=openWorlds;
+document.getElementById("worlds2Btn").onclick=openWorlds;
+document.getElementById("worldsClose").onclick=closeWorlds;
+{ const _sd=document.getElementById("scDaily"); if(_sd) _sd.onclick=()=>{ if(!dailyState().claimed) claimDaily(); }; }
+// insta-restart: tapping the results page anywhere OUTSIDE a button/input launches the next run (the page itself stays; Space does this too via press())
+{ const _rc=document.getElementById("resultCard"); if(_rc) _rc.addEventListener("click",(e)=>{ if(state!=="result") return; if(e.target.closest(".pill")||e.target.closest("button")||e.target.closest("input")||e.target.closest("#resultRank")) return; snd("ui"); reset(); }); } // #resultRank holds the first-run name prompt (label/whitespace had no guard) -> don't restart when tapping it
 document.getElementById("closeShop").onclick=()=>{ snd("ui"); closeShopFn(); };
 document.getElementById("closeShopTop").onclick=()=>{ snd("ui"); closeShopFn(); };
 (function(){ const fb=document.getElementById("shopFilters");
@@ -4320,6 +4713,7 @@ function updateAbilityBtn(){ const b=document.getElementById("abilityBtn"); if(!
   b.classList.remove("hidden");
   const finite=c.uses!==Infinity; let prog=1, count="";
   if(ab()==="teleport"){ const cap=ACTIVE_AB.teleport.uses; prog = abUses>=cap?1:(abRegen/7); count=Math.max(0,abUses); } // regen toward next charge
+  else if(ab()==="spicyspeed" && abCd<=0 && abUses<ACTIVE_AB.spicyspeed.uses){ prog = abRegen/12; count=Math.max(0,abUses); } // SPICY: ring fills toward the next 12s-regen charge (was sitting empty)
   else if(abCd>0 && c.cd>0){ prog = 1-Math.max(0,Math.min(1,abCd/c.cd)); if(finite) count=Math.max(0,abUses); } // recharging
   else { prog = (finite && abUses<=0)?0:1; if(finite) count=Math.max(0,abUses); }
   const usable = prog>=1 && !(finite && abUses<=0);
@@ -4396,10 +4790,12 @@ function renderLB(top){ const list=document.getElementById("lbList"); list.inner
     frag.appendChild(row); });
   list.appendChild(frag); }
 function submitLB(){ const n=(document.getElementById("lbName").value||"").trim()||"anon"; try{ localStorage.setItem("sm.spritecannon.name",n); }catch{}
-  const st=document.getElementById("lbStatus"); st.textContent="Submitting..."; snd("ui"); const ch=streamChannel(), onStream=(lbScope==="stream"&&ch);
+  const st=document.getElementById("lbStatus"); st.textContent="Submitting..."; snd("ui"); const ch=streamChannel(), onStream=(lbScope==="stream"&&ch), scope=lbScope, my=++lbReq; // my = stale-response guard (a tab switch bumps lbReq -> this response is dropped)
   scSubmit(n, ch).then(d=>{
+    if(my!==lbReq) return; // user switched scope mid-submit -> don't clobber the now-current board
+    if(scope==="weekly"){ loadLB(); return; } // weekly: the submit payload carries only global/stream -> repaint the REAL weekly board (scope-correct + its own lbReq guard) instead of showing global scores under the weekly header
     if(onStream && d.streamTop) renderLB(d.streamTop); else if(d.top) renderLB(d.top);
-    const rank = onStream ? d.streamRank : d.rank; st.textContent= rank?("You're #"+rank+(onStream?" on this stream!":" globally!")):"Submitted!"; }).catch(()=>{ st.textContent="Couldn't submit (offline)."; }); }
+    const rank = onStream ? d.streamRank : d.rank; st.textContent= rank?("You're #"+rank+(onStream?" on this stream!":" globally!")):"Submitted!"; }).catch(()=>{ if(my!==lbReq) return; st.textContent="Couldn't submit (offline)."; }); }
 function _postRank(el, name){ const ch=streamChannel(), onStream=!!ch;
   el.style.display="block"; el.textContent="Posting your rank...";
   scSubmit(name, ch).then(d=>{
