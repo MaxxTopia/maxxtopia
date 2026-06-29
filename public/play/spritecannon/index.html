@@ -1076,9 +1076,10 @@ function update(){
     cam += ((kitty.x-260*DPR)-cam)*0.12; if(cam<0) cam=0;
     // follow-camera: only engages once the kitty climbs into the top band; pans up to keep it on screen,
     // eases back to 0 as it descends. Render-only (collisions/positions stay in world space).
-    { const band=H*0.26, tgt=Math.max(0, band-kitty.y); camY += (tgt-camY)*0.25; // smooth follow into a top band
-      const hardMin=Math.max(0, 12*DPR - kitty.y); if(camY<hardMin) camY=hardMin; // HARD clamp: kitty can NEVER leave the top, even on a fast launch the ease can't catch
+    if(_touchDev){ const band=H*0.26, tgt=Math.max(0, band-kitty.y); camY += (tgt-camY)*0.25; // follow-camera ONLY on phones (small/short screen + punchy zoom needs it)
+      const hardMin=Math.max(0, 12*DPR - kitty.y); if(camY<hardMin) camY=hardMin; // hard clamp: kitty never leaves the top on a fast launch
       if(camY<0.5) camY=0; }
+    else camY=0; // DESKTOP: no follow-cam -> the kitty soars up off the top and you take in the whole world (Diggy prefers this on PC)
     const nd=Math.floor((kitty.x-90*DPR)/(24*DPR)); distM=Math.max(distM,nd);
     if(distM>2000){ const _sp=Math.hypot(kitty.vx,kitty.vy); if(_sp>10*DPR && parts.length<240) parts.push({x:kitty.x-kitty.vx*0.4,y:kitty.y,vx:0,vy:-0.05*DPR,life:0.45,c:getAccent(0.45),r:(2+Math.random()*2.5)*DPR}); } // deep-run speed trail
     if(ab()==="lightning" && overchargeT>0 && parts.length<260){ for(let i=0;i<2;i++) parts.push({x:kitty.x-kitty.vx*0.35+rand(-6,6)*DPR,y:kitty.y+rand(-9,9)*DPR,vx:0,vy:0,life:0.4,c:i%2?"#7fe7ff":"#ffffff",r:(2.5+Math.random()*3)*DPR}); } // Thunder Dash lightning trail (dash fired via ability key, see activateAbility)
