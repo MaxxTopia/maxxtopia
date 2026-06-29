@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0d0820">
-<title>streammaxxing · sprite cannon</title>
+<title>Sprite Cannon — Free Arcade Game · Maxxtopia</title>
+<meta name="description" content="Sprite Cannon — a free browser arcade game from Maxxtopia. Launch the kitty as far as you can, unlock 50+ skins and abilities, and climb the weekly leaderboard for coin prizes. Installable on phones.">
+<link rel="canonical" href="https://maxxtopia.com/play/spritecannon/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Maxxtopia Arcade">
+<meta property="og:title" content="Sprite Cannon — Free Arcade Game">
+<meta property="og:description" content="Launch the kitty, unlock 50+ skins, win weekly coin prizes. Free, installable, no app store.">
+<meta property="og:url" content="https://maxxtopia.com/play/spritecannon/">
+<meta property="og:image" content="https://maxxtopia.com/play/spritecannon/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sprite Cannon — Free Arcade Game · Maxxtopia">
+<meta name="twitter:description" content="Launch the kitty, unlock 50+ skins, win weekly coin prizes. Free, installable, no app store.">
+<meta name="twitter:image" content="https://maxxtopia.com/play/spritecannon/icons/icon-512.png">
 <!-- PWA / Add-to-Home-Screen (effective only on the standalone web build; harmless 404s elsewhere) -->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -40,6 +52,13 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
 .stat .u{ font-size:14px; color:var(--ac); margin-left:4px; }
 .lbl{ font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:#9fb0cf; }
 .coins .stat{ color:#ffd34d; }
+/* PWA install pill (hosted web build only) - Android = real install button, iOS = Share-sheet hint */
+#scInstall{ display:none; position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:30; pointer-events:auto; cursor:pointer;
+  align-items:center; gap:7px; padding:11px 18px; border-radius:999px; max-width:90vw; text-align:center;
+  font-family:'Saira Semi Condensed','Segoe UI',sans-serif; font-weight:800; font-size:14px; letter-spacing:.02em; color:#06140f;
+  background:linear-gradient(180deg,#ffe27a,#ffc23d); box-shadow:0 8px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.25); }
+#scInstall.show{ display:inline-flex; }
+#scInstall:active{ transform:translateX(-50%) scale(.97); }
 
 /* always-visible restart button */
 .restart{ position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:7; pointer-events:auto; cursor:pointer;
@@ -502,6 +521,9 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
   </div>
 </div>
 
+<!-- PWA install pill: shown only on the hosted web build (top-level), hidden once installed. -->
+<div id="scInstall" role="button" tabindex="0"><span>&#128241;</span> <span id="scInstallTxt">Add to Home Screen</span></div>
+
 <script>window.SC_STANDALONE=true;</script>
 <script>
 "use strict";
@@ -513,6 +535,22 @@ const AB = STANDALONE ? "imported/" : "/imported/"; // asset base: relative when
 // Skipped on the in-app/OBS hub so the desktop overlay path is untouched. Failures are swallowed.
 if (STANDALONE && "serviceWorker" in navigator) {
   window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+}
+// PWA install affordance (hosted web build, top-level page only - never in the OBS hub or an embed iframe).
+// Android/Chromium: capture beforeinstallprompt -> a real "Add to Home Screen" button. iOS Safari has no such
+// event, so we show a Share-sheet hint instead. Hidden once launched as an installed app.
+if (STANDALONE && window.top === window.self) {
+  var _scInstalled = function(){ try{ return matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone === true; }catch(e){ return false; } };
+  var _scDefer = null, _scIsIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var _scEl = function(){ return document.getElementById("scInstall"); };
+  var _scTxt = function(t){ var b=_scEl(); if(b){ var s=b.querySelector("#scInstallTxt"); if(s) s.textContent=t; } };
+  window.addEventListener("beforeinstallprompt", function(e){ e.preventDefault(); _scDefer=e; var b=_scEl(); if(b && !_scInstalled()){ _scTxt("Add to Home Screen"); b.classList.add("show"); } });
+  window.addEventListener("appinstalled", function(){ var b=_scEl(); if(b) b.classList.remove("show"); _scDefer=null; });
+  var _scWire = function(){ var b=_scEl(); if(!b) return;
+    if(!_scInstalled() && _scIsIOS && !_scDefer){ _scTxt("Install: tap Share, then 'Add to Home Screen'"); b.classList.add("show"); }
+    b.onclick = function(){ if(_scDefer){ b.classList.remove("show"); _scDefer.prompt(); _scDefer=null; }
+      else if(_scIsIOS){ _scTxt("Tap the Share icon, then 'Add to Home Screen'"); } }; };
+  if(document.readyState!=="loading") _scWire(); else window.addEventListener("DOMContentLoaded", _scWire);
 }
 const cv = document.getElementById("game"), ctx = cv.getContext("2d");
 // Resolution independence. CRISP = retina sharpness (canvas pixels per CSS pixel - backing-store only).

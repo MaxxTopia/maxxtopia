@@ -133,6 +133,17 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       </nav>
     </div>
     <div class="flex items-center gap-2.5">
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-[var(--color-text)] border border-[var(--color-line)] bg-[rgba(255,255,255,0.03)]"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg id="mobile-menu-icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="mobile-menu-icon-close" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
       <a
         href="/discordmaxxer"
         class="header-product-btn header-dm-btn hidden sm:inline-flex"
@@ -157,4 +168,33 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       </a>
     </div>
   </div>
+
+  <!-- Mobile dropdown — SEPARATE from the desktop nav above (which stays hidden md:flex,
+       untouched). This is md:hidden, so it only exists below the desktop breakpoint. -->
+  <nav id="mobile-menu" class="md:hidden hidden border-t border-[var(--color-line)] bg-[rgba(10,6,18,0.97)] px-5 pb-3 pt-1" aria-label="Mobile menu">
+    <a href="/#apps" class="block py-2.5 text-[15px] text-[var(--color-text)]">Apps</a>
+    <a href="/play" class="block py-2.5 text-[15px] text-[var(--color-text)]">Arcade</a>
+    <a href="/why" class="block py-2.5 text-[15px] text-[var(--color-text)]">Why</a>
+    <a href="/updates" class="block py-2.5 text-[15px] text-[var(--color-text)]">Updates</a>
+    <a href="/guides" class="block py-2.5 text-[15px] text-[var(--color-text)]">Guides</a>
+    <a href="https://discord.gg/S78eecbWdx" target="_blank" rel="noopener noreferrer" class="block py-2.5 text-[15px] text-[var(--color-text)]">Discord</a>
+  </nav>
+  <script is:inline>
+    (() => {
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      const iOpen = document.getElementById('mobile-menu-icon-open');
+      const iClose = document.getElementById('mobile-menu-icon-close');
+      if (!btn || !menu) return;
+      const setOpen = (open) => {
+        menu.classList.toggle('hidden', !open);
+        iOpen.classList.toggle('hidden', open);
+        iClose.classList.toggle('hidden', !open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      };
+      btn.addEventListener('click', () => setOpen(menu.classList.contains('hidden')));
+      menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    })();
+  </script>
 </header>

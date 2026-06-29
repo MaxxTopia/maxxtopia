@@ -16,6 +16,7 @@ export const GET: APIRoute = () => {
     { loc: `${SITE}/why/`,     priority: '0.8', changefreq: 'monthly' },
     { loc: `${SITE}/updates/`, priority: '0.8', changefreq: 'weekly' },
     { loc: `${SITE}/play/`,    priority: '0.8', changefreq: 'weekly' },
+    { loc: `${SITE}/play/spritecannon/`, priority: '0.7', changefreq: 'weekly' },
     ...products.map((p) => ({
       loc: `${SITE}/${p.slug}/`,
       priority: p.status === 'live' ? '0.9' : '0.6',
