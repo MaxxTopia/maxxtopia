@@ -1361,10 +1361,13 @@ const ZONES = [
   // ZERO-G WORLD: low gravity + floating bounce-pads + bobbing hazards. Neon palette, fast-but-floaty.
   // lowGrav = gravity multiplier; floaty = spawn mid-air pads/hazards instead of the ground set.
   { name:"Zero Purravity",      d:1500,  sky:["#1a0a52","#6f1ad6","#0a0524"], ac:"#19f0ff", fx:"none", lowGrav:0.40, floaty:true },
+  { name:"Petal Purradise",     d:4200,  sky:["#ff9ec7","#ffc1de","#ffe6f2"], ac:"#ff4f9e", fx:"none" }, // all-pink cherry-blossom world (Naruto-Sakura vibe; sakura/petals are generic)
+  { name:"Crimson Dawn",        d:21500, sky:["#2a0810","#5e0e1a","#0a0306"], ac:"#ff2d4a", fx:"none" }, // ominous red clouds on dark crimson (Akatsuki-inspired but original shapes + non-identical shade)
 ];
 ZONES.sort((a,b)=>a.d-b.d); // keep zones ordered by distance after appending the new environments
-const _ZG = ZONES.find(z=>z.name==="Zero Purravity"); // Zero-G zone (for the ?zerog test-jump)
-const _forceZeroG = (typeof Q!=="undefined") && Q.has("zerog"); // ?zerog forces the Zero-G world from the start (testing)
+// World test-jump: ?world=<substring> (or legacy ?zerog) forces a world from the start, for previewing.
+const _forceWorld = ((typeof Q!=="undefined" ? (Q.get("world") || (Q.has("zerog") ? "zero" : "")) : "") || "").toLowerCase();
+function _forcedZone(){ return _forceWorld ? (ZONES.find(z=>z.name.toLowerCase().includes(_forceWorld)) || null) : null; }
 function _h2r(h){ const n=parseInt(h.slice(1),16); return [n>>16&255,n>>8&255,n&255]; }
 function _r2h(r,g,b){ return "#"+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0")).join(""); }
 function _mix(a,b,t){ const A=_h2r(a),B=_h2r(b); return _r2h(A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t); }
@@ -1378,7 +1381,7 @@ function proceduralBiome(k){ const hue=(210+k*137.508)%360, darken=Math.min(0.12
     sky:[hslHex(hue,0.88,0.54-darken), hslHex(hue+20,0.92,0.38-darken), hslHex(hue+42,0.96,0.20-darken*0.6)],
     ac:hslHex(hue+180,0.97,0.64), fx:_PFX[((k%_PFX.length)+_PFX.length)%_PFX.length] }; }
 function biomeAt(dist){ const last=ZONES.length-1;
-  if(_forceZeroG && _ZG){ return { name:_ZG.name, sky:_ZG.sky.slice(), ac:_ZG.ac, fx:_ZG.fx, lowGrav:_ZG.lowGrav, floaty:_ZG.floaty }; } // ?zerog test-jump
+  { const fz=_forcedZone(); if(fz){ return { name:fz.name, sky:fz.sky.slice(), ac:fz.ac, fx:fz.fx||"none", lowGrav:fz.lowGrav, floaty:fz.floaty }; } } // ?world=/?zerog test-jump
   if(dist<=ZONES[last].d){ let i=0; while(i<last && dist>=ZONES[i+1].d) i++; const A=ZONES[i], B=ZONES[Math.min(i+1,last)]; const t=B.d>A.d?_sm((dist-A.d)/(B.d-A.d)):0; const near=t<0.5?A:B;
     return { name:near.name, sky:[_mix(A.sky[0],B.sky[0],t),_mix(A.sky[1],B.sky[1],t),_mix(A.sky[2],B.sky[2],t)], ac:_mix(A.ac,B.ac,t), fx:near.fx||"none", lowGrav:near.lowGrav, floaty:near.floaty }; }
   const over=dist-ZONES[last].d, SP=1500, k=Math.floor(over/SP); const A=(k===0)?ZONES[last]:proceduralBiome(k-1), B=proceduralBiome(k); const t=_sm((over%SP)/SP); const near=t<0.5?A:B;
@@ -2717,11 +2720,30 @@ function drawFloorElysium(biome,t){
   const cg=70*D, co=((cam)%cg+cg)%cg; ctx.fillStyle='rgba(255,252,242,0.85)'; for(let x=-co-cg,i=0;x<W+cg;x+=cg,i++){ const col=Math.round((cam-co)/cg)+i; const r=cg*(0.5+0.18*hashY(col)); ctx.beginPath(); ctx.arc(x+cg*0.5,gy+2*D,r,Math.PI,2*Math.PI,false); ctx.fill(); }
   ctx.fillStyle=getAccent(0.5); ctx.fillRect(0,gy,W,2.5*D); for(let i=0;i<10;i++){ const px=(((i*151*D-cam)%W)+W)%W, py=gy+gh*(0.3+0.5*hashY(i)), tw=0.5+0.5*Math.sin(t*3+i*1.7); ctx.fillStyle='rgba(255,244,210,'+(0.25+0.5*tw)+')'; ctx.beginPath(); ctx.arc(px,py,2.2*D,0,6.283); ctx.fill(); } ctx.restore();
 }
+// CRIMSON DAWN scenery: ominous red clouds drifting on a dark crimson sky + a blood moon. Inspired by the
+// Akatsuki red-cloud motif but with original lumpy shapes (not the trademarked cloud-with-white-outline).
+function _redCloud(x,y,s,fill,rim,a){ const lobes=[[0,0,1],[-0.72,0.12,0.7],[0.72,0.12,0.72],[-0.36,-0.3,0.6],[0.42,-0.26,0.62],[1.18,0.18,0.5],[-1.18,0.2,0.48]];
+  ctx.save(); ctx.globalAlpha=a; ctx.fillStyle=rim; for(const L of lobes){ ctx.beginPath(); ctx.arc(x+L[0]*s,y+L[1]*s,L[2]*s*1.14,0,6.283); ctx.fill(); }
+  ctx.fillStyle=fill; for(const L of lobes){ ctx.beginPath(); ctx.arc(x+L[0]*s,y+L[1]*s,L[2]*s,0,6.283); ctx.fill(); } ctx.restore(); }
+function scapeRedClouds(biome,horizon,t){
+  const mx=W*0.74-cam*0.02, my=horizon*0.30; // blood moon
+  ctx.save(); ctx.globalCompositeOperation='lighter'; const mg=ctx.createRadialGradient(mx,my,0,mx,my,horizon*0.55);
+  mg.addColorStop(0,'rgba(255,60,72,0.32)'); mg.addColorStop(1,'rgba(120,10,22,0)'); ctx.fillStyle=mg; ctx.fillRect(0,0,W,horizon); ctx.restore();
+  ctx.fillStyle='#7c0e1a'; ctx.beginPath(); ctx.arc(mx,my,horizon*0.13,0,6.283); ctx.fill();
+  ctx.fillStyle=biome.sky?biome.sky[2]:'#0a0306'; ctx.beginPath(); ctx.arc(mx+horizon*0.05,my-horizon*0.028,horizon*0.115,0,6.283); ctx.fill(); // crescent shadow
+  const layers=[{f:0.06,y:0.18,sz:0.10,n:5,a:0.85,c:'#b0141f',rim:'#360309',spd:6},
+                {f:0.15,y:0.32,sz:0.14,n:5,a:0.93,c:'#dc1f30',rim:'#48060f',spd:11},
+                {f:0.27,y:0.50,sz:0.18,n:4,a:0.98,c:'#ff2f44',rim:'#5a0a14',spd:18}];
+  for(const L of layers){ const span=W*1.7, drift=cam*L.f + t*L.spd*DPR;
+    for(let i=0;i<L.n*2;i++){ const baseX=hashS(i*3.1+L.f*97)*span; const x=(((baseX-drift)%span)+span)%span - span*0.3;
+      const y=horizon*(L.y+(hashY(i*2.7)-0.5)*0.10)+Math.sin(t*0.4+i)*4*DPR; const s=horizon*L.sz*(0.7+0.6*hashY(i*5));
+      _redCloud(x,y,s,L.c,L.rim,L.a); } }
+}
 // ===== END NEW ENVIRONMENTS =====
-const THEMED_SCAPE = { "Dawnpurr":scapeMeadow, "Candyland":scapeCandyland, "Underwater Reef":scapeReef, "Neon Cyber-City":scapeCyberCity, "Haunted Graveyard":scapeGraveyard, "Sakura Grove":scapeSakura, "Desert Pyramids":scapeDesert, "Frozen Aurora":scapeFrozen, "Sky Kingdom":scapeSky, "Mushroom Hollow":scapeMushroom, "Jungle Ruins":scapeJungle, "Clockwork City":scapeClockwork, "Storm Spire":scapeStormSpire, "Funland":scapeFunland, "Rainbow Road":scapeRainbowRoad, "Synthwave Grid":scapeSynthwave, "Cosmic Nebula":scapeNebula, "Vaporwave":scapeVaporwave, "Geometric Void":scapeGeoVoid, "Bioluminescent Abyss":scapeAbyss, "Elysium":scapeElysium, "Zero Purravity":scapeNebula };
+const THEMED_SCAPE = { "Dawnpurr":scapeMeadow, "Candyland":scapeCandyland, "Underwater Reef":scapeReef, "Neon Cyber-City":scapeCyberCity, "Haunted Graveyard":scapeGraveyard, "Sakura Grove":scapeSakura, "Desert Pyramids":scapeDesert, "Frozen Aurora":scapeFrozen, "Sky Kingdom":scapeSky, "Mushroom Hollow":scapeMushroom, "Jungle Ruins":scapeJungle, "Clockwork City":scapeClockwork, "Storm Spire":scapeStormSpire, "Funland":scapeFunland, "Rainbow Road":scapeRainbowRoad, "Synthwave Grid":scapeSynthwave, "Cosmic Nebula":scapeNebula, "Vaporwave":scapeVaporwave, "Geometric Void":scapeGeoVoid, "Bioluminescent Abyss":scapeAbyss, "Elysium":scapeElysium, "Zero Purravity":scapeNebula, "Petal Purradise":scapeSakura, "Crimson Dawn":scapeRedClouds };
 function _zoneObj(z){ return { name:z.name, sky:z.sky, ac:z.ac, fx:z.fx||"none" }; }
 function zonePair(dist){ const last=ZONES.length-1; // the two biomes you're between + blend t (for crossfading the distant world)
-  if(_forceZeroG && _ZG){ return {A:_zoneObj(_ZG), B:_zoneObj(_ZG), tt:0}; } // ?zerog: scenery = Zero-G too (not the low-distance meadow)
+  { const fz=_forcedZone(); if(fz){ return {A:_zoneObj(fz), B:_zoneObj(fz), tt:0}; } } // ?world=/?zerog: scenery matches the forced world
   if(dist<=ZONES[last].d){ let i=0; while(i<last && dist>=ZONES[i+1].d) i++; const A=ZONES[i], B=ZONES[Math.min(i+1,last)]; const tt=B.d>A.d?_sm((dist-A.d)/(B.d-A.d)):0; return {A:_zoneObj(A),B:_zoneObj(B),tt}; }
   const over=dist-ZONES[last].d, SP=1500, k=Math.floor(over/SP); const A=(k===0)?_zoneObj(ZONES[last]):proceduralBiome(k-1), B=proceduralBiome(k); const tt=_sm((over%SP)/SP); return {A:A,B:B,tt}; }
 function _scapeFor(biome,horizon,t){
@@ -3164,6 +3186,8 @@ function drawBackground(t,biome){
 const THEMED_FLOOR = {}; // biome name -> drawFloorX(biome,t); themed floors register here
 THEMED_FLOOR["Rainbow Road"]=drawFloorRainbowRoad; THEMED_FLOOR["Synthwave Grid"]=drawFloorSynthwave; THEMED_FLOOR["Vaporwave"]=drawFloorVaporwave; THEMED_FLOOR["Bioluminescent Abyss"]=drawFloorAbyss; THEMED_FLOOR["Elysium"]=drawFloorElysium;
 THEMED_FLOOR["Zero Purravity"]=drawFloorSynthwave; // Zero-G = neon synthwave grid floor (no grass/trees)
+THEMED_FLOOR["Petal Purradise"]=drawFloorCandy;     // all-pink sakura = candy floor (pink, no grass)
+THEMED_FLOOR["Crimson Dawn"]=drawFloorAbyss;        // red-cloud world = dark void floor
 function drawFloor(biome,t){ const f=THEMED_FLOOR[biome.name]; if(f){ f(biome,t); return; } drawFloorDefault(biome); }
 function drawFloorDefault(biome){
   ctx.fillStyle="#0a1024"; ctx.fillRect(0,GROUND(),W,H-GROUND());
