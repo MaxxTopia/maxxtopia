@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-06-29",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.4.7",
+    "title": "THE SYSTEM: a built-in daily quest tracker.",
+    "body": "A new gamified Daily Quest panel lives in the extension - add your own goals, check them off, earn XP and rank up E to S, build a streak. Plus a big update to the built-in Sprite Cannon arcade.",
+    "items": [
+      "THE SYSTEM: personal daily quests, XP, ranks E to S, streaks - all on your device (Alt+Shift+Q).",
+      "Sprite Cannon: a new WORLDS map screen to climb toward the deepest biome.",
+      "Sprite Cannon: many new worlds, daily rewards, quests, and jackpot pads.",
+      "Latest EasyList/EasyPrivacy + Twitch quality fix."
+    ]
+  },
+  {
     "date": "2026-06-28",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
