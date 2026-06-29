@@ -2718,9 +2718,10 @@ function drawFloorElysium(biome,t){
   ctx.fillStyle=getAccent(0.5); ctx.fillRect(0,gy,W,2.5*D); for(let i=0;i<10;i++){ const px=(((i*151*D-cam)%W)+W)%W, py=gy+gh*(0.3+0.5*hashY(i)), tw=0.5+0.5*Math.sin(t*3+i*1.7); ctx.fillStyle='rgba(255,244,210,'+(0.25+0.5*tw)+')'; ctx.beginPath(); ctx.arc(px,py,2.2*D,0,6.283); ctx.fill(); } ctx.restore();
 }
 // ===== END NEW ENVIRONMENTS =====
-const THEMED_SCAPE = { "Dawnpurr":scapeMeadow, "Candyland":scapeCandyland, "Underwater Reef":scapeReef, "Neon Cyber-City":scapeCyberCity, "Haunted Graveyard":scapeGraveyard, "Sakura Grove":scapeSakura, "Desert Pyramids":scapeDesert, "Frozen Aurora":scapeFrozen, "Sky Kingdom":scapeSky, "Mushroom Hollow":scapeMushroom, "Jungle Ruins":scapeJungle, "Clockwork City":scapeClockwork, "Storm Spire":scapeStormSpire, "Funland":scapeFunland, "Rainbow Road":scapeRainbowRoad, "Synthwave Grid":scapeSynthwave, "Cosmic Nebula":scapeNebula, "Vaporwave":scapeVaporwave, "Geometric Void":scapeGeoVoid, "Bioluminescent Abyss":scapeAbyss, "Elysium":scapeElysium };
+const THEMED_SCAPE = { "Dawnpurr":scapeMeadow, "Candyland":scapeCandyland, "Underwater Reef":scapeReef, "Neon Cyber-City":scapeCyberCity, "Haunted Graveyard":scapeGraveyard, "Sakura Grove":scapeSakura, "Desert Pyramids":scapeDesert, "Frozen Aurora":scapeFrozen, "Sky Kingdom":scapeSky, "Mushroom Hollow":scapeMushroom, "Jungle Ruins":scapeJungle, "Clockwork City":scapeClockwork, "Storm Spire":scapeStormSpire, "Funland":scapeFunland, "Rainbow Road":scapeRainbowRoad, "Synthwave Grid":scapeSynthwave, "Cosmic Nebula":scapeNebula, "Vaporwave":scapeVaporwave, "Geometric Void":scapeGeoVoid, "Bioluminescent Abyss":scapeAbyss, "Elysium":scapeElysium, "Zero Purravity":scapeNebula };
 function _zoneObj(z){ return { name:z.name, sky:z.sky, ac:z.ac, fx:z.fx||"none" }; }
 function zonePair(dist){ const last=ZONES.length-1; // the two biomes you're between + blend t (for crossfading the distant world)
+  if(_forceZeroG && _ZG){ return {A:_zoneObj(_ZG), B:_zoneObj(_ZG), tt:0}; } // ?zerog: scenery = Zero-G too (not the low-distance meadow)
   if(dist<=ZONES[last].d){ let i=0; while(i<last && dist>=ZONES[i+1].d) i++; const A=ZONES[i], B=ZONES[Math.min(i+1,last)]; const tt=B.d>A.d?_sm((dist-A.d)/(B.d-A.d)):0; return {A:_zoneObj(A),B:_zoneObj(B),tt}; }
   const over=dist-ZONES[last].d, SP=1500, k=Math.floor(over/SP); const A=(k===0)?_zoneObj(ZONES[last]):proceduralBiome(k-1), B=proceduralBiome(k); const tt=_sm((over%SP)/SP); return {A:A,B:B,tt}; }
 function _scapeFor(biome,horizon,t){
@@ -3162,6 +3163,7 @@ function drawBackground(t,biome){
 }
 const THEMED_FLOOR = {}; // biome name -> drawFloorX(biome,t); themed floors register here
 THEMED_FLOOR["Rainbow Road"]=drawFloorRainbowRoad; THEMED_FLOOR["Synthwave Grid"]=drawFloorSynthwave; THEMED_FLOOR["Vaporwave"]=drawFloorVaporwave; THEMED_FLOOR["Bioluminescent Abyss"]=drawFloorAbyss; THEMED_FLOOR["Elysium"]=drawFloorElysium;
+THEMED_FLOOR["Zero Purravity"]=drawFloorSynthwave; // Zero-G = neon synthwave grid floor (no grass/trees)
 function drawFloor(biome,t){ const f=THEMED_FLOOR[biome.name]; if(f){ f(biome,t); return; } drawFloorDefault(biome); }
 function drawFloorDefault(biome){
   ctx.fillStyle="#0a1024"; ctx.fillRect(0,GROUND(),W,H-GROUND());
