@@ -4,3 +4,8 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self' https://static.cloudflareinsights.com https://cloudflareinsights.com https://*.ingest.sentry.io https://spritecannon-lb.maxxtopia.workers.dev https://spritecannon-codes.maxxtopia.workers.dev; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+
+# Service workers must never be HTTP-cached, or the browser keeps the OLD sw.js (default 4h) and
+# the PWA never picks up new builds. no-cache = always revalidate -> updates propagate immediately.
+/play/spritecannon/sw.js
+  Cache-Control: no-cache, max-age=0, must-revalidate
