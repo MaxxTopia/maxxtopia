@@ -2,7 +2,7 @@
    Scope = the directory this file is served from (e.g. /play/spritecannon/).
    Bump CACHE when shipping a new build so clients pull the fresh shell. */
 "use strict";
-var CACHE = "sprite-cannon-v1";
+var CACHE = "sprite-cannon-v2";
 var SHELL = [
   "./",
   "index.html",
