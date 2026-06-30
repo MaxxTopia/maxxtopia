@@ -3,6 +3,20 @@
     "date": "2026-06-29",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
+    "version": "v1.5.1",
+    "title": "Sprite Cannon: portals, daily quests, and a world map.",
+    "body": "The built-in arcade gets a big content + polish drop, and the Daily Quest panel keeps improving.",
+    "items": [
+      "Warp portals: fly through to blast out high with a speed boost.",
+      "Daily quests: 3 a day with a reset countdown, plus a world map of every biome.",
+      "Weekly leaderboard now shows the coin prize on each top-5 spot.",
+      "Smoother world transitions, fairer trampolines, and new reward sounds."
+    ]
+  },
+  {
+    "date": "2026-06-29",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
     "version": "v1.5.0",
     "title": "Daily Quest timers + Sprite Cannon cloud save.",
     "body": "THE SYSTEM daily-quest panel gets timed quests (a stopwatch fills the bar and auto-completes), a minimize button, and Solo-Leveling effects. The built-in Sprite Cannon arcade adds cross-device cloud save.",
