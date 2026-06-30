@@ -3,6 +3,20 @@
     "date": "2026-06-29",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
+    "version": "v1.5.0",
+    "title": "Daily Quest timers + Sprite Cannon cloud save.",
+    "body": "THE SYSTEM daily-quest panel gets timed quests (a stopwatch fills the bar and auto-completes), a minimize button, and Solo-Leveling effects. The built-in Sprite Cannon arcade adds cross-device cloud save.",
+    "items": [
+      "Daily Quest timers: set minutes, the bar fills, auto-completes - keeps running in the background.",
+      "Sprite Cannon cloud save: sync your coins and progress across devices from Settings.",
+      "Sprite Cannon on Twitch: the game window resizes from any edge and the Play button moved off chat.",
+      "Latest EasyList/EasyPrivacy + Twitch quality fix."
+    ]
+  },
+  {
+    "date": "2026-06-29",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
     "version": "v1.4.7",
     "title": "THE SYSTEM: a built-in daily quest tracker.",
     "body": "A new gamified Daily Quest panel lives in the extension - add your own goals, check them off, earn XP and rank up E to S, build a streak. Plus a big update to the built-in Sprite Cannon arcade.",
