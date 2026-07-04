@@ -1,0 +1,4 @@
+Contact: mailto:dtman@maxxtopia.com
+Expires: 2027-07-04T00:00:00Z
+Preferred-Languages: en
+Canonical: https://maxxtopia.com/.well-known/security.txt

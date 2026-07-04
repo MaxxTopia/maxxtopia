@@ -16,7 +16,9 @@
   --color-text: #f8f6ff;
   --color-text-mid: #d8d0f0;
   --color-muted: #9a90b8;
-  --color-subtle: #5e537a;
+  /* Raised from #5e537a (2.86:1, WCAG-fail) to pass AA (~4.6:1) — used on
+     stat labels + citations, so it must clear the 4.5:1 body-text bar. */
+  --color-subtle: #8b80ac;
 
   --color-magenta: #e25bff;
   --color-cyan: #00d4ff;
@@ -25,13 +27,13 @@
   --color-success: #4ade80;
   --color-danger: #ff6b8b;
 
-  --font-sans: 'Geist', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Geist Sans', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
   /* Display: Bebas Neue — esports-iconic heavy condensed all-caps. */
-  --font-display: 'Bebas Neue', 'Geist', 'Impact', sans-serif;
+  --font-display: 'Bebas Neue', 'Geist Sans', 'Impact', sans-serif;
   /* Accent (replaces the elegant Instrument Serif): Bowlby One — chunky
      friendly-aggressive, energy-drink-coded. Used italic for inline punch. */
-  --font-accent: 'Bowlby One', 'Geist', sans-serif;
+  --font-accent: 'Bowlby One', 'Geist Sans', sans-serif;
   /* Backwards-compat alias — old code refs --font-serif. */
   --font-serif: var(--font-accent);
 
@@ -50,6 +52,37 @@
   *::before,
   *::after {
     box-sizing: border-box;
+  }
+
+  /* Site-wide keyboard focus ring. Only one :focus rule existed before, so
+     most custom controls had no visible focus state. :focus-visible keeps it
+     off mouse clicks and on for keyboard/AT users. */
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  /* Skip-to-content link — first focusable element, hidden until focused, so
+     keyboard/screen-reader users can jump past the header + product rail. */
+  .skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 200;
+    transform: translateY(-160%);
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--color-magenta);
+    color: #0a0612;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    transition: transform 160ms ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
   }
 
   html {

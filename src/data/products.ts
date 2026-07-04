@@ -337,25 +337,16 @@ export const products: Product[] = [
         headline: "0% idle CPU. Pinned.",
         body: 'Tournament Mode v3 cuts wakeups, ticks down background polling, and parks the renderer when you\'re focused on the game. Discord stays connected. Your frame pacing stays flat.',
         visual: {
-          kind: 'video',
-          src: '/screenshots/discordmaxxer/_v8_clips/03_stat1.mp4',
-          poster: '/screenshots/discordmaxxer/demo-poster.jpg',
-          alt: 'Tournament Mode toggle with idle CPU at 0%',
+          kind: 'chips',
+          chips: [
+            { label: 'Idle CPU · in-game, Tournament Mode', value: '0%', emphasize: true },
+            { label: 'Discord stays live — DMs, pings, calls', value: 'Connected' },
+          ],
+          caption: 'Renderer parked, background polling ticked down · fires on Ctrl+Alt+T, even mid-game',
         },
       },
       {
-        eyebrow: '03 · The Plugins',
-        headline: "10 plugins. First-class code.",
-        body: 'Native plugin engine — no third-party runtime tax. Cursor, Privacy, Trim, plus seven more. Each one written as TypeScript, compiled with the client, signed with the same key.',
-        visual: {
-          kind: 'video',
-          src: '/screenshots/discordmaxxer/_v8_clips/06_branded.mp4',
-          poster: '/screenshots/discordmaxxer/demo-poster.jpg',
-          alt: 'Plugin panel showing 10 native plugins',
-        },
-      },
-      {
-        eyebrow: '04 · No Phone-Home',
+        eyebrow: '03 · No Phone-Home',
         headline: "Opens what you sent. Nothing else.",
         body: 'Stock Discord opens calls to telemetry, ad-tech, and crash-pipeline domains the moment it launches. We strip every one of those. You ping who you meant to ping.',
         visual: {
@@ -365,17 +356,6 @@ export const products: Product[] = [
             { label: 'Discordmaxxer · domains it opens on launch', value: '0', emphasize: true },
           ],
           caption: 'Before you type a single message · measured via packet capture',
-        },
-      },
-      {
-        eyebrow: '05 · The Themes',
-        headline: "5 hand-tuned palettes.",
-        body: 'Maxxer · Valorant · Sonic · DMC · BO3. Five complete colorways — not skins, not CSS hacks. Each one re-paints the entire client without breaking native UI.',
-        visual: {
-          kind: 'video',
-          src: '/screenshots/discordmaxxer/_v8_clips/07_themes.mp4',
-          poster: '/screenshots/discordmaxxer/demo-poster.jpg',
-          alt: 'Five-theme palette switcher',
         },
       },
     ],

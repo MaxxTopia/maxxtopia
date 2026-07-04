@@ -14,6 +14,12 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@fontsource/bebas-neue": "^5.2.7",
+    "@fontsource/bowlby-one": "^5.2.8",
+    "@fontsource/crimson-pro": "^5.2.8",
+    "@fontsource/geist-mono": "^5.2.8",
+    "@fontsource/geist-sans": "^5.2.5",
+    "@fontsource/metal-mania": "^5.2.7",
     "@tailwindcss/vite": "^4.0.0",
     "astro": "^5.0.0",
     "tailwindcss": "^4.0.0",

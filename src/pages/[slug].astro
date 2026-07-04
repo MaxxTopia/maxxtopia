@@ -7,6 +7,7 @@ import StatusTape from '../components/StatusTape.astro';
 import BuildStatus from '../components/BuildStatus.astro';
 import NotifyMeCard from '../components/NotifyMeCard.astro';
 import ProductScreenshot from '../components/ProductScreenshot.astro';
+import LiveEmbed from '../components/LiveEmbed.astro';
 import FeatureZone from '../components/FeatureZone.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import SourceWall from '../components/SourceWall.astro';
@@ -151,8 +152,8 @@ const reconvertConfig: Record<string, {
         a: "Two ways. Between games, the HUD polls your live tournament standing — your points, your rank, and how many games you have left in the window — and tells you, for the format you're playing, whether to play for placement or push for elims to make the cutoff. And once you're a few minutes into a match, the scouting report names the lobby: which pros and live streamers are still alive, who's beaten down for an easy key, and who's off-region. You always know the read.",
       },
       {
-        q: 'Do I need two PCs or a capture card?',
-        a: "No. It runs on the same PC you play on. Set your Fortnite name once, tick auto-detect, and it finds your FNCS and Cash Cup matches on its own through Epic — no second PC, no capture card, no log files to wire up. Two-PC streamers can run it on the streaming PC for a zero-overhead setup, but that's entirely optional. Heads up: it only works for standard BR tournaments (FNCS, Cash Cups) — Ranked, pubs and Reload have no downloadable server replay.",
+        q: 'Which modes does it work in?',
+        a: "Tournaments only — FNCS, Cash Cups and other standard BR competitive events. It reads the official server replay Epic generates for those matches, so it's built for cups, not casual play. If it's not finding a game in Ranked, pubs, Reload or Zero Build arena, that's expected — those modes don't produce a downloadable replay to read. Set your Fortnite name once, tick auto-detect, and it finds your cup matches on its own. Runs on the same PC you play on — no second PC or capture card needed.",
       },
     ],
   },
@@ -286,6 +287,32 @@ const isAim = product.slug === 'aimmaxxer';
 //   - per-product story sections render after the hero
 const isOM = product.slug === 'optimizationmaxxing';
 const isDM = product.slug === 'discordmaxxer';
+// Dropmaxxer is a browser app — embed it live so visitors can test it in-page
+// instead of just seeing a screenshot.
+const isDrop = product.slug === 'dropmaxxer';
+
+// Downloadable .exe installers get the Windows system-requirements line + the
+// SmartScreen reassurance. The old gate matched 'setup.exe', which never hit
+// the real 'Name-Setup-x.y.z.exe' filenames — so the note silently never showed.
+const isExeDownload = !!product.primaryCta?.href?.toLowerCase().endsWith('.exe');
+
+// SEO <title>/description overrides — META ONLY, the visible hero copy is
+// untouched. These lead with the real search keyword (nobody googles the
+// coined brand word) and keep the meta description ≤160 chars.
+const seoTitleOverride: Record<string, string> = {
+  discordmaxxer: 'Lightweight Discord Client — 750 MB Less RAM | Discordmaxxer',
+  optimizationmaxxing: 'Windows Game Optimizer — 100 Audited FPS Tweaks | Maxxtopia',
+  extensionmaxxing: 'Free YouTube & Twitch Ad Blocker + More | AdBlock-Maxxer',
+  streammaxxing: 'Free Stream Alerts, Overlays & TTS | Streammaxxing',
+};
+const seoDescOverride: Record<string, string> = {
+  discordmaxxer: 'A lightweight Discord client that runs at 288 MB instead of 1,041 — same servers, friends and pings, 753 MB lighter. Free, native, zero telemetry.',
+  optimizationmaxxing: 'A free Windows game optimizer: 100 audited, reversible FPS tweaks with cited sources and one-click undo. No placebos, no bloat, no telemetry.',
+  extensionmaxxing: 'Free ad blocker for YouTube, Twitch and Spotify across Chrome, Brave, Edge and Firefox. Manifest V3-ready, no Web Store gatekeeping — and more than ads.',
+  streammaxxing: 'Free, local Twitch stream alerts, overlays and TTS — no cloud hop, no delay. Import Botrix, trim clips, normalize loudness. Runs on your PC.',
+};
+const pageTitle = seoTitleOverride[product.slug] ?? `${product.name} — ${product.tagline}`;
+const pageDescription = seoDescOverride[product.slug] ?? product.description;
 // Products that show the How-it-works walkthrough ABOVE the feature zones:
 // OM + dropmaxxer (zero-install / try-it-first), and streammaxxing (lead with
 // the "here's everything it does" walkthrough before the latency moat zones).
@@ -359,7 +386,7 @@ const softwareSchema = {
     priceCurrency: 'USD',
   },
   publisher: { '@type': 'Organization', name: 'Maxxtopia', url: 'https://maxxtopia.com' },
-  url: `https://maxxtopia.com/${product.slug}`,
+  url: `https://maxxtopia.com/${product.slug}/`,
 };
 
 // Per-product social card: a bespoke, branded 1200×630 card rendered for
@@ -396,14 +423,14 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://maxxtopia.com/' },
-    { '@type': 'ListItem', position: 2, name: product.name, item: `https://maxxtopia.com/${product.slug}` },
+    { '@type': 'ListItem', position: 2, name: product.name, item: `https://maxxtopia.com/${product.slug}/` },
   ],
 };
 ---
 
 <Layout
-  title={`${product.name} — ${product.tagline}`}
-  description={product.description}
+  title={pageTitle}
+  description={pageDescription}
   image={ogImage}
 >
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
@@ -543,10 +570,18 @@ const breadcrumbSchema = {
               )}
             </p>
           )}
-          {isLive && product.primaryCta?.href?.includes('setup.exe') && (
-            <p class="reveal reveal-5 mt-3 text-sm text-[var(--color-subtle)]">
-              First launch may show a Windows "unknown publisher" notice — that's normal for a new indie app. Click <strong>More info → Run anyway</strong>. The auto-updater is cryptographically signed.
-            </p>
+          {isExeDownload && (
+            <>
+              <p class="reveal reveal-5 mt-3 text-sm text-[var(--color-muted)]">
+                <span class="inline-flex items-center gap-1.5 font-mono text-[13px]">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8M12 18v2"/></svg>
+                  Windows 10 / 11 · 64-bit
+                </span>
+              </p>
+              <p class="reveal reveal-5 mt-2 text-sm text-[var(--color-subtle)]">
+                First launch may show a Windows "unknown publisher" notice — that's normal for a new indie app. Click <strong>More info → Run anyway</strong>. The auto-updater is cryptographically signed.
+              </p>
+            </>
           )}
         </div>
 
@@ -596,8 +631,20 @@ const breadcrumbSchema = {
         )}
       </div>
 
+      <!-- Dropmaxxer: live, in-page "try it right here" window instead of a
+           static hero shot — it's a browser app, so let visitors test it. -->
+      {isDrop && (
+        <LiveEmbed
+          url={product.primaryCta.href}
+          title={product.name}
+          poster={screenshotMain}
+          accentHex={product.accentHex}
+          host="dropmaxxer.pages.dev"
+        />
+      )}
+
       <!-- Apple-style hero shot (or demo video) for live + beta products -->
-      {!isExt && (screenshotMain || product.demoVideo) && (
+      {!isExt && !isDrop && (screenshotMain || product.demoVideo) && (
         <ProductScreenshot
           src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
           alt={`${product.name} demo`}

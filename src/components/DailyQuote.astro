@@ -297,7 +297,14 @@ const quotes = [
       sessionStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
     };
 
-    setCollapsed(sessionStorage.getItem(STORAGE_KEY) === '1');
+    // Default to the collapsed pill on phones (no stored preference yet) so
+    // the wide card never covers a CTA or trust note on small screens. Desktop
+    // still opens expanded. A stored choice always wins.
+    const storedCollapsed = sessionStorage.getItem(STORAGE_KEY);
+    const startCollapsed = storedCollapsed === null
+      ? window.matchMedia('(max-width: 768px)').matches
+      : storedCollapsed === '1';
+    setCollapsed(startCollapsed);
 
     close.addEventListener('click', () => setCollapsed(true));
     pill.addEventListener('click',  () => setCollapsed(false));
