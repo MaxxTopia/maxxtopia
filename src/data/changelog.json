@@ -1,6 +1,20 @@
 [
   {
     "date": "2026-07-05",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.5.7",
+    "title": "Gorilla Warfare lands in Sprite Cannon.",
+    "body": "The bundled Sprite Cannon game gets a brand-new boss level plus an in-game coin shop.",
+    "items": [
+      "New GORILLA WARFARE boss level - outrun a cosmonaut silverback across a scrolling moon arena.",
+      "Thread the pillar gaps to grab coin trails, and dodge his ground-pound.",
+      "New in-game GET COINS shop.",
+      "Refreshed EasyList/EasyPrivacy + latest Twitch fix."
+    ]
+  },
+  {
+    "date": "2026-07-05",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
     "version": "v0.1.46",
