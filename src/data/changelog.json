@@ -1,6 +1,20 @@
 [
   {
     "date": "2026-07-05",
+    "product": "streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.47",
+    "title": "The keyboard cam, reimagined.",
+    "body": "The keyboard overlay is now a premium see-through 'centerpiece' keyboard - drop any image under the glass keys as a skin, or leave it transparent to sit clean over your gameplay.",
+    "items": [
+      "Glass keycaps over a skinnable display - add your own art, or leave it fully transparent.",
+      "Ornate engraved frame plus an iridescent, holographic sheen (both toggleable).",
+      "Keys glow in your accent color on every press, with real see-through switch depth.",
+      "Pick a keyboard skin right from the dashboard."
+    ]
+  },
+  {
+    "date": "2026-07-05",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
     "version": "v1.5.7",
