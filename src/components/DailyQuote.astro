@@ -316,6 +316,25 @@ const quotes = [
     close.addEventListener('click', () => setCollapsed(true));
     pill.addEventListener('click',  () => setCollapsed(false));
 
+    // ── Auto-minimize on game interaction ────────────────────────
+    // On the /play page the Sprite Cannon game is embedded as an iframe
+    // (#sc-frame). The moment the player clicks/taps into it, collapse the
+    // widget so the card never sits over the run. Interacting with an iframe
+    // blurs the parent window and makes the iframe the activeElement — that's
+    // our cross-frame signal (the game's own events don't bubble out). We only
+    // minimize; we never fight the player by re-opening it.
+    const gameFrame = document.getElementById('sc-frame');
+    if (gameFrame) {
+      window.addEventListener('blur', () => {
+        // Defer a tick so activeElement has settled to the iframe.
+        setTimeout(() => {
+          if (document.activeElement === gameFrame && !card.hasAttribute('hidden')) {
+            setCollapsed(true);
+          }
+        }, 0);
+      });
+    }
+
     // ── Idle fade ────────────────────────────────────────────────
     // After 60s without hover, the widget fades to ~25% opacity.
     // Hovering anywhere on it cancels the fade; mouseleave restarts
