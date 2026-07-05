@@ -3,6 +3,20 @@
     "date": "2026-07-05",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
+    "version": "v0.1.46",
+    "title": "Automations, input cams, and Stream Deck support.",
+    "body": "A big drop: build your own 'when X happens, do Y' automations, add real-time keyboard, mouse and controller overlays, and control everything from an Elgato Stream Deck.",
+    "items": [
+      "Automations: rules that fire actions (play a sound, fire an alert, switch OBS scene, toggle a source, speak TTS, post to Discord) on follows, subs, gifts, bits, raids, channel-point redeems, and going live.",
+      "Input cams: keyboard, mouse and controller overlays - keyboard and mouse use safe read-only capture with no added game latency.",
+      "Stream Deck plugin: put any streammaxxing action, or a whole automation, on a button.",
+      "Switch OBS scenes and toggle sources automatically from any stream event."
+    ]
+  },
+  {
+    "date": "2026-07-05",
+    "product": "streammaxxing",
+    "productSlug": "streammaxxing",
     "version": "v0.1.43",
     "title": "Now Playing, redesigned - pick your style.",
     "body": "The now-playing widget got a full redesign and now comes in five looks you can switch between live from the dashboard. Whatever you're playing shows up with real album art and a progress bar that stays perfectly in sync.",
