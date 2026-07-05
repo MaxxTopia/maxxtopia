@@ -1198,7 +1198,7 @@ export const products: Product[] = [
         visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp?v=2', alt: 'Where Everyone Was map — the current-season Fortnite map showing each pro and streamer\'s skin icon and IGN at the POI they landed, with the field as dots and per-POI head-counts.' },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.68.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.70.exe', external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
