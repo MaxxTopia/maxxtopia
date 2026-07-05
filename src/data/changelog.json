@@ -1,5 +1,20 @@
 [
   {
+    "date": "2026-07-05",
+    "product": "streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.43",
+    "title": "Now Playing, redesigned - pick your style.",
+    "body": "The now-playing widget got a full redesign and now comes in five looks you can switch between live from the dashboard. Whatever you're playing shows up with real album art and a progress bar that stays perfectly in sync.",
+    "items": [
+      "Five styles: Vinyl, Glass, Neon, Spectrum, and Broadcast - swap live from one OBS source.",
+      "Redesigned vinyl: the album art fills the record and the tonearm taps with a spark on every track change.",
+      "Every style auto-matches the colors of the song's cover art.",
+      "Smoother, accurate progress bar for YouTube and browser music - no more stutter.",
+      "Works with anything: Spotify, YouTube, Apple Music, SoundCloud, any player."
+    ]
+  },
+  {
     "date": "2026-06-29",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
