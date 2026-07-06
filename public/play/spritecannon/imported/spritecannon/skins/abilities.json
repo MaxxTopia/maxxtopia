@@ -6,15 +6,15 @@
   },
   "bacca": {
     "name": "Bacca",
-    "cost": 3500,
+    "cost": 4440,
     "rarity": "epic",
     "ability": "rocketstart",
-    "abilityDesc": "Launches you out of the cannon with extra power."
+    "abilityDesc": "Blasts out of the cannon with extra power + a ROCKET afterburner that keeps building speed. Ability key THROWS an axe; press again to WARP to it mid-air (10s cooldown)."
   },
   "baldy": {
     "name": "Baldy",
-    "cost": 3000,
-    "rarity": "epic",
+    "cost": 1650,
+    "rarity": "rare",
     "ability": "rage",
     "abilityDesc": "Unleash Spartan Rage - a sweeping smash clears nearby hazards and launches you up and forward. 13s cooldown."
   },
@@ -25,16 +25,17 @@
     "ability": "split"
   },
   "bartholomew": {
-    "name": "Bartholomew",
-    "cost": 1000,
+    "name": "BARTholomew",
+    "cost": 0,
     "rarity": "mythic",
+    "grant": true,
     "ability": "bartman",
-    "abilityDesc": " Caped glider — permanent slow-fall + 2 bonus flaps (passive)",
+    "abilityDesc": "Caped glider: permanent slow-fall + 1 bonus flap. HOLD your ability key to ride the skateboard and fly - it drains a meter, then recharges when you let go (like Man of Steel).",
     "secret": true,
     "unlock": {
-      "type": "total_runs",
-      "value": 50,
-      "label": ""
+      "type": "reach_distance",
+      "value": 50000,
+      "label": "Reach 50km in a single run to unlock"
     }
   },
   "blackhole": {
@@ -44,13 +45,13 @@
   },
   "boba": {
     "name": "Boba",
-    "cost": 3000,
-    "rarity": "epic"
+    "cost": 1200,
+    "rarity": "rare"
   },
   "bonez": {
     "name": "Bonez",
-    "cost": 2000,
-    "rarity": "epic"
+    "cost": 1000,
+    "rarity": "rare"
   },
   "burger": {
     "name": "Burger",
@@ -67,7 +68,7 @@
     "unlock": {
       "type": "own_ability_skins",
       "value": 10,
-      "label": ""
+      "label": "Own 10 ability skins to unlock"
     }
   },
   "chrome": {
@@ -112,8 +113,8 @@
   },
   "fallout": {
     "name": "Fallout",
-    "cost": 6900,
-    "rarity": "legendary",
+    "cost": 2250,
+    "rarity": "epic",
     "ability": "fallout"
   },
   "fastboi": {
@@ -135,13 +136,13 @@
   },
   "frozone": {
     "name": "Frozone",
-    "cost": 333,
+    "cost": 1,
     "rarity": "rare",
     "secret": true,
     "unlock": {
       "type": "own_ability_skins",
       "value": 10,
-      "label": ""
+      "label": "Own 10 ability skins to unlock"
     }
   },
   "gas_mask": {
@@ -217,8 +218,8 @@
   },
   "purpdrank": {
     "name": "Purpdrank",
-    "cost": 10000,
-    "rarity": "legendary",
+    "cost": 1250,
+    "rarity": "rare",
     "ability": "slowmo",
     "abilityDesc": "take a sip — the whole world slows to ~40% for ~3–4s with a woozy purple wobble,"
   },
@@ -229,7 +230,7 @@
   },
   "raptor_sprite": {
     "name": "Raptor",
-    "cost": 5000,
+    "cost": 4000,
     "rarity": "epic",
     "ability": "windboost"
   },
@@ -256,9 +257,9 @@
     "cost": 0,
     "rarity": "mythic",
     "ability": "phantom",
-    "abilityDesc": "Wraith form: turn intangible and slip through every hazard unharmed for 3.5s. 15s cooldown.",
+    "abilityDesc": "GHOST RUSH: turn intangible AND blaze at crazy speed, phasing through every hazard for 5s. 12s cooldown.",
     "secret": true,
-    "unlock": { "type": "reach_distance", "value": 25000, "label": "" }
+    "unlock": { "type": "reach_distance", "value": 40000, "label": "Reach 40km in a single run to unlock" }
   },
   "slurpy": {
     "name": "Slurpy",
@@ -272,8 +273,9 @@
   },
   "spongey": {
     "name": "Spongey",
-    "cost": 1000,
+    "cost": 0,
     "rarity": "rare",
+    "grant": true,
     "secret": true,
     "unlock": {
       "type": "total_runs",
@@ -283,26 +285,30 @@
   },
   "spookyszn": {
     "name": "Spookyszn",
-    "cost": 500,
+    "cost": 0,
     "rarity": "common",
+    "grant": true,
+    "ability": "candy",
+    "abilityDesc": "CRAZY SLOTS (Kite-style): eat a mystery candy to SPIN the slot - it locks on a random numbered power (speed, ghost, glide, star, super-flight, gold - or the rare REAPER jackpot: fly + invincible + gold).",
     "secret": true,
     "unlock": {
-      "type": "own_skins",
-      "value": 5,
+      "type": "posted_score",
+      "value": 1,
       "label": ""
     }
   },
   "superbob": {
     "name": "Superbob",
-    "cost": 1000,
+    "cost": 0,
     "rarity": "mythic",
+    "grant": true,
     "ability": "godmode",
     "abilityDesc": "metered flight",
     "secret": true,
     "unlock": {
       "type": "reach_distance",
-      "value": 10000,
-      "label": "Reach 10,000m in a single run"
+      "value": 35000,
+      "label": "Reach 35,000m in a single run"
     }
   },
   "toneguy": {
@@ -320,7 +326,7 @@
     "unlock": {
       "type": "own_skins",
       "value": 25,
-      "label": "own 25 skins"
+      "label": "Own 25 skins to unlock"
     }
   },
   "turtle": {
@@ -336,8 +342,8 @@
   },
   "zeropoint": {
     "name": "Zero Point",
-    "cost": 10000,
-    "rarity": "legendary",
+    "cost": 3000,
+    "rarity": "epic",
     "ability": "teleport"
   }
 }

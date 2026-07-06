@@ -209,14 +209,14 @@ html,body{ margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:
 .skin:active{ transform:translateY(-1px) scale(.985); }
 .sc-rar{ font:900 8.5px 'Orbitron',sans-serif; letter-spacing:.16em; padding:3px 10px; border-radius:999px; color:#0c0a16;
   background:linear-gradient(180deg,var(--rc1),var(--rc2)); box-shadow:0 1px 6px var(--rg), inset 0 0 0 1px rgba(255,255,255,.2); text-shadow:0 1px 2px rgba(255,255,255,.25); }
-.skin .thumb{ position:relative; flex:0 0 auto; width:90px; height:90px; border-radius:12px; display:grid; place-items:center; overflow:hidden;
+.skin .thumb{ position:relative; flex:0 0 auto; width:94px; height:94px; border-radius:12px; display:grid; place-items:center; overflow:hidden;
   background:radial-gradient(circle at 50% 38%, color-mix(in srgb,var(--rc1) 30%, #0c0a16), #0a0814 72%);
   box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rc1) 45%, transparent); }
 .skin .thumb::before{ content:""; position:absolute; inset:-30%; z-index:0; pointer-events:none; opacity:.55;
   background:conic-gradient(from 0deg, transparent, color-mix(in srgb,var(--rc1) 80%, transparent), transparent 38%, color-mix(in srgb,var(--rc2) 70%, transparent), transparent 72%);
   animation:scRaySpin 9s linear infinite; }
 .skin .thumb::after{ content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(circle at 50% 120%, color-mix(in srgb,var(--rc1) 30%, transparent), transparent 60%); }
-.skin .thumb canvas, .skin .thumb img{ position:relative; z-index:2; width:84px; height:84px; object-fit:contain; filter:drop-shadow(0 3px 6px rgba(0,0,0,.45)); }
+.skin .thumb canvas, .skin .thumb img{ position:relative; z-index:2; width:87px; height:87px; object-fit:contain; filter:drop-shadow(0 3px 6px rgba(0,0,0,.45)); }
 .skin[data-rarity="common"] .thumb::before, .skin[data-rarity="rare"] .thumb::before{ animation-play-state:paused; opacity:.32; }
 .skin[data-rarity="common"]:hover .thumb::before, .skin[data-rarity="rare"]:hover .thumb::before{ animation-play-state:running; }
 .skin::after{ content:""; position:absolute; top:0; left:-60%; width:45%; height:100%; z-index:4; pointer-events:none; background:linear-gradient(105deg, transparent, rgba(255,255,255,.18), transparent); transform:skewX(-18deg); opacity:0; }
@@ -640,6 +640,7 @@ const DEV = Q.has("dev"); // dev test mode (?dev): every skin unlocked to previe
 const GORILLA_TEST = Q.has("gorilla") || Q.get("gauntlet")==="gorilla"; // ?gorilla -> drop straight into GORILLA WARFARE for testing
 const STANDALONE = (window.SC_STANDALONE===true) || (location.port!=="4747" && !/^(127\.0\.0\.1|localhost)$/.test(location.hostname)); // hosted web build (injected flag, or any non-hub host) vs in-app OBS hub; the hub always serves on :4747 so treat that port as in-app even via LAN IP
 const AB = STANDALONE ? "imported/" : "/imported/"; // asset base: relative when hosted standalone, absolute under the app hub
+const SKIN_VIS = 1.70; // in-game skin visual scale (hitbox/collision UNCHANGED) - Diggy-tuned so bought skins read big enough to enjoy while flying
 // PWA: register the service worker ONLY on the hosted standalone web build (Add-to-Home-Screen + offline).
 // Skipped on the in-app/OBS hub so the desktop overlay path is untouched. Failures are swallowed.
 if (STANDALONE && "serviceWorker" in navigator) {
@@ -739,7 +740,7 @@ setTimeout(cloudPull, 700); // pull on load if already linked
 addEventListener("visibilitychange", function(){ if(document.hidden && syncCode){ clearTimeout(_syncPushT); cloudPushNow(); } }); // flush a pending push when the tab hides
 
 // ---- sound (baked picks; original Web Audio synthesis, master volume via settings gear) ----
-let audioCtx=null, masterGain=null, vol=70, lastVol=70;
+let audioCtx=null, masterGain=null, vol=50, lastVol=50;
 try{ const sv=localStorage.getItem("sm.spritecannon.vol"); if(sv!=null) vol=Math.max(0,Math.min(100,Number(sv)||0)); }catch{}
 function actx(){ if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
     masterGain=audioCtx.createGain(); masterGain.gain.value=vol/100; masterGain.connect(audioCtx.destination); }
@@ -853,21 +854,22 @@ function _computeSkinBox(id,img){ try{
 }catch(e){} }
 let skinList=[{id:"default",name:"Kitty",cost:0,img:null}];
 // ability skins (cost more): a skin gets an ability + custom cost/name via imported/spritecannon/skins/abilities.json
-const ABILITY_LABELS={ ninelives:"start +1 life", doubleflap:"+2 flaps", featherfall:"floaty fall", goldcat:"2x coins", rocketstart:"big launch", shield:"1-hit shield", magnet:"coin magnet", bouncy:"super bounce", greedy:"5x coins", revive:"up to 4 lives", turtle:"shell shield", magnetburst:"10s coin magnet", flamejet:"flame dash", windboost:"wind launch", chrome:"chrome plating (3 hits)", dragon:"draft relaunch + flap regen", lightning:"thunder dash", fallout:"momentum + critical mass", teleport:"blink (regens 1/7s, max 3)", split:"Flying Raijin teleport", crashout:"NITRO smash (recharges 15s)", spicyspeed:"SPICY SPEED", buildwall:"BUILD THE WALL", slowmo:"SLOWED & THROWED", screech:"SONIC SCREAM", GodSpeed:"GOD SPEED", godmode:"MAN OF STEEL", bartman:"BARTMAN", waterimmune:"WATER WALKER", thedrop:"THE DROP", phantom:"wraith form (3.5s)", rage:"Spartan Rage" };
+const ABILITY_LABELS={ ninelives:"start +1 life", doubleflap:"+2 flaps", featherfall:"floaty fall", goldcat:"2x coins", rocketstart:"big launch", shield:"1-hit shield", magnet:"coin magnet", bouncy:"super bounce", greedy:"5x coins", revive:"up to 4 lives", turtle:"regenerating shell", magnetburst:"10s coin magnet", flamejet:"flame dash", windboost:"wind launch", chrome:"chrome plating (renews + deflects)", dragon:"draft relaunch (10s) + flap regen", lightning:"thunder dash", fallout:"NUKE (clears the screen)", teleport:"blink dash (phase-through, x3)", split:"Flying Raijin (warp any way)", crashout:"NITRO smash (recharges 15s)", spicyspeed:"SPICY SPEED", buildwall:"BUILD THE WALL", slowmo:"SLOWED & THROWED", screech:"SONIC SCREAM", GodSpeed:"GOD SPEED", godmode:"MAN OF STEEL", bartman:"hold to skate/fly + glider", waterimmune:"WATER WALKER", thedrop:"THE DROP", phantom:"ghost rush (5s speed+phase)", rage:"Spartan Rage", candy:"eat candy -> random power" };
 const ABILITY_DESC={
   greedy:"Earns 5x coins from everything you collect.",
   revive:"Respawn on the spot up to 4 times before it's game over.",
-  turtle:"A shell shield absorbs one crash without ending your run.",
+  turtle:"A shell shield absorbs a crash without ending your run - then grows back every 10 seconds.",
   magnetburst:"Pulls in every nearby coin for a 10-second burst.",
   flamejet:"Ignites a flame dash that launches you up and forward, over hazards.",
   windboost:"Catches a gust for an extra-long launch off the cannon.",
-  chrome:"Chrome plating absorbs your first 3 hazard hits - smash through and keep going.",
-  dragon:"Tap your ability key for a Dragon Draft relaunch (once per run), and regrow a wing-flap every 3 seconds.",
+  chrome:"Chrome plating deflects hazard hits into a forward shockwave - and a spent plate grows back every 14s (up to 3).",
+  dragon:"Tap your ability key for a Dragon Draft relaunch (recharges every 6-7 seconds), and regrow a wing-flap every 3 seconds.",
   crashout:"NITRO! Smash straight through everything for a few seconds. One charge, recharges every 15s.",
   lightning:"Tap your ability key for a THUNDER DASH - a huge piercing forward burst. 5s cooldown.",
-  fallout:"Builds momentum to critical mass for a devastating long run.",
-  teleport:"Blink forward with a leap to dodge danger. Charges refill over time (one every 7s, up to 3).",
-  split:"Flying Raijin: a space-time jump that instantly teleports you to the safest spot ahead.",
+  fallout:"Drop the NUKE: wipe every hazard on screen into a coin blast, launch off the mushroom cloud, and go radioactive-invincible for a moment. Recharges every 12s.",
+  teleport:"Blink dash forward through danger with a leap, phasing through hazards for a moment. Three charges, one refills every 5s.",
+  split:"Flying Raijin (the Yellow Flash): warp a huge distance in ANY direction you hold - up, down, forward or diagonal - flashing through hazards. 2.5s cooldown.",
+  screech:"SONIC SCREAM: a shockwave that destroys every hazard on the whole screen and rockets you forward. 8s cooldown.",
   ninelives:"Start every run with one extra life in reserve.",
   doubleflap:"Adds 2 extra flaps for more air time and control.",
   featherfall:"Fall slow and floaty, softening every descent.",
@@ -876,15 +878,16 @@ const ABILITY_DESC={
   shield:"A shield blocks the first hit that would end your run.",
   magnet:"Continuously draws nearby coins toward you.",
   bouncy:"Bounce higher off every surface for big rebounds.",
-  phantom:"Wraith form: turn intangible and slip through every hazard unharmed for 3.5 seconds. 15s cooldown.",
-  rage:"Unleash Spartan Rage - a sweeping smash clears nearby hazards and launches you up and forward. 13s cooldown."
+  phantom:"GHOST RUSH: turn intangible AND blaze at crazy speed, phasing through every hazard for 5 seconds. 12s cooldown.",
+  rage:"Unleash Spartan Rage - a sweeping smash clears nearby hazards and launches you up and forward. 13s cooldown.",
+  candy:"Crazy Slots (Kite): eat a mystery candy to SPIN the slot - it locks on a random numbered power (speed, ghost, glide, star, super-flight, gold, or the rare REAPER jackpot)."
 };
 function ab(){ const s=skinList.find(x=>x.id===save.skin); return (s&&s.ability)||null; }
-function baseFlaps(){ const a=ab(); return cfg.flaps + (a==="doubleflap"||a==="bartman"?2:0); } // bartman: +2 bonus flaps (like doubleflap)
+function baseFlaps(){ const a=ab(); return cfg.flaps + (a==="doubleflap"?2:(a==="bartman"?1:0)); } // bartman: +1 bonus flap
 function grav(){ const a=ab(); const lg=biomeAt(distM).lowGrav||1; return cfg.gravity*lg*(glideT>0?0.4:(a==="featherfall"||a==="bartman"?0.62:1)); } // lg = Zero-G world low-gravity multiplier; bartman: permanent floaty slow-fall
 function skinImgFor(id){ const v=save.style&&save.style[id]; return (v&&skinImgs[v])?skinImgs[v]:skinImgs[id]; } // chosen style variant -> its image (fallback to base)
 function skinBoxFor(id){ const v=save.style&&save.style[id]; return (v&&skinBox[v])?skinBox[v]:skinBox[id]; }
-function coinAmt(n){ return ab()==="greedy"? n*5 : ab()==="goldcat"? n*2 : n; }
+function coinAmt(n){ let m = ab()==="greedy"?5 : ab()==="goldcat"?2 : 1; if(candyGoldT>0) m*=3; return n*m; } // Spookyszn GOLD RUSH candy = 3x coins while active
 function pickR(){ return kitty.r + (ab()==="magnet"?55*DPR:0); }
 function segNear(ox,oy,reach){ const ax=kitty.px,ay=kitty.py,bx=kitty.x,by=kitty.y, dx=bx-ax,dy=by-ay, L2=dx*dx+dy*dy; let tt=L2>0?((ox-ax)*dx+(oy-ay)*dy)/L2:0; tt=tt<0?0:tt>1?1:tt; const cx=ax+dx*tt, cy=ay+dy*tt; return Math.hypot(ox-cx,oy-cy)<reach; } // swept: nearest point on the move-segment within reach -> never tunnel through a pickup
 let waterStart=-1, waterEnd=-1, waterCd=0; // lethal water stretch (floats + diving boards only; touching water costs a life)
@@ -896,72 +899,111 @@ function nearFloat(){ for(const o of obstacles){ if((o.type==="float"||o.type===
 function splashFx(x,y){ for(let i=0;i<22;i++) parts.push({x:x+rand(-14,14)*DPR,y,vx:rand(-5,5)*DPR,vy:rand(-9,-2)*DPR,life:1,c:i%2?"#bfeaff":"#7fd0ff",r:rand(2,5)*DPR}); }
 function maxLives(){ return ab()==="revive"?4:3; }
 // ---- ACTIVE abilities: fired via Shift key / on-screen ability button (Diggy's pick) ----
-const ACTIVE_AB={ magnetburst:{label:"MAGNET",uses:1,cd:0,dur:10}, flamejet:{label:"FLAME",uses:Infinity,cd:1.5,dur:0}, windboost:{label:"WIND",uses:Infinity,cd:5,dur:0.9}, teleport:{label:"BLINK",uses:3,cd:0.3,dur:0}, split:{label:"RAIJIN",uses:Infinity,cd:3.5,dur:0}, crashout:{label:"NITRO",uses:Infinity,cd:15,dur:2.5}, dragon:{label:"DRAFT",uses:1,cd:0,dur:0}, lightning:{label:"DASH",uses:Infinity,cd:5,dur:0},
-  spicyspeed:{label:"SPICY",uses:5,cd:1.2,dur:0}, buildwall:{label:"WALL",uses:Infinity,cd:8,dur:0}, slowmo:{label:"SLOW",uses:Infinity,cd:18,dur:3.5}, screech:{label:"SCREAM",uses:Infinity,cd:12,dur:0}, thedrop:{label:"DROP",uses:Infinity,cd:11,dur:0}, GodSpeed:{label:"SUPER",uses:Infinity,cd:25,dur:4}, phantom:{label:"WRAITH",uses:Infinity,cd:15,dur:3.5}, rage:{label:"RAGE",uses:Infinity,cd:13,dur:0} };
-let abUses=0, abCd=0, magnetT=0, glideT=0, abRegen=0, flameTrailT=0, crashT=0; // abRegen: teleport regen 7s; flameTrailT: inferno trail; crashT: nitro smash window
-let spicyT=0, slowT=0, phaseT=0, superT=0, superCoast=0, starT=0, flightMeter=1, abHeld=false, wallFx=null, shockwaves=[], portalFx=[]; // spicy dash / slow-mo / GodSpeed super (+coast) / godmode metered flight / buildwall sweep + screech rings / portal warp swirls
+const ACTIVE_AB={ rocketstart:{label:"AXE",uses:Infinity,cd:10,dur:0}, magnetburst:{label:"MAGNET",uses:Infinity,cd:25,dur:10}, flamejet:{label:"FLAME",uses:Infinity,cd:1.5,dur:0}, windboost:{label:"WIND",uses:Infinity,cd:5,dur:0.9}, teleport:{label:"BLINK",uses:3,cd:0.3,dur:0}, split:{label:"RAIJIN",uses:Infinity,cd:2.5,dur:0}, fallout:{label:"NUKE",uses:Infinity,cd:12,dur:0}, crashout:{label:"NITRO",uses:Infinity,cd:15,dur:2.5}, dragon:{label:"DRAFT",uses:Infinity,cd:10,dur:0}, lightning:{label:"DASH",uses:Infinity,cd:5,dur:0},
+  spicyspeed:{label:"SPICY",uses:5,cd:1.2,dur:0}, buildwall:{label:"WALL",uses:Infinity,cd:8,dur:0}, slowmo:{label:"SLOW",uses:Infinity,cd:18,dur:3.5}, screech:{label:"SCREAM",uses:Infinity,cd:8,dur:0}, thedrop:{label:"DROP",uses:Infinity,cd:8,dur:0}, GodSpeed:{label:"SUPER",uses:Infinity,cd:25,dur:4}, phantom:{label:"WRAITH",uses:Infinity,cd:12,dur:5}, rage:{label:"RAGE",uses:Infinity,cd:13,dur:0} };
+let abUses=0, abCd=0, magnetT=0, glideT=0, abRegen=0, flameTrailT=0, crashT=0, turtleRegen=0, chromeRegen=0; // abRegen: teleport regen; flameTrailT: inferno trail; crashT: nitro smash window; turtleRegen/chromeRegen: renewable-armor timers
+let spicyT=0, slowT=0, phaseT=0, superT=0, superCoast=0, starT=0, flightMeter=1, abHeld=false, wallFx=null, shockwaves=[], portalFx=[], candyGoldT=0, candySpawnT=0, skateT=0; // spicy dash / slow-mo / GodSpeed super (+coast) / godmode metered flight / buildwall sweep + screech rings / portal warp swirls / candyGoldT = Spookyszn gold-rush timer / skateT = Bart skateboard dash
 let abilityKey="ShiftLeft", capturingKey=false; try{ const _k=localStorage.getItem("sm.spritecannon.abkey"); if(_k) abilityKey=_k; }catch{}
 function keyLabel(c){ if(!c) return "None"; return c.replace("ShiftLeft","L-Shift").replace("ShiftRight","R-Shift").replace("ControlLeft","L-Ctrl").replace("ControlRight","R-Ctrl").replace("AltLeft","L-Alt").replace("AltRight","R-Alt").replace(/^Key/,"").replace(/^Digit/,"").replace("ArrowUp","Up").replace("ArrowDown","Down").replace("ArrowLeft","Left").replace("ArrowRight","Right"); }
 let dragonUsed=false, dragonRegen=0, staticMeter=0, overchargeT=0, falloutBounces=0, falloutCharge=0; // dragon / lightning / fallout
 function piercing(){ return crashT>0 || superT>0 || phaseT>0 || starT>0 || slideGrace>0 || (ab()==="lightning" && overchargeT>0); } // blow through hazards: nitro = the active smash window (was speed-based = never died); lightning = overcharge; GodSpeed super = invincible; slideGrace = the slide launched you, so you smash through instead of dying
+function shatterFx(o){ const cy=o.y-(o.h||30*DPR)*0.5; for(let i=0;i<15;i++) parts.push({x:o.x+rand(-8,8)*DPR,y:cy,vx:rand(-8,8)*DPR,vy:rand(-10,-1)*DPR,life:rand(0.4,0.95),c:(i%3===0)?"#6b7079":(i%2?"#c9ccd2":"#8a8f98"),r:rand(2,5.5)*DPR}); if(typeof dust==="function") dust(o.x,o.y); } // grey rubble burst: a crushed/destroyed hazard shatters into debris
+// ---- SPOOKYSZN "CRAZY SLOTS" (HxH Kite): eat a candy -> spin the slot -> it LOCKS on a random numbered power ----
+let candyRoll=null; // {t,spin,hold,result,applied} while a slot is spinning
+const SLOTS=[
+  {n:"SPEED",  c:"#ff5aa0", fn:()=>{ spicyT=Math.max(spicyT,2.8); kitty.vx=Math.max(kitty.vx, kitty.vx*1.5+6*DPR); }},           // 1 sugar-rush speed
+  {n:"GHOST",  c:"#b59cff", fn:()=>{ phaseT=Math.max(phaseT,2.8); }},                                                            // 2 phase through hazards
+  {n:"FLOAT",  c:"#7fe7ff", fn:()=>{ glideT=Math.max(glideT,3.6); kitty.vy=Math.min(kitty.vy,-6*DPR); flapsLeft=baseFlaps(); }}, // 3 low-grav glide
+  {n:"STAR",   c:"#ffe27a", fn:()=>{ starT=Math.max(starT,4.2); kitty.vy=Math.min(kitty.vy,-4*DPR); flapsLeft=baseFlaps(); }},   // 4 invincible rainbow
+  {n:"FLIGHT", c:"#8fd0ff", fn:()=>{ superT=Math.max(superT,3.6); flapsLeft=baseFlaps(); kitty.vy=Math.min(kitty.vy,-3*DPR); }}, // 5 man-of-steel free flight
+  {n:"GOLD",   c:"#ffd34d", fn:()=>{ candyGoldT=6.5; }},                                                                         // 6 3x coins
+  {n:"REAPER", c:"#c6ff5a", fn:()=>{ superT=Math.max(superT,4.8); starT=Math.max(starT,4.8); candyGoldT=9; flapsLeft=baseFlaps(); }} // 7 JACKPOT: fly + invincible + gold
+];
+function eatCandy(o){ if(candyRoll) return; // one spin at a time (like Kite's slot)
+  const jackpot = Math.random()<0.11; // ~1-in-9 lands the REAPER, like the rare top slot
+  candyRoll={ t:0, spin:0.8, hold:0.6, result: jackpot?6:(Math.random()*6)|0, applied:false };
+  snd("token"); shake=Math.max(shake,8*DPR);
+  for(let i=0;i<12;i++) parts.push({x:o.x,y:o.y,vx:rand(-5,5)*DPR,vy:rand(-6,1)*DPR,life:0.5,c:i%2?"#b06bff":"#ffd34d",r:rand(2,4)*DPR}); }
+function applySlot(i){ const k=SLOTS[i], big=(i===6); k.fn(); pop(kitty.x,kitty.y-42*DPR, big?"REAPER!!":k.n+"!"); snd(big?"newbest":"reboot"); shake=Math.max(shake, big?24*DPR:12*DPR); hitstop=Math.max(hitstop, big?3:1);
+  for(let j=0;j<(big?40:22);j++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-7,7)*DPR,vy:rand(-8,2)*DPR,life:rand(0.4,1),c:j%2?k.c:"#ffffff",r:rand(2,5)*DPR}); }
+// ---- BACCA axe: shift THROWS a Minecraft axe; shift again WARPS you to it mid-air (10s cooldown) ----
+let baccaAxe=null;
+function throwAxe(){ baccaAxe={ x:kitty.x+kitty.r*0.6, y:kitty.y, vx:Math.max(kitty.vx+13*DPR, 22*DPR), vy:-7*DPR, spin:0, t:0 }; snd("spike"); shake=Math.max(shake,8*DPR); pop(kitty.x,kitty.y-40*DPR,"AXE!"); for(let i=0;i<8;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-3,3)*DPR,vy:rand(-3,3)*DPR,life:0.4,c:i%2?"#caa15a":"#c9ccd2",r:rand(1.5,3)*DPR}); }
+function baccaTeleport(){ if(!baccaAxe) return; kitty.x=baccaAxe.x; kitty.y=Math.max(40*DPR,Math.min(GROUND()-kitty.r,baccaAxe.y)); kitty.vx=Math.max(kitty.vx, baccaAxe.vx*0.85, 16*DPR); kitty.vy=Math.min(kitty.vy,-6*DPR); kitty.px=kitty.x; phaseT=Math.max(phaseT,0.25); kitty.sx=1.4; kitty.sy=0.66; shake=Math.max(shake,10*DPR); hitstop=Math.max(hitstop,1); snd("token"); pop(kitty.x,kitty.y-40*DPR,"WARP!"); for(let i=0;i<20;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-6,6)*DPR,vy:rand(-6,4)*DPR,life:0.55,c:i%2?"#caa15a":"#7fe7ff",r:rand(2,4)*DPR}); baccaAxe=null; }
+function drawBaccaAxe(t){ const a=baccaAxe, ax=a.x-cam; ctx.save(); ctx.translate(ax,a.y); ctx.rotate(a.spin);
+  ctx.shadowColor="rgba(200,210,220,.6)"; ctx.shadowBlur=8*DPR;
+  ctx.fillStyle="#6b4a2a"; roundRect(-2.5*DPR,-4*DPR,5*DPR,20*DPR,2*DPR); ctx.fill(); // handle
+  ctx.fillStyle="#c9ccd2"; ctx.beginPath(); ctx.moveTo(0,-14*DPR); ctx.lineTo(13*DPR,-9*DPR); ctx.quadraticCurveTo(16*DPR,-3*DPR,12*DPR,1*DPR); ctx.lineTo(0,-3*DPR); ctx.closePath(); ctx.fill(); // blade
+  ctx.fillStyle="#8a8f98"; ctx.beginPath(); ctx.moveTo(0,-14*DPR); ctx.lineTo(-13*DPR,-9*DPR); ctx.quadraticCurveTo(-16*DPR,-3*DPR,-12*DPR,1*DPR); ctx.lineTo(0,-3*DPR); ctx.closePath(); ctx.fill(); // back blade
+  ctx.shadowBlur=0; ctx.restore();
+  ctx.save(); ctx.globalAlpha=0.5+0.4*Math.sin(t*6); ctx.fillStyle="#caa15a"; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.textAlign="center"; ctx.fillText("WARP", ax, a.y-20*DPR); ctx.restore(); }
+function drawSkateboard(t){ const sx=kitty.x-cam, sy=kitty.y+kitty.r*0.92*SKIN_VIS, w=kitty.r*2.0*SKIN_VIS; ctx.save(); ctx.translate(sx,sy); ctx.rotate(Math.sin(t*9)*0.12);
+  ctx.fillStyle="#ffd34d"; for(const dx of [-w*0.34,w*0.34]){ ctx.beginPath(); ctx.arc(dx,6*DPR,5*DPR,0,7); ctx.fill(); ctx.strokeStyle="rgba(0,0,0,.4)"; ctx.lineWidth=1.4*DPR; ctx.stroke(); } // wheels
+  ctx.fillStyle="#3a2a5a"; roundRect(-w/2,-4*DPR,w,8*DPR,4*DPR); ctx.fill(); // deck
+  ctx.fillStyle="#ff5aa0"; ctx.fillRect(-w*0.42,-1.5*DPR,w*0.84,3*DPR); ctx.restore(); } // grip stripe
 function falloutCriticalMass(){ falloutCharge=0; shake=Math.max(shake,22*DPR); hitstop=2; kitty.vx+=20*DPR; kitty.vy=Math.min(kitty.vy,-6*DPR); pop(kitty.x,kitty.y-52*DPR,"CRITICAL MASS!"); snd("reboot");
   for(const o of obstacles){ if(Math.abs(o.x-kitty.x)<360*DPR && (o.type==="spike"||o.type==="tnt"||o.type==="doghouse")) o.hit=true; } // clear nearby hazards
   for(let i=0;i<40;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-10,10)*DPR,vy:rand(-10,10)*DPR,life:1,c:i%3?"#ff7a1a":(i%2?"#ffd34d":"#fff"),r:rand(2,6)*DPR}); }
 function activeCfg(){ return ACTIVE_AB[ab()]||null; }
 function activateAbility(){
   if(state!=="fly") return; const c=activeCfg(); if(!c) return;
+  if(ab()==="rocketstart" && baccaAxe){ baccaTeleport(); return; } // 2nd AXE press = warp to the thrown axe (ignores cooldown)
   if(abCd>0 || abUses<=0) return;
   abCd=c.cd; if(c.uses!==Infinity) abUses--;
   const id=ab();
-  if(id==="magnetburst"){ magnetT=c.dur; pop(kitty.x,kitty.y-44*DPR,"MAGNET!"); shake=Math.max(shake,6*DPR); snd("token"); }
-  else if(id==="flamejet"){ kitty.vx+=9*DPR; kitty.vy=Math.min(kitty.vy-3*DPR,-6*DPR); kitty.sx=1.5; kitty.sy=0.65; shake=Math.max(shake,8*DPR); snd("spring"); flameTrailT=0.6; pop(kitty.x,kitty.y-40*DPR,"FLAME!"); // dash forward + always a little UP (never dives into a spike) + lingering trail
-    for(let i=0;i<28;i++) parts.push({x:kitty.x-rand(0,18)*DPR,y:kitty.y+rand(-9,9)*DPR,vx:rand(-10,-2)*DPR,vy:rand(-3,3)*DPR,life:rand(0.5,0.95),c:(i%3===0)?"#ff3d1f":(i%2?"#ff7a1a":"#ffd34d"),r:rand(3,6.5)*DPR}); }
+  if(id==="rocketstart"){ throwAxe(); }
+  else if(id==="magnetburst"){ magnetT=c.dur; pop(kitty.x,kitty.y-44*DPR,"MAGNET!"); shake=Math.max(shake,6*DPR); snd("token"); }
+  else if(id==="flamejet"){ kitty.vx=Math.max(kitty.vx+16*DPR, 22*DPR); kitty.vy=Math.min(kitty.vy-3*DPR,-6*DPR); kitty.sx=1.7; kitty.sy=0.58; shake=Math.max(shake,10*DPR); hitstop=Math.max(hitstop,1); snd("spring"); flameTrailT=1.15; pop(kitty.x,kitty.y-40*DPR,"FLAME!"); // FURTHER dash + always a little UP (never dives into a spike) + a long lingering fire stream
+    for(let i=0;i<44;i++) parts.push({x:kitty.x-rand(0,42)*DPR,y:kitty.y+rand(-10,10)*DPR,vx:rand(-15,-2)*DPR,vy:rand(-3,3)*DPR,life:rand(0.5,1.15),c:(i%3===0)?"#ff3d1f":(i%2?"#ff7a1a":"#ffd34d"),r:rand(3,7)*DPR}); }
   else if(id==="windboost"){ kitty.vy=Math.min(kitty.vy,-15*DPR); kitty.vx+=2*DPR; glideT=c.dur; snd("flap");
     for(let i=0;i<16;i++) parts.push({x:kitty.x+rand(-12,12)*DPR,y:kitty.y+10*DPR,vx:rand(-2,2)*DPR,vy:rand(1,3.5)*DPR,life:0.7,c:"#bfefff",r:rand(2,4)*DPR}); }
-  else if(id==="teleport"){ kitty.x+=210*DPR; kitty.y=Math.max(40*DPR,kitty.y-70*DPR); kitty.vy=Math.min(kitty.vy,-10*DPR); kitty.vx=Math.max(kitty.vx,11*DPR); kitty.px=kitty.x; kitty.sy=0.7; kitty.sx=1.3; shake=Math.max(shake,7*DPR); snd("token"); pop(kitty.x,kitty.y-30*DPR,"BLINK!"); // farther forward blink + a vertical leap
-    for(let i=0;i<18;i++) parts.push({x:kitty.x-rand(0,120)*DPR,y:kitty.y+rand(-12,12)*DPR,vx:0,vy:0,life:0.5,c:i%2?"#b59cff":"#7fe7ff",r:rand(2,4)*DPR}); }
-  else if(id==="dragon"){ kitty.vy=-cfg.power*0.62*DPR; kitty.vx+=2*DPR; kitty.sx=1.3; kitty.sy=0.7; shake=14*DPR; snd("reboot"); pop(kitty.x,kitty.y-44*DPR,"DRAGON DRAFT!"); for(let i=0;i<24;i++) parts.push({x:kitty.x,y:kitty.y+10*DPR,vx:rand(-4,4)*DPR,vy:rand(1,5)*DPR,life:0.8,c:i%2?"#ff7a1a":"#ffd34d",r:rand(2,5)*DPR}); } // dragon draft relaunch, fired by the ability keybind (once/run)
+  else if(id==="teleport"){ kitty.x+=300*DPR; kitty.y=Math.max(40*DPR,kitty.y-95*DPR); kitty.vy=Math.min(kitty.vy,-12*DPR); kitty.vx=Math.max(kitty.vx,17*DPR); kitty.px=kitty.x; phaseT=Math.max(phaseT,0.32); kitty.sy=0.66; kitty.sx=1.38; shake=Math.max(shake,8*DPR); hitstop=Math.max(hitstop,1); snd("token"); pop(kitty.x,kitty.y-30*DPR,"BLINK!"); // longer forward blink + higher leap + a brief phase-through so it RELIABLY dodges through danger
+    for(let i=0;i<26;i++) parts.push({x:kitty.x-rand(0,180)*DPR,y:kitty.y+rand(-14,14)*DPR,vx:0,vy:0,life:0.55,c:i%2?"#b59cff":"#7fe7ff",r:rand(2,4.5)*DPR}); }
+  else if(id==="dragon"){ abCd=6+Math.random(); kitty.vy=-cfg.power*0.62*DPR; kitty.vx+=2*DPR; kitty.sx=1.3; kitty.sy=0.7; shake=14*DPR; snd("reboot"); pop(kitty.x,kitty.y-44*DPR,"DRAGON DRAFT!"); for(let i=0;i<24;i++) parts.push({x:kitty.x,y:kitty.y+10*DPR,vx:rand(-4,4)*DPR,vy:rand(1,5)*DPR,life:0.8,c:i%2?"#ff7a1a":"#ffd34d",r:rand(2,5)*DPR}); } // dragon draft relaunch, fired by the ability keybind (once/run)
   else if(id==="lightning"){ overchargeT=1.4; kitty.vx=Math.min(62*DPR, kitty.vx+28*DPR); kitty.vy=Math.min(kitty.vy,-4*DPR); kitty.sx=1.7; kitty.sy=0.55; shake=Math.max(shake,16*DPR); hitstop=Math.max(hitstop,2); snd("reboot"); pop(kitty.x,kitty.y-52*DPR,"THUNDER DASH!"); for(let i=0;i<26;i++) parts.push({x:kitty.x-rand(0,30)*DPR,y:kitty.y+rand(-12,12)*DPR,vx:rand(-12,-2)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.8),c:i%2?"#7fe7ff":"#ffffff",r:rand(3,6)*DPR}); } // Thunder Dash on the ability key (5s cd): big piercing forward burst (capped) + pierce window
   else if(id==="crashout"){ crashT=c.dur; kitty.vx+=15*DPR; kitty.sx=1.6; kitty.sy=0.55; shake=Math.max(shake,12*DPR); hitstop=2; flashT=Math.max(flashT,0); snd("reboot"); pop(kitty.x,kitty.y-42*DPR,"NITRO!"); // active smash window: pierce everything for dur, then it ends (no more never-die)
     for(let i=0;i<26;i++) parts.push({x:kitty.x-rand(0,18)*DPR,y:kitty.y+rand(-10,10)*DPR,vx:rand(-11,-3)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.8),c:(i%3===0)?"#21e6ff":(i%2?"#7fe7ff":"#ffffff"),r:rand(3,6)*DPR}); }
-  else if(id==="split"){ // 3 ghost slices probe a spread; reassemble at the best opportunity reached first
-    const dirs=[{vx:9,vy:-9},{vx:13,vy:-3},{vx:11,vy:5}]; let best=null;
-    for(const d of dirs){ let px=kitty.x,py=kitty.y,vx=d.vx*DPR,vy=d.vy*DPR;
-      for(let st=0; st<60; st++){ vy+=grav()*DPR*1.5; px+=vx; py+=vy; let hit=null;
-        for(const o of obstacles){ if(o.got||o.hit||o.pop) continue;
-          if((o.type==="rocket"||o.type==="tramp"||o.type==="comet"||o.type==="balloon"||o.type==="bolt"||o.type==="pad"||o.type==="spring") && Math.hypot(px-o.x,py-o.y)<((o.r||o.w*0.6||30*DPR)+22*DPR)){ hit=o; break; } }
-        if(hit){ const pri=(hit.type==="rocket"?5:hit.type==="tramp"?4:hit.type==="comet"?3:hit.type==="balloon"?2:1); if(!best || st<best.st || (st===best.st && pri>best.pri)) best={o:hit,vx,vy,st,pri}; break; }
-        if(py>GROUND()-kitty.r) break; } }
-    if(best){ kitty.x=best.o.x; kitty.y=best.o.y-10*DPR; kitty.vx=Math.max(best.vx,10*DPR); kitty.vy=Math.max(best.vy,1*DPR); kitty.px=kitty.x; pop(kitty.x,kitty.y-44*DPR,"RAIJIN!"); }
-    else { kitty.vx+=8*DPR; kitty.vy=Math.min(kitty.vy,-4*DPR); pop(kitty.x,kitty.y-44*DPR,"RAIJIN!"); }
-    shake=Math.max(shake,8*DPR); snd("token");
-    for(let i=0;i<24;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-7,7)*DPR,vy:rand(-7,7)*DPR,life:0.6,c:i%3===0?"#ffd34d":(i%2?"#b59cff":"#7fe7ff"),r:rand(2,4.5)*DPR}); } // space-time warp burst (gold/purple/cyan)
+  else if(id==="split"){ // FLYING RAIJIN (Minato, the Yellow Flash): warps the way you're already FLYING - flap up first to warp up, dive to warp down, level to warp forward. Nothing to aim, it follows your trajectory + flashes through hazards
+    let dx=kitty.vx, dy=kitty.vy; if(dx<4*DPR) dx=8*DPR; // always carry you forward
+    const m=Math.hypot(dx,dy)||1; dx/=m; dy/=m; const D=380*DPR;
+    kitty.x=kitty.x+dx*D;
+    kitty.y=Math.max(40*DPR, Math.min(GROUND()-kitty.r, kitty.y+dy*D));
+    kitty.vx=Math.max(kitty.vx, dx*22*DPR + 9*DPR); kitty.vy=dy*20*DPR - 2*DPR; // keep flying along the warp line (tiny upward bias so you never warp straight into the floor)
+    kitty.px=kitty.x; phaseT=Math.max(phaseT,0.3); kitty.sx=1.45; kitty.sy=0.64; shake=Math.max(shake,9*DPR); hitstop=Math.max(hitstop,1); flashT=Math.max(flashT,0.32); snd("token"); pop(kitty.x,kitty.y-46*DPR,"FLYING RAIJIN!"); // yellow-flash warp
+    for(let i=0;i<30;i++) parts.push({x:kitty.x-dx*rand(0,170)*DPR,y:kitty.y-dy*rand(0,170)*DPR,vx:0,vy:0,life:0.55,c:(i%3===0)?"#fff2a8":(i%2?"#ffd34d":"#ffae2e"),r:rand(2,5)*DPR}); } // gold streak trailing the origin, Yellow Flash style
   else if(id==="spicyspeed"){ spicyT=1.5; kitty.vx=Math.max(kitty.vx,kitty.vx*1.6); kitty.sx=1.5; kitty.sy=0.62; shake=Math.max(shake,8*DPR); snd("spring"); pop(kitty.x,kitty.y-40*DPR,"SPICY!"); // forward burst (NOT invincible); ongoing boost + speed-lines applied each frame while spicyT>0
     for(let i=0;i<22;i++) parts.push({x:kitty.x-rand(0,22)*DPR,y:kitty.y+rand(-9,9)*DPR,vx:rand(-13,-3)*DPR,vy:rand(-2,2)*DPR,life:rand(0.3,0.6),c:(i%2?"#ff4d1f":"#ffae3c"),r:rand(2,5)*DPR}); }
   else if(id==="buildwall"){ const x0=kitty.x+120*DPR, x1=kitty.x+1300*DPR; let cleared=0;
-    for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && o.x>=x0 && o.x<=x1){ o.hit=true; cleared++; for(let i=0;i<8;i++) parts.push({x:o.x,y:o.y-(o.h||30*DPR)*0.5,vx:rand(-5,5)*DPR,vy:rand(-7,1)*DPR,life:0.8,c:i%2?"#ffd34d":"#ffae3c",r:rand(2,5)*DPR}); } } // golden brick-wall sweep destroys hazards ahead; pickups untouched
+    for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && o.x>=x0 && o.x<=x1){ o.hit=true; cleared++; shatterFx(o); } } // golden brick-wall CRUSHES the hazards ahead (they shatter into rubble + vanish); pickups left alone
     wallFx={x0,x1,life:0.6}; shake=Math.max(shake,14*DPR); hitstop=Math.max(hitstop,2); snd("reboot"); pop(kitty.x,kitty.y-44*DPR,cleared?"WALL UP!":"WALL!"); }
   else if(id==="slowmo"){ slowT=3.5; shake=Math.max(shake,6*DPR); snd("reboot"); pop(kitty.x,kitty.y-44*DPR,"SLOW-MO!"); // bullet-time: only the world advance is scaled (see WS in update), player input stays full
     for(let i=0;i<20;i++) parts.push({x:kitty.x+rand(-20,20)*DPR,y:kitty.y+rand(-20,20)*DPR,vx:rand(-2,2)*DPR,vy:rand(-2,2)*DPR,life:0.7,c:i%2?"#b59cff":"#d6b8ff",r:rand(2,4)*DPR}); }
   else if(id==="screech"){ let cleared=0; const x0=cam-40*DPR, x1=cam+W+40*DPR;
-    for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && o.x>=x0 && o.x<=x1){ o.hit=true; cleared++; for(let i=0;i<7;i++) parts.push({x:o.x,y:o.y-(o.h||30*DPR)*0.5,vx:rand(-6,6)*DPR,vy:rand(-8,1)*DPR,life:0.8,c:i%2?"#7fe7ff":"#ffffff",r:rand(2,5)*DPR}); } } // destroy EVERY hazard on screen
-    shockwaves.push({x:kitty.x,y:kitty.y,r:20*DPR,life:1}); shake=Math.max(shake,20*DPR); hitstop=Math.max(hitstop,3); kitty.vx=Math.min(62*DPR,kitty.vx+18*DPR); kitty.vy=Math.min(kitty.vy,-5*DPR); snd("spike"); pop(kitty.x,kitty.y-52*DPR,"SCREECH!"); }
-  else if(id==="thedrop"){ let cleared=0; const R=420*DPR; // THE DROP (tscott): bass-drop -> clear nearby hazards + big launch up/forward
+    for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && o.x>=x0 && o.x<=x1){ o.hit=true; cleared++; shatterFx(o); } } // SONIC SCREAM shatters EVERY hazard on screen
+    shockwaves.push({x:kitty.x,y:kitty.y,r:14*DPR,life:1.25,scream:true}); shockwaves.push({x:kitty.x,y:kitty.y,r:42*DPR,life:1.45,scream:true}); shockwaves.push({x:kitty.x,y:kitty.y,r:74*DPR,life:1.6,scream:true}); // 3 expanding sound rings
+    phaseT=Math.max(phaseT,0.45); kitty.vx=Math.min(62*DPR,kitty.vx+24*DPR); kitty.vy=Math.min(kitty.vy,-8*DPR); kitty.sx=1.75; kitty.sy=0.52; shake=Math.max(shake,26*DPR); hitstop=Math.max(hitstop,3); flashT=Math.max(flashT,0.4); snd("spike"); pop(kitty.x,kitty.y-54*DPR,"SCREECH!!");
+    for(let i=0;i<32;i++){ const a=Math.random()*6.28, sp=rand(4,12)*DPR; parts.push({x:kitty.x,y:kitty.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:rand(0.4,0.95),c:i%3===0?"#c6b3ff":(i%2?"#7fe7ff":"#ffffff"),r:rand(2,5)*DPR}); } } // radial sonic burst (violet/cyan/white)
+  else if(id==="thedrop"){ let cleared=0; const R=560*DPR; // THE DROP (tscott): bass-drop -> clear a BIG radius + big launch up/forward + rainbow impulse shockwave
     for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && Math.abs(o.x-kitty.x)<R){ o.hit=true; cleared++; for(let i=0;i<8;i++) parts.push({x:o.x,y:o.y-(o.h||30*DPR)*0.5,vx:rand(-7,7)*DPR,vy:rand(-9,1)*DPR,life:0.8,c:i%2?"#b56bff":"#ffd34d",r:rand(2,5)*DPR}); } }
-    shockwaves.push({x:kitty.x,y:kitty.y,r:20*DPR,life:1}); kitty.vy=-22*DPR; kitty.vx=Math.min(62*DPR,kitty.vx+12*DPR); kitty.sx=1.6; kitty.sy=0.55; shake=Math.max(shake,22*DPR); hitstop=Math.max(hitstop,3); snd("reboot"); pop(kitty.x,kitty.y-54*DPR,"THE DROP!");
+    shockwaves.push({x:kitty.x,y:kitty.y,r:16*DPR,life:1.2,rainbow:true}); shockwaves.push({x:kitty.x,y:kitty.y,r:60*DPR,life:1.35,rainbow:true}); kitty.vy=-27*DPR; kitty.vx=Math.min(62*DPR,kitty.vx+18*DPR); kitty.sx=1.7; kitty.sy=0.52; shake=Math.max(shake,26*DPR); hitstop=Math.max(hitstop,3); flashT=Math.max(flashT,0.35); snd("reboot"); pop(kitty.x,kitty.y-54*DPR,"THE DROP!");
     for(let i=0;i<28;i++) parts.push({x:kitty.x+rand(-30,30)*DPR,y:kitty.y+rand(-10,20)*DPR,vx:rand(-8,8)*DPR,vy:rand(-12,-2)*DPR,life:rand(0.4,0.9),c:(i%3?"#b56bff":"#ffd34d"),r:rand(2,5)*DPR}); }
   else if(id==="GodSpeed"){ superT=c.dur; kitty.vx=Math.min(62*DPR,Math.max(kitty.vx,52*DPR)); kitty.vy=Math.min(kitty.vy,-3*DPR); kitty.sx=1.6; kitty.sy=0.6; shake=Math.max(shake,16*DPR); hitstop=Math.max(hitstop,2); snd("reboot"); pop(kitty.x,kitty.y-52*DPR,"GOD SPEED!"); // invincible + near-max speed + free flight while superT>0 (sprite transforms in drawKitty)
     for(let i=0;i<30;i++) parts.push({x:kitty.x-rand(0,26)*DPR,y:kitty.y+rand(-12,12)*DPR,vx:rand(-12,-2)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.9),c:(i%2?"#ffd34d":"#fff2c0"),r:rand(3,6)*DPR}); }
-  else if(id==="phantom"){ phaseT=c.dur; kitty.sx=1.2; kitty.sy=0.86; shake=Math.max(shake,6*DPR); snd("token"); pop(kitty.x,kitty.y-48*DPR,"WRAITH!"); // ghost out: intangible, pass through every hazard while phaseT>0
-    for(let i=0;i<26;i++) parts.push({x:kitty.x+rand(-24,24)*DPR,y:kitty.y+rand(-18,18)*DPR,vx:rand(-3,3)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.95),c:(i%3?"#9b8cff":"#2c2350"),r:rand(2,5)*DPR}); }
+  else if(id==="phantom"){ phaseT=c.dur; kitty.vx=Math.min(62*DPR,Math.max(kitty.vx,48*DPR)); kitty.vy=Math.min(kitty.vy,-4*DPR); kitty.sx=1.6; kitty.sy=0.6; shake=Math.max(shake,12*DPR); hitstop=Math.max(hitstop,2); snd("reboot"); pop(kitty.x,kitty.y-48*DPR,"GHOST RUSH!"); // ghost out: intangible + CRAZY SPEED, blaze through every hazard while phaseT>0
+    for(let i=0;i<30;i++) parts.push({x:kitty.x-rand(0,30)*DPR,y:kitty.y+rand(-18,18)*DPR,vx:rand(-10,-2)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.95),c:(i%3?"#9b8cff":"#2c2350"),r:rand(2,5)*DPR}); }
   else if(id==="rage"){ let cleared=0; const R=340*DPR; // SPARTAN RAGE (kratos): sweep nearby hazards + launch up/forward
     for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && Math.abs(o.x-kitty.x)<R){ o.hit=true; cleared++; for(let i=0;i<8;i++) parts.push({x:o.x,y:o.y-(o.h||30*DPR)*0.5,vx:rand(-7,7)*DPR,vy:rand(-9,1)*DPR,life:0.8,c:i%2?"#ff5a2a":"#ffd34d",r:rand(2,5)*DPR}); } }
     shockwaves.push({x:kitty.x,y:kitty.y,r:20*DPR,life:1}); kitty.vy=-19*DPR; kitty.vx=Math.min(62*DPR,kitty.vx+13*DPR); kitty.sx=1.6; kitty.sy=0.55; shake=Math.max(shake,20*DPR); hitstop=Math.max(hitstop,3); snd("reboot"); pop(kitty.x,kitty.y-54*DPR,"SPARTAN RAGE!");
     for(let i=0;i<28;i++) parts.push({x:kitty.x+rand(-30,30)*DPR,y:kitty.y+rand(-10,20)*DPR,vx:rand(-8,8)*DPR,vy:rand(-12,-2)*DPR,life:rand(0.4,0.9),c:(i%3?"#ff5a2a":"#ffd34d"),r:rand(2,5)*DPR}); }
+  else if(id==="fallout"){ let cleared=0; const R=W+80*DPR; // FALLOUT = drop the NUKE: wipe the whole screen of hazards into a coin blast, mushroom-launch, and go radioactive-invincible for a moment
+    for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && Math.abs(o.x-kitty.x)<R){ o.hit=true; cleared++; runCoins+=coinAmt(6); for(let i=0;i<6;i++) parts.push({x:o.x,y:o.y-(o.h||30*DPR)*0.5,vx:rand(-6,6)*DPR,vy:rand(-9,1)*DPR,life:0.9,c:i%2?"#c6ff5a":"#ffd34d",r:rand(2,5)*DPR}); } }
+    phaseT=Math.max(phaseT,1.4); shockwaves.push({x:kitty.x,y:kitty.y,r:24*DPR,life:1}); shockwaves.push({x:kitty.x,y:kitty.y,r:10*DPR,life:1});
+    kitty.vy=-20*DPR; kitty.vx=Math.min(62*DPR,kitty.vx+16*DPR); kitty.sx=1.6; kitty.sy=0.55; shake=Math.max(shake,24*DPR); hitstop=Math.max(hitstop,3); flashT=Math.max(flashT,0.6); snd("reboot"); pop(kitty.x,kitty.y-54*DPR,cleared?"NUKE!  +"+cleared:"NUKE!");
+    for(let i=0;i<40;i++) parts.push({x:kitty.x+rand(-30,30)*DPR,y:kitty.y+rand(-16,10)*DPR,vx:rand(-9,9)*DPR,vy:rand(-13,-2)*DPR,life:rand(0.5,1.1),c:(i%3===0)?"#c6ff5a":(i%2?"#ffd34d":"#ff7a1a"),r:rand(2,6)*DPR}); }
 }
 let shielded=false, chromePlates=0; // chrome: absorbs the first N hazard hits (chrome plating)
 function hazard(){ if(shielded){ shielded=false; kitty.vy=-13*DPR; kitty.vx=Math.max(kitty.vx,5*DPR); shake=10*DPR; pop(kitty.x,kitty.y-30*DPR,"SHIELD!"); for(let i=0;i<16;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-4,4)*DPR,vy:rand(-5,-1)*DPR,life:1,c:i%2?"#7fe7ff":"#fff",r:rand(2,4)*DPR}); snd("token"); return true; }
-  if(ab()==="chrome" && chromePlates>0){ chromePlates--; kitty.vy=Math.min(kitty.vy,-11*DPR); kitty.vx=Math.max(kitty.vx,5*DPR); shake=12*DPR; pop(kitty.x,kitty.y-30*DPR,"CHROME!"); for(let i=0;i<20;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-5,5)*DPR,vy:rand(-5,-1)*DPR,life:0.8,c:i%2?"#eef4fa":"#9fb3c6",r:rand(2,4.5)*DPR}); snd("token"); return true; } // chrome plating absorbs the hit
+  if(ab()==="chrome" && chromePlates>0){ chromePlates--; chromeRegen=0; kitty.vy=Math.min(kitty.vy,-12*DPR); kitty.vx=Math.max(kitty.vx+10*DPR,14*DPR); shake=14*DPR; hitstop=Math.max(hitstop,1); shockwaves.push({x:kitty.x,y:kitty.y,r:16*DPR,life:1}); pop(kitty.x,kitty.y-30*DPR,"CHROME!"); for(let i=0;i<22;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-6,6)*DPR,vy:rand(-6,-1)*DPR,life:0.8,c:i%2?"#eef4fa":"#9fb3c6",r:rand(2,4.5)*DPR}); snd("token"); return true; } // chrome plating: absorb -> DEFLECT forward with a shockwave (renewable, regen below)
   return false; }
 let bgImgs=[], bgIdx=0;
 function loadImg(src){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
@@ -977,7 +1019,7 @@ async function loadManifests(){
       if(s){ if(!s.styles) s.styles=[{id:base,name:"Default",img:s.img}]; s.styles.push({id:vid,name:styleId.replace(/[-_]/g," "),img:skinImgs[vid]}); } } }
   }catch{}
   try{ const r=await fetch(AB+"spritecannon/skins/abilities.json",{cache:"no-store"});
-    if(r.ok){ const cfgA=await r.json(); for(const id in cfgA){ const s=skinList.find(x=>x.id===id); if(s){ const e=cfgA[id]; if(e.ability) s.ability=e.ability; if(e.cost!=null) s.cost=Number(e.cost)||s.cost; if(e.name) s.name=e.name; if(e.secret) s.secret=true; if(e.rarity) s.rarity=e.rarity; if(e.unlock) s.unlock=e.unlock; if(e.abilityDesc) s.abilityDesc=e.abilityDesc; } } }
+    if(r.ok){ const cfgA=await r.json(); for(const id in cfgA){ const s=skinList.find(x=>x.id===id); if(s){ const e=cfgA[id]; if(e.ability) s.ability=e.ability; if(e.cost!=null) s.cost=Number(e.cost)||s.cost; if(e.name) s.name=e.name; if(e.secret) s.secret=true; if(e.rarity) s.rarity=e.rarity; if(e.unlock) s.unlock=e.unlock; if(e.grant) s.grant=true; if(e.abilityDesc) s.abilityDesc=e.abilityDesc; } } } if(typeof checkUnlocks==="function") checkUnlocks(); // a returning player may already meet a grant condition
   }catch{}
   try{ const r=await fetch(AB+"spritecannon/backgrounds/manifest.json",{cache:"no-store"});
     if(r.ok){ const m=await r.json(); for(const p of (m.images||[])){ const im=await loadImg(AB+p.replace(/^imported\//,"")); if(im) bgImgs.push(im); } }
@@ -1007,7 +1049,7 @@ function reset(){
   ufo=null; infurno=null; infCoins=[]; infurnoUsedThisRun=false; ufoBiomeMark=""; shielded=(ab()==="shield"||ab()==="turtle"); chromePlates=(ab()==="chrome"?3:0); if(ab()==="ninelives"||ab()==="revive") lives=1; // revive/ninelives start the run with 1 heart already; chrome = 3 armor plates
   gauntlet=null; gorilla=null; gHaz=[]; gauntletUsed={fire:false,water:false,zombie:false,gorilla:false};
   { const _c=ACTIVE_AB[ab()]; abUses=_c?_c.uses:0; } abCd=0; abRegen=0; flameTrailT=0; crashT=0; magnetT=0; glideT=0; dragonUsed=false; dragonRegen=0; staticMeter=0; overchargeT=0; falloutBounces=0; falloutCharge=0;
-  spicyT=0; slowT=0; phaseT=0; superT=0; superCoast=0; starT=0; flightMeter=1; abHeld=false; wallFx=null; shockwaves=[]; portalFx=[]; // new-ability per-run state
+  spicyT=0; slowT=0; phaseT=0; superT=0; superCoast=0; starT=0; flightMeter=1; abHeld=false; wallFx=null; shockwaves=[]; portalFx=[]; turtleRegen=0; chromeRegen=0; candyGoldT=0; candySpawnT=2.5; candyRoll=null; baccaAxe=null; skateT=0; // new-ability per-run state
   kitty={ x:90*DPR, y:GROUND()-30*DPR, vx:0, vy:0, r:22*DPR, rest:false, sx:1, sy:1, spin:0 };
   hitstop=0; flashT=0; winFlashT=0; lastMile=0; popTexts=[]; prevBest=save.best; beatBest=false; skimCd=0; bhopWin=0; bhopChain=0; stopBark();
   if(Math.random()<0.45){ const sM=rand(280,1100); waterStart=90*DPR+sM*24*DPR; waterEnd=waterStart+rand(2600,4200)*DPR; } else { waterStart=waterEnd=-1; } waterCd=0; // ~45% of runs: a lethal water stretch
@@ -1077,7 +1119,7 @@ function spawnObstacleAt(x){
 function extendWorld(toX){ let guard=0; while(worldX<toX && guard++<500){ worldX+=rand(240,500)*DPR; spawnObstacleAt(worldX); } }
 function buildWorld(){ obstacles=[]; worldX=460*DPR; extendWorld(90*DPR+6000*DPR); }
 
-function press(){ if(state==="aim"){ charging=true; startCharge(); hideTut(); } else if(state==="fly"){ flap(); } else if(state==="infurno"){ infurnoFlap(); } else if(state==="gauntlet"){ if(gauntlet && !gauntlet.ready){ gauntletGo(); gauntletFlap(); } else gauntletFlap(); }
+function press(){ if(state==="aim"){ charging=true; startCharge(); hideTut(); } else if(state==="fly"){ flap(); } else if(state==="infurno"){ if(infurno && !infurno.ready){ infurnoGo(); infurnoFlap(); } else infurnoFlap(); } else if(state==="gauntlet"){ if(gauntlet && !gauntlet.ready){ gauntletGo(); gauntletFlap(); } else gauntletFlap(); }
   else if(state==="start"||state==="result"){ reset(); } }
 function release(){ if(state==="aim" && charging){ fire(); } }
 function flap(){ if(kitty.rest) return;
@@ -1106,8 +1148,9 @@ addEventListener("keydown",(e)=>{
   { const _t=e.target; if(_t && (_t.tagName==="INPUT"||_t.tagName==="TEXTAREA"||_t.isContentEditable)) return; } // typing a name/code -> don't trigger r=restart / s=shop / space=fire
   if(capturingKey){ e.preventDefault(); const _RESV=["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight","KeyR","KeyS","Escape"]; if(e.code!=="Escape" && _RESV.indexOf(e.code)<0) { abilityKey=e.code; try{ localStorage.setItem("sm.spritecannon.abkey",abilityKey); }catch{} } capturingKey=false; const b=document.getElementById("abKeyBtn"); if(b) b.textContent=keyLabel(abilityKey); return; } // reserved keys (Space/arrows/R/S) are used by game controls -> refuse to bind the ability to them (else the ability silently never fires)
   if(state==="gauntlet" && gauntlet && !gauntlet.ready){ gauntletGo(); } // PRESS ANY KEY TO START the survival level (then fall through so the key also does its normal action)
+  if(state==="infurno" && infurno && !infurno.ready){ infurnoGo(); } // PRESS ANY KEY TO START Dante's Infurno
   if(e.code==="Space"){ e.preventDefault(); press(); }
-  else if(e.code==="ArrowUp"||e.code==="KeyW"){ e.preventDefault(); aimUp=true; }   // WASD mirrors the arrows for keyboards without arrow keys
+  else if(e.code==="ArrowUp"||e.code==="KeyW"){ e.preventDefault(); if(state==="infurno"){ if(infurno && !infurno.ready) infurnoGo(); infurnoFlap(); } else aimUp=true; }   // W/Up also FLAPS in Infurno (full WASD there); mirrors arrows elsewhere
   else if(e.code==="ArrowDown"){ e.preventDefault(); aimDown=true; }
   else if(e.code==="ArrowLeft"||e.code==="KeyA"){ e.preventDefault(); infLeft=true; }
   else if(e.code==="ArrowRight"||e.code==="KeyD"){ e.preventDefault(); infRight=true; }
@@ -1146,11 +1189,14 @@ function update(){
   if(skimCd>0) skimCd-=1/60;
   if(bhopWin>0){ bhopWin--; if(bhopWin===0) bhopChain=0; } // bhop timing window closing -> chain resets if you missed it
   if(slideGrace>0) slideGrace-=1/60; // slide hazard-immunity ticking down (set while riding; lingers into the launch)
-  if(spicyT>0) spicyT-=1/60; if(slowT>0) slowT-=1/60; if(phaseT>0) phaseT-=1/60; if(superT>0){ superT-=1/60; if(superT<=0) superCoast=1.3; } if(superCoast>0) superCoast-=1/60; if(starT>0) starT-=1/60; // GodSpeed leaves a momentum-coast window; Super Star invincibility ticks down
+  if(spicyT>0) spicyT-=1/60; if(slowT>0) slowT-=1/60; if(phaseT>0) phaseT-=1/60; if(superT>0){ superT-=1/60; if(superT<=0) superCoast=1.3; } if(superCoast>0) superCoast-=1/60; if(starT>0) starT-=1/60; if(candyGoldT>0) candyGoldT-=1/60; if(skateT>0) skateT-=1/60; // GodSpeed leaves a momentum-coast window; Super Star invincibility ticks down; candyGoldT = Spookyszn gold rush; skateT = Bart skate dash
+  if(candyRoll){ candyRoll.t+=1/60; if(!candyRoll.applied && candyRoll.t>=candyRoll.spin){ candyRoll.applied=true; applySlot(candyRoll.result); } if(candyRoll.t>=candyRoll.spin+candyRoll.hold) candyRoll=null; } // CRAZY SLOTS: spin -> lock -> fire the rolled power
   if(wallFx){ wallFx.life-=1/60; if(wallFx.life<=0) wallFx=null; }
   if(shockwaves.length){ for(const s of shockwaves){ s.r+=14*DPR; s.life-=1/60*2; } shockwaves=shockwaves.filter(s=>s.life>0); }
   if(portalFx.length){ for(const pf of portalFx) pf.t-=1/60*1.5; portalFx=portalFx.filter(pf=>pf.t>0); }
-  if(ab()==="teleport"){ const _cap=ACTIVE_AB.teleport.uses; if(abUses<_cap){ abRegen+=1/60; if(abRegen>=7){ abRegen=0; abUses=Math.min(_cap,abUses+1); } } else abRegen=0; } // zeropoint: regen one blink charge every 7s, cap 3
+  if(ab()==="teleport"){ const _cap=ACTIVE_AB.teleport.uses; if(abUses<_cap){ abRegen+=1/60; if(abRegen>=5){ abRegen=0; abUses=Math.min(_cap,abUses+1); } } else abRegen=0; } // zeropoint: regen one blink charge every 5s, cap 3
+  if(ab()==="turtle" && state==="fly"){ if(!shielded){ turtleRegen+=1/60; if(turtleRegen>=10){ turtleRegen=0; shielded=true; snd("token"); pop(kitty.x,kitty.y-40*DPR,"SHELL BACK!"); for(let i=0;i<12;i++) parts.push({x:kitty.x+rand(-14,14)*DPR,y:kitty.y+rand(-14,14)*DPR,vx:rand(-2,2)*DPR,vy:rand(-3,1)*DPR,life:0.6,c:i%2?"#3ad17a":"#bff5cf",r:rand(2,4)*DPR}); } } else turtleRegen=0; } // Turtle: the shell shield grows back every 10s
+  if(ab()==="chrome" && state==="fly"){ if(chromePlates<3){ chromeRegen+=1/60; if(chromeRegen>=14){ chromeRegen=0; chromePlates++; snd("token"); pop(kitty.x,kitty.y-40*DPR,"+PLATE"); for(let i=0;i<10;i++) parts.push({x:kitty.x+rand(-12,12)*DPR,y:kitty.y+rand(-12,12)*DPR,vx:0,vy:0,life:0.5,c:i%2?"#eef4fa":"#9fb3c6",r:rand(1.5,3)*DPR}); } } else chromeRegen=0; } // Chrome: a spent plate grows back every 14s (max 3)
   if(ab()==="spicyspeed"){ const _cap=ACTIVE_AB.spicyspeed.uses; if(abUses<_cap){ abRegen+=1/60; if(abRegen>=12){ abRegen=0; abUses=Math.min(_cap,abUses+1); } } else abRegen=0; } // SPICY SPEED: regen 1 charge every 12s once below max (starts only when below 5)
   if(flashT>0) flashT-=0.06;
   if(winFlashT>0) winFlashT-=0.03; // gold survival-celebration flash (lingers longer than the red danger flash)
@@ -1166,6 +1212,8 @@ function update(){
     if(ab()==="godmode"){ if(abHeld && flightMeter>0){ kitty.vy -= grav()*DPR*1.85; if(kitty.vy<-9*DPR) kitty.vy=-9*DPR; flightMeter=Math.max(0,flightMeter-1/(60*1.5)); // MAN OF STEEL: metered flight (~2.5s of held thrust); survivable (drains, then normal gravity)
         if(parts.length<240) for(let i=0;i<2;i++) parts.push({x:kitty.x-rand(0,14)*DPR,y:kitty.y+rand(4,12)*DPR,vx:rand(-3,1)*DPR,vy:rand(1,4)*DPR,life:0.5,c:i%2?"#9fd0ff":"#ffffff",r:rand(2,4)*DPR}); }
       else flightMeter=Math.min(1,flightMeter+1/(60*3)); } // recharge over ~3s when not flying (drain ~1.5s)
+    if(ab()==="bartman"){ if(abHeld && flightMeter>0){ kitty.vy -= grav()*DPR*1.7; if(kitty.vy<-9*DPR) kitty.vy=-9*DPR; kitty.vx=Math.min(62*DPR,Math.max(kitty.vx,34*DPR)); flightMeter=Math.max(0,flightMeter-1/(60*1.2)); if(parts.length<250) for(let i=0;i<2;i++) parts.push({x:kitty.x-rand(6,30)*DPR,y:kitty.y+kitty.r*0.7+rand(-4,4)*DPR,vx:rand(-11,-4)*DPR,vy:rand(-1,2)*DPR,life:0.35,c:i%2?"#ffd34d":"#7fe7ff",r:rand(1.5,3.5)*DPR}); } // BART SKATEBOARD: HOLD to ride + fly (metered, like Man of Steel) + skate speed; drains ~1.2s
+      else flightMeter=Math.min(1,flightMeter+1/(60*3.8)); } // recharge when you let go (~3.8s, a bit slower)
     if(spicyT>0){ kitty.vx=Math.min(62*DPR,Math.max(kitty.vx,kitty.vx+1.4*DPR)); if(parts.length<240) for(let i=0;i<2;i++) parts.push({x:kitty.x-rand(6,30)*DPR,y:kitty.y+rand(-8,8)*DPR,vx:rand(-16,-6)*DPR,vy:0,life:0.3,c:i%2?"#ff4d1f":"#ffae3c",r:rand(1.5,3.5)*DPR}); } // SPICY SPEED: ongoing forward accel + speed-lines (not invincible)
     if(slideT>0){ slideT-=1/60; slideGrace=0.55; kitty.vx+=2.0*DPR; if(kitty.vy>3*DPR) kitty.vy=3*DPR; if(Math.random()<0.6) slideFx(kitty.x-10*DPR,kitty.y+kitty.r*0.5); // riding the slide: forward boost + low glide (vx still bounded by the hard cap below); slideGrace refreshed each ride frame so it lingers ~0.55s into the launch arc
       if(slideT<=0){ kitty.vy=Math.min(kitty.vy,-12*DPR); kitty.vx+=3*DPR; kitty.sy=0.6; kitty.sx=1.4; shake=Math.max(shake,8*DPR); pop(kitty.x,kitty.y-30*DPR,"WHEEE!"); snd("spring"); } } // slide ejects you up + forward at the end
@@ -1206,6 +1254,7 @@ function update(){
       if(o.type==="bolt"){ if(!o.got && segNear(o.x,o.y,pr+o.r)){ o.got=true; flapsLeft=baseFlaps(); runCoins+=coinAmt(2); boltFx(o.x,o.y); snd("token"); } continue; }
       if(o.type==="comet"){ if(!o.got && segNear(o.x,o.y,pr+o.r)){ o.got=true; const cb=bumpCombo(); runCoins+=coinAmt(20); popFx(o.x,o.y); pop(o.x,o.y,"+"+coinAmt(20)+(cb>1?"  x"+cb:"")); coinChime(Math.min(cb-1,12)); } continue; }
       if(o.type==="star"){ if(!o.got && segNear(o.x,o.y,pr+o.r)){ o.got=true; starT=Math.max(starT,5); kitty.vx=Math.min(62*DPR,Math.max(kitty.vx,50*DPR)); kitty.vy=Math.min(kitty.vy,-4*DPR); flapsLeft=baseFlaps(); shake=Math.max(shake,12*DPR); snd("token"); pop(o.x,o.y-12*DPR,"SUPER STAR!"); for(let i=0;i<28;i++){ const h=i/28*360; parts.push({x:o.x,y:o.y,vx:rand(-7,7)*DPR,vy:rand(-7,3)*DPR,life:rand(0.5,1),c:"hsl("+h+",100%,62%)",r:rand(2,5)*DPR}); } } continue; } // SUPER STAR: 5s invincible + SPEED rush + INFINITE WINGS (Diggy's buff)
+      if(o.type==="candy"){ if(!o.got && segNear(o.x,o.y,pr+o.r)){ o.got=true; eatCandy(o); } continue; } // Spookyszn: eat -> random power
       if(o.type==="rocket"){ if(!o.hit && segNear(o.x,o.y,kitty.r+o.r)){ o.hit=true; kitty.vx+=24*DPR; kitty.vy=Math.min(kitty.vy,-12*DPR); kitty.sx=1.5; kitty.sy=0.7; shake=18*DPR; hitstop=3; runCoins+=coinAmt(4); rocketFx(o.x,o.y); pop(o.x,o.y,"BOOST!"); snd("reboot"); } continue; }
       if(o.type==="updraft"){ if(!o.hit && segNear(o.x,o.y,kitty.r+o.r)){ o.hit=true; kitty.vy=-32*DPR; kitty.vx+=4*DPR; kitty.sy=0.55; kitty.sx=1.5; shake=14*DPR; hitstop=2; updraftFx(o.x,o.y); pop(o.x,o.y,"WHOOSH!"); snd("spring"); } continue; } // floating updraft: launches you higher than a tramp
       if(o.type==="portal"){ if(!o.used && segNear(o.x,o.y,kitty.r+o.r*0.72)){ o.used=true; // PORTAL: vanish in -> pop out of a NEW portal HIGH on the screen with a movement boost
@@ -1216,7 +1265,7 @@ function update(){
           for(let i=0;i<10;i++) parts.push({x:o.x,y:o.y,vx:rand(-4,4)*DPR,vy:rand(-4,4)*DPR,life:rand(0.3,0.6),c:i%2?"#b06bff":"#27e6ff",r:rand(2,4)*DPR}); } continue; }
       if(o.type==="balloon"){ if(!o.pop && segNear(o.x,o.y,pr+o.r)){ o.pop=true; kitty.vx+=13*DPR; kitty.vy=Math.min(kitty.vy-3*DPR,-9*DPR); kitty.sx=1.5; kitty.sy=0.7; shake=14*DPR; hitstop=2; runCoins+=coinAmt(5); grenadeFx(o.x,o.y); pop(o.x,o.y,"BLAST!"); snd("balloon"); } continue; } // grenade balloon: blast forward + a bit higher
       if(o.w && Math.max(kitty.px,kitty.x)>o.x-o.w/2 && Math.min(kitty.px,kitty.x)<o.x+o.w/2 && kitty.y+kitty.r>o.y-o.h && kitty.y-kitty.r<o.y && (kitty.vy>=0 || fellThisFrame)){ // swept-x + fellThisFrame: catches fast roll-past AND fast drops the ground-clamp already negated (anti-tunnel). The `kitty.y-kitty.r<o.y` lower bound confines the hit to the obstacle's band so an AIRBORNE bobbing spike (Zero-G) can't phantom-kill a cat flying entirely beneath it.
-        if(ab()==="fallout"){ falloutCharge++; if(falloutCharge>=3) falloutCriticalMass(); } // fallout Critical Mass: 3 obstacle hits -> shockwave
+        // (Fallout is now an active NUKE on the ability key; the old passive charge-on-hit was removed)
         if(o.type==="pad"){ kitty.vy=mbounce(16,bm); kitty.vx+=2*DPR; if(kitty.vx<10*DPR){ kitty.vx=Math.max(kitty.vx,13*DPR); kitty.vy=Math.min(kitty.vy,-16*DPR); pop(kitty.x,kitty.y-34*DPR,"BOING!"); } kitty.sy=0.6; kitty.sx=1.4; dust(kitty.x,o.y); shake=8*DPR; snd("pad"); } // low-momentum rescue: a slow roll-in still launches you forward + up back into play
         else if(o.type==="jackpot"){ kitty.vy=mbounce(20,bm); kitty.vx+=3*DPR; kitty.sy=0.55; kitty.sx=1.5; dust(kitty.x,o.y); // golden bounce pad: bounces every time, pays a VARIABLE jackpot once
           if(!o.hit){ o.hit=true; const roll=Math.random(), mega=roll>=0.97; const amt= roll<0.78? coinAmt(80) : mega? coinAmt(1000) : coinAmt(250); runCoins+=amt; hitstop=2; const cb=bumpCombo();
@@ -1254,6 +1303,10 @@ function update(){
       pop(kitty.x, kitty.y-70*DPR, "PASSED "+r.name+"! #"+r.rank); snd("newbest"); shake=Math.max(shake,8*DPR); }
     if(distM>2000){ const _sp=Math.hypot(kitty.vx,kitty.vy); if(_sp>10*DPR && parts.length<240) parts.push({x:kitty.x-kitty.vx*0.4,y:kitty.y,vx:0,vy:-0.05*DPR,life:0.45,c:getAccent(0.45),r:(2+Math.random()*2.5)*DPR}); } // deep-run speed trail
     if(ab()==="lightning" && overchargeT>0 && parts.length<260){ for(let i=0;i<2;i++) parts.push({x:kitty.x-kitty.vx*0.35+rand(-6,6)*DPR,y:kitty.y+rand(-9,9)*DPR,vx:0,vy:0,life:0.4,c:i%2?"#7fe7ff":"#ffffff",r:(2.5+Math.random()*3)*DPR}); } // Thunder Dash lightning trail (dash fired via ability key, see activateAbility)
+    if(ab()==="phantom" && phaseT>0){ kitty.vx=Math.min(62*DPR, Math.max(kitty.vx, 44*DPR)); if(parts.length<250 && Math.random()<0.6) parts.push({x:kitty.x-kitty.vx*0.3+rand(-6,6)*DPR,y:kitty.y+rand(-10,10)*DPR,vx:0,vy:0,life:0.35,c:Math.random()<0.5?"#9b8cff":"#c7bcff",r:rand(2,4)*DPR}); } // Phantom GHOST RUSH: sustained crazy speed while intangible
+    if(ab()==="rocketstart"){ kitty.vx=Math.min(kitty.vx+0.09*DPR, 36*DPR); if(parts.length<240 && Math.random()<0.55) parts.push({x:kitty.x-kitty.vx*0.32+rand(-4,4)*DPR,y:kitty.y+rand(-5,5)*DPR,vx:rand(-4,-1)*DPR,vy:rand(-1,1)*DPR,life:rand(0.25,0.5),c:Math.random()<0.5?"#ff9a3c":"#ffd34d",r:rand(1.5,3.5)*DPR}); } // Bacca ROCKET passive: an afterburner that keeps building forward speed (capped) + a flame trail
+    if(ab()==="candy"){ candySpawnT-=1/60; if(candySpawnT<=0){ candySpawnT=rand(2.6,4.2); obstacles.push({type:"candy",x:kitty.x+W+rand(160,420)*DPR,y:GROUND()-rand(130,540)*DPR,r:15*DPR,got:false}); } } // Spookyszn: mystery candies drift in -> eat to spin the Crazy Slots
+    if(baccaAxe){ const a=baccaAxe; a.t+=1/60; a.vy+=grav()*DPR*0.85; a.x+=a.vx; a.y+=a.vy; a.spin+=0.55; const gg=GROUND()-6*DPR; if(a.y>gg){ a.y=gg; a.vy=0; a.vx*=0.5; } if(a.x<cam-160*DPR || a.t>6){ baccaAxe=null; } else if(parts.length<220 && Math.random()<0.4) parts.push({x:a.x,y:a.y,vx:0,vy:0,life:0.3,c:"#c9ccd2",r:rand(1,2)*DPR}); } // Bacca axe in flight (shift again = warp to it)
     if(ab()==="chrome" && chromePlates>0 && parts.length<240 && Math.random()<0.5){ const a=Math.random()*6.28, rr2=kitty.r+2*DPR; parts.push({x:kitty.x+Math.cos(a)*rr2,y:kitty.y+Math.sin(a)*rr2,vx:0,vy:0,life:0.25,c:Math.random()<0.5?"#ffffff":"#cfe0ee",r:rand(1.5,3)*DPR}); } // chrome plating: subtle metallic shimmer while plates remain
     if(ab()==="dragon"){ if(flapsLeft<baseFlaps()){ dragonRegen+=1/60; if(dragonRegen>=3){ dragonRegen=0; flapsLeft++; snd("flap"); pop(kitty.x,kitty.y-40*DPR,"+FLAP"); for(let i=0;i<10;i++) parts.push({x:kitty.x,y:kitty.y+6*DPR,vx:rand(-3,3)*DPR,vy:rand(-3,1)*DPR,life:0.5,c:i%2?"#ff9a3c":"#ffd34d",r:rand(2,4)*DPR}); } } else dragonRegen=0; } // dragon: regenerate a wing-flap every 3s (capped at base flaps)
     while(distM>=lastMile+250){ lastMile+=250; pop(kitty.x, kitty.y-44*DPR, "+"+lastMile+"m");
@@ -1285,12 +1338,18 @@ function update(){
       kitty.y += (ufo.targetY-kitty.y)*0.11; kitty.sx=kitty.sy=Math.min(1,0.2+ufo.k*0.95); kitty.vx=0; kitty.vy=0;
       if(ufo.k>1.2 && Math.abs(kitty.y-ufo.targetY)<34*DPR){ ufo.phase="ready"; ufo.k=0; bannerT=1.2; bannerName="GET READY"; } }
     else if(ufo.phase==="ready"){ kitty.sx=kitty.sy=1; ufo.beam=Math.max(0,1-ufo.k/0.5); ufo.ufoY-=3.2*DPR; // beam retracts, UFO lifts off, brief breathing room
-      if(ufo.k>1.05){ kitty.vx=ufo.savedVx; kitty.vy=ufo.savedVy; kitty.rest=false; ufo=null; state="fly"; bannerT=0.9; bannerName="GO!"; } }
+      if(ufo.k>1.05){ kitty.vx=Math.max(ufo.savedVx,18*DPR)+4*DPR; kitty.vy=Math.min(ufo.savedVy,-2*DPR); kitty.rest=false; kitty.sx=1.5; kitty.sy=0.62; shake=Math.max(shake,12*DPR); hitstop=Math.max(hitstop,1); // the UFO TOSSES you back into play with real momentum + a boost (no more dead-drop stall)
+        for(let i=0;i<22;i++) parts.push({x:kitty.x-rand(0,24)*DPR,y:kitty.y+rand(-10,10)*DPR,vx:rand(-12,-3)*DPR,vy:rand(-3,3)*DPR,life:rand(0.4,0.8),c:(i%3===0)?"#7fe7ff":(i%2?"#b59cff":"#ffd34d"),r:rand(2.5,5)*DPR});
+        snd("spring"); ufo=null; state="fly"; bannerT=0.9; bannerName="GO!"; pop(kitty.x,kitty.y-40*DPR,"BOOST!"); } }
   }
   else if(state==="infurno"){
-    infurno.t += 1/60; infurno.p=Math.min(1, infurno.t/0.8);
+    if(!infurno.ready){ infurno.hold+=1/60; infurno.p=Math.min(1, infurno.hold/0.8); if(infurno.hold>=15) infurnoGo(); // WAIT on "press any key" (timer + fireballs paused) so Infurno never starts before you're ready; 15s fallback
+      kitty.vy=0; kitty.y=(GROUND()-200*DPR)+Math.sin(infurno.hold*2.2)*6*DPR; kitty.spin+=0.01;
+      const _imv=(infRight?1:0)-(infLeft?1:0); if(_imv!==0) kitty.x+=_imv*7*DPR; kitty.x=Math.max(40*DPR,Math.min(W-40*DPR,kitty.x));
+    } else {
+    infurno.t += 1/60; infurno.p=1;
     kitty.vy += 0.34*DPR; kitty.y += kitty.vy;
-    { const _imv=(infRight?1:0)-(infLeft?1:0); if(_imv!==0) kitty.x += _imv*7*DPR; else kitty.x += (W*0.5 - kitty.x)*0.02; kitty.x=Math.max(40*DPR,Math.min(W-40*DPR,kitty.x)); } // L/R control in Infurno only
+    { const _imv=(infRight?1:0)-(infLeft?1:0); if(_imv!==0) kitty.x += _imv*7*DPR; kitty.x=Math.max(40*DPR,Math.min(W-40*DPR,kitty.x)); } // L/R control in Infurno only (no auto-drift; the cat holds position when you're not steering)
     kitty.spin += 0.02;
     const g=GROUND();
     if(kitty.y>g-kitty.r){ kitty.y=g-kitty.r; kitty.vy*=-0.42; if(kitty.vy>-2*DPR) kitty.vy=-4*DPR; }
@@ -1311,6 +1370,7 @@ function update(){
         kitty.sx=kitty.sy=1; infurno=null; infCoins=[]; infHaz=[]; state="fly"; endRun(); return; } }
     infHaz=infHaz.filter(h=>h.y<GROUND()+40*DPR);
     if(infurno.t>=INFURNO_DUR) exitInfurno();
+    }
   }
   else if(state==="gauntlet"){
     const G=gauntlet; if(!G.ready){ G.hold+=1/60; if(G.hold>=15) gauntletGo(); } else { G.t += 1/60; } // WAIT for "press any key" (timer paused, no hazards) so it never starts before you're ready; 15s fallback auto-start so it can't hang
@@ -1480,7 +1540,7 @@ function endRun(){
   const hsBonus = isBest ? (wasBest>0 ? Math.min(1000, 150+Math.round((distM-wasBest)*0.5)) : 150) : 0; // beat your best -> bonus coins (scales with margin, first record = flat 150)
   if(hsBonus) save.coins+=hsBonus;
   save.runs=(save.runs||0)+1; save.totalDist=(save.totalDist||0)+distM; save.coinsEarned=(save.coinsEarned||0)+earned+hsBonus; // lifetime stats feed quests + secret-skin unlocks (save.runs was never incremented before)
-  questOnRun(distM, earned+hsBonus); persist(); // 1 coin / 20m + pickup bonus
+  questOnRun(distM, earned+hsBonus); persist(); checkUnlocks(); // 1 coin / 20m + pickup bonus; then auto-grant/announce any secret skin whose achievement just completed
   const nearMiss=!isBest && prevBest>=120 && distM<prevBest && distM>=Math.floor(prevBest*0.9); // within 10% of a real best (>=120m so tiny scores don't spam it)
   document.getElementById("resultWhere").textContent=biomeAt(distM).name;
   { const _de=document.getElementById("resultDist"); if(_de){ _de.textContent="0"; setTimeout(function(){ countUp(_de, distM); }, 200); } } // hero count-up after panel scale-in
@@ -1679,7 +1739,7 @@ function startAbduction(){ if(state!=="fly") return; infurnoUsedThisRun=true;
   ufo={ phase:"descend", k:0, sx:kitty.x-cam, ufoY:-90*DPR, beam:0 };
   state="abduct"; charging=false; stopCharge(); snd("token");
   bannerT=2.4; bannerName="SECRET LEVEL UNLOCKED"; } // announce it (was silent) + the descend phase now pulls the kitty into view (see update: abduct)
-function enterInfurno(){ state="infurno"; cam=0; infurno={ t:0, p:0, coins:0 }; infCoins=[]; infHaz=[]; ufo=null;
+function enterInfurno(){ state="infurno"; cam=0; infurno={ t:0, p:0, coins:0, ready:false, hold:0 }; infCoins=[]; infHaz=[]; ufo=null;
   kitty.x=W*0.5; kitty.y=GROUND()-200*DPR; kitty.vx=0; kitty.vy=0; kitty.sx=kitty.sy=1; kitty.spin=0; kitty.rest=false;
   comboN=0; shake=12*DPR; bannerT=1.8; bannerName="DANTE'S INFURNO"; }
 function exitInfurno(){ const jp=infurno?infurno.coins:0;
@@ -1687,11 +1747,12 @@ function exitInfurno(){ const jp=infurno?infurno.coins:0;
   if(savedRun){ cam=savedRun.cam; kitty.x=savedRun.x; }
   const tY = Math.max(H*0.30, Math.min(savedRun ? savedRun.y : GROUND()-180*DPR, GROUND()-120*DPR)); // clamp into a VISIBLE band so the redeploy always plays on-screen (you may have been abducted from way above the top) + a bit of air to react
   ufo={ phase:"return", k:0, sx:(kitty.x-cam), ufoY:-90*DPR, beam:0,
-        savedVx:(savedRun?Math.max(savedRun.vx,6*DPR):8*DPR), savedVy:(savedRun?savedRun.vy:0), targetY:tY };
+        savedVx:(savedRun?Math.max(savedRun.vx,16*DPR):18*DPR), savedVy:(savedRun?savedRun.vy:0), targetY:tY };
   kitty.y=-40*DPR; kitty.vx=0; kitty.vy=0; kitty.sx=kitty.sy=0.2; kitty.rest=false; // start above the top; the UFO lowers you into view (see update: redeploy)
   state="redeploy"; snd("token");
   bannerT=1.4; bannerName="REDEPLOYING"; pop(kitty.x, 80*DPR, "JACKPOT +"+jp); }
 function infurnoFlap(){ kitty.vy=-9*DPR; snd("flap"); for(let i=0;i<8;i++) parts.push({x:kitty.x,y:kitty.y+10*DPR,vx:rand(-1.5,1.5)*DPR,vy:rand(0,2)*DPR,life:0.7,c:"#ffd36b",r:rand(1.5,3)*DPR}); }
+function infurnoGo(){ if(!infurno||infurno.ready) return; infurno.ready=true; shake=Math.max(shake,10*DPR); snd("spike"); } // "press any key to start" -> begin the jackpot timer + fireballs
 
 // ---- SURVIVAL GAUNTLET secret levels (LETHAL: TRIAL BY FIRE / SHARK WATERS) ----
 const GAUNTLET_DUR=12;
@@ -7029,6 +7090,7 @@ function drawRival(t){ if(_rivalI>=_rivals.length || state!=="fly") return; cons
   ctx.fillText("\u{1F47B} "+r.name+" #"+r.rank, x, g-82*DPR); ctx.restore(); }
 function drawObstacles(t){
   for(const o of obstacles){ const x=o.x-cam; if(x<-140*DPR||x>W+140*DPR) continue;
+    if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && o.hit) continue; // an ability CRUSHED this hazard -> it's destroyed, stop drawing it (the shatter debris carries the break)
     if(o.type==="token"){ if(o.got) continue; const pulse=1+0.1*Math.sin(t*3+o.x); // big MAGENTA heart = life (shape-coded vs blue balloon)
       ctx.save(); ctx.translate(x,o.y); ctx.scale(pulse,pulse);
       ctx.strokeStyle="rgba(255,61,166,.4)"; ctx.lineWidth=3*DPR; ctx.beginPath(); ctx.arc(0,0,o.r*1.3,0,7); ctx.stroke();
@@ -7055,6 +7117,13 @@ function drawObstacles(t){
       ctx.fillStyle=sg; ctx.beginPath(); for(let i=0;i<10;i++){ const a=i/10*Math.PI*2-Math.PI/2, rr2=(i%2?0.44:1)*sr; const px=Math.cos(a)*rr2, py=Math.sin(a)*rr2; i?ctx.lineTo(px,py):ctx.moveTo(px,py); } ctx.closePath(); ctx.fill();
       ctx.shadowBlur=0; ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=1.4*DPR; ctx.stroke();
       ctx.fillStyle="rgba(255,255,255,.9)"; ctx.beginPath(); ctx.arc(-sr*0.2,-sr*0.22,sr*0.18,0,7); ctx.fill(); ctx.restore(); continue; }
+    if(o.type==="candy"){ if(o.got) continue; const pl=1+0.12*Math.sin(t*4+o.x); ctx.save(); ctx.translate(x,o.y+Math.sin(t*2+o.x)*3*DPR); ctx.rotate(Math.sin(t*1.5+o.x)*0.25); ctx.scale(pl,pl); // MYSTERY spooky candy -> eating it SPINS the Crazy Slots
+      ctx.shadowColor="#b06bff"; ctx.shadowBlur=15*DPR; ctx.fillStyle="#7a2fd6";
+      ctx.beginPath(); ctx.ellipse(0,0,o.r*0.9,o.r*0.66,0,0,7); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(o.r*0.7,0); ctx.lineTo(o.r*1.45,-o.r*0.5); ctx.lineTo(o.r*1.45,o.r*0.5); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-o.r*0.7,0); ctx.lineTo(-o.r*1.45,-o.r*0.5); ctx.lineTo(-o.r*1.45,o.r*0.5); ctx.closePath(); ctx.fill();
+      ctx.shadowBlur=0; ctx.strokeStyle="rgba(255,255,255,.75)"; ctx.lineWidth=2*DPR; ctx.beginPath(); ctx.ellipse(0,0,o.r*0.9,o.r*0.66,0,0,7); ctx.stroke();
+      ctx.fillStyle="#fff"; ctx.font=`900 ${Math.round(o.r*0.95)}px Orbitron`; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("?",0,0); ctx.textBaseline="alphabetic"; ctx.restore(); continue; }
     if(o.type==="portal"){ if(o.used) continue; ctx.save(); ctx.translate(x,o.y); const sp=t*3+o.x; // PORTAL = warp gate; fly in -> pop out high with a boost
       ctx.shadowColor="rgba(150,90,255,.9)"; ctx.shadowBlur=18*DPR;
       let pg=ctx.createRadialGradient(0,0,o.r*0.25,0,0,o.r*1.5); pg.addColorStop(0,"rgba(180,120,255,0)"); pg.addColorStop(0.68,"rgba(150,90,255,.34)"); pg.addColorStop(1,"rgba(40,230,255,0)"); ctx.fillStyle=pg; ctx.beginPath(); ctx.arc(0,0,o.r*1.5,0,7); ctx.fill();
@@ -7201,16 +7270,22 @@ function drawKitty(){
   const gy=GROUND(), sc=Math.max(0.25, 1-(gy-(y+kitty.r))/(420*DPR));
   ctx.fillStyle="rgba(0,0,0,.28)"; ctx.beginPath(); ctx.ellipse(x, gy-3*DPR, kitty.r*1.15*sc, kitty.r*0.3*sc, 0,0,7); ctx.fill();
   ctx.save(); ctx.translate(x,y); ctx.rotate(state==="fly"?kitty.spin:0); ctx.scale(kitty.sx,kitty.sy);
-  if(ab()==="bartman" && state==="fly" && (gy-(y+kitty.r))>4*DPR){ // BARTMAN: black glider cape while airborne (the float passive), billows more when falling
-    const r=kitty.r, wv=Math.sin(performance.now()/150)*0.14, fall=Math.max(0,Math.min(1,kitty.vy/(8*DPR)));
-    ctx.fillStyle="#0a0a12";
-    ctx.beginPath(); ctx.moveTo(-r*0.5,-r*0.95);
-    ctx.quadraticCurveTo(-r*(1.6+wv*1.2),-r*0.1,-r*(1.25+wv),r*(1.05+fall*0.55));
-    ctx.quadraticCurveTo(-r*0.35,r*(0.85+fall*0.45),0,r*1.02);
-    ctx.quadraticCurveTo(r*0.22,r*0.2,r*0.5,-r*0.9); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle="rgba(120,124,170,.3)"; ctx.lineWidth=r*0.05; ctx.stroke();
-  }
-  if(phaseT>0){ ctx.globalAlpha=0.4+0.16*Math.sin(t*15); ctx.filter="brightness(.7) saturate(.5)"; } // PHASE: spectral translucent shimmer while intangible
+  if(ab()==="bartman" && state==="fly"){ // BARTHOLOMEW: hero CAPE stays flowing the whole time you're in play (billows bigger the faster he dives) + the bat-ear cowl "helmet"
+    const r=kitty.r*SKIN_VIS, t2=performance.now()/160, fall=Math.max(0.25,Math.min(1,kitty.vy/(8*DPR))), up=r*(1.15+fall*2.0);
+    const swayL=Math.sin(t2)*0.18*r, swayR=Math.sin(t2*1.15+0.8)*0.18*r, swayM=Math.sin(t2*0.9+2)*0.14*r;
+    ctx.save();
+    ctx.fillStyle="#141126"; // cape cloth
+    ctx.beginPath(); ctx.moveTo(-r*0.46,-r*0.3);                       // left shoulder anchor
+    ctx.quadraticCurveTo(-r*0.95+swayL, -up*0.55, -r*0.7+swayL, -up);  // up the left side
+    ctx.quadraticCurveTo(-r*0.3+swayM, -up*0.86, 0, -up*1.02+swayM);   // wavy crest (left half)
+    ctx.quadraticCurveTo(r*0.3+swayM, -up*0.86, r*0.7+swayR, -up);     // wavy crest (right half)
+    ctx.quadraticCurveTo(r*0.95+swayR, -up*0.55, r*0.46,-r*0.3);       // down the right side
+    ctx.quadraticCurveTo(0,-r*0.02, -r*0.46,-r*0.3); ctx.closePath(); ctx.fill();
+    ctx.fillStyle="#2c2646"; ctx.globalAlpha=0.55;                     // inner-fold highlight
+    ctx.beginPath(); ctx.moveTo(-r*0.2,-r*0.24); ctx.quadraticCurveTo(swayM,-up*0.8,r*0.2,-r*0.24); ctx.quadraticCurveTo(0,-r*0.02,-r*0.2,-r*0.24); ctx.closePath(); ctx.fill(); ctx.globalAlpha=1;
+    ctx.restore();
+  } // (cowl/helmet is drawn AFTER the sprite below, so it isn't hidden behind the big skin)
+  if(phaseT>0){ ctx.globalAlpha=0.4+0.16*Math.sin(performance.now()*0.015); ctx.filter="brightness(.7) saturate(.5)"; } // PHASE: spectral translucent shimmer while intangible (drawKitty has no `t` param -> use the clock directly)
   const _super=(superT>0 && save.skin==="fastboi" && skinImgs["fastboi__super"]); // GodSpeed literally transforms the fastboi sprite while super is active (overrides the chosen style)
   const img=_super?skinImgs["fastboi__super"]:skinImgFor(save.skin);
   // NOTE: Super Star (starT) deliberately does NOT use a per-frame ctx.filter hue-rotate here anymore -
@@ -7218,9 +7293,13 @@ function drawKitty(){
   // timestep, the FPS drop read as "everything went slow-mo" (worst in the small Twitch extension iframe).
   // The cheap rainbow RINGS + sparkles in drawPassiveHud() carry the star look at ~zero cost.
   if(img){ const bx=_super?skinBox["fastboi__super"]:skinBoxFor(save.skin), cw=bx?bx.w:img.width, ch=bx?bx.h:img.height, ccx=bx?(bx.x+bx.w/2):img.width/2, ccy=bx?(bx.y+bx.h/2):img.height/2;
-    let s=(kitty.r*2.62)/Math.sqrt(cw*ch); if(ch*s<kitty.r*2.05) s=(kitty.r*2.05)/ch; if(cw*s>kitty.r*3.6) s=(kitty.r*3.6)/cw; // area-norm + height floor (no skin too short, e.g. head-only gas mask) + width cap
+    let s=(kitty.r*2.62*SKIN_VIS)/Math.sqrt(cw*ch); if(ch*s<kitty.r*2.05*SKIN_VIS) s=(kitty.r*2.05*SKIN_VIS)/ch; if(cw*s>kitty.r*3.6*SKIN_VIS) s=(kitty.r*3.6*SKIN_VIS)/cw; // area-norm + height floor (no skin too short, e.g. head-only gas mask) + width cap [SKIN_VIS scales visual only]
     ctx.drawImage(img,-ccx*s,-ccy*s,img.width*s,img.height*s); } // center on creature
   else drawKittyArt(ctx, kitty.r);
+  if(ab()==="bartman" && state==="fly"){ const r=kitty.r*SKIN_VIS; ctx.save(); // little BAT HORNS on top of the head (no band/cowl, so they don't cover his hair)
+    ctx.fillStyle="#141126"; ctx.strokeStyle="rgba(150,154,190,.45)"; ctx.lineWidth=r*0.045; ctx.lineJoin="round";
+    for(const sgn of [-1,1]){ ctx.beginPath(); ctx.moveTo(sgn*r*0.30,-r*1.5); ctx.lineTo(sgn*r*0.46,-r*2.12); ctx.lineTo(sgn*r*0.58,-r*1.46); ctx.closePath(); ctx.fill(); ctx.stroke(); } // two little bat horns
+    ctx.restore(); }
   if(phaseT>0){ ctx.globalAlpha=1; ctx.filter="none"; }
   ctx.restore();
 }
@@ -8190,6 +8269,14 @@ function drawTrajectory(){ if(!(state==="aim"&&charging)) return; const a=aimAng
     ctx.globalAlpha=Math.max(0,.55-i*0.016); ctx.fillStyle=getAccent(1); ctx.beginPath(); ctx.arc(px-cam,py,3*DPR,0,7); ctx.fill(); } ctx.globalAlpha=1; }
 // Passive-ability feedback attached to the kitty so you can SEE what's happening
 function drawPassiveHud(t){ const A=ab(); const sx=kitty.x-cam, sy=kitty.y;
+  if(candyRoll){ const cr=candyRoll, spinning=cr.t<cr.spin, prog=Math.min(1,cr.t/cr.spin); // CRAZY SLOTS reel above the cat: numbers blur then LOCK on the rolled power
+    const idx = spinning ? (Math.floor(performance.now()/(45+150*prog*prog))%SLOTS.length) : cr.result, k=SLOTS[idx];
+    const boxY=sy-kitty.r-48*DPR, bw=56*DPR, bh=42*DPR; ctx.save(); ctx.textAlign="center";
+    ctx.fillStyle="rgba(10,8,20,.88)"; roundRect(sx-bw/2, boxY-bh/2, bw, bh, 9*DPR); ctx.fill();
+    ctx.strokeStyle=spinning?"rgba(255,255,255,.45)":k.c; ctx.lineWidth=3*DPR; roundRect(sx-bw/2, boxY-bh/2, bw, bh, 9*DPR); ctx.stroke();
+    if(!spinning){ const gl=0.5+0.5*Math.sin(performance.now()*0.02); ctx.shadowColor=k.c; ctx.shadowBlur=(8+12*gl)*DPR; }
+    ctx.fillStyle=k.c; ctx.font=`900 ${23*DPR}px Orbitron`; ctx.fillText(String(idx+1), sx, boxY+2*DPR); ctx.shadowBlur=0;
+    ctx.fillStyle="#fff"; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.fillText(spinning?"· · ·":k.n, sx, boxY+bh/2+11*DPR); ctx.restore(); }
   if(starT>0){ const hue=(performance.now()/3.5)%360; ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.lineWidth=4*DPR;
     for(let k=0;k<3;k++){ ctx.strokeStyle="hsla("+((hue+k*120)%360)+",100%,62%,.8)"; ctx.beginPath(); ctx.arc(sx,sy,kitty.r+(8+k*5)*DPR+3*DPR*Math.sin(t*16+k),0,7); ctx.stroke(); }
     ctx.restore(); if(parts.length<260 && Math.random()<0.7){ const a2=Math.random()*7, rr2=kitty.r*(1+Math.random()*0.6); parts.push({x:kitty.x+Math.cos(a2)*rr2,y:kitty.y+Math.sin(a2)*rr2,vx:rand(-2,2)*DPR,vy:rand(-3,1)*DPR,life:0.5,c:"hsl("+((hue+Math.random()*360)%360)+",100%,65%)",r:rand(2,4)*DPR}); }
@@ -8197,31 +8284,19 @@ function drawPassiveHud(t){ const A=ab(); const sx=kitty.x-cam, sy=kitty.y;
   if(superT>0){ const pu=0.5+0.5*Math.sin(t*18); ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.strokeStyle="rgba(255,211,77,"+(0.5+0.4*pu)+")"; ctx.lineWidth=4*DPR; ctx.beginPath(); ctx.arc(sx,sy,kitty.r+10*DPR+pu*3*DPR,0,7); ctx.stroke(); ctx.restore();
     ctx.save(); ctx.fillStyle="#ffe27a"; ctx.font=`900 ${11*DPR}px Orbitron`; ctx.textAlign="center"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.fillText("GOD SPEED", sx, sy-kitty.r-20*DPR); ctx.restore(); } // GodSpeed invincible aura
   if(spicyT>0){ ctx.save(); ctx.fillStyle="#ff7a1a"; ctx.font=`900 ${10*DPR}px Orbitron`; ctx.textAlign="center"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.fillText("SPICY", sx, sy-kitty.r-30*DPR); ctx.restore(); }
-  if(A==="godmode"){ const w=44*DPR,h=6*DPR,bx=sx-w/2,by=sy-kitty.r-22*DPR; ctx.save(); // MAN OF STEEL flight meter (hold to fly, drains; recharges when grounded)
+  if(A==="godmode"||A==="bartman"){ const w=44*DPR,h=6*DPR,bx=sx-w/2,by=sy-kitty.r-22*DPR; ctx.save(); // MAN OF STEEL / BART SKATE flight meter (hold to fly/skate, drains; recharges when grounded)
     ctx.fillStyle="rgba(0,0,0,.5)"; roundRect(bx-1*DPR,by-1*DPR,w+2*DPR,h+2*DPR,4*DPR); ctx.fill();
     ctx.fillStyle="rgba(120,180,255,.28)"; roundRect(bx,by,w,h,3*DPR); ctx.fill();
     ctx.fillStyle=(abHeld&&flightMeter>0)?"#bfe3ff":"#6fb0ff"; roundRect(bx,by,Math.max(0,w*Math.min(1,flightMeter)),h,3*DPR); ctx.fill();
-    ctx.fillStyle="rgba(207,224,238,.9)"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.textAlign="center"; ctx.fillText("FLIGHT (hold ⚡)", sx, by-6*DPR); ctx.restore(); }
+    ctx.fillStyle="rgba(207,224,238,.9)"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.textAlign="center"; ctx.fillText(A==="bartman"?"SKATE (hold ⚡)":"FLIGHT (hold ⚡)", sx, by-6*DPR); ctx.restore(); }
   if(crashT>0){ const pu=0.5+0.5*Math.sin(t*20); ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.strokeStyle="rgba(255,140,40,"+(0.45+0.4*pu)+")"; ctx.lineWidth=4*DPR; ctx.beginPath(); ctx.arc(sx,sy,kitty.r+9*DPR+pu*3*DPR,0,7); ctx.stroke(); ctx.restore(); ctx.save(); ctx.fillStyle="#ffd34d"; ctx.font=`900 ${10*DPR}px Orbitron`; ctx.textAlign="center"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.fillText("IMMUNE", sx, sy-kitty.r-18*DPR); ctx.restore(); } // NITRO active = flame ring + IMMUNE
   if(A==="lightning" && overchargeT>0){ const pu=0.55+0.45*Math.sin(t*16); ctx.save(); ctx.strokeStyle="rgba(127,231,255,"+pu+")"; ctx.lineWidth=3*DPR; ctx.beginPath(); ctx.arc(sx,sy,kitty.r+9*DPR,0,7); ctx.stroke();
     ctx.fillStyle="#7fe7ff"; ctx.font=`900 ${11*DPR}px Orbitron`; ctx.textAlign="center"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.fillText("OVERCHARGE", sx, sy-kitty.r-20*DPR); ctx.restore(); } // dash pierce window ring (cooldown shown on the ability button)
-  else if(A==="fallout"){ ctx.save(); ctx.textAlign="center"; const cy=sy-kitty.r-26*DPR;
-    for(let i=0;i<3;i++){ const px=sx-15*DPR+i*15*DPR, on=i<falloutCharge, pl=0.5+0.5*Math.sin(t*6+i*1.4);
-      if(on){ const r=5.2*DPR+1.4*DPR*pl;
-        const gg=ctx.createRadialGradient(px,cy,0,px,cy,r*2.6); gg.addColorStop(0,"rgba(255,170,70,"+(0.45+0.35*pl)+")"); gg.addColorStop(1,"rgba(255,170,70,0)"); ctx.fillStyle=gg; ctx.beginPath(); ctx.arc(px,cy,r*2.6,0,7); ctx.fill(); // glow halo
-        const cg=ctx.createRadialGradient(px-r*0.3,cy-r*0.3,r*0.2,px,cy,r); cg.addColorStop(0,"#ffe7a8"); cg.addColorStop(.5,"#ffae3c"); cg.addColorStop(1,"#ff7a1a"); ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(px,cy,r,0,7); ctx.fill();
-        ctx.strokeStyle="rgba(255,236,175,.9)"; ctx.lineWidth=1.3*DPR; ctx.stroke(); }
-      else { ctx.fillStyle="rgba(255,255,255,.14)"; ctx.beginPath(); ctx.arc(px,cy,4.6*DPR,0,7); ctx.fill(); ctx.strokeStyle="rgba(255,255,255,.3)"; ctx.lineWidth=1.2*DPR; ctx.stroke(); } }
-    if(falloutCharge>=3){ const rp=0.5+0.5*Math.sin(t*12); ctx.strokeStyle="rgba(255,211,77,"+(0.35+0.5*rp)+")"; ctx.lineWidth=2.2*DPR; ctx.beginPath(); ctx.arc(sx,cy,27*DPR+rp*3*DPR,0,7); ctx.stroke(); } // CRITICAL MASS ready ring
-    if(falloutBounces<4){ ctx.fillStyle="#ffd34d"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.fillText("MOMENTUM", sx, cy-12*DPR); } ctx.restore(); }
+  else if(A==="fallout"){ if(falloutBounces<4){ ctx.save(); ctx.textAlign="center"; const cy=sy-kitty.r-26*DPR; ctx.fillStyle="#c6ff5a"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.fillText("MOMENTUM", sx, cy-12*DPR); ctx.restore(); } } // NUKE cooldown shows on the ability button
   else if(A==="dragon"){ const w=40*DPR,h=5*DPR,bx=sx-w/2,by=sy-kitty.r-20*DPR; const full=flapsLeft>=baseFlaps(); ctx.save();
     if(!full){ ctx.fillStyle="rgba(0,0,0,.5)"; roundRect(bx-1*DPR,by-1*DPR,w+2*DPR,h+2*DPR,4*DPR); ctx.fill(); ctx.fillStyle="rgba(255,140,60,.3)"; roundRect(bx,by,w,h,3*DPR); ctx.fill(); ctx.fillStyle="#ff9a3c"; roundRect(bx,by,Math.max(0,w*Math.min(1,dragonRegen/3)),h,3*DPR); ctx.fill(); } // flap-regen progress
     if(abUses>0){ ctx.fillStyle="rgba(255,180,90,.9)"; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.textAlign="center"; ctx.fillText("DRAFT READY (⚡)", sx, sy-kitty.r-28*DPR); } ctx.restore(); }
-  else if(A==="chrome"){ ctx.save(); ctx.textAlign="center"; const cy=sy-kitty.r-24*DPR; // chrome plating: 3 metallic armor pips that deplete as hits are absorbed
-    for(let i=0;i<3;i++){ const px=sx-15*DPR+i*15*DPR, on=i<chromePlates;
-      if(on){ const sh=ctx.createLinearGradient(px-5*DPR,cy-5*DPR,px+5*DPR,cy+5*DPR); sh.addColorStop(0,"#ffffff"); sh.addColorStop(.5,"#b6c6d6"); sh.addColorStop(1,"#7f93a6"); ctx.fillStyle=sh; ctx.beginPath(); ctx.arc(px,cy,5*DPR,0,7); ctx.fill(); ctx.strokeStyle="rgba(255,255,255,.85)"; ctx.lineWidth=1.3*DPR; ctx.stroke(); }
-      else { ctx.fillStyle="rgba(255,255,255,.12)"; ctx.beginPath(); ctx.arc(px,cy,4.6*DPR,0,7); ctx.fill(); ctx.strokeStyle="rgba(255,255,255,.28)"; ctx.lineWidth=1.2*DPR; ctx.stroke(); } }
-    ctx.fillStyle="rgba(207,224,238,.9)"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4*DPR; ctx.font=`800 ${9*DPR}px Orbitron`; ctx.fillText("CHROME PLATING", sx, cy-12*DPR); ctx.restore(); }
+  // (Chrome ARMOR pips + Turtle SHELL icon now render above the HEARTS in the lives HUD - easier to read than floating over the cat)
 }
 function drawWing(wx,wy,s,on){
   ctx.save(); ctx.translate(wx,wy+s*0.22); ctx.shadowBlur=0; ctx.lineJoin="round"; ctx.lineCap="round";
@@ -8312,6 +8387,15 @@ function frame(){
       ctx.fillStyle="rgba(0,0,0,.5)"; roundRect(W/2-bw2/2, cy-28*DPR, bw2, 56*DPR, 12*DPR); ctx.fill();
       ctx.fillStyle="#ff9a3c"; ctx.font=`900 ${26*DPR}px Orbitron`; ctx.fillText(bannerName.toUpperCase(), W/2, cy+1*DPR);
       ctx.fillStyle="rgba(255,255,255,.85)"; ctx.font=`700 ${12*DPR}px 'Saira Semi Condensed'`; ctx.fillText("SECRET JACKPOT LEVEL", W/2, cy+20*DPR); ctx.restore(); bannerT-=0.006; }
+    if(infurno && !infurno.ready){ ctx.save(); ctx.textAlign="center"; // INTRO: explain the jackpot + WAIT for the player to press any key (no auto-start)
+      ctx.fillStyle="rgba(0,0,0,.5)"; ctx.fillRect(0,0,W,H); ctx.shadowColor="rgba(0,0,0,.7)"; ctx.shadowBlur=8*DPR;
+      ctx.fillStyle="#ff9a3c"; ctx.font=`900 ${30*DPR}px Orbitron`; ctx.fillText("DANTE'S INFURNO", W/2, H*0.30);
+      ctx.fillStyle="#fff"; ctx.font=`800 ${17*DPR}px 'Saira Semi Condensed'`;
+      ctx.fillText("Grab the falling gold for a coin JACKPOT.", W/2, H*0.385);
+      ctx.fillText("DODGE the fireballs - one burn ends the run!", W/2, H*0.43);
+      ctx.fillStyle="rgba(255,255,255,.9)"; ctx.font=`700 ${14*DPR}px 'Saira Semi Condensed'`; ctx.fillText("TAP / SPACE to fly  ·  LEFT / RIGHT to move", W/2, H*0.48);
+      const pulse=0.55+0.45*Math.sin(t*4.5); ctx.globalAlpha=pulse; ctx.fillStyle="#ffd34d"; ctx.font=`900 ${34*DPR}px Orbitron`;
+      ctx.fillText("PRESS ANY KEY TO START", W/2, H*0.64); ctx.globalAlpha=1; ctx.restore(); }
     stepSim();
     requestAnimationFrame(frame);
     return;
@@ -8360,6 +8444,7 @@ function frame(){
   ctx.save(); ctx.translate(0, camY);
   drawBackground(t,biome);
   drawObstacles(t);
+  if(baccaAxe) drawBaccaAxe(t);
   drawRival(t);
   drawCannon();
   drawReboot();
@@ -8375,11 +8460,22 @@ function frame(){
         ctx.fillStyle="rgba(255,255,214,.45)"; ctx.fillRect(xx,by-bh+2*DPR,w,2*DPR); ctx.fillStyle="rgba(110,64,8,.32)"; ctx.fillRect(xx,by-3*DPR,w,2*DPR); } }
     ctx.globalCompositeOperation="lighter"; const eg=ctx.createLinearGradient(wx1-32*DPR,0,wx1,0); eg.addColorStop(0,"rgba(255,240,160,0)"); eg.addColorStop(1,"rgba(255,255,220,"+(a*0.85)+")"); ctx.fillStyle=eg; ctx.fillRect(wx1-32*DPR,topY,32*DPR,g0-topY);
     ctx.restore(); }
-  for(const s of shockwaves){ ctx.save(); ctx.globalAlpha=Math.max(0,s.life)*0.8; ctx.globalCompositeOperation="lighter"; ctx.strokeStyle="rgba(127,231,255,.9)"; ctx.lineWidth=4*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r,0,7); ctx.stroke(); ctx.strokeStyle="rgba(255,255,255,.7)"; ctx.lineWidth=2*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r*0.7,0,7); ctx.stroke(); ctx.restore(); } // SONIC SCREAM shockwave rings
+  for(const s of shockwaves){ ctx.save(); ctx.globalAlpha=Math.max(0,s.life)*0.8; ctx.globalCompositeOperation="lighter";
+    if(s.rainbow){ const hue=(performance.now()*0.22 + s.r*1.4)%360; // rainbow IMPULSE ring (THE DROP)
+      ctx.strokeStyle="hsla("+hue+",100%,60%,.95)"; ctx.lineWidth=6*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r,0,7); ctx.stroke();
+      ctx.strokeStyle="hsla("+((hue+120)%360)+",100%,64%,.85)"; ctx.lineWidth=3.5*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r*0.74,0,7); ctx.stroke();
+      ctx.strokeStyle="rgba(255,255,255,.8)"; ctx.lineWidth=1.6*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r*0.5,0,7); ctx.stroke(); }
+    else if(s.scream){ const a=Math.max(0,s.life); // SONIC SCREAM: layered violet -> cyan -> white sound rings
+      ctx.strokeStyle="rgba(150,120,255,"+(0.5*a)+")"; ctx.lineWidth=8*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r,0,7); ctx.stroke();
+      ctx.strokeStyle="rgba(127,231,255,"+(0.9*a)+")"; ctx.lineWidth=4*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r,0,7); ctx.stroke();
+      ctx.strokeStyle="rgba(255,255,255,"+(0.75*a)+")"; ctx.lineWidth=1.8*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r*0.82,0,7); ctx.stroke(); }
+    else { ctx.strokeStyle="rgba(127,231,255,.9)"; ctx.lineWidth=4*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r,0,7); ctx.stroke(); ctx.strokeStyle="rgba(255,255,255,.7)"; ctx.lineWidth=2*DPR; ctx.beginPath(); ctx.arc(s.x-cam,s.y,s.r*0.7,0,7); ctx.stroke(); }
+    ctx.restore(); } // SONIC SCREAM / rainbow-impulse shockwave rings
   for(const pf of portalFx){ const px=pf.x-cam, py=pf.y, life=Math.max(0,pf.t); ctx.save(); ctx.globalCompositeOperation="lighter"; ctx.globalAlpha=life; // portal warp swirls: "in" collapses, "out" pops open where you reappear
     const baseR=(pf.k==="out"?48:38)*DPR, r=pf.k==="out"?baseR*(1.5-life*1.0):baseR*life;
     for(let i=0;i<3;i++){ ctx.strokeStyle=i%2?"rgba(40,230,255,.9)":"rgba(180,120,255,.9)"; ctx.lineWidth=(4-i)*DPR; ctx.beginPath(); ctx.arc(px,py,Math.max(1,r*(1-i*0.22)),0,7); ctx.stroke(); }
     ctx.fillStyle="rgba(240,230,255,"+(life*0.8)+")"; ctx.beginPath(); ctx.arc(px,py,Math.max(1,r*0.2),0,7); ctx.fill(); ctx.restore(); }
+  if(ab()==="bartman" && abHeld && flightMeter>0) drawSkateboard(t);
   drawKitty();
   if(state==="fly") drawPassiveHud(t); // ability feedback (lightning meter / fallout pips / dragon regen)
   biomeFX(biome,t);
@@ -8394,7 +8490,12 @@ function frame(){
     ctx.font=`800 ${14*DPR}px Orbitron`; ctx.fillStyle="rgba(255,255,255,.7)"; ctx.fillText("LIVES", 22*DPR, H-48*DPR);
     const _hxx=82*DPR, _hyy=H-48*DPR, _ml=maxLives(); ctx.font=`800 ${16*DPR}px Orbitron`; ctx.fillStyle="rgba(255,255,255,.22)"; ctx.fillText("♥".repeat(_ml), _hxx, _hyy); ctx.fillStyle="#ff5470"; ctx.fillText("♥".repeat(Math.max(0,Math.min(_ml,lives))), _hxx, _hyy);
     ctx.fillStyle="#fff"; ctx.font=`800 ${13*DPR}px Orbitron`; ctx.fillText("FLAPS", 22*DPR, H-24*DPR);
-    const _tf=baseFlaps(); for(let _w=0;_w<_tf;_w++) drawWing((104+_w*24)*DPR, H-30*DPR, 8*DPR, _w<flapsLeft); ctx.restore(); }
+    const _tf=baseFlaps(); for(let _w=0;_w<_tf;_w++) drawWing((104+_w*24)*DPR, H-30*DPR, 8*DPR, _w<flapsLeft);
+    if(ab()==="chrome"){ const ay=H-72*DPR; ctx.fillStyle="rgba(207,224,238,.85)"; ctx.font=`800 ${13*DPR}px Orbitron`; ctx.fillText("ARMOR", 22*DPR, ay+5*DPR); // Chrome plates above the hearts
+      for(let i=0;i<3;i++){ const px=(90+i*17)*DPR, on=i<chromePlates; if(on){ const sh=ctx.createLinearGradient(px-6*DPR,ay-6*DPR,px+6*DPR,ay+6*DPR); sh.addColorStop(0,"#ffffff"); sh.addColorStop(.5,"#b6c6d6"); sh.addColorStop(1,"#7f93a6"); ctx.fillStyle=sh; ctx.beginPath(); ctx.arc(px,ay,6.2*DPR,0,7); ctx.fill(); ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=1.4*DPR; ctx.stroke(); } else { ctx.fillStyle="rgba(255,255,255,.14)"; ctx.beginPath(); ctx.arc(px,ay,5.6*DPR,0,7); ctx.fill(); ctx.strokeStyle="rgba(255,255,255,.3)"; ctx.lineWidth=1.2*DPR; ctx.stroke(); } } }
+    else if(ab()==="turtle"){ const ay=H-72*DPR; ctx.fillStyle=shielded?"rgba(120,240,170,.9)":"rgba(160,200,175,.8)"; ctx.font=`800 ${13*DPR}px Orbitron`; ctx.fillText("SHELL", 22*DPR, ay+5*DPR); // Turtle shell above the hearts
+      ctx.save(); ctx.translate(96*DPR,ay); if(shielded){ const g=ctx.createLinearGradient(0,-8*DPR,0,8*DPR); g.addColorStop(0,"#7ef0a6"); g.addColorStop(.55,"#33c86f"); g.addColorStop(1,"#1c8f4c"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,3*DPR,9*DPR,Math.PI,2*Math.PI); ctx.closePath(); ctx.fill(); ctx.strokeStyle="rgba(9,60,30,.85)"; ctx.lineWidth=1.4*DPR; ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,-6*DPR); ctx.lineTo(0,3*DPR); ctx.moveTo(-5*DPR,-2*DPR); ctx.lineTo(-6*DPR,3*DPR); ctx.moveTo(5*DPR,-2*DPR); ctx.lineTo(6*DPR,3*DPR); ctx.stroke(); } else { ctx.strokeStyle="rgba(120,220,160,.35)"; ctx.lineWidth=1.5*DPR; ctx.beginPath(); ctx.arc(0,3*DPR,9*DPR,Math.PI,2*Math.PI); ctx.closePath(); ctx.stroke(); ctx.strokeStyle="#3ad17a"; ctx.lineWidth=2.6*DPR; ctx.lineCap="round"; ctx.beginPath(); ctx.arc(0,0,11*DPR,-Math.PI/2,-Math.PI/2+Math.min(1,turtleRegen/10)*2*Math.PI); ctx.stroke(); } ctx.restore(); }
+    ctx.restore(); }
   if(bannerT>0){ ctx.save(); ctx.globalAlpha=Math.min(1,bannerT*1.5); ctx.textAlign="center";
     const isHS=bannerName==="NEW HIGH SCORE!", bw2=Math.min(W*0.7, 470*DPR), cy=H*0.17;
     ctx.fillStyle="rgba(0,0,0,.5)"; roundRect(W/2-bw2/2, cy-28*DPR, bw2, 56*DPR, 12*DPR); ctx.fill();
@@ -8443,6 +8544,7 @@ function unlockMet(sk){ const u=sk.unlock; if(!u) return ownedAbilCount()>=5; //
     case "total_runs":        return (save.runs||0)>=v;
     case "reach_distance":    return (save.best||0)>=v;
     case "best_distance":     return (save.best||0)>=v;
+    case "posted_score":      return !!save.posted;
     case "manual":            return false;
     default:                  return ownedAbilCount()>=v;
   }
@@ -8554,13 +8656,13 @@ function _burstConfetti(big){
   })(t0);
 }
 function closeUnlock(){ clearTimeout(_unlockTO); cancelAnimationFrame(_unlockRAF); show("unlockCard",false); }
-function celebrateUnlock(skId){
+function celebrateUnlock(skId, availableOnly){
   const sk=skinList.find(s=>s.id===skId); if(!sk){ snd("buy"); return; }
   const nonSecret=skinList.filter(s=>!s.secret);
   const ownNS=nonSecret.filter(s=>save.owned.includes(s.id)).length;
   const complete = !sk.secret && nonSecret.length>1 && ownNS>=nonSecret.length;
-  document.getElementById("unlockTitle").textContent = complete ? "COLLECTION COMPLETE!" : "UNLOCKED!";
-  document.getElementById("unlockName").textContent = sk.name+" Sprite";
+  document.getElementById("unlockTitle").textContent = availableOnly ? "SECRET UNLOCKED!" : (complete ? "COLLECTION COMPLETE!" : "UNLOCKED!");
+  document.getElementById("unlockName").textContent = availableOnly ? (sk.name+" — claim it in the Shop") : (sk.name+" Sprite");
   const abEl=document.getElementById("unlockAbility");
   if(sk.ability){ abEl.style.display="inline-block"; abEl.textContent="⚡ "+(ABILITY_LABELS[sk.ability]||sk.ability); } else abEl.style.display="none";
   const card=document.getElementById("unlockCard"); card.classList.toggle("complete", complete);
@@ -8569,6 +8671,16 @@ function celebrateUnlock(skId){
   snd("buy"); _burstConfetti(complete);
   clearTimeout(_unlockTO); _unlockTO=setTimeout(closeUnlock, complete?2400:1600);
 }
+// ---- SECRET SKIN unlocks: auto-GRANT the free ones + a "SECRET UNLOCKED!" popup (grant skins are added free; buy skins just announce they're now claimable) ----
+let _unlockQ=[], _flushing=false;
+function checkUnlocks(){ if(!Array.isArray(save.seenUnlocks)) save.seenUnlocks=[]; let changed=false;
+  for(const sk of skinList){ if(!sk.secret || save.owned.includes(sk.id) || !unlockMet(sk)) continue;
+    if(sk.grant){ save.owned.push(sk.id); changed=true; _unlockQ.push({id:sk.id, grant:true}); }                       // auto-grant FREE
+    else if(!save.seenUnlocks.includes(sk.id)){ save.seenUnlocks.push(sk.id); changed=true; _unlockQ.push({id:sk.id, grant:false}); } } // buy skin: announce once
+  if(changed){ persist(); try{ buildShop(); }catch(e){} }
+  _flushUnlocks(); }
+function _flushUnlocks(){ if(_flushing || !_unlockQ.length) return; _flushing=true; const u=_unlockQ.shift();
+  setTimeout(()=>{ _flushing=false; try{ celebrateUnlock(u.id, !u.grant); }catch(e){} _flushUnlocks(); }, 1100); } // stagger multiple unlocks ~1.1s apart
 document.getElementById("unlockCard").onclick=closeUnlock;
 let _detailSk=null;
 function openSkinDetail(sk){
@@ -8743,11 +8855,11 @@ document.body.insertAdjacentHTML("beforeend","<div id='scAim' class='scPad'><div
     const off=(e)=>{ if(e) e.stopPropagation(); set[k](false); b.classList.remove("on"); };
     b.addEventListener("touchstart",on,{passive:false}); ["touchend","touchcancel"].forEach(ev=>b.addEventListener(ev,off)); }); })();
 function updateAbilityBtn(){ const b=document.getElementById("abilityBtn"); if(!b) return; const c=activeCfg();
-  if(state==="fly" && ab()==="godmode"){ b.classList.remove("hidden"); b.style.setProperty("--prog", flightMeter.toFixed(3)); b.style.setProperty("--ring", flightMeter>0.05?"#6fb0ff":"#7d6bd0"); b.style.opacity = flightMeter>0.05?"1":"0.6"; b.innerHTML="🕊"; return; } // MAN OF STEEL: hold the button/key to fly; ring = flight meter
+  if(state==="fly" && (ab()==="godmode"||ab()==="bartman")){ b.classList.remove("hidden"); b.style.setProperty("--prog", flightMeter.toFixed(3)); b.style.setProperty("--ring", flightMeter>0.05?"#6fb0ff":"#7d6bd0"); b.style.opacity = flightMeter>0.05?"1":"0.6"; b.innerHTML=(ab()==="bartman"?"🛹":"🕊"); return; } // MAN OF STEEL / BART SKATE: hold the button/key to fly; ring = meter
   if(!(state==="fly" && c)){ b.classList.add("hidden"); return; }
   b.classList.remove("hidden");
   const finite=c.uses!==Infinity; let prog=1, count="";
-  if(ab()==="teleport"){ const cap=ACTIVE_AB.teleport.uses; prog = abUses>=cap?1:(abRegen/7); count=Math.max(0,abUses); } // regen toward next charge
+  if(ab()==="teleport"){ const cap=ACTIVE_AB.teleport.uses; prog = abUses>=cap?1:(abRegen/5); count=Math.max(0,abUses); } // regen toward next charge
   else if(ab()==="spicyspeed" && abCd<=0 && abUses<ACTIVE_AB.spicyspeed.uses){ prog = abRegen/12; count=Math.max(0,abUses); } // SPICY: ring fills toward the next 12s-regen charge (was sitting empty)
   else if(abCd>0 && c.cd>0){ prog = 1-Math.max(0,Math.min(1,abCd/c.cd)); if(finite) count=Math.max(0,abUses); } // recharging
   else { prog = (finite && abUses<=0)?0:1; if(finite) count=Math.max(0,abUses); }
@@ -8831,10 +8943,12 @@ function submitLB(){ const n=(document.getElementById("lbName").value||"").trim(
     if(my!==lbReq) return; // user switched scope mid-submit -> don't clobber the now-current board
     if(scope==="weekly"){ loadLB(); return; } // weekly: the submit payload carries only global/stream -> repaint the REAL weekly board (scope-correct + its own lbReq guard) instead of showing global scores under the weekly header
     if(onStream && d.streamTop) renderLB(d.streamTop); else if(d.top) renderLB(d.top);
+    if(!save.posted){ save.posted=true; persist(); checkUnlocks(); } // posting a score unlocks Spookyszn (auto-granted free)
     const rank = onStream ? d.streamRank : d.rank; st.textContent= rank?("You're #"+rank+(onStream?" on this stream!":" globally!")):"Submitted!"; }).catch(()=>{ if(my!==lbReq) return; st.textContent="Couldn't submit (offline)."; }); }
 function _postRank(el, name){ const ch=streamChannel(), onStream=!!ch;
   el.style.display="block"; el.textContent="Posting your rank...";
   scSubmit(name, ch).then(d=>{
+    if(!save.posted){ save.posted=true; persist(); checkUnlocks(); } // auto-posted rank also unlocks Spookyszn
     const rank = onStream ? d.streamRank : d.rank;
     if(rank){ el.style.display="block"; el.innerHTML='&#127942; #'+rank+(onStream?(' on '+ch):' worldwide'); }
     else el.style.display="none";
