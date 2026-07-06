@@ -561,7 +561,10 @@
 /* immediate reveal-on-load (above fold) */
 .reveal {
   opacity: 0;
-  transform: translateY(10px);
+  /* Opacity-only entrance. A `transform` here forced the heading into a GPU
+     layer; when the self-hosted Bowlby font loaded mid-animation and reflowed
+     an accent word to the next line, Brave never repainted the stale layer and
+     left a solid text "ghost" of the pre-reflow layout. No transform = no layer. */
   animation: reveal 800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 .reveal-1 { animation-delay: 0ms; }
@@ -571,7 +574,7 @@
 .reveal-5 { animation-delay: 400ms; }
 .reveal-6 { animation-delay: 500ms; }
 @keyframes reveal {
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; }
 }
 
 /* ────────────────────────────────────────────────────────────────────
