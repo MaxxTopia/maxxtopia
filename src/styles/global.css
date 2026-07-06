@@ -718,6 +718,11 @@
   line-height: 0.95;
   display: inline-block;
   transform: translateY(0.02em);
+  /* Extend the (background-clip:text) gradient box below the baseline so glyph
+     descenders (p, g, y) aren't painted transparent / clipped; the matching
+     negative margin keeps the layout footprint unchanged. */
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
 }
 
 /* Display utility — Bebas Neue, all-caps, esports-iconic.

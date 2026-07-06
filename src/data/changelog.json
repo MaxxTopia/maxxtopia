@@ -15,6 +15,19 @@
     ]
   },
   {
+    "date": "2026-07-06",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "title": "Every platform, one playlist.",
+    "body": "The suite's music hub is live at music.maxxtopia.com - paste a track or a whole playlist from Spotify, SoundCloud or YouTube and it plays right in place. No account, no install.",
+    "items": [
+      "Paste a link from Spotify, SoundCloud or YouTube - it detects the platform and drops in a real, playable card.",
+      "Pop out a floating vinyl mini-player that keeps playing while you're on other tabs.",
+      "Synced karaoke lyrics that light up line by line, colored from the cover art.",
+      "One toggle pushes what's playing to your Streammaxxing vinyl overlay - live now-playing on stream."
+    ]
+  },
+  {
     "date": "2026-07-05",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
