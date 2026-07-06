@@ -28,6 +28,34 @@
     ]
   },
   {
+    "date": "2026-07-06",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.50",
+    "title": "Your rank, on your Discord profile.",
+    "body": "DMWidget profile-board widgets are live (off by default) - put your Fortnite and Valorant rank cards right on your profile.",
+    "items": [
+      "Fortnite + Valorant rank cards with badges and logos.",
+      "Cross-account copy-code to share your setup.",
+      "\"Move to top\" ordering for your widgets.",
+      "Echo + voice fixes on the Vesktop base."
+    ]
+  },
+  {
+    "date": "2026-07-05",
+    "product": "Optimizationmaxxing",
+    "productSlug": "optimizationmaxxing",
+    "version": "v0.3.8",
+    "title": "Know your rig, tune your rig.",
+    "body": "A full hardware read plus real sensor data - see what you've got and what to upgrade.",
+    "items": [
+      "Upgrade Advisor - what to upgrade next.",
+      "RAM SPD timings + serial numbers.",
+      "GPU VRAM readout.",
+      "Real CPU temps via a PawnIO sensor driver."
+    ]
+  },
+  {
     "date": "2026-07-05",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",

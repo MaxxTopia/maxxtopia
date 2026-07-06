@@ -63,9 +63,7 @@ for (const raw of lines) {
   }
   if (inHi) section.push(line);
 }
-if (!inHi && section.length === 0) {
-  fail(`no "## Highlights" section in ${version} notes`);
-}
+// No `## Highlights`? Don't skip — we auto-generate below from the PR list.
 
 // --- Split the section into a lead line + bullets ---------------------------
 const items = [];
@@ -97,8 +95,29 @@ if (!title) {
   if (title === entryBody) entryBody = undefined;
 }
 
+// --- FALLBACK: no curated Highlights -> auto-generate from the release's PR
+// list (GitHub "What's Changed") so every release self-generates an entry, no
+// manual notes required. Curated Highlights (above) still win when present.
+if (items.length === 0) {
+  const clean = (s) => s
+    .replace(/\s+by\s+@[\w-]+/i, '')                                             // drop " by @user"
+    .replace(/\s+in\s+#\d+\s*$/i, '')                                            // drop " in #123"
+    .replace(/^\s*(feat|fix|chore|refactor|docs|style|perf|test|build|ci)(\([^)]*\))?:\s*/i, '') // drop conventional-commit prefix
+    .replace(/\s+/g, ' ')
+    .trim();
+  const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
+  for (const raw of lines) {
+    const b = raw.trim().match(/^[-*+]\s+(.*)$/);
+    if (!b || NOISE.test(raw)) continue;
+    const text = cap(clean(b[1]));
+    if (text && text.length > 2 && !/^\*\*/.test(text)) items.push(text);
+    if (items.length >= 5) break;
+  }
+}
+// Still nothing (a bare CI release with no PR list) -> a minimal honest entry so
+// the version still appears on the timeline instead of vanishing silently.
 if (items.length === 0 && !entryBody) {
-  fail(`"Highlights" section in ${version} had no usable bullets or summary`);
+  entryBody = 'Maintenance release — under-the-hood fixes and improvements.';
 }
 
 // --- Build the entry --------------------------------------------------------
