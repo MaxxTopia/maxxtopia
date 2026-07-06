@@ -269,6 +269,9 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* Brave/Chromium under animation compositing ignores `color:transparent` and
+     paints a solid ghost of the text; -webkit-text-fill-color forces it clear. */
+  -webkit-text-fill-color: transparent;
   animation: shimmer 6s ease-in-out infinite;
 }
 
@@ -277,6 +280,8 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* Prevents the solid white text-ghost Brave leaves during the reveal animation. */
+  -webkit-text-fill-color: transparent;
 }
 
 /* Accent-green variant of .gradient-suite — same shimmer, tuned to the
