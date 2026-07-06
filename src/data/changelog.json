@@ -1,5 +1,20 @@
 [
   {
+    "date": "2026-07-06",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.5.8",
+    "title": "Sprite Cannon's big ability + skin overhaul.",
+    "body": "The bundled Sprite Cannon game gets a huge pass: reworked powers across the roster, secret skins that auto-unlock with notifications, bigger skins, and a full rarity/price rebalance.",
+    "items": [
+      "Reworked abilities across the roster - Bartholomew's skateboard + cape, Phantom Ghost Rush, Fallout NUKE, Peely warp, Bacca rocket, Chrome/Turtle armor.",
+      "New Spookyszn 'Crazy Slots' - eat a candy to roll a random power.",
+      "Secret skins now auto-unlock with an on-screen notification, and shop tiles show how to earn them.",
+      "Bigger skins in play and in the shop, plus a full rarity/price rebalance.",
+      "Refreshed EasyList/EasyPrivacy + latest Twitch fix."
+    ]
+  },
+  {
     "date": "2026-07-05",
     "product": "streammaxxing",
     "productSlug": "streammaxxing",
