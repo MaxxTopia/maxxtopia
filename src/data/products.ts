@@ -1250,6 +1250,8 @@ export const products: Product[] = [
     ],
     primaryCta: { label: 'Open Playlistmaxxing', href: 'https://music.maxxtopia.com', external: true },
     glyph: '♫',
+    logo: '/logos/playlistmaxxing.webp',
+    icon: '/logos/playlistmaxxing.webp',
     accentHex: '#7c5cff',
     screenshots: ['/screenshots/playlistmaxxing/hero.webp'],
     heroStat: { value: '3-in-1', label: 'Spotify · SoundCloud · YouTube' },
