@@ -342,6 +342,7 @@ const featureHeadings: Record<string, FeatureHeading> = {
   extensionmaxxing:    { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
   streammaxxing:       { eyebrow: 'The latency',     left: 'No cloud hop.',            right: 'No delay.' },
   snipemaxxer:         { eyebrow: 'The edge',        left: 'Intel you can\'t get',     right: 'from inside the game.' },
+  playlistmaxxing:     { eyebrow: 'The mixtape',     left: 'Every song you love,',     right: 'one page.' },
 };
 const featureHeading: FeatureHeading | undefined = featureHeadings[product.slug];
 
@@ -359,6 +360,7 @@ const softwareKeywords: Record<string, string> = {
   extensionmaxxing: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
   streammaxxing: 'stream alerts, twitch alerts, local stream alerts, botrix alternative, streamlabs alerts alternative, twitch eventsub overlay, donation tts, voice clone tts alerts, obs alert overlay, free stream alerts, clip trimmer, loudness normalize alerts',
   snipemaxxer: 'fortnite lobby scout, fortnite tournament tool, fncs scout, cash cup helper, fortnite replay analyzer, who is in my fortnite lobby, fortnite pro tracker, fortnite live streamer detector, fortnite points calculator, fortnite qualify calculator, fortnite surge tracker, fortnite tournament coach',
+  playlistmaxxing: 'cross-platform playlist, combine spotify soundcloud youtube, one playlist all platforms, unified music player, free online music player, no login music player, listen to soundcloud and youtube together, embed music player, music aggregator, web music hub, playlist across services, songs not on spotify',
 };
 
 const softwareSchema = {
@@ -375,9 +377,13 @@ const softwareSchema = {
     'Streamer Tools': 'MultimediaApplication',
     'TV Streaming': 'MultimediaApplication',
     'Content': 'MultimediaApplication',
+    'Music': 'MultimediaApplication',
   } as Record<string, string>)[product.category] ?? 'GameApplication',
   applicationSubCategory: product.category,
-  operatingSystem: product.slug === 'viewmaxxing' ? 'Android' : 'Windows 10, Windows 11',
+  operatingSystem:
+    product.slug === 'viewmaxxing' ? 'Android'
+    : product.slug === 'playlistmaxxing' ? 'Web browser'
+    : 'Windows 10, Windows 11',
   ...(product.version && { softwareVersion: product.version }),
   ...(softwareKeywords[product.slug] && { keywords: softwareKeywords[product.slug] }),
   offers: {

@@ -1206,6 +1206,54 @@ export const products: Product[] = [
     screenshots: ['/screenshots/snipemaxxer/scout-glance.webp'],
     heroStat: { value: '0', label: 'game memory read', inline: true },
   },
+  {
+    slug: 'playlistmaxxing',
+    name: 'Playlistmaxxing',
+    category: 'Music',
+    status: 'live',
+    tagline: 'Every platform. One playlist.',
+    description:
+      'Your music is scattered — some songs only on SoundCloud, some only on YouTube, some on Spotify. Playlistmaxxing puts them all on one page. Paste a link, it plays. No account. Nothing to install.',
+    longDescription:
+      'One page for the music you actually listen to — Spotify, SoundCloud and YouTube, side by side. Paste a track or a whole playlist and it plays in place. No login, no install, saved on your device.',
+    features: [
+      {
+        title: 'Paste anything. It plays.',
+        body: 'A single track — or a whole playlist, album or set — from Spotify, SoundCloud or YouTube. It detects the platform and drops in a real, playable card.',
+      },
+      {
+        title: 'Nothing to log into.',
+        body: 'No account, no install, no server. Runs in your browser, saves on your device. SoundCloud and YouTube play full and free; Spotify plays full when you\'re signed in.',
+      },
+      {
+        title: 'A record that follows you.',
+        body: 'Pop out a floating vinyl mini-player that stays on top while you\'re on other tabs. Spin, skip, done. Spotify-style pop-out — your look.',
+      },
+      {
+        title: 'Karaoke, built in.',
+        body: 'Synced lyrics that light up line by line, colour-pulled from the cover art. Sing along without leaving the page.',
+      },
+      {
+        title: 'Put it on your stream.',
+        body: 'One toggle pushes what\'s playing to your Streammaxxing vinyl overlay — live now-playing on stream, no extra software.',
+      },
+      {
+        title: 'Yours, everywhere.',
+        body: 'Search, reorder, tag into playlists, export or share your whole library as a link. Open it on your phone — same link, same music.',
+      },
+    ],
+    stats: [
+      { label: 'Platforms, one page', value: '3' },
+      { label: 'Accounts needed', value: '0' },
+      { label: 'To install', value: 'Nothing' },
+      { label: 'Cost', value: 'Free' },
+    ],
+    primaryCta: { label: 'Open Playlistmaxxing', href: 'https://music.maxxtopia.com', external: true },
+    glyph: '♫',
+    accentHex: '#7c5cff',
+    screenshots: ['/screenshots/playlistmaxxing/hero.webp'],
+    heroStat: { value: '3-in-1', label: 'Spotify · SoundCloud · YouTube' },
+  },
 ];
 
 export const liveProducts = products.filter((p) => p.status === 'live');
