@@ -8941,6 +8941,24 @@ function loadLB(){ const my=++lbReq; const st=document.getElementById("lbStatus"
   const ch=streamChannel(), onStream=(lbScope==="stream"&&ch), label=onStream?"this stream":"global";
   const q = onStream ? ("?scope=stream&ch="+encodeURIComponent(ch)) : "?scope=global";
   fetch(LB_URL+"/top"+q,{cache:"no-store"}).then(r=>r.json()).then(d=>{ if(my!==lbReq) return; renderLB(d.top||[]); st.textContent=(d.top&&d.top.length)?("Your best: "+save.best+"m ("+label+")"):("No scores yet ("+label+") - be the first!"); }).catch(()=>{ if(my===lbReq) _lbOffline(st); }); }
+// ---- distance rank ladder: named tiers spanning the whole map (extends PAST Legend@20k to the deepest worlds ~78k) ----
+const SC_RANKS=[
+  {d:0,     n:"Rookie",      e:"\u{1F423}",       c:"#9fb0cf"},
+  {d:1000,  n:"Flyer",       e:"\u{1FAB6}",       c:"#7fe7ff"},
+  {d:2500,  n:"Adventurer",  e:"\u{1F9ED}",       c:"#6ad0a0"},
+  {d:5000,  n:"Pilot",       e:"✈️",    c:"#5cc8ff"},
+  {d:8000,  n:"Ace",         e:"\u{1F3AF}",       c:"#ffd34d"},
+  {d:12000, n:"Veteran",     e:"\u{1F396}️", c:"#ff9e63"},
+  {d:16000, n:"Master",      e:"\u{1F3C5}",       c:"#ff6ae0"},
+  {d:20000, n:"Legend",      e:"\u{1F451}",       c:"#ffcf3a"},
+  {d:26000, n:"Mythic",      e:"\u{1F52E}",       c:"#b97bff"}, // -- above here = new tiers past Legend --
+  {d:34000, n:"Champion",    e:"\u{1F3C6}",       c:"#ffd76a"},
+  {d:44000, n:"Grandmaster", e:"\u{1F4A0}",       c:"#22e6ff"},
+  {d:56000, n:"Ascendant",   e:"\u{1F31F}",       c:"#7dffd0"},
+  {d:70000, n:"Celestial",   e:"☄️",    c:"#ff5fc8"},
+  {d:88000, n:"Godlike",     e:"⚡",          c:"#ff2d4f"}
+];
+function scRankTitle(dist){ const d=+dist||0; let r=SC_RANKS[0]; for(const t of SC_RANKS){ if(d>=t.d) r=t; else break; } return r; }
 function renderLB(top, payout){ const list=document.getElementById("lbList"); list.innerHTML="";
   if(!top || !top.length){ list.innerHTML='<div class="lb-state"><div class="lb-ico">&#127942;</div><div>No scores yet</div><div class="muted" style="font-weight:600;letter-spacing:.02em">Be the first to claim the top spot!</div></div>'; return; }
   const me=_lbMe(), medals=["&#128081;","&#129352;","&#129353;"];
@@ -8949,9 +8967,11 @@ function renderLB(top, payout){ const list=document.getElementById("lbList"); li
     const row=document.createElement("div");
     row.className="lb-row"+(isTop?(" top r"+(i+1)):"")+(isYou?" you":"");
     row.style.setProperty("--i", i);
+    const rt=scRankTitle(e.dist); // distance rank tier badge
     row.innerHTML='<span class="lb-rank">'+(isTop?'<span class="lb-medal">'+medals[i]+'</span>':(i+1))+'</span>'
       +'<span class="lb-nm"></span>'
       +(isYou?'<span class="lb-you">YOU</span>':'')
+      +'<span class="lb-tier" title="'+rt.n+' rank" style="flex:0 0 auto;font-family:Orbitron,sans-serif;font-weight:800;font-size:9px;letter-spacing:.03em;color:'+rt.c+';border:1px solid '+rt.c+'59;border-radius:999px;padding:2px 7px;white-space:nowrap">'+rt.e+' '+rt.n.toUpperCase()+'</span>'
       +(payout&&i<payout.length?'<span style="margin:0 7px 0 4px;font-family:Orbitron,sans-serif;font-weight:800;font-size:11px;color:#06140f;background:linear-gradient(180deg,#ffe27a,#ffc23d);border-radius:999px;padding:2px 8px;white-space:nowrap;box-shadow:0 0 10px rgba(255,200,60,.4)">+'+payout[i].toLocaleString()+' &#9921;</span>':'')
       +'<span class="lb-d">'+fmtDist(e.dist)+'<span class="lb-m">m</span></span>';
     row.querySelector(".lb-nm").textContent=e.name||"anon";
