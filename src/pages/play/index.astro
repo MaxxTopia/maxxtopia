@@ -646,12 +646,18 @@ const steps = [
 
       // The prestige ladder — distance (m) -> named rank, escalating colour/flair.
       const TIERS = [
-        { name: 'Recruit', min: 0,     c: '#9a90b8' },
-        { name: 'Amateur', min: 2500,  c: '#4ade80' },
-        { name: 'Veteran', min: 5000,  c: '#00d4ff' },
-        { name: 'Elite',   min: 9000,  c: '#4c51f7' },
-        { name: 'Master',  min: 14000, c: '#e25bff' },
-        { name: 'Legend',  min: 20000, c: '#ffb23e' },
+        { name: 'Recruit',     min: 0,     c: '#9a90b8' },
+        { name: 'Amateur',     min: 2500,  c: '#4ade80' },
+        { name: 'Veteran',     min: 5000,  c: '#00d4ff' },
+        { name: 'Elite',       min: 9000,  c: '#4c51f7' },
+        { name: 'Master',      min: 14000, c: '#e25bff' },
+        { name: 'Legend',      min: 20000, c: '#ffb23e' },
+        { name: 'Mythic',      min: 28000, c: '#b06bff' },
+        { name: 'Champion',    min: 38000, c: '#ffd76a' },
+        { name: 'Grandmaster', min: 50000, c: '#22e6ff' },
+        { name: 'Ascendant',   min: 64000, c: '#7dffd0' },
+        { name: 'Celestial',   min: 78000, c: '#ff5fc8' },
+        { name: 'Godlike',     min: 95000, c: '#ff2d4f' },
       ];
       const tierOf = (d) => { let t = TIERS[0]; for (const x of TIERS) if (d >= x.min) t = x; return t; };
       const nextOf = (d) => TIERS.find((x) => x.min > d) || null;
