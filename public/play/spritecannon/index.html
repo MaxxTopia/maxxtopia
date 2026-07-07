@@ -718,6 +718,9 @@ let _adopting=false, _syncPushT=null, _syncBusy=false;
 const SC_SYNC_URL="https://spritecannon-lb.maxxtopia.workers.dev";
 let save = { coins:0, best:0, owned:["default"], skin:"default", runs:0, style:{}, daily:{streak:0,lastClaim:0}, quests:null, totalDist:0, coinsEarned:0, rev:0 };
 try{ const s=JSON.parse(localStorage.getItem(SAVE)); if(s) save=Object.assign(save,s); }catch{}
+// REGATE MIGRATION: Superbob now needs 65,000m (was 35k); Spookyszn now needs a posted score >= 25,000m (was any posted score). Revoke from anyone granted under the OLD bars who hasn't hit the new ones - checkUnlocks() auto-re-grants once they qualify. Idempotent + self-healing (safe to run every load).
+function _regateSecrets(){ if(!Array.isArray(save.owned)) return; const drop=[]; if(save.owned.includes("superbob") && (save.best||0)<65000) drop.push("superbob"); if(save.owned.includes("spookyszn") && (save.best||0)<25000) drop.push("spookyszn"); if(!drop.length) return; save.owned=save.owned.filter(id=>drop.indexOf(id)<0); if(drop.indexOf(save.skin)>=0) save.skin="default"; if(Array.isArray(save.seenUnlocks)) save.seenUnlocks=save.seenUnlocks.filter(id=>drop.indexOf(id)<0); }
+_regateSecrets();
 function persist(){ if(!_adopting){ save.rev=(save.rev||0)+1; } try{ localStorage.setItem(SAVE, JSON.stringify(save)); }catch{} if(!_adopting && syncCode) cloudPush(); } // every change bumps rev + (if linked) debounced-pushes to the cloud
 if(!save.pid){ save.pid="p_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36); persist(); } // stable anon id for code redemption (per-player dedup)
 
@@ -725,7 +728,7 @@ if(!save.pid){ save.pid="p_"+Math.random().toString(36).slice(2,10)+Date.now().t
 function setSyncCode(c){ syncCode=String(c||"").replace(/[^\w\-]/g,"").slice(0,32).toUpperCase(); try{ localStorage.setItem("sm.spritecannon.synccode",syncCode); }catch{} }
 function genSyncCode(){ const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let s=""; for(let i=0;i<8;i++) s+=A[Math.floor(Math.random()*A.length)]; return s; }
 function _baseSave(){ return {coins:0,best:0,owned:["default"],skin:"default",runs:0,style:{},daily:{streak:0,lastClaim:0},quests:null,totalDist:0,coinsEarned:0,rev:0,revDay:0,revBought:0}; }
-function _afterAdopt(){ try{ updateCoinHUD(); }catch(e){} try{ refreshStartCard(); }catch(e){} try{ if(state==="shop") buildShop(); }catch(e){} }
+function _afterAdopt(){ try{ _regateSecrets(); }catch(e){} try{ updateCoinHUD(); }catch(e){} try{ refreshStartCard(); }catch(e){} try{ if(state==="shop") buildShop(); }catch(e){} }
 function adoptCloudSave(cloud,rev){ if(!cloud||typeof cloud!=="object") return; const pid=save.pid; _adopting=true; save=Object.assign(_baseSave(),cloud); save.rev=rev||cloud.rev||0; if(!save.pid) save.pid=pid; persist(); _adopting=false; _afterAdopt(); }
 function _mergeSaves(a,b){ const o=Object.assign({},a,b); o.coins=Math.max(a.coins||0,b.coins||0); o.best=Math.max(a.best||0,b.best||0); o.runs=Math.max(a.runs||0,b.runs||0); o.totalDist=Math.max(a.totalDist||0,b.totalDist||0); o.coinsEarned=Math.max(a.coinsEarned||0,b.coinsEarned||0); o.owned=Array.from(new Set([].concat(a.owned||["default"],b.owned||["default"]))); o.style=Object.assign({},a.style||{},b.style||{}); o.daily=((a.daily&&a.daily.lastClaim||0)>=(b.daily&&b.daily.lastClaim||0))?a.daily:b.daily;
   // daily REVIVE cap must survive a link/merge (anti-cheat): keep the newest day, and if both saves are on that day keep the HIGHER spent count so linking a device can't reset the 10/day ceiling
@@ -842,7 +845,18 @@ const SND = {
     lp.type="lowpass"; lp.frequency.value=900;
     o.type="sine"; o.frequency.setValueAtTime(230,t); o.frequency.exponentialRampToValueAtTime(150,t+0.07);
     g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.34,t+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t+0.11);
-    o.connect(g).connect(lp).connect(out); o.start(t); o.stop(t+0.12); }
+    o.connect(g).connect(lp).connect(out); o.start(t); o.stop(t+0.12); },
+  axe: function(ctx){ const t=ctx.currentTime,out=ctx.destination; // BACCA axe throw: spinning blade whir + swish (was the death sound)
+    for(let i=0;i<6;i++){ const st=t+i*0.05; const ns=ctx.createBufferSource(); ns.buffer=noiseBuf(ctx,0.045,x=>1-x); const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.Q.value=6; bp.frequency.value=2600-i*180; const g=ctx.createGain(); const pk=0.14*(1-i*0.09); g.gain.setValueAtTime(0.0001,st); g.gain.linearRampToValueAtTime(pk,st+0.008); g.gain.exponentialRampToValueAtTime(0.0001,st+0.045); ns.connect(bp).connect(g).connect(out); ns.start(st); ns.stop(st+0.05); }
+    const sw=ctx.createBufferSource(); sw.buffer=noiseBuf(ctx,0.3,x=>Math.sin(Math.PI*x)); const sbp=ctx.createBiquadFilter(); sbp.type="bandpass"; sbp.frequency.setValueAtTime(900,t); sbp.frequency.exponentialRampToValueAtTime(400,t+0.28); sbp.Q.value=0.8; const sg=ctx.createGain(); sg.gain.setValueAtTime(0.0001,t); sg.gain.linearRampToValueAtTime(0.14,t+0.08); sg.gain.exponentialRampToValueAtTime(0.0001,t+0.3); sw.connect(sbp).connect(sg).connect(out); sw.start(t); sw.stop(t+0.31); },
+  screech: function(ctx){ const t=ctx.currentTime,out=ctx.destination; // SONIC SCREAM ability: rising sonic ring (was the death sound)
+    const o=ctx.createOscillator(),g=ctx.createGain(); o.type="sine"; o.frequency.setValueAtTime(300,t); o.frequency.exponentialRampToValueAtTime(2400,t+0.3); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.26,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4); o.connect(g).connect(out); o.start(t); o.stop(t+0.41);
+    const p=ctx.createOscillator(),pg=ctx.createGain(); p.type="triangle"; p.frequency.setValueAtTime(1760,t+0.24); pg.gain.setValueAtTime(0.0001,t+0.24); pg.gain.exponentialRampToValueAtTime(0.18,t+0.26); pg.gain.exponentialRampToValueAtTime(0.0001,t+0.5); p.connect(pg).connect(out); p.start(t+0.24); p.stop(t+0.51); },
+  throw: function(ctx){ const t=ctx.currentTime,out=ctx.destination; // GORILLA hurls a boulder: heavy throw whoosh (was the death sound)
+    const ns=ctx.createBufferSource(); ns.buffer=noiseBuf(ctx,0.34,x=>Math.sin(Math.PI*x)); const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.setValueAtTime(1400,t); lp.frequency.exponentialRampToValueAtTime(300,t+0.32); const ng=ctx.createGain(); ng.gain.setValueAtTime(0.0001,t); ng.gain.linearRampToValueAtTime(0.3,t+0.09); ng.gain.exponentialRampToValueAtTime(0.0001,t+0.34); ns.connect(lp).connect(ng).connect(out); ns.start(t); ns.stop(t+0.35);
+    const o=ctx.createOscillator(),g=ctx.createGain(); o.type="sine"; o.frequency.setValueAtTime(150,t); o.frequency.exponentialRampToValueAtTime(60,t+0.3); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.2,t+0.04); g.gain.exponentialRampToValueAtTime(0.0001,t+0.34); o.connect(g).connect(out); o.start(t); o.stop(t+0.35); },
+  error: function(ctx){ const t=ctx.currentTime,out=ctx.destination; // redeem-code fail: soft error buzz (was the death sound)
+    function blip(s,f1,f2){ const o=ctx.createOscillator(),g=ctx.createGain(),lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1100; o.type="square"; o.frequency.setValueAtTime(f1,s); o.frequency.exponentialRampToValueAtTime(f2,s+0.1); g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(0.18,s+0.01); g.gain.exponentialRampToValueAtTime(0.0001,s+0.13); o.connect(lp).connect(g).connect(out); o.start(s); o.stop(s+0.14); } blip(t,300,220); blip(t+0.14,220,165); }
 };
 
 let skinImgs={}, skinBox={}; // skinBox[id] = the creature's alpha bounding box in image px (so padding never makes a skin render small)
@@ -900,7 +914,7 @@ function splashFx(x,y){ for(let i=0;i<22;i++) parts.push({x:x+rand(-14,14)*DPR,y
 function maxLives(){ return ab()==="revive"?4:3; }
 // ---- ACTIVE abilities: fired via Shift key / on-screen ability button (Diggy's pick) ----
 const ACTIVE_AB={ rocketstart:{label:"AXE",uses:Infinity,cd:10,dur:0}, magnetburst:{label:"MAGNET",uses:Infinity,cd:25,dur:10}, flamejet:{label:"FLAME",uses:Infinity,cd:1.5,dur:0}, windboost:{label:"WIND",uses:Infinity,cd:5,dur:0.9}, teleport:{label:"BLINK",uses:3,cd:0.3,dur:0}, split:{label:"RAIJIN",uses:Infinity,cd:2.5,dur:0}, fallout:{label:"NUKE",uses:Infinity,cd:12,dur:0}, crashout:{label:"NITRO",uses:Infinity,cd:15,dur:2.5}, dragon:{label:"DRAFT",uses:Infinity,cd:10,dur:0}, lightning:{label:"DASH",uses:Infinity,cd:5,dur:0},
-  spicyspeed:{label:"SPICY",uses:5,cd:1.2,dur:0}, buildwall:{label:"WALL",uses:Infinity,cd:8,dur:0}, slowmo:{label:"SLOW",uses:Infinity,cd:18,dur:3.5}, screech:{label:"SCREAM",uses:Infinity,cd:8,dur:0}, thedrop:{label:"DROP",uses:Infinity,cd:8,dur:0}, GodSpeed:{label:"SUPER",uses:Infinity,cd:25,dur:4}, phantom:{label:"WRAITH",uses:Infinity,cd:12,dur:5}, rage:{label:"RAGE",uses:Infinity,cd:13,dur:0} };
+  spicyspeed:{label:"SPICY",uses:5,cd:1.2,dur:0}, buildwall:{label:"WALL",uses:Infinity,cd:8,dur:0}, slowmo:{label:"SLOW",uses:Infinity,cd:18,dur:3.5}, screech:{label:"SCREAM",uses:Infinity,cd:8,dur:0}, thedrop:{label:"DROP",uses:Infinity,cd:8,dur:0}, GodSpeed:{label:"SUPER",uses:Infinity,cd:25,dur:4}, phantom:{label:"WRAITH",uses:Infinity,cd:12,dur:5}, rage:{label:"RAGE",uses:Infinity,cd:13,dur:0}, candy:{label:"CANDY",uses:Infinity,cd:9,dur:0} };
 let abUses=0, abCd=0, magnetT=0, glideT=0, abRegen=0, flameTrailT=0, crashT=0, turtleRegen=0, chromeRegen=0; // abRegen: teleport regen; flameTrailT: inferno trail; crashT: nitro smash window; turtleRegen/chromeRegen: renewable-armor timers
 let spicyT=0, slowT=0, phaseT=0, superT=0, superCoast=0, starT=0, flightMeter=1, abHeld=false, wallFx=null, shockwaves=[], portalFx=[], candyGoldT=0, candySpawnT=0, skateT=0; // spicy dash / slow-mo / GodSpeed super (+coast) / godmode metered flight / buildwall sweep + screech rings / portal warp swirls / candyGoldT = Spookyszn gold-rush timer / skateT = Bart skateboard dash
 let abilityKey="ShiftLeft", capturingKey=false; try{ const _k=localStorage.getItem("sm.spritecannon.abkey"); if(_k) abilityKey=_k; }catch{}
@@ -928,7 +942,7 @@ function applySlot(i){ const k=SLOTS[i], big=(i===6); k.fn(); pop(kitty.x,kitty.
   for(let j=0;j<(big?40:22);j++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-7,7)*DPR,vy:rand(-8,2)*DPR,life:rand(0.4,1),c:j%2?k.c:"#ffffff",r:rand(2,5)*DPR}); }
 // ---- BACCA axe: shift THROWS a Minecraft axe; shift again WARPS you to it mid-air (10s cooldown) ----
 let baccaAxe=null;
-function throwAxe(){ baccaAxe={ x:kitty.x+kitty.r*0.6, y:kitty.y, vx:Math.max(kitty.vx+13*DPR, 22*DPR), vy:-7*DPR, spin:0, t:0 }; snd("spike"); shake=Math.max(shake,8*DPR); pop(kitty.x,kitty.y-40*DPR,"AXE!"); for(let i=0;i<8;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-3,3)*DPR,vy:rand(-3,3)*DPR,life:0.4,c:i%2?"#caa15a":"#c9ccd2",r:rand(1.5,3)*DPR}); }
+function throwAxe(){ baccaAxe={ x:kitty.x+kitty.r*0.6, y:kitty.y, vx:Math.max(kitty.vx+13*DPR, 22*DPR), vy:-7*DPR, spin:0, t:0 }; snd("axe"); shake=Math.max(shake,8*DPR); pop(kitty.x,kitty.y-40*DPR,"AXE!"); for(let i=0;i<8;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-3,3)*DPR,vy:rand(-3,3)*DPR,life:0.4,c:i%2?"#caa15a":"#c9ccd2",r:rand(1.5,3)*DPR}); }
 function baccaTeleport(){ if(!baccaAxe) return; kitty.x=baccaAxe.x; kitty.y=Math.max(40*DPR,Math.min(GROUND()-kitty.r,baccaAxe.y)); kitty.vx=Math.max(kitty.vx, baccaAxe.vx*0.85, 16*DPR); kitty.vy=Math.min(kitty.vy,-6*DPR); kitty.px=kitty.x; phaseT=Math.max(phaseT,0.25); kitty.sx=1.4; kitty.sy=0.66; shake=Math.max(shake,10*DPR); hitstop=Math.max(hitstop,1); snd("token"); pop(kitty.x,kitty.y-40*DPR,"WARP!"); for(let i=0;i<20;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-6,6)*DPR,vy:rand(-6,4)*DPR,life:0.55,c:i%2?"#caa15a":"#7fe7ff",r:rand(2,4)*DPR}); baccaAxe=null; }
 function drawBaccaAxe(t){ const a=baccaAxe, ax=a.x-cam; ctx.save(); ctx.translate(ax,a.y); ctx.rotate(a.spin);
   ctx.shadowColor="rgba(200,210,220,.6)"; ctx.shadowBlur=8*DPR;
@@ -948,6 +962,7 @@ function activeCfg(){ return ACTIVE_AB[ab()]||null; }
 function activateAbility(){
   if(state!=="fly") return; const c=activeCfg(); if(!c) return;
   if(ab()==="rocketstart" && baccaAxe){ baccaTeleport(); return; } // 2nd AXE press = warp to the thrown axe (ignores cooldown)
+  if(ab()==="candy"){ if(candyRoll || abCd>0) return; abCd=c.cd; eatCandy({x:kitty.x,y:kitty.y-18*DPR}); return; } // Spookyszn: the ability button summons + eats a candy on demand -> spins the Crazy Slots (candies still also drift in to catch)
   if(abCd>0 || abUses<=0) return;
   abCd=c.cd; if(c.uses!==Infinity) abUses--;
   const id=ab();
@@ -981,7 +996,7 @@ function activateAbility(){
   else if(id==="screech"){ let cleared=0; const x0=cam-40*DPR, x1=cam+W+40*DPR;
     for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && o.x>=x0 && o.x<=x1){ o.hit=true; cleared++; shatterFx(o); } } // SONIC SCREAM shatters EVERY hazard on screen
     shockwaves.push({x:kitty.x,y:kitty.y,r:14*DPR,life:1.25,scream:true}); shockwaves.push({x:kitty.x,y:kitty.y,r:42*DPR,life:1.45,scream:true}); shockwaves.push({x:kitty.x,y:kitty.y,r:74*DPR,life:1.6,scream:true}); // 3 expanding sound rings
-    phaseT=Math.max(phaseT,0.45); kitty.vx=Math.min(62*DPR,kitty.vx+24*DPR); kitty.vy=Math.min(kitty.vy,-8*DPR); kitty.sx=1.75; kitty.sy=0.52; shake=Math.max(shake,26*DPR); hitstop=Math.max(hitstop,3); flashT=Math.max(flashT,0.4); snd("spike"); pop(kitty.x,kitty.y-54*DPR,"SCREECH!!");
+    phaseT=Math.max(phaseT,0.45); kitty.vx=Math.min(62*DPR,kitty.vx+24*DPR); kitty.vy=Math.min(kitty.vy,-8*DPR); kitty.sx=1.75; kitty.sy=0.52; shake=Math.max(shake,26*DPR); hitstop=Math.max(hitstop,3); flashT=Math.max(flashT,0.4); snd("screech"); pop(kitty.x,kitty.y-54*DPR,"SCREECH!!");
     for(let i=0;i<32;i++){ const a=Math.random()*6.28, sp=rand(4,12)*DPR; parts.push({x:kitty.x,y:kitty.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:rand(0.4,0.95),c:i%3===0?"#c6b3ff":(i%2?"#7fe7ff":"#ffffff"),r:rand(2,5)*DPR}); } } // radial sonic burst (violet/cyan/white)
   else if(id==="thedrop"){ let cleared=0; const R=560*DPR; // THE DROP (tscott): bass-drop -> clear a BIG radius + big launch up/forward + rainbow impulse shockwave
     for(const o of obstacles){ if(o.hit||o.got||o.pop) continue; if((o.type==="spike"||o.type==="tnt"||o.type==="doghouse") && Math.abs(o.x-kitty.x)<R){ o.hit=true; cleared++; for(let i=0;i<8;i++) parts.push({x:o.x,y:o.y-(o.h||30*DPR)*0.5,vx:rand(-7,7)*DPR,vy:rand(-9,1)*DPR,life:0.8,c:i%2?"#b56bff":"#ffd34d",r:rand(2,5)*DPR}); } }
@@ -1382,9 +1397,14 @@ function update(){
     G.cd -= 1/60;
     if(G.type!=="gorilla" && G.ready && G.cd<=0 && G.t < G.dur-1.2){
       if(G.type==="fire"){
+        const warn=Math.max(0.44, 0.55 - G.t*0.010); // telegraph tightens slightly as it heats up, never below a readable 0.44s (stays fair)
         const fx=rand(60*DPR, W-60*DPR);
-        gHaz.push({ kind:"fire", x:fx, w:rand(48,74)*DPR, h:rand(210,430)*DPR, t:0, warn:0.55, dur:1.0, burst:false }); // longer telegraph reads the new warning clearly + taller/wider variety = more dramatic pillars (hitbox scales with these)
-        G.cd = Math.max(0.34, 0.80 - G.t*0.035);
+        gHaz.push({ kind:"fire", x:fx, w:rand(52,82)*DPR, h:rand(240,470)*DPR, t:0, warn, dur:1.0, burst:false }); // bigger, more dramatic pillars (hitbox scales with these)
+        if(G.t>3 && Math.random() < Math.min(0.5, 0.15 + (G.t-3)*0.05)){ // TWICE THE HEAT: once it's rolling, a SECOND pillar a fair gap away -> thread the lane or fly over both (prob ramps with time)
+          let fx2=rand(60*DPR, W-60*DPR), tries=0; while(Math.abs(fx2-fx)<165*DPR && tries++<8) fx2=rand(60*DPR, W-60*DPR); // keep a survivable lane between the pair
+          gHaz.push({ kind:"fire", x:fx2, w:rand(52,82)*DPR, h:rand(240,470)*DPR, t:rand(0,0.10), warn, dur:1.0, burst:false });
+        }
+        G.cd = Math.max(0.28, 0.70 - G.t*0.045); // pillars come faster and keep coming
       } else if(G.type==="zombie"){
         if(G.t>2 && Math.random()<0.4){ // WRAITH swoops from ABOVE past ~2s -> no safe altitude (floating up is no longer safe)
           const wx=Math.max(50*DPR,Math.min(W-50*DPR, kitty.x + rand(-140,140)*DPR));
@@ -1423,7 +1443,7 @@ function update(){
       else if(GO.state==="beat"){ GO.anim += (1/60)/0.7; if(GO.anim>=1){ GO.state=GO.next; GO.anim=0; } }
       else { GO.anim += (1/60)/(GO.state==="throw"?0.75:0.65);
         if(GO.anim>=1){
-          if(GO.state==="throw"){ const sx=GO.x+GO.facing*GO.r*0.3, sy=g-GO.r*1.5, grav=0.5*DPR, rise=Math.max(70*DPR, sy-kitty.y), vy=-Math.sqrt(2*grav*rise), tAp=Math.abs(vy)/grav, vx=(kitty.x-sx)/Math.max(1,tAp); gHaz.push({kind:"rock",x:sx,y:sy,vx,vy,r:22*DPR,t:0,grav}); snd("spike"); shake=Math.max(shake,8*DPR); }
+          if(GO.state==="throw"){ const sx=GO.x+GO.facing*GO.r*0.3, sy=g-GO.r*1.5, grav=0.5*DPR, rise=Math.max(70*DPR, sy-kitty.y), vy=-Math.sqrt(2*grav*rise), tAp=Math.abs(vy)/grav, vx=(kitty.x-sx)/Math.max(1,tAp); gHaz.push({kind:"rock",x:sx,y:sy,vx,vy,r:22*DPR,t:0,grav}); snd("throw"); shake=Math.max(shake,8*DPR); }
           else { gHaz.push({kind:"shock",x:GO.x,y:g,vx:9*DPR,r:22*DPR,t:0}); gHaz.push({kind:"shock",x:GO.x,y:g,vx:-9*DPR,r:22*DPR,t:0}); snd("reboot"); shake=Math.max(shake,16*DPR); for(let i=0;i<20;i++) parts.push({x:GO.x,y:g,vx:rand(-8,8)*DPR,vy:rand(-7,-1)*DPR,life:0.7,c:i%2?"#6b4a2a":"#8a7a5a",r:rand(2,5)*DPR}); }
           GO.state="walk"; GO.anim=0; GO.acd = Math.max(0.7, 1.7 - G.t*0.06); // attacks come more often as it rages
         }
@@ -1445,7 +1465,7 @@ function update(){
         }
       } else if(h.kind==="hand"){
         h.t += 1/60;
-        if(!h.burst && h.t>=h.warn){ h.burst=true; shake=Math.max(shake,8*DPR); snd("spike"); for(let i=0;i<14;i++) parts.push({x:h.x+rand(-h.w/2,h.w/2),y:g,vx:rand(-2,2)*DPR,vy:rand(-6,-1)*DPR,life:0.7,c:i%2?"#5a4a34":"#2e2418",r:rand(2,5)*DPR}); }
+        if(!h.burst && h.t>=h.warn){ h.burst=true; shake=Math.max(shake,8*DPR); for(let i=0;i<14;i++) parts.push({x:h.x+rand(-h.w/2,h.w/2),y:g,vx:rand(-2,2)*DPR,vy:rand(-6,-1)*DPR,life:0.7,c:i%2?"#5a4a34":"#2e2418",r:rand(2,5)*DPR}); } // Grave Danger: eruption sound removed (Diggy: not good) - visual burst only
         if(h.t>=h.warn){ const top = g - h.h*Math.min(1,(h.t-h.warn)/0.18);
           if(Math.abs(kitty.x-h.x) < h.w/2 + kitty.r*0.6 && kitty.y+kitty.r > top){ shake=22*DPR; flashT=1; snd("spike"); for(let i=0;i<30;i++) parts.push({x:kitty.x,y:kitty.y,vx:rand(-5,5)*DPR,vy:rand(-6,2)*DPR,life:1,c:i%2?"#7bae3a":"#3a2f22",r:rand(2,5)*DPR}); if(savedRun){ cam=savedRun.cam; kitty.x=savedRun.x; kitty.y=Math.min(savedRun.y,GROUND()-40*DPR); kitty.vx=savedRun.vx; kitty.vy=savedRun.vy; } kitty.sx=kitty.sy=1; gHaz=[]; gauntlet=null; state="fly"; endRun(); return; } }
       } else if(h.kind==="rock"){
@@ -1534,7 +1554,7 @@ function endRun(){
   if(state!=="fly" && state!=="dying") return; // "dying" = the revive prompt was up; a decline/timeout must still finalize the run (else you're stuck staring at a dead kitty)
   state="result";
   const coinMult = ab()==="greedy"?5:(ab()==="goldcat"?2:1); // Queen=5x, goldcat=2x
-  const baseCoins = Math.floor(distM/20) + (coinMult>1 ? Math.round(runCoins/coinMult) : runCoins); // raw (pre-multiplier) total: distance bonus (1 coin / 20m) + un-multiplied pickups
+  const baseCoins = Math.floor(distM/23) + (coinMult>1 ? Math.round(runCoins/coinMult) : runCoins); // raw (pre-multiplier) total: distance bonus (1 coin / 23m - trimmed from 20m to make coins a tad rarer) + un-multiplied pickups
   const earned = baseCoins*coinMult; save.coins+=earned; runCoins=0; // multiplier now applies to EVERYTHING incl. the distance bonus (was: pickups only). Bank then ZERO runCoins (shop opens from result without reset())
   const wasBest=save.best, isBest=distM>0 && distM>wasBest; if(isBest) save.best=distM; // revived (paid-continue) runs DO count now (Diggy's call) -> a revived run that beats your best ranks like any other
   const hsBonus = isBest ? (wasBest>0 ? Math.min(1000, 150+Math.round((distM-wasBest)*0.5)) : 150) : 0; // beat your best -> bonus coins (scales with margin, first record = flat 150)
@@ -1622,11 +1642,11 @@ function refreshDaily(){ const el=document.getElementById("scDaily"); if(!el) re
 
 // ===== QUESTS: 3 rotating missions, coins for tasks; claim -> respawn a fresh one =====
 const QUEST_DEFS=[
-  { type:"dist_run",   pick:[300,500,800,1200,1800], reward:t=>Math.round(t*0.15)+25, label:q=>"Reach "+q.target+"m in one run" },
-  { type:"runs",       pick:[3,5,8,12],              reward:t=>t*22,                  label:q=>"Play "+q.target+" runs" },
-  { type:"coins",      pick:[600,1200,2500],         reward:t=>Math.round(t*0.2),     label:q=>"Earn "+q.target+" coins" },
-  { type:"dist_total", pick:[2500,5000,9000],        reward:t=>Math.round(t*0.07),    label:q=>"Fly "+q.target+"m total" },
-  { type:"skins",      pick:[1],                     reward:t=>180,                   label:q=>"Unlock a new skin" }
+  { type:"dist_run",   pick:[300,500,800,1200,1800], reward:t=>Math.round(t*0.13)+20, label:q=>"Reach "+q.target+"m in one run" },
+  { type:"runs",       pick:[3,5,8,12],              reward:t=>t*19,                  label:q=>"Play "+q.target+" runs" },
+  { type:"coins",      pick:[600,1200,2500],         reward:t=>Math.round(t*0.17),    label:q=>"Earn "+q.target+" coins" },
+  { type:"dist_total", pick:[2500,5000,9000],        reward:t=>Math.round(t*0.06),    label:q=>"Fly "+q.target+"m total" },
+  { type:"skins",      pick:[1],                     reward:t=>150,                   label:q=>"Unlock a new skin" }
 ];
 function genQuest(avoid){ const _maxSkins=skinList.filter(s=>s.id!=="default").length, _skinsDead=ownedSkinCount()>=_maxSkins; // a "skins" quest is uncompletable once every skin is owned -> never roll it then
   const _ok=d=>(!avoid||avoid.indexOf(d.type)<0) && !(d.type==="skins"&&_skinsDead);
@@ -1752,7 +1772,7 @@ function exitInfurno(){ const jp=infurno?infurno.coins:0;
   state="redeploy"; snd("token");
   bannerT=1.4; bannerName="REDEPLOYING"; pop(kitty.x, 80*DPR, "JACKPOT +"+jp); }
 function infurnoFlap(){ kitty.vy=-9*DPR; snd("flap"); for(let i=0;i<8;i++) parts.push({x:kitty.x,y:kitty.y+10*DPR,vx:rand(-1.5,1.5)*DPR,vy:rand(0,2)*DPR,life:0.7,c:"#ffd36b",r:rand(1.5,3)*DPR}); }
-function infurnoGo(){ if(!infurno||infurno.ready) return; infurno.ready=true; shake=Math.max(shake,10*DPR); snd("spike"); } // "press any key to start" -> begin the jackpot timer + fireballs
+function infurnoGo(){ if(!infurno||infurno.ready) return; infurno.ready=true; shake=Math.max(shake,10*DPR); } // "press any key to start" -> begin the jackpot timer + fireballs (no start cue)
 
 // ---- SURVIVAL GAUNTLET secret levels (LETHAL: TRIAL BY FIRE / SHARK WATERS) ----
 const GAUNTLET_DUR=12;
@@ -1766,9 +1786,9 @@ function startGauntlet(type){ if(state!=="fly") return; if(type!=="fire"&&type!=
   gorilla = type==="gorilla" ? { x:W*0.13, y:GROUND(), facing:1, state:"walk", anim:0, acd:1.6, r:92*DPR, pcd:1.1 } : null;
   if(type==="gorilla"){ kitty.x=W*0.6; }
   state="gauntlet"; charging=false; stopCharge();
-  shake=14*DPR; bannerT=1.8; bannerName=name; snd("spike");
+  shake=14*DPR; bannerT=1.8; bannerName=name; // no start cue (Diggy: rather have none than the death sound)
 }
-function gauntletGo(){ if(!gauntlet||gauntlet.ready) return; gauntlet.ready=true; gauntlet.cd=0.7; shake=Math.max(shake,10*DPR); snd("spike"); } // "press any key to start" -> begin the timer + hazards
+function gauntletGo(){ if(!gauntlet||gauntlet.ready) return; gauntlet.ready=true; gauntlet.cd=0.7; shake=Math.max(shake,10*DPR); } // "press any key to start" -> begin the timer + hazards (no start cue)
 function gauntletFlap(){ kitty.vy=-9*DPR; snd("flap");
   const c = (gauntlet&&gauntlet.type==="fire") ? "#ffb24d" : "#bfefff";
   for(let i=0;i<8;i++) parts.push({x:kitty.x,y:kitty.y+10*DPR,vx:rand(-1.5,1.5)*DPR,vy:rand(0,2)*DPR,life:0.7,c,r:rand(1.5,3)*DPR}); }
@@ -8544,7 +8564,7 @@ function unlockMet(sk){ const u=sk.unlock; if(!u) return ownedAbilCount()>=5; //
     case "total_runs":        return (save.runs||0)>=v;
     case "reach_distance":    return (save.best||0)>=v;
     case "best_distance":     return (save.best||0)>=v;
-    case "posted_score":      return !!save.posted;
+    case "posted_score":      return !!save.posted && (save.best||0) >= (v||1);
     case "manual":            return false;
     default:                  return ownedAbilCount()>=v;
   }
@@ -8762,7 +8782,7 @@ async function redeemCode(inpId,msgId){ const inp=document.getElementById(inpId|
     const j=await r.json();
     if(j.ok){ save.coins+=j.coins; persist(); inp.value=""; msg.style.color="#7ee59a"; msg.textContent="+"+j.coins+" coins!"; snd("newbest");
       const c=document.getElementById("coins"); if(c) c.textContent=save.coins+runCoins; if(state==="shop") buildShop(); }
-    else { msg.style.color="#ff8a8a"; msg.textContent=j.error||"Invalid code"; snd("spike"); }
+    else { msg.style.color="#ff8a8a"; msg.textContent=j.error||"Invalid code"; snd("error"); }
   }catch(e){ msg.style.color="#ff8a8a"; msg.textContent="Network error - try again"; }
 }
 { const rb=document.getElementById("redeemBtn"); if(rb) rb.onclick=()=>{ snd("ui"); redeemCode(); };

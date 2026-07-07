@@ -293,8 +293,8 @@
     "secret": true,
     "unlock": {
       "type": "posted_score",
-      "value": 1,
-      "label": ""
+      "value": 25000,
+      "label": "Post a 25,000m+ leaderboard score"
     }
   },
   "superbob": {
@@ -307,8 +307,8 @@
     "secret": true,
     "unlock": {
       "type": "reach_distance",
-      "value": 35000,
-      "label": "Reach 35,000m in a single run"
+      "value": 65000,
+      "label": "Reach 65,000m in a single run"
     }
   },
   "toneguy": {
