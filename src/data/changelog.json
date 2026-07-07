@@ -3,6 +3,21 @@
     "date": "2026-07-06",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
+    "version": "v1.5.9",
+    "title": "Sprite Cannon balance + a full sound pass.",
+    "body": "The bundled Sprite Cannon game gets a tuning + audio pass: a tougher Trial by Fire, cleaner sound design, and a coin/quest/secret-skin rebalance.",
+    "items": [
+      "Trial by Fire is a real challenge now - denser fire pillars and double-wall dodges.",
+      "Full sound pass - the death sound only plays when you actually get hit; new axe-throw, sonic-scream, and boulder-throw sounds.",
+      "Spookyszn's Crazy Slots gets its own on-screen ability button.",
+      "Coin, quest, and secret-skin rebalance (Superbob and Spookyszn re-gated to the deep maps).",
+      "Refreshed EasyList/EasyPrivacy + latest Twitch fix."
+    ]
+  },
+  {
+    "date": "2026-07-06",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
     "version": "v1.5.8",
     "title": "Sprite Cannon's big ability + skin overhaul.",
     "body": "The bundled Sprite Cannon game gets a huge pass: reworked powers across the roster, secret skins that auto-unlock with notifications, bigger skins, and a full rarity/price rebalance.",
