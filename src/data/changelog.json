@@ -3,6 +3,19 @@
     "date": "2026-07-06",
     "product": "AdBlock-Maxxer",
     "productSlug": "extensionmaxxing",
+    "version": "v1.6.0",
+    "title": "Daily Quest System: the Penalty Zone no longer gets stuck.",
+    "body": "Fixed a bug where the red Penalty Zone re-appeared every single day. It now fires once when you break the chain, then stays quiet until you fully clear a day again.",
+    "items": [
+      "Penalty Zone fires once per broken chain instead of re-arming every day.",
+      "It re-arms only after you fully clear a day and then miss again - no more daily shame wall.",
+      "Refreshed EasyList/EasyPrivacy + latest Twitch fix."
+    ]
+  },
+  {
+    "date": "2026-07-06",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
     "version": "v1.5.9",
     "title": "Sprite Cannon balance + a full sound pass.",
     "body": "The bundled Sprite Cannon game gets a tuning + audio pass: a tougher Trial by Fire, cleaner sound design, and a coin/quest/secret-skin rebalance.",
