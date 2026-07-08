@@ -8,9 +8,9 @@
  * strip covers the one-toggle push to the Streammaxxing vinyl overlay.
  *
  * All copy is grounded in real product facts. No fabricated numbers.
- * (The spinning record itself now lives in the page hero; this section
- * carries the equalizer, platform chips and the three story pillars.)
  */
+import VinylDisc from './VinylDisc.astro';
+
 interface Props {
   accentHex?: string;
   logo?: string;
@@ -50,23 +50,25 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
       </p>
     </header>
 
-    <!-- Live equalizer accent + platform chips (the record itself now lives
-         in the page hero up top). -->
-    <div class="pls__band reveal-on-scroll">
-      <div class="pls__eq" aria-hidden="true">
-        {eqBars.map((h, i) => (
-          <span class="pls__eq-bar" style={`--h: ${h}%; --i: ${i};`}></span>
-        ))}
-      </div>
-      <div class="pls__platforms" aria-label="Supported platforms">
-        <span class="pls__chip pls__chip--sp">Spotify</span>
-        <span class="pls__chip pls__chip--sc">SoundCloud</span>
-        <span class="pls__chip pls__chip--yt">YouTube</span>
-      </div>
-    </div>
-
     <div class="pls__stage">
-      <!-- The three story pillars. -->
+      <!-- Left: the record + a live equalizer accent + platform chips. -->
+      <div class="pls__deck reveal-on-scroll">
+        <VinylDisc accentHex={accentHex} logo={logo} />
+
+        <div class="pls__eq" aria-hidden="true">
+          {eqBars.map((h, i) => (
+            <span class="pls__eq-bar" style={`--h: ${h}%; --i: ${i};`}></span>
+          ))}
+        </div>
+
+        <div class="pls__platforms" aria-label="Supported platforms">
+          <span class="pls__chip pls__chip--sp">Spotify</span>
+          <span class="pls__chip pls__chip--sc">SoundCloud</span>
+          <span class="pls__chip pls__chip--yt">YouTube</span>
+        </div>
+      </div>
+
+      <!-- Right: the three story pillars. -->
       <div class="pls__pillars">
         <article class="pls__card reveal-on-scroll">
           <span class="pls__num">01</span>
@@ -187,15 +189,25 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     max-width: 60ch;
   }
 
-  .pls__stage { display: block; }
+  .pls__stage {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (min-width: 920px) {
+    .pls__stage {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 56px;
+    }
+  }
 
-  /* ── Band (eq + chips), centered above the pillars ────────── */
-  .pls__band {
+  /* ── Deck (record + eq + chips) ───────────────────────────── */
+  .pls__deck {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 22px;
-    margin: 0 auto 48px;
+    gap: 26px;
   }
 
   .pls__eq {
@@ -247,9 +259,6 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
   .pls__pillars {
     display: grid;
     gap: 14px;
-  }
-  @media (min-width: 920px) {
-    .pls__pillars { grid-template-columns: repeat(3, 1fr); align-items: start; }
   }
   .pls__card {
     position: relative;

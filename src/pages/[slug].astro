@@ -13,7 +13,6 @@ import HowItWorks from '../components/HowItWorks.astro';
 import SourceWall from '../components/SourceWall.astro';
 import CutAutopsy from '../components/CutAutopsy.astro';
 import PlaylistShowcase from '../components/PlaylistShowcase.astro';
-import VinylDisc from '../components/VinylDisc.astro';
 import DiscordKillshot from '../components/DiscordKillshot.astro';
 import ReceiptsBand from '../components/ReceiptsBand.astro';
 import ReconversionCTA from '../components/ReconversionCTA.astro';
@@ -305,7 +304,8 @@ const isPlaylist = product.slug === 'playlistmaxxing';
 // and the DM + OM demo players (videos). Left column narrows to 7 cols.
 const isSnipe = product.slug === 'snipemaxxer';
 const isClip = product.slug === 'clipmaxxer';
-const heroAsideVideo = (isDM || isOM) && !!product.demoVideo;
+const isStream = product.slug === 'streammaxxing';
+const heroAsideVideo = (isDM || isOM || isStream) && !!product.demoVideo;
 const heroShotAside = isExt || isSnipe || isClip || heroAsideVideo;
 
 // Clipmaxxer hero: two real Clipmaxxer-cut creator shorts (9:16) shown to the
@@ -622,7 +622,7 @@ const breadcrumbSchema = {
         {/* Stats aside: SOON products keep the 4-tile grid. LIVE products
             (OM, DM) hide it here — the same numbers re-emerge below in the
             Receipts band where they have room to breathe + carry citations. */}
-        {!hasReceiptsBand && !isPlaylist && product.stats && product.stats.length > 0 && (
+        {!hasReceiptsBand && product.stats && product.stats.length > 0 && (
           <aside class="reveal reveal-6 md:col-span-4 grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
             {product.stats.map((s) => (
               <div class="bg-[var(--color-bg-card)] p-5">
@@ -634,14 +634,6 @@ const breadcrumbSchema = {
                 </p>
               </div>
             ))}
-          </aside>
-        )}
-
-        {/* Playlistmaxxing: the spinning turntable takes the hero right column,
-            in place of the stat tiles. */}
-        {isPlaylist && (
-          <aside class="reveal reveal-6 md:col-span-4 flex items-center justify-center">
-            <VinylDisc accentHex={product.accentHex} logo={product.logo} />
           </aside>
         )}
 
@@ -716,7 +708,7 @@ const breadcrumbSchema = {
       <!-- Apple-style hero shot (or demo video) for live + beta products.
            Products whose hero media moved into the right-column aside skip
            this full-width shot. -->
-      {!heroShotAside && !isDrop && (screenshotMain || product.demoVideo) && (
+      {!heroShotAside && !isDrop && !isPlaylist && (screenshotMain || product.demoVideo) && (
         <ProductScreenshot
           src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
           alt={`${product.name} demo`}
