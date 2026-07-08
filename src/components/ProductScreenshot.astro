@@ -94,7 +94,7 @@ const isGrid = all.length > 1 && !initialVideo;
           class="product-screenshot__volume"
           min="0"
           max="100"
-          value="25"
+          value="15"
           step="1"
           aria-label="Volume"
         />
@@ -199,10 +199,10 @@ const isGrid = all.length > 1 && !initialVideo;
       const overlay = frame?.querySelector<HTMLButtonElement>('.product-screenshot__playcta');
       if (!v || !btn || !slider) return;
       const UNMUTE_CAP = 0.75;       // mute-button unmute volume ceiling
-      const DEFAULT_VOL = 0.25;       // slider rest position
+      const DEFAULT_VOL = 0.15;       // slider rest position - starts quiet so first unmute never blasts
       let lastVolume = DEFAULT_VOL;   // restored when un-muting via button
       const paint = (pct: number) => slider.style.setProperty('--vol', pct + '%');
-      paint(Number(slider.value));    // matches the server-rendered value="25"
+      paint(Number(slider.value));    // matches the server-rendered value="15"
       // Shared "go from frozen-muted → playing-with-sound" action, used by
       // both the big centered overlay and the small speaker button.
       const playWithSound = () => {
@@ -256,11 +256,11 @@ const isGrid = all.length > 1 && !initialVideo;
           const el = frame as any;
           (el.requestFullscreen || el.webkitRequestFullscreen)?.call(el);
           v.muted = false;
-          v.volume = 0.25;
-          lastVolume = 0.25;
+          v.volume = 0.15;
+          lastVolume = 0.15;
           btn.dataset.state = 'on';
-          slider.value = '25';
-          paint(25);
+          slider.value = '15';
+          paint(15);
           v.play().catch(() => {});
           overlay?.classList.add('is-hidden');
         };
