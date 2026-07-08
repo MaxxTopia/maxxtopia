@@ -303,8 +303,19 @@ const isPlaylist = product.slug === 'playlistmaxxing';
 // shot below: the AdBlock welcome shot + snipemaxxer lobby screenshot (images),
 // and the DM + OM demo players (videos). Left column narrows to 7 cols.
 const isSnipe = product.slug === 'snipemaxxer';
+const isClip = product.slug === 'clipmaxxer';
 const heroAsideVideo = (isDM || isOM) && !!product.demoVideo;
-const heroShotAside = isExt || isSnipe || heroAsideVideo;
+const heroShotAside = isExt || isSnipe || isClip || heroAsideVideo;
+
+// Clipmaxxer hero: two real Clipmaxxer-cut creator shorts (9:16) shown to the
+// right of the "Done-for-you" stat as portfolio proof. They start frozen on the
+// poster (muted = paused rule); a click plays the reel with sound.
+const clipReels = isClip
+  ? [
+      { src: '/screenshots/clipmaxxer/demo-cut-tenz.mp4', poster: '/screenshots/clipmaxxer/demo-cut-tenz-poster.jpg', label: 'TenZ · clutch' },
+      { src: '/screenshots/clipmaxxer/demo-cut-out.mp4', poster: '/screenshots/clipmaxxer/demo-cut-out-poster.jpg', label: 'Clutch cut' },
+    ]
+  : [];
 
 // Downloadable .exe installers get the Windows system-requirements line + the
 // SmartScreen reassurance. The old gate matched 'setup.exe', which never hit
@@ -630,9 +641,26 @@ const breadcrumbSchema = {
             the compact demo player; image products (AdBlock welcome shot,
             snipemaxxer lobby) get a click-to-enlarge shot via the global
             data-zoom lightbox. */}
-        {heroShotAside && (heroAsideVideo || screenshotMain) && (
+        {heroShotAside && (heroAsideVideo || screenshotMain || isClip) && (
           <aside class="reveal reveal-6 md:col-span-5 md:mt-12 hero-shot-aside">
-            {heroAsideVideo ? (
+            {isClip ? (
+              <div class="clip-reels">
+                <p class="clip-reels__eyebrow">Real cuts &middot; made with Clipmaxxer</p>
+                <div class="clip-reels__grid">
+                  {clipReels.map((r) => (
+                    <figure class="clip-reel">
+                      <video class="clip-reel__vid" poster={r.poster} preload="none" playsinline loop muted>
+                        <source src={r.src} type="video/mp4" />
+                      </video>
+                      <button type="button" class="clip-reel__btn" aria-label={`Play ${r.label}`}>
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                      </button>
+                      <figcaption class="clip-reel__cap">{r.label}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            ) : heroAsideVideo ? (
               <ProductScreenshot
                 src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
                 alt={`${product.name} demo`}
@@ -848,5 +876,30 @@ const breadcrumbSchema = {
       aligned neatly beside the hero number instead of dropping too low. */}
   <style is:global>
     .hero-shot-aside .product-screenshot { margin-top: 0; }
+
+    /* Clipmaxxer hero reels — two 9:16 creator cuts as portfolio proof. */
+    .clip-reels__eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-cyan); margin: 0 0 10px; }
+    .clip-reels__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .clip-reel { position: relative; margin: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--color-line-strong); background: #000; aspect-ratio: 9 / 16; box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5); }
+    .clip-reel__vid { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .clip-reel__btn { position: absolute; inset: 0; margin: auto; width: 46px; height: 46px; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, 0.6); background: linear-gradient(180deg, rgba(0, 212, 255, 0.92), rgba(76, 81, 247, 0.92)); color: #fff; display: flex; align-items: center; justify-content: center; padding-left: 3px; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 212, 255, 0.4); transition: transform 0.18s ease, opacity 0.22s ease; }
+    .clip-reel__btn:hover { transform: scale(1.08); }
+    .clip-reel__btn.is-hidden { opacity: 0; pointer-events: none; }
+    .clip-reel__cap { position: absolute; left: 8px; bottom: 8px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; color: #fff; background: rgba(0, 0, 0, 0.55); padding: 3px 8px; border-radius: 999px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
   </style>
+
+  <script>
+    // Clipmaxxer hero reels: click to play with sound (frozen on poster until
+    // then, honoring the muted = paused rule). Clicking the video toggles.
+    document.querySelectorAll<HTMLElement>('.clip-reel').forEach((reel) => {
+      const v = reel.querySelector('video');
+      const btn = reel.querySelector<HTMLButtonElement>('.clip-reel__btn');
+      if (!v || !btn) return;
+      const play = () => { v.muted = false; v.volume = 0.8; v.play().catch(() => {}); btn.classList.add('is-hidden'); };
+      const pause = () => v.pause();
+      btn.addEventListener('click', play);
+      v.addEventListener('click', () => { if (v.paused) play(); else pause(); });
+      v.addEventListener('pause', () => btn.classList.remove('is-hidden'));
+    });
+  </script>
 </Layout>
