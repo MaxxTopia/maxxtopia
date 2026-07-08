@@ -1,0 +1,387 @@
+---
+/**
+ * PlaylistShowcase — playlistmaxxing's bespoke, music-themed hero exhibit.
+ * A spinning vinyl record centers the section (VinylDisc) while three
+ * story pillars tell how it looks and works: three platforms unified on one
+ * page, the floating pop-out vinyl mini-player, and synced karaoke lyrics.
+ * A live-equalizer accent + platform chips carry the music motif; a footer
+ * strip covers the one-toggle push to the Streammaxxing vinyl overlay.
+ *
+ * All copy is grounded in real product facts. No fabricated numbers.
+ */
+import VinylDisc from './VinylDisc.astro';
+
+interface Props {
+  accentHex?: string;
+  logo?: string;
+  appUrl?: string;
+}
+
+const {
+  accentHex = '#7c5cff',
+  logo = '/logos/playlistmaxxing.webp',
+  appUrl = 'https://music.maxxtopia.com',
+} = Astro.props;
+
+// Illustrative karaoke lines (original demo copy describing the product, not
+// a real song's lyrics) — they light up one at a time like synced lyrics.
+const karaokeLines = [
+  'the lights go down, the needle drops',
+  'every platform on one turning page',
+  'paste the link and let it play',
+];
+
+// Decorative equalizer bar heights (percent) — purely visual, animated.
+const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
+---
+
+<section class="pls" style={`--accent: ${accentHex};`} aria-labelledby="pls-heading">
+  <div class="pls__inner">
+    <header class="pls__header reveal-on-scroll">
+      <p class="pls__eyebrow">The turntable</p>
+      <h2 id="pls-heading" class="pls__heading">
+        <span class="gradient-text">Three platforms.</span>
+        <span class="serif-accent gradient-suite">One spinning page.</span>
+      </h2>
+      <p class="pls__sub">
+        Spotify, SoundCloud and YouTube side by side. Paste a track or a whole
+        playlist and it plays in place &mdash; no account, nothing to install,
+        saved on your device.
+      </p>
+    </header>
+
+    <div class="pls__stage">
+      <!-- Left: the record + a live equalizer accent + platform chips. -->
+      <div class="pls__deck reveal-on-scroll">
+        <VinylDisc accentHex={accentHex} logo={logo} />
+
+        <div class="pls__eq" aria-hidden="true">
+          {eqBars.map((h, i) => (
+            <span class="pls__eq-bar" style={`--h: ${h}%; --i: ${i};`}></span>
+          ))}
+        </div>
+
+        <div class="pls__platforms" aria-label="Supported platforms">
+          <span class="pls__chip pls__chip--sp">Spotify</span>
+          <span class="pls__chip pls__chip--sc">SoundCloud</span>
+          <span class="pls__chip pls__chip--yt">YouTube</span>
+        </div>
+      </div>
+
+      <!-- Right: the three story pillars. -->
+      <div class="pls__pillars">
+        <article class="pls__card reveal-on-scroll">
+          <span class="pls__num">01</span>
+          <h3 class="pls__card-title">Paste anything. It plays.</h3>
+          <p class="pls__card-body">
+            A single track or a whole playlist, album or set. It detects the
+            platform and drops in a real, playable card &mdash; Spotify,
+            SoundCloud and YouTube living on the same page.
+          </p>
+        </article>
+
+        <article class="pls__card reveal-on-scroll">
+          <span class="pls__num">02</span>
+          <h3 class="pls__card-title">A record that follows you.</h3>
+          <p class="pls__card-body">
+            Pop out a floating vinyl mini-player that stays on top while you
+            move across other tabs. Spin, skip, done &mdash; the now-playing
+            disc never leaves your sight.
+          </p>
+        </article>
+
+        <article class="pls__card pls__card--karaoke reveal-on-scroll">
+          <span class="pls__num">03</span>
+          <h3 class="pls__card-title">Karaoke, built in.</h3>
+          <p class="pls__card-body">
+            Synced lyrics light up line by line, colour-pulled from the cover
+            art. Sing along without leaving the page.
+          </p>
+          <div class="pls__karaoke" aria-hidden="true">
+            {karaokeLines.map((line, i) => (
+              <span class="pls__lyric" style={`--i: ${i};`}>{line}</span>
+            ))}
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Footer strip: the one-toggle push to the Streammaxxing overlay. -->
+    <div class="pls__stream reveal-on-scroll">
+      <div class="pls__stream-copy">
+        <p class="pls__stream-tag">One toggle</p>
+        <p class="pls__stream-line">
+          Push what&rsquo;s playing straight to your
+          <strong> Streammaxxing vinyl overlay</strong> &mdash; live
+          now-playing on stream, no extra software.
+        </p>
+      </div>
+      <a class="pls__stream-cta" href={appUrl} target="_blank" rel="noopener">
+        Open Playlistmaxxing
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pls {
+    position: relative;
+    padding: 96px 0 88px;
+    border-top: 1px solid var(--color-line);
+    overflow: hidden;
+  }
+  /* Faint accent wash top-center to seat the record in its own light. */
+  .pls::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    width: 80%;
+    height: 60%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 22%, transparent), transparent 68%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .pls__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  @media (min-width: 640px) {
+    .pls__inner { padding: 0 32px; }
+  }
+
+  .pls__header {
+    max-width: 720px;
+    margin: 0 auto 56px;
+    text-align: center;
+  }
+  .pls__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  .pls__heading {
+    font-family: var(--font-sans);
+    font-size: clamp(30px, 4.6vw, 52px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 18px;
+  }
+  .pls__heading .serif-accent { display: inline-block; }
+  .pls__sub {
+    color: var(--color-text-mid);
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0 auto;
+    max-width: 60ch;
+  }
+
+  .pls__stage {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (min-width: 920px) {
+    .pls__stage {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 56px;
+    }
+  }
+
+  /* ── Deck (record + eq + chips) ───────────────────────────── */
+  .pls__deck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .pls__eq {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    height: 46px;
+    width: 100%;
+    max-width: 320px;
+  }
+  .pls__eq-bar {
+    flex: 1;
+    height: var(--h);
+    min-height: 6px;
+    border-radius: 999px 999px 2px 2px;
+    background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 45%, #00d4ff));
+    transform-origin: bottom;
+    animation: pls-eq 1200ms ease-in-out infinite;
+    animation-delay: calc(var(--i) * -140ms);
+    opacity: 0.9;
+  }
+  @keyframes pls-eq {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+  }
+
+  .pls__platforms {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .pls__chip {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-bg-card);
+    color: var(--color-text-mid);
+  }
+  .pls__chip--sp { border-color: rgba(30, 215, 96, 0.45); color: #45e07f; }
+  .pls__chip--sc { border-color: rgba(255, 85, 0, 0.45); color: #ff7a3d; }
+  .pls__chip--yt { border-color: rgba(255, 45, 60, 0.45); color: #ff5a6a; }
+
+  /* ── Story pillars ────────────────────────────────────────── */
+  .pls__pillars {
+    display: grid;
+    gap: 14px;
+  }
+  .pls__card {
+    position: relative;
+    border: 1px solid var(--color-line);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, transparent), transparent 45%),
+      var(--color-bg-card);
+    border-radius: 16px;
+    padding: 22px 24px;
+    transition: border-color 200ms ease, transform 200ms ease, background 200ms ease;
+  }
+  .pls__card:hover {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    transform: translateY(-2px);
+    background: var(--color-bg-card-hover);
+  }
+  .pls__num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .pls__card-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 8px 0 8px;
+    color: var(--color-text);
+  }
+  .pls__card-body {
+    color: var(--color-text-mid);
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Karaoke demo — lines light up in sequence. */
+  .pls__karaoke {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid var(--color-line);
+  }
+  .pls__lyric {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    color: var(--color-subtle);
+    opacity: 0.5;
+    transition: color 240ms ease, opacity 240ms ease;
+    animation: pls-lyric 5.4s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 1.8s);
+  }
+  @keyframes pls-lyric {
+    0%, 8% { color: var(--color-subtle); opacity: 0.45; text-shadow: none; }
+    16%, 30% {
+      color: #fff;
+      opacity: 1;
+      text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 70%, transparent);
+    }
+    40%, 100% { color: var(--color-subtle); opacity: 0.45; text-shadow: none; }
+  }
+
+  /* ── Stream push strip ────────────────────────────────────── */
+  .pls__stream {
+    margin-top: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 26px;
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--color-line-strong));
+    background:
+      linear-gradient(120deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
+      var(--color-bg-card);
+  }
+  .pls__stream-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+  }
+  .pls__stream-line {
+    margin: 0;
+    color: var(--color-text-mid);
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 62ch;
+  }
+  .pls__stream-line strong { color: var(--color-text); font-weight: 600; }
+  .pls__stream-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 20px;
+    border-radius: 999px;
+    color: #0a0612;
+    background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #00d4ff));
+    box-shadow: 0 8px 26px color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+  .pls__stream-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pls__eq-bar,
+    .pls__lyric {
+      animation: none !important;
+    }
+    .pls__lyric { opacity: 0.85; color: var(--color-text-mid); }
+  }
+</style>

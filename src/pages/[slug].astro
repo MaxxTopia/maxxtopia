@@ -12,6 +12,7 @@ import FeatureZone from '../components/FeatureZone.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import SourceWall from '../components/SourceWall.astro';
 import CutAutopsy from '../components/CutAutopsy.astro';
+import PlaylistShowcase from '../components/PlaylistShowcase.astro';
 import DiscordKillshot from '../components/DiscordKillshot.astro';
 import ReceiptsBand from '../components/ReceiptsBand.astro';
 import ReconversionCTA from '../components/ReconversionCTA.astro';
@@ -268,7 +269,10 @@ const screenshotExtras = product.screenshots?.slice(1) ?? [];
 // Per-product accent treatment: viewmaxxing's green page recolors the hero
 // number + stat tiles (kept in sync) and dims the loud suite-magenta CTA to a
 // glassy emerald that matches the page. Everything else keeps the suite look.
-const numGradient = product.slug === 'viewmaxxing' ? 'gradient-view' : 'gradient-suite';
+const numGradient =
+  product.slug === 'viewmaxxing' ? 'gradient-view'
+  : product.slug === 'streammaxxing' ? 'gradient-omni'
+  : 'gradient-suite';
 const primaryBtnClass = product.slug === 'viewmaxxing' ? 'btn-view' : 'btn-primary';
 
 // AdBlock-Maxxer: pull the hero screenshot up into the empty right column
@@ -290,6 +294,17 @@ const isDM = product.slug === 'discordmaxxer';
 // Dropmaxxer is a browser app — embed it live so visitors can test it in-page
 // instead of just seeing a screenshot.
 const isDrop = product.slug === 'dropmaxxer';
+// Playlistmaxxing gets a bespoke music-themed showcase (spinning vinyl +
+// the 3-platform / mini-player / karaoke story) after the hero.
+const isPlaylist = product.slug === 'playlistmaxxing';
+
+// Products that pull their hero media UP into the right column, filling the
+// empty space beside the giant hero number/tagline instead of the full-width
+// shot below: the AdBlock welcome shot + snipemaxxer lobby screenshot (images),
+// and the DM + OM demo players (videos). Left column narrows to 7 cols.
+const isSnipe = product.slug === 'snipemaxxer';
+const heroAsideVideo = (isDM || isOM) && !!product.demoVideo;
+const heroShotAside = isExt || isSnipe || heroAsideVideo;
 
 // Downloadable .exe installers get the Windows system-requirements line + the
 // SmartScreen reassurance. The old gate matched 'setup.exe', which never hit
@@ -318,6 +333,7 @@ const pageDescription = seoDescOverride[product.slug] ?? product.description;
 // the "here's everything it does" walkthrough before the latency moat zones).
 const howItWorksFirst =
   isOM ||
+  isDM ||
   product.slug === 'dropmaxxer' ||
   product.slug === 'streammaxxing' ||
   product.slug === 'extensionmaxxing';
@@ -458,7 +474,7 @@ const breadcrumbSchema = {
       </a>
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
-        <div class={isExt ? 'md:col-span-7' : 'md:col-span-8'}>
+        <div class={heroShotAside ? 'md:col-span-7' : 'md:col-span-8'}>
           <div class="reveal reveal-1 flex items-center gap-3.5 mb-8">
             <span class="glyph-badge !w-12 !h-12" style={`--accent: ${product.accentHex}; ${product.logo ? 'padding: 4px;' : ''}`} aria-hidden="true">
               {product.logo ? (
@@ -609,30 +625,40 @@ const breadcrumbSchema = {
           </aside>
         )}
 
-        {/* AdBlock-Maxxer: hero screenshot lives in the right column, sized to
-            sit just under the Live / version pills. Click-to-enlarge via the
-            global data-zoom lightbox (injected by FeatureZone, present here). */}
-        {isExt && screenshotMain && (
-          <aside class="reveal reveal-6 md:col-span-5 md:mt-12">
-            <button
-              type="button"
-              class="ext-hero-shot group relative block w-full cursor-zoom-in rounded-2xl overflow-hidden border border-[var(--color-line-strong)]"
-              data-zoom={screenshotMain}
-              aria-label={`Enlarge: ${product.name} welcome screen`}
-              style={`box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px ${product.accentHex}22, 0 0 60px ${product.accentHex}14;`}
-            >
-              <img
-                src={screenshotMain}
-                alt={`${product.name} welcome screen`}
-                loading="eager"
-                decoding="async"
-                class="block w-full h-auto transition-transform duration-500 group-hover:scale-[1.03]"
+        {/* Hero media pulled into the right column, filling the empty space
+            beside the giant hero number/tagline. Video products (DM, OM) get
+            the compact demo player; image products (AdBlock welcome shot,
+            snipemaxxer lobby) get a click-to-enlarge shot via the global
+            data-zoom lightbox. */}
+        {heroShotAside && (heroAsideVideo || screenshotMain) && (
+          <aside class="reveal reveal-6 md:col-span-5 md:mt-12 hero-shot-aside">
+            {heroAsideVideo ? (
+              <ProductScreenshot
+                src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
+                alt={`${product.name} demo`}
+                video={product.demoVideo}
               />
-              <span class="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/65 px-2.5 py-1 text-[11px] font-mono tracking-wide text-white/90 opacity-85 backdrop-blur transition-opacity group-hover:opacity-100">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
-                Click to enlarge
-              </span>
-            </button>
+            ) : (
+              <button
+                type="button"
+                class="ext-hero-shot group relative block w-full cursor-zoom-in rounded-2xl overflow-hidden border border-[var(--color-line-strong)]"
+                data-zoom={screenshotMain}
+                aria-label={`Enlarge: ${product.name}`}
+                style={`box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px ${product.accentHex}22, 0 0 60px ${product.accentHex}14;`}
+              >
+                <img
+                  src={screenshotMain}
+                  alt={`${product.name} screenshot`}
+                  loading="eager"
+                  decoding="async"
+                  class="block w-full h-auto transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <span class="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/65 px-2.5 py-1 text-[11px] font-mono tracking-wide text-white/90 opacity-85 backdrop-blur transition-opacity group-hover:opacity-100">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+                  Click to enlarge
+                </span>
+              </button>
+            )}
           </aside>
         )}
       </div>
@@ -649,14 +675,15 @@ const breadcrumbSchema = {
         />
       )}
 
-      <!-- Apple-style hero shot (or demo video) for live + beta products -->
-      {!isExt && !isDrop && (screenshotMain || product.demoVideo) && (
+      <!-- Apple-style hero shot (or demo video) for live + beta products.
+           Products whose hero media moved into the right-column aside skip
+           this full-width shot. -->
+      {!heroShotAside && !isDrop && (screenshotMain || product.demoVideo) && (
         <ProductScreenshot
           src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
           alt={`${product.name} demo`}
           extras={product.demoVideo ? [] : screenshotExtras}
           video={product.demoVideo}
-          maxWidth={product.slug === 'snipemaxxer' ? '680px' : undefined}
         />
       )}
 
@@ -694,6 +721,17 @@ const breadcrumbSchema = {
       )}
     </div>
   </section>
+
+  {/* Playlistmaxxing-only: music-themed showcase — spinning vinyl record +
+      the 3-platform / floating mini-player / karaoke story. Sits right after
+      the hero as the "how it looks" centerpiece. */}
+  {isPlaylist && (
+    <PlaylistShowcase
+      accentHex={product.accentHex}
+      logo={product.logo}
+      appUrl={product.primaryCta.href}
+    />
+  )}
 
   {/* OM + dropmaxxer show the How-it-works walkthrough ABOVE the feature
       zones (zero-install / try-it-first products); everyone else gets it
@@ -804,4 +842,11 @@ const breadcrumbSchema = {
   <!-- Floating Notify-me CTA on coming-soon products (aimmaxxer uses its own
        v2 teaser CTA instead). -->
   {isSoon && !isAim && <NotifyMeCard productName={product.name} href={product.primaryCta.href} />}
+
+  {/* The demo player carries its own 48px top margin — the aside already
+      offsets it with md:mt-12, so zero the internal margin to keep the video
+      aligned neatly beside the hero number instead of dropping too low. */}
+  <style is:global>
+    .hero-shot-aside .product-screenshot { margin-top: 0; }
+  </style>
 </Layout>

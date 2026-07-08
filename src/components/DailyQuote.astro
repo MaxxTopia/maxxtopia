@@ -316,6 +316,15 @@ const quotes = [
     close.addEventListener('click', () => setCollapsed(true));
     pill.addEventListener('click',  () => setCollapsed(false));
 
+    // ── Auto-minimize after 5 minutes on the site ────────────────
+    // Once a visitor has been on the page ~5 min, tuck the card down to
+    // the pill so it stops taking up the corner during a long read/scroll.
+    // Fires once; if they re-open it afterward it stays open (we don't nag).
+    const AUTO_MINIMIZE_MS = 5 * 60 * 1000;
+    setTimeout(() => {
+      if (!card.hasAttribute('hidden')) setCollapsed(true);
+    }, AUTO_MINIMIZE_MS);
+
     // ── Auto-minimize on game interaction ────────────────────────
     // On the /play page the Sprite Cannon game is embedded as an iframe
     // (#sc-frame). The moment the player clicks/taps into it, collapse the

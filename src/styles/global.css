@@ -322,6 +322,34 @@
   .gradient-view { animation: none; }
 }
 
+/* Ben 10 Omnitrix colorway — for the streammaxxing "Instant" hero word.
+   Punchier + more electric than .gradient-view: a hot alien-green core that
+   sweeps lime→green→emerald like an Omnitrix dial charging, wrapped in a thin
+   dark contour (text-shadow) so it reads like the black-ringed watch face
+   instead of a flat green blur. Matches streammaxxing's green vibe. */
+.gradient-omni {
+  background: linear-gradient(
+    115deg,
+    #eaffb0 0%,
+    #a3ff3c 16%,
+    #3fff6a 34%,
+    #12e06a 52%,
+    #0bd47f 70%,
+    #7dff4a 88%,
+    #eaffb0 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: omnitrix-flux 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 18px rgba(63, 255, 106, 0.28));
+}
+@media (prefers-reduced-motion: reduce) {
+  .gradient-omni { animation: none; }
+}
+
 /* ────────────────────────────────────────────────────────────────────
    Buttons — magnetic primary + ghost secondary.
    ──────────────────────────────────────────────────────────────────── */

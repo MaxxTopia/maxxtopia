@@ -699,7 +699,27 @@ export const products: Product[] = [
     screenshots: ['/screenshots/viewmaxxing/home-hero.webp'],
     zones: [
       {
-        eyebrow: '01 · The Rebuild',
+        eyebrow: '01 · The Catalog',
+        headline: "Every show. Real artwork. One grid.",
+        body: 'Movies, prestige TV and anime in a live catalog with real poster art — not a wall of broken links. House of the Dragon, The Boys, FROM, Snowfall: all a click from the couch, sorted into Popular and Top Rated.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/viewmaxxing/catalog.webp',
+          alt: 'Viewmaxxing TV Shows catalog — Popular and Top Rated rows of real series with poster art',
+        },
+      },
+      {
+        eyebrow: '02 · The Search',
+        headline: "Type it once. It's already there.",
+        body: 'One search across movies, TV, anime and YouTube. Type "Snowfall" and the full FX series surfaces first — six seasons, sixty episodes deep — next to everything adjacent. No bouncing between apps to find a show you already know the name of.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/viewmaxxing/snowfall-search.webp',
+          alt: 'Searching Snowfall in Viewmaxxing — the FX series surfaces first among live results',
+        },
+      },
+      {
+        eyebrow: '03 · The Rebuild',
         headline: "We scrapped the first one. On purpose.",
         body: 'The old Viewmaxxing was a vague streamer toolkit aimed at a tiny audience. It never shipped. We didn\'t fill the slot with slop — we deleted the concept and rebuilt it into the box app everyone actually wanted: instant-open, one tap to whatever you\'re in the mood for.',
         visual: {
@@ -712,7 +732,7 @@ export const products: Product[] = [
         },
       },
       {
-        eyebrow: '02 · The Stack',
+        eyebrow: '04 · The Stack',
         headline: "Your living room runs six apps. This is one.",
         body: 'YouTube here, a movie service there, an anime app, Twitch on your phone — five subscriptions and five remotes\' worth of friction. Viewmaxxing collapses all of it into one home screen, and it bills you nothing.',
         visual: {
@@ -726,7 +746,7 @@ export const products: Product[] = [
         },
       },
       {
-        eyebrow: '03 · The Feed',
+        eyebrow: '05 · The Feed',
         headline: "YouTube on the big screen. Zero ads.",
         body: 'The stock TV YouTube app shows unskippable ads and buries the audio tracks. Viewmaxxing extracts the video natively on the box, so ad slots never load — plus a multi-language audio picker, optional captions, and quality from Auto to Max.',
         visual: {
@@ -741,7 +761,7 @@ export const products: Product[] = [
         },
       },
       {
-        eyebrow: '04 · The Pick',
+        eyebrow: '06 · The Pick',
         headline: "It finds the working server. You don't.",
         body: 'A TMDb-powered catalog of movies and shows, plus anime and live Twitch. Multi-mirror streaming auto-selects the best source in the background — no manual picker, no "try another link." Continue Watching remembers where you stopped; episode pickers and sub/dub are built in. All of it D-pad native.',
         visual: {
@@ -751,26 +771,6 @@ export const products: Product[] = [
             { label: 'Viewmaxxing · auto best-server', value: 'one tap', emphasize: true },
           ],
           caption: 'Reliability ranked per source · the working mirror plays first',
-        },
-      },
-      {
-        eyebrow: '05 · The Catalog',
-        headline: "Every show. Real artwork. One grid.",
-        body: 'Movies, prestige TV and anime in a live catalog with real poster art — not a wall of broken links. House of the Dragon, The Boys, FROM, Snowfall: all a click from the couch, sorted into Popular and Top Rated.',
-        visual: {
-          kind: 'image',
-          src: '/screenshots/viewmaxxing/catalog.webp',
-          alt: 'Viewmaxxing TV Shows catalog — Popular and Top Rated rows of real series with poster art',
-        },
-      },
-      {
-        eyebrow: '06 · The Search',
-        headline: "Type it once. It's already there.",
-        body: 'One search across movies, TV, anime and YouTube. Type "Snowfall" and the full FX series surfaces first — six seasons, sixty episodes deep — next to everything adjacent. No bouncing between apps to find a show you already know the name of.',
-        visual: {
-          kind: 'image',
-          src: '/screenshots/viewmaxxing/snowfall-search.webp',
-          alt: 'Searching Snowfall in Viewmaxxing — the FX series surfaces first among live results',
         },
       },
     ],
@@ -1134,6 +1134,14 @@ export const products: Product[] = [
     accentHex: '#22d3a0',
     // Real hero shot: the Command Center dashboard — the "everything in one app" proof.
     screenshots: ['/screenshots/streammaxxing/howto/command-center.webp'],
+    // Product trailer — a music-scored showcase of the Command Center + overlay
+    // studio. Renders full-width under the hero (streammaxxing keeps the wide
+    // shot, not the aside), replacing the static command-center still.
+    demoVideo: {
+      src: '/screenshots/streammaxxing/demo.mp4',
+      src720: '/screenshots/streammaxxing/demo-720.mp4',
+      poster: '/screenshots/streammaxxing/demo-poster.jpg',
+    },
   },
   {
     slug: 'snipemaxxer',
@@ -1255,6 +1263,93 @@ export const products: Product[] = [
     accentHex: '#7c5cff',
     screenshots: ['/screenshots/playlistmaxxing/hero.webp'],
     heroStat: { value: '3-in-1', label: 'Spotify · SoundCloud · YouTube' },
+    zones: [
+      {
+        eyebrow: '01 · The Stack',
+        headline: "Three services. One page.",
+        body: 'Some songs only live on SoundCloud. Some only on YouTube. Some only on Spotify. Playlistmaxxing puts all three side by side, so the music you actually listen to finally shares one home instead of four tabs.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Spotify', value: 'one page', emphasize: true },
+            { label: 'SoundCloud', value: 'one page', emphasize: true },
+            { label: 'YouTube', value: 'one page', emphasize: true },
+          ],
+          caption: 'Three platforms, side by side · one turning page',
+        },
+      },
+      {
+        eyebrow: '02 · The Paste',
+        headline: "Paste a link. It plays.",
+        body: 'A single track, or a whole playlist, album or set. Drop the link and it detects the platform and drops in a real, playable card that plays right in place. No copy-paste dance, no reformatting.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Track link', value: 'plays in place', emphasize: true },
+            { label: 'Playlist / album / set', value: 'plays in place', emphasize: true },
+            { label: 'Platform detection', value: 'automatic' },
+          ],
+          caption: 'Paste it in · a playable card appears',
+        },
+      },
+      {
+        eyebrow: '03 · The Login',
+        headline: "Nothing to log into.",
+        body: 'No account, no install, no server. It runs in your browser and saves on your device. SoundCloud and YouTube play full and free; Spotify plays full when you\'re signed in.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Accounts needed', value: '0', emphasize: true },
+            { label: 'To install', value: 'Nothing', emphasize: true },
+            { label: 'Saved', value: 'On your device' },
+            { label: 'Cost', value: 'Free' },
+          ],
+          caption: 'Runs in the browser · saved locally · nothing to sign up for',
+        },
+      },
+      {
+        eyebrow: '04 · The Mini-Player',
+        headline: "A record that follows you.",
+        body: 'Pop out a floating vinyl mini-player that stays on top while you move across other tabs. Spin, skip, done. A Spotify-style pop-out, in your look, that never leaves your sight.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Floating vinyl pop-out', value: 'stays on top', emphasize: true },
+            { label: 'Across other tabs', value: 'always visible' },
+            { label: 'Spin · skip · done', value: 'one glance' },
+          ],
+          caption: 'The now-playing disc pops out and rides along on top',
+        },
+      },
+      {
+        eyebrow: '05 · The Lyrics',
+        headline: "Karaoke, built in.",
+        body: 'Synced lyrics light up line by line, colour-pulled from the cover art. Sing along without leaving the page or opening a second site.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Synced lyrics', value: 'line by line', emphasize: true },
+            { label: 'Colour', value: 'pulled from the cover art' },
+            { label: 'Second site', value: 'not needed' },
+          ],
+          caption: 'Lyrics that light up in time · coloured by the artwork',
+        },
+      },
+      {
+        eyebrow: '06 · The Stream',
+        headline: "One toggle to your overlay.",
+        body: 'Flip one switch and what\'s playing pushes straight to your Streammaxxing vinyl overlay - live now-playing on stream, no extra software. Search, reorder, tag and share your whole library as a link; open it on your phone and it\'s the same music.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Now-playing to Streammaxxing overlay', value: 'one toggle', emphasize: true },
+            { label: 'Share your library', value: 'as a link' },
+            { label: 'On your phone', value: 'same link, same music' },
+          ],
+          caption: 'One switch pushes now-playing on stream · library travels as a link',
+        },
+      },
+    ],
   },
 ];
 

@@ -69,6 +69,13 @@ const skins: { k: string; n: string; r: string; secret?: boolean }[] = [
   { k: 'cute', n: 'Cute', r: 'common' },
 ];
 
+// Hero armory — the FULL wall of real sprites, dropped into the empty right
+// side of the launch section so the "50+ skins" claim is shown, not just
+// stated. Every key maps to a real /skins/<k>.png. Known secret unlocks stay
+// silhouetted (same no-spoiler treatment as the shop below).
+const armorySkins: string[] = ['applejuice', 'bacca', 'baldy', 'bananna', 'bartholomew', 'blackhole', 'boba', 'bonez', 'burger', 'chowder', 'chrome', 'crashout', 'crystal', 'cute', 'dillan', 'donlad', 'dragon', 'fallout', 'fastboi', 'fishy', 'foxspirit', 'frozone', 'gas_mask', 'greedy', 'imaworkersir', 'inferno', 'job', 'klombo', 'lightning', 'llamma', 'magnet', 'mrmeeseeks', 'munch', 'nonchalant', 'pepper', 'purpdrank', 'rager', 'raptor_sprite', 'reboot', 'revive', 'secretskin', 'shark', 'slurpy', 'snowman', 'spongey', 'spookyszn', 'superbob', 'toneguy', 'tscott', 'turtle', 'ying', 'zeropoint'];
+const secretKeys = new Set(['bartholomew', 'superbob', 'secretskin', 'tscott']);
+
 // Signature abilities — each card is a real, NON-secret skin + its real in-game
 // ability text (secret skins stay hidden, so they aren't featured here).
 const sigAbilities: { k: string; skin: string; label: string; r: string; desc: string }[] = [
@@ -126,6 +133,8 @@ const steps = [
     <div class="absolute inset-0 bg-grid opacity-60"></div>
 
     <div class="relative mx-auto max-w-7xl px-5 sm:px-8 pt-16 sm:pt-20 pb-12">
+     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-10 items-center">
+      <div class="lg:col-span-7">
       <div class="reveal reveal-1 mb-7 flex flex-wrap items-center gap-3">
         <div class="inline-flex items-center gap-2 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-bg-card)] px-3.5 py-1.5">
           <span class="flex h-2 w-2 rounded-full bg-[var(--color-magenta)]" style="box-shadow: 0 0 12px var(--color-magenta); animation: pulse 2s ease-in-out infinite"></span>
@@ -165,6 +174,27 @@ const steps = [
           </div>
         ))}
       </div>
+      </div>{/* left column */}
+
+      {/* THE ARMORY — the full wall of real sprites fills the empty right side
+          of the launch section, turning the "50+ skins" stat into a showcase. */}
+      <aside class="reveal reveal-5 lg:col-span-5">
+        <div class="armory-card">
+          <div class="mb-3.5">
+            <p class="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-cyan)]">&#9670; The armory</p>
+            <p class="mt-1.5 text-[22px] font-semibold tracking-[-0.02em] leading-none"><span class="gradient-suite">50+ skins</span> <span class="text-[var(--color-text)]">to unlock</span></p>
+            <p class="mt-2 text-[12.5px] text-[var(--color-muted)]">Real cats straight from the shop &mdash; spend coins, dress the cannon.</p>
+          </div>
+          <div class="armory-grid">
+            {armorySkins.map((k, i) => (
+              <span class:list={['armory-cell', secretKeys.has(k) && 'is-secret']} style={`--d:${(i % 13) * 0.05}s`}>
+                <img src={`${skinBase}/${k}.png`} alt={secretKeys.has(k) ? 'Locked secret skin' : `${k} skin`} loading="lazy" decoding="async" width="44" height="44" />
+              </span>
+            ))}
+          </div>
+        </div>
+      </aside>
+     </div>{/* hero two-column grid */}
     </div>
 
     <!-- World marquee — endless scroll of the hand-built parallax scenes. -->
@@ -573,6 +603,62 @@ const steps = [
     .sc-you__cta { color: var(--color-cyan); text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 2px; }
 
     @media (prefers-reduced-motion: reduce) { .sc-throne::before, .sc-lb-skel { animation: none; } }
+
+    /* ── Hero armory — full sprite wall in the launch section ───────── */
+    .armory-card {
+      border: 1px solid var(--color-line-strong);
+      border-radius: 22px;
+      padding: 18px;
+      background:
+        radial-gradient(130% 120% at 100% 0%, rgba(226, 91, 255, 0.12), transparent 55%),
+        radial-gradient(120% 120% at 0% 100%, rgba(0, 212, 255, 0.10), transparent 55%),
+        linear-gradient(180deg, rgba(20, 12, 36, 0.72), rgba(10, 6, 18, 0.9));
+      box-shadow: 0 30px 90px -30px rgba(226, 91, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .armory-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 7px;
+    }
+    @media (max-width: 520px) { .armory-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+    .armory-cell {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border-radius: 11px;
+      border: 1px solid var(--color-line);
+      background: rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      animation: armory-in 0.5s ease both;
+      animation-delay: var(--d, 0s);
+    }
+    .armory-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      transition: transform 0.18s ease;
+    }
+    .armory-cell:hover {
+      transform: translateY(-2px) scale(1.07);
+      border-color: rgba(226, 91, 255, 0.5);
+      background: rgba(226, 91, 255, 0.09);
+      z-index: 1;
+    }
+    .armory-cell:hover img { transform: scale(1.08); }
+    /* No-spoiler: known secret unlocks render as solid silhouettes. */
+    .armory-cell.is-secret img { filter: brightness(0) saturate(0); opacity: 0.5; }
+    @keyframes armory-in {
+      from { opacity: 0; transform: translateY(7px) scale(0.9); }
+      to   { opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { .armory-cell { animation: none; } }
   </style>
 
   <script is:inline>
