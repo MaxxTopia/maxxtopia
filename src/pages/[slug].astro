@@ -13,6 +13,7 @@ import HowItWorks from '../components/HowItWorks.astro';
 import SourceWall from '../components/SourceWall.astro';
 import CutAutopsy from '../components/CutAutopsy.astro';
 import PlaylistShowcase from '../components/PlaylistShowcase.astro';
+import VinylDisc from '../components/VinylDisc.astro';
 import DiscordKillshot from '../components/DiscordKillshot.astro';
 import ReceiptsBand from '../components/ReceiptsBand.astro';
 import ReconversionCTA from '../components/ReconversionCTA.astro';
@@ -621,7 +622,7 @@ const breadcrumbSchema = {
         {/* Stats aside: SOON products keep the 4-tile grid. LIVE products
             (OM, DM) hide it here — the same numbers re-emerge below in the
             Receipts band where they have room to breathe + carry citations. */}
-        {!hasReceiptsBand && product.stats && product.stats.length > 0 && (
+        {!hasReceiptsBand && !isPlaylist && product.stats && product.stats.length > 0 && (
           <aside class="reveal reveal-6 md:col-span-4 grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
             {product.stats.map((s) => (
               <div class="bg-[var(--color-bg-card)] p-5">
@@ -633,6 +634,14 @@ const breadcrumbSchema = {
                 </p>
               </div>
             ))}
+          </aside>
+        )}
+
+        {/* Playlistmaxxing: the spinning turntable takes the hero right column,
+            in place of the stat tiles. */}
+        {isPlaylist && (
+          <aside class="reveal reveal-6 md:col-span-4 flex items-center justify-center">
+            <VinylDisc accentHex={product.accentHex} logo={product.logo} />
           </aside>
         )}
 
@@ -655,6 +664,7 @@ const breadcrumbSchema = {
                       <button type="button" class="clip-reel__btn" aria-label={`Play ${r.label}`}>
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
                       </button>
+                      <input type="range" class="clip-reel__vol" min="0" max="100" value="10" step="1" aria-label={`Volume for ${r.label}`} />
                       <figcaption class="clip-reel__cap">{r.label}</figcaption>
                     </figure>
                   ))}
@@ -886,6 +896,11 @@ const breadcrumbSchema = {
     .clip-reel__btn:hover { transform: scale(1.08); }
     .clip-reel__btn.is-hidden { opacity: 0; pointer-events: none; }
     .clip-reel__cap { position: absolute; left: 8px; bottom: 8px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; color: #fff; background: rgba(0, 0, 0, 0.55); padding: 3px 8px; border-radius: 999px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    /* Per-reel volume slider - starts at 10% (value="10"), appears on hover. */
+    .clip-reel__vol { position: absolute; left: 10px; right: 10px; bottom: 34px; width: calc(100% - 20px); z-index: 3; -webkit-appearance: none; appearance: none; height: 4px; margin: 0; border-radius: 999px; cursor: pointer; opacity: 0; transition: opacity 0.2s ease; background: linear-gradient(to right, #00d4ff 0%, #00d4ff var(--vol, 10%), rgba(255, 255, 255, 0.28) var(--vol, 10%), rgba(255, 255, 255, 0.28) 100%); }
+    .clip-reel:hover .clip-reel__vol, .clip-reel__vol:focus-visible { opacity: 1; }
+    .clip-reel__vol::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 12px; border-radius: 999px; background: #fff; border: 2px solid #00d4ff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); cursor: pointer; }
+    .clip-reel__vol::-moz-range-thumb { width: 12px; height: 12px; border-radius: 999px; background: #fff; border: 2px solid #00d4ff; cursor: pointer; }
   </style>
 
   <script>
@@ -894,12 +909,21 @@ const breadcrumbSchema = {
     document.querySelectorAll<HTMLElement>('.clip-reel').forEach((reel) => {
       const v = reel.querySelector('video');
       const btn = reel.querySelector<HTMLButtonElement>('.clip-reel__btn');
+      const vol = reel.querySelector<HTMLInputElement>('.clip-reel__vol');
       if (!v || !btn) return;
-      const play = () => { v.muted = false; v.volume = 0.8; v.play().catch(() => {}); btn.classList.add('is-hidden'); };
+      // Volume slider - defaults to 10% for everyone (value="10" in markup).
+      const applyVol = () => {
+        const pct = vol ? Number(vol.value) : 10;
+        v.volume = pct / 100;
+        vol?.style.setProperty('--vol', pct + '%');
+      };
+      applyVol();
+      const play = () => { v.muted = false; applyVol(); v.play().catch(() => {}); btn.classList.add('is-hidden'); };
       const pause = () => v.pause();
       btn.addEventListener('click', play);
       v.addEventListener('click', () => { if (v.paused) play(); else pause(); });
       v.addEventListener('pause', () => btn.classList.remove('is-hidden'));
+      vol?.addEventListener('input', () => { v.muted = false; applyVol(); });
     });
   </script>
 </Layout>

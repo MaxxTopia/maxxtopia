@@ -111,6 +111,13 @@ const isGrid = all.length > 1 && !initialVideo;
             <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
           </svg>
         </button>
+        <button
+          type="button"
+          class="product-screenshot__fs"
+          aria-label="Fullscreen"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        </button>
       </div>
     )}
   </div>
@@ -239,6 +246,33 @@ const isGrid = all.length > 1 && !initialVideo;
           v.pause();
         }
       });
+
+      // Fullscreen: dedicated button + double-click on the video. Entering
+      // fullscreen makes it a watch experience - unmute and start at 25%
+      // volume for everyone, then play. Exits back on toggle or Esc.
+      const fsBtn = wrap.querySelector<HTMLButtonElement>('.product-screenshot__fs');
+      if (frame) {
+        const enterFs = () => {
+          const el = frame as any;
+          (el.requestFullscreen || el.webkitRequestFullscreen)?.call(el);
+          v.muted = false;
+          v.volume = 0.25;
+          lastVolume = 0.25;
+          btn.dataset.state = 'on';
+          slider.value = '25';
+          paint(25);
+          v.play().catch(() => {});
+          overlay?.classList.add('is-hidden');
+        };
+        const toggleFs = () => {
+          const d = document as any;
+          const fsEl = d.fullscreenElement || d.webkitFullscreenElement;
+          if (fsEl) { (d.exitFullscreen || d.webkitExitFullscreen)?.call(d); }
+          else { enterFs(); }
+        };
+        fsBtn?.addEventListener('click', toggleFs);
+        v.addEventListener('dblclick', toggleFs);
+      }
     });
   </script>
 )}
@@ -461,6 +495,31 @@ const isGrid = all.length > 1 && !initialVideo;
     color: #e25bff;
     border-color: rgba(226, 91, 255, 0.45);
     opacity: 1;
+  }
+
+  /* Fullscreen button — mirrors the sound button styling, sits beside it. */
+  .product-screenshot__fs {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(8, 8, 8, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(255, 255, 255, 0.82);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.65;
+    transition: opacity 200ms ease, transform 200ms ease, border-color 200ms ease, color 200ms ease;
+  }
+  .product-screenshot__frame:hover .product-screenshot__fs { opacity: 1; }
+  .product-screenshot__fs:hover {
+    border-color: rgba(226, 91, 255, 0.55);
+    color: #e25bff;
+    transform: scale(1.06);
   }
 
   /* Volume slider — collapsed by default, expands left from the button on hover. */
