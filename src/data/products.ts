@@ -1138,9 +1138,9 @@ export const products: Product[] = [
     // studio. Renders full-width under the hero (streammaxxing keeps the wide
     // shot, not the aside), replacing the static command-center still.
     demoVideo: {
-      src: '/screenshots/streammaxxing/demo.mp4',
-      src720: '/screenshots/streammaxxing/demo-720.mp4',
-      poster: '/screenshots/streammaxxing/demo-poster.jpg',
+      src: '/screenshots/streammaxxing/demo-cut-trailer.mp4',
+      src720: '/screenshots/streammaxxing/demo-cut-trailer-720.mp4',
+      poster: '/screenshots/streammaxxing/demo-cut-trailer-poster.jpg',
     },
   },
   {
