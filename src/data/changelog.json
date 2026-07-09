@@ -1,6 +1,20 @@
 [
   {
     "date": "2026-07-09",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "extensionmaxxing",
+    "version": "v1.6.3",
+    "title": "Playback speed is back on the YouTube Reclaim player.",
+    "body": "The Reclaim player swaps in its own video, which meant YouTube's speed menu was out of reach. It now has its own - and it remembers what you picked.",
+    "items": [
+      "Pick 0.25x to 2x from the gear menu on the Reclaim player.",
+      "YouTube's own shift+. and shift+, shortcuts step through the speeds.",
+      "Your speed sticks across quality switches and the next video.",
+      "Performance Mode no longer sleeps a tab playing audio during a silent gap between songs."
+    ]
+  },
+  {
+    "date": "2026-07-09",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.59",
