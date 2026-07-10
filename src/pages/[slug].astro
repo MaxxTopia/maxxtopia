@@ -250,10 +250,16 @@ const buildStatus: Record<string, { progress: number; dropTarget: string; channe
 };
 
 export async function getStaticPaths() {
-  return products.map((product) => ({
-    params: { slug: product.slug },
-    props: { product },
-  }));
+  // clipmaxxer has a bespoke, self-themed page at src/pages/clipmaxxer/index.astro
+  // — exclude it here so the dynamic route doesn't also emit /clipmaxxer and
+  // collide with the static one. The product stays in `products` so cards,
+  // the home grid, the footer and the sitemap still link to it.
+  return products
+    .filter((product) => product.slug !== 'clipmaxxer')
+    .map((product) => ({
+      params: { slug: product.slug },
+      props: { product },
+    }));
 }
 
 const { product } = Astro.props;
@@ -465,6 +471,25 @@ const breadcrumbSchema = {
     { '@type': 'ListItem', position: 2, name: product.name, item: `https://maxxtopia.com/${product.slug}/` },
   ],
 };
+
+// FAQPage JSON-LD — mirrors the Q&A the ReconversionCTA renders visibly on the
+// page (via native <details>), so it's Google-compliant, not injected-only
+// markup. Emitted under the SAME gate as the visible FAQ block
+// (`product.heroStat && reconvertConfig[product.slug]`) so the structured data
+// can never claim FAQs the page doesn't actually show. Earns FAQ rich results
+// and feeds the answer verbatim to GPT/Claude/Perplexity crawlers.
+const faqEntry = reconvertConfig[product.slug];
+const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqEntry.faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : null;
 ---
 
 <Layout
@@ -475,6 +500,7 @@ const breadcrumbSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {videoSchema && <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />}
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <!-- Product hero -->
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
