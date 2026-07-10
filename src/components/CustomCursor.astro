@@ -31,24 +31,20 @@
 
     let mx = window.innerWidth / 2;
     let my = window.innerHeight / 2;
-    let dx = mx, dy = my;
     let rx = mx, ry = my;
     let raf = 0;
 
+    // The ring trails the cursor with a lerp — that trailing is the effect. The dot
+    // does NOT go through here: it is pinned to the true cursor in the mousemove
+    // handler below, so it can never lag behind a busy frame the way a rAF-driven
+    // dot does on a page carrying dozens of animations.
     const tick = () => {
-      // Lerp the ring; dot follows the cursor 1:1 with no smoothing
       rx += (mx - rx) * 0.22;
       ry += (my - ry) * 0.22;
-      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
       ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
 
-      // Stop the loop once the ring has caught up — restart on next move
-      const dxr = Math.abs(mx - rx);
-      const dyr = Math.abs(my - ry);
-      if (dxr < 0.4 && dyr < 0.4) {
-        raf = 0;
-        return;
-      }
+      // Stop once the ring has caught up — restart on next move
+      if (Math.abs(mx - rx) < 0.4 && Math.abs(my - ry) < 0.4) { raf = 0; return; }
       raf = requestAnimationFrame(tick);
     };
 
@@ -56,6 +52,8 @@
 
     window.addEventListener('mousemove', (e) => {
       mx = e.clientX; my = e.clientY;
+      // Move the dot NOW, on the input event itself — instant, no frame wait.
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
       start();
     }, { passive: true });
 

@@ -211,26 +211,33 @@
   z-index: 99999;
   width: 0; height: 0;
 }
+/* will-change: transform promotes the dot + ring to their own GPU layers, so a move
+   is a compositor transform instead of a repaint of the glow/border every frame.
+   The hover grow uses the `scale` property (not width/height) so it stays on the
+   compositor too — the JS owns `transform` for positioning, and `scale` composes
+   with it independently. 0.667 = 4/6px, 1.571 = 44/28px: same sizes as before. */
 .custom-cursor__dot {
   position: absolute;
   width: 6px; height: 6px;
   border-radius: 999px;
   background: #e25bff;
   box-shadow: 0 0 8px rgba(226, 91, 255, 0.7);
-  transition: width 200ms ease, height 200ms ease, background 200ms ease;
+  will-change: transform;
+  transition: scale 200ms ease, background 200ms ease;
 }
 .custom-cursor__ring {
   position: absolute;
   width: 28px; height: 28px;
   border-radius: 999px;
   border: 1px solid rgba(226, 91, 255, 0.35);
-  transition: width 240ms ease, height 240ms ease, border-color 240ms ease;
+  will-change: transform;
+  transition: scale 240ms ease, border-color 240ms ease;
 }
 .custom-cursor.is-over-link .custom-cursor__dot {
-  width: 4px; height: 4px;
+  scale: 0.667;
 }
 .custom-cursor.is-over-link .custom-cursor__ring {
-  width: 44px; height: 44px;
+  scale: 1.571;
   border-color: rgba(0, 212, 255, 0.7);
 }
 
