@@ -218,19 +218,24 @@
    with it independently. 0.667 = 4/6px, 1.571 = 44/28px: same sizes as before. */
 .custom-cursor__dot {
   position: absolute;
+  /* left/top offset = -half the size, so the `translate` property (set in JS to the
+     raw cursor x/y) lands the element's CENTRE on the cursor. Doing the centring here
+     instead of translate(-50%,-50%) keeps `translate` free to hold only the position. */
+  left: -3px; top: -3px;
   width: 6px; height: 6px;
   border-radius: 999px;
   background: #e25bff;
   box-shadow: 0 0 8px rgba(226, 91, 255, 0.7);
-  will-change: transform;
+  will-change: translate;
   transition: scale 200ms ease, background 200ms ease;
 }
 .custom-cursor__ring {
   position: absolute;
+  left: -14px; top: -14px;
   width: 28px; height: 28px;
   border-radius: 999px;
   border: 1px solid rgba(226, 91, 255, 0.35);
-  will-change: transform;
+  will-change: translate;
   transition: scale 240ms ease, border-color 240ms ease;
 }
 .custom-cursor.is-over-link .custom-cursor__dot {
