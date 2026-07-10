@@ -17,6 +17,7 @@ import DiscordKillshot from '../components/DiscordKillshot.astro';
 import ReceiptsBand from '../components/ReceiptsBand.astro';
 import ReconversionCTA from '../components/ReconversionCTA.astro';
 import AimWarmup from '../components/AimWarmup.astro';
+import AdBlockDivide from '../components/AdBlockDivide.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -502,6 +503,8 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {videoSchema && <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />}
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <!-- Product hero -->
+  {isExt && <AdBlockDivide product={product} />}
+  {!isExt && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
@@ -724,8 +727,8 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
         )}
       </div>
 
-      <!-- Dropmaxxer: live, in-page "try it right here" window instead of a
-           static hero shot — it's a browser app, so let visitors test it. -->
+      {/* Dropmaxxer: live, in-page "try it right here" window instead of a
+           static hero shot — it's a browser app, so let visitors test it. */}
       {isDrop && (
         <LiveEmbed
           url={product.primaryCta.href}
@@ -736,9 +739,9 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
         />
       )}
 
-      <!-- Apple-style hero shot (or demo video) for live + beta products.
+      {/* Apple-style hero shot (or demo video) for live + beta products.
            Products whose hero media moved into the right-column aside skip
-           this full-width shot. -->
+           this full-width shot. */}
       {!heroShotAside && !isDrop && !isPlaylist && (screenshotMain || product.demoVideo) && (
         <ProductScreenshot
           src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo!.poster)}
@@ -767,9 +770,9 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
         />
       )}
 
-      <!-- Coming-soon "live build" banner — replaces the diagonal marquee.
+      {/* Coming-soon "live build" banner — replaces the diagonal marquee.
            Aimmaxxer suppresses it: its dedicated "v2, the real deal" teaser
-           in the AimWarmup section is the single coming-soon signal. -->
+           in the AimWarmup section is the single coming-soon signal. */}
       {isSoon && !isAim && (
         <div class="mt-12 max-w-3xl">
           <BuildStatus
@@ -782,6 +785,7 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
       )}
     </div>
   </section>
+  )}
 
   {/* Playlistmaxxing-only: music-themed showcase — spinning vinyl record +
       the 3-platform / floating mini-player / karaoke story. Sits right after

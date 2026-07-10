@@ -947,7 +947,11 @@ export const products: Product[] = [
     },
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
-    accentHex: '#00d4ff',
+    // Shield-derived identity (was raw suite cyan #00d4ff): the page now reads
+    // as AdBlock's own navy+sky "shield" world, not a suite clone. Drives the
+    // sidebar rail, receipts band, feature zones + chips off these blues.
+    accentHex: '#5b9fd8',
+    accent2Hex: '#17457f',
     // Real hero shot: the post-install welcome screen ("You're set.").
     screenshots: ['/screenshots/extensionmaxxing/welcome-hero.webp'],
     howItWorks: {

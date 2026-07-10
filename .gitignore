@@ -24,6 +24,8 @@ public/screenshots/**/demo*.jpg
 !public/screenshots/**/demo-tiktok-poster.jpg
 !public/screenshots/**/demo-cut*.mp4
 !public/screenshots/**/demo-cut*.jpg
+# AdBlock-Maxxer bespoke hero: the "clean feed" gameplay loop (AdBlockDivide).
+!public/screenshots/extensionmaxxing/feed-clip.mp4
 
 # Feature-zone clips referenced by the OM/DM product pages. Tracked so the
 # deploy.yml CI build ships a complete site (these used to live only in
