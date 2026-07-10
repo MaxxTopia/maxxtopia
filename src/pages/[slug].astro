@@ -149,8 +149,12 @@ const reconvertConfig: Record<string, {
         a: "No. Snipemaxxer never touches Fortnite's process — no memory reading, no injection, no overlay hooked into the game. It reads the official server replay of your match, the same public match data Fortnite Tracker and fortnite.gg work from. There's nothing for BattlEye or EAC to flag.",
       },
       {
+        q: "I've landed and the report is empty. Is it broken?",
+        a: "Almost certainly not — that's how it works. Snipemaxxer reads the official server replay of your match rather than the game's memory, and the replay is only what the server has already recorded. So the scouting report shows up roughly five minutes into the match and then trails the live game by about that much. Nothing appears in the first minutes because there is nothing to read yet. The one thing that is instant is your tournament standing: points, rank and qualify math come from the live leaderboard, not the replay.",
+      },
+      {
         q: 'How does it actually help mid-tournament?',
-        a: "Two ways. Between games, the HUD polls your live tournament standing — your points, your rank, and how many games you have left in the window — and tells you, for the format you're playing, whether to play for placement or push for elims to make the cutoff. And once you're a few minutes into a match, the scouting report names the lobby: which pros and live streamers are still alive, who's beaten down for an easy key, and who's off-region. You always know the read.",
+        a: "Two ways, at two speeds. Between games, the HUD polls your live tournament standing — your points, your rank, and how many games you have left in the window — and tells you, for the format you're playing, whether to play for placement or push for elims to make the cutoff. That part has no delay. Then, about five minutes into a match, the scouting report names the lobby: which pros and live streamers are in it, who's beaten down for an easy key, who's off-region, and where everyone landed. It's a read on the game you're in, not a live radar — but it's intel you cannot get from inside your own box fight.",
       },
       {
         q: 'Which modes does it work in?',

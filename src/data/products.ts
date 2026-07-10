@@ -1152,7 +1152,7 @@ export const products: Product[] = [
     name: 'Snipemaxxer',
     category: 'Fortnite',
     status: 'beta',
-    version: '0.1.68',
+    version: '0.1.71',
     tagline: 'Know who\'s in your lobby.',
     description:
       "Auto-detects your match and names the whole lobby — pros, live streamers, who dropped where, off-region — plus more features to help in-game.",
@@ -1181,10 +1181,24 @@ export const products: Product[] = [
       },
       {
         title: 'Unbannable by design.',
-        body: 'No memory reading, no injection, no overlay hooked into the game. It downloads the official server replay through your own Epic login and reads it — nothing for BattlEye or EAC to flag.',
+        body: 'No memory reading, no injection, no overlay hooked into the game. It downloads the official server replay through your own Epic login and reads it — nothing for BattlEye or EAC to flag. That\'s the trade: the scouting report arrives about five minutes into the match, never the instant you land.',
       },
     ],
     zones: [
+      {
+        eyebrow: 'Read this first',
+        headline: 'It\'s a replay, not a radar.',
+        body: 'Snipemaxxer stays unbannable by never touching Fortnite — it downloads the official server replay of your match through your own Epic login and reads that. The replay is what the server has already recorded, so the scouting report trails the live game by roughly five minutes. Drop in and nothing appears for the first few minutes: that is the tool working, not failing. The tournament standing is the exception — it comes from the live leaderboard, so your points, rank and qualify math have no delay at all.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'First minutes of the match', value: 'no report yet' },
+            { label: 'Scouting: lobby, keys, map', value: '~5 min behind', emphasize: true },
+            { label: 'Standing, points, qualify math', value: 'live, no delay', emphasize: true },
+          ],
+          caption: 'Two surfaces, two speeds — the replay is history, the standing is now',
+        },
+      },
       {
         eyebrow: 'The hidden roster',
         headline: 'Who\'s actually in your lobby.',
@@ -1216,7 +1230,11 @@ export const products: Product[] = [
     logo: '/logos/snipemaxxer.svg',
     accentHex: '#ff3b3b',
     screenshots: ['/screenshots/snipemaxxer/scout-glance.webp'],
-    heroStat: { value: '0', label: 'game memory read', inline: true },
+    /* The old hero stat was "0 game memory read". True, and it sold the ban-safety —
+     * but it read as "instant", and the scouting report is about five minutes behind
+     * the live match. A first-time user who saw nothing appear assumed it was broken.
+     * Lead with the timing instead; ban-safety still carries in the features + FAQ. */
+    heroStat: { value: '~5 min', label: 'behind live — it reads Epic\'s replay, never your game', inline: true },
   },
   {
     slug: 'playlistmaxxing',
