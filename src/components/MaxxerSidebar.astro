@@ -4,6 +4,30 @@ const path = Astro.url.pathname;
 const activeSlug = products.find((p) =>
   path === `/${p.slug}` || path.startsWith(`/${p.slug}/`)
 )?.slug;
+
+/**
+ * Rail order, top to bottom — Diggy's call, not the products-array order (which
+ * groups by status and still drives the home grid, the footer and the sitemap).
+ * A slug missing from this list is not dropped: it falls to the bottom in its
+ * array order, so adding a product can never make it silently vanish from the rail.
+ */
+const RAIL_ORDER = [
+  'extensionmaxxing',   // AdBlock-Maxxer
+  'discordmaxxer',
+  'optimizationmaxxing',
+  'streammaxxing',
+  'viewmaxxing',
+  'clipmaxxer',
+  'snipemaxxer',
+  'playlistmaxxing',
+  'dropmaxxer',
+  'aimmaxxer',
+];
+const railRank = (slug: string) => {
+  const i = RAIL_ORDER.indexOf(slug);
+  return i === -1 ? RAIL_ORDER.length : i;
+};
+const railProducts = [...products].sort((a, b) => railRank(a.slug) - railRank(b.slug));
 ---
 
 <aside class="maxxer-sidebar" id="maxxer-sidebar" aria-label="Maxxer suite">
@@ -48,7 +72,7 @@ const activeSlug = products.find((p) =>
 
   <!-- Product rail -->
   <nav class="maxxer-sidebar__rail">
-    {products.map((p) => {
+    {railProducts.map((p) => {
       const isActive = activeSlug === p.slug;
       const isLive = p.status === 'live';
       const isComingSoon = p.status === 'soon' || p.status === 'dev';
