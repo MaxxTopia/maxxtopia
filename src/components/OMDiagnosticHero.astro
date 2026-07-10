@@ -1,0 +1,277 @@
+---
+/**
+ * OMDiagnosticHero — bespoke hero for Optimizationmaxxing (/optimizationmaxxing).
+ *
+ * "The Diagnostic": a PC rig spins on a swivel, a drone orbits it firing a blue
+ * scan beam, a sweep-line scans the tower, and diagnostics report in (CPU / DPC
+ * / GPU / PCIe) ending on "scan complete · 17 tweaks found · every one sourced".
+ * Dramatizes OM's "measure, then tune / everything sourced" story.
+ *
+ * REPLACES the shared hero for isOM (see [slug].astro). Numbers are honest
+ * current-state READOUTS, not promised gains (no unsourced "-63%/+FPS" claims) —
+ * consistent with OM's "sourced · zero placebos" brand. The OM demo video is
+ * re-rendered below this hero (it lived in the standard hero's aside).
+ *
+ * Classes/ids `om-` prefixed, styles `<style is:global>` scoped under
+ * `.om-diagnostic` so the generic component names never collide with global
+ * site styles. prefers-reduced-motion -> static 3/4 "scanned" frame.
+ */
+import type { Product } from '../data/products';
+type Props = { product: Product };
+const { product } = Astro.props;
+const primary = product.primaryCta;
+const secondary = product.secondaryCta;
+const stat = product.stats ?? [];
+---
+
+<section class="om-diagnostic" aria-label={`${product.name} hero`}>
+  <div class="om-hero">
+    <a href="/#apps" class="om-backlink">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All products
+    </a>
+
+    <div class="om-grid">
+      <!-- LEFT: the scan stage -->
+      <div class="om-stage" id="om-stage">
+        <div class="om-turntable" aria-hidden="true"></div>
+
+        <div class="om-rig-tilt" aria-hidden="true">
+          <div class="om-rig" title="hover to pause the swivel">
+            <div class="om-face om-front"><div class="om-case"></div><div class="om-mesh"></div><span class="om-rgb"></span><span class="om-power"></span><span class="om-emblem"></span><span class="om-vent"></span></div>
+            <div class="om-face om-back"><div class="om-case"></div><div class="om-mesh"></div></div>
+            <div class="om-face om-right">
+              <div class="om-case"></div>
+              <div class="om-fans"><span class="om-fan"></span><span class="om-fan"></span><span class="om-fan"></span></div>
+              <div class="om-gpu"></div>
+            </div>
+            <div class="om-face om-left"><div class="om-case"></div></div>
+            <div class="om-face om-top"><div class="om-case"></div><div class="om-mesh"></div></div>
+            <div class="om-face om-bottom"><div class="om-case"></div></div>
+          </div>
+        </div>
+
+        <div class="om-scan" aria-hidden="true"></div>
+
+        <div class="om-orbit" aria-hidden="true">
+          <div class="om-drone-arm">
+            <div class="om-drone">
+              <span class="om-rotor om-l"></span><span class="om-rotor om-r"></span>
+              <span class="om-drone-body"></span><span class="om-drone-eye"></span>
+              <span class="om-beam"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="om-diag om-diag--cpu"><div class="om-k">CPU package</div><div class="om-v"><span class="om-cnt" data-to="42">--</span>&deg;C <small>stable</small></div></div>
+        <div class="om-diag om-diag--dpc"><div class="om-k">DPC latency</div><div class="om-v"><span class="om-cnt" data-to="18">--</span>&micro;s <small>measured</small></div></div>
+        <div class="om-diag om-diag--gpu"><div class="om-k">GPU core</div><div class="om-v"><span class="om-cnt" data-to="61">--</span>&deg;C <small>power ok</small></div></div>
+        <div class="om-diag om-diag--pcie"><div class="om-k">PCIe link</div><div class="om-v">Gen <span class="om-cnt" data-to="4">--</span> &times;16 <small>ok</small></div></div>
+
+        <div class="om-report" id="om-report">Scan complete &middot; <b>17 tweaks</b> found &middot; every one <b>sourced</b></div>
+      </div>
+
+      <!-- RIGHT: copy -->
+      <div class="om-copy">
+        <p class="om-eyebrow"><span class="om-dot" aria-hidden="true"></span>Diagnostics &middot; then tune</p>
+        <div class="om-stat"><div class="om-num">100</div><div class="om-lbl">audited tweaks<br>zero placebos</div></div>
+        <h1 class="om-h1">We measure your rig<br>before we touch it.</h1>
+        <p class="om-sub">Live DPC latency, thermals, driver health and PCIe link-state &mdash; read first, so you
+          tune against numbers, not vibes. Every tweak cites a Microsoft Learn doc or a vendor whitepaper. One
+          prompt applies the preset; snapshot revert at any time.</p>
+        <div class="om-cta">
+          <a class="om-btn" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>
+            {primary.label}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          {secondary && (
+            <a class="om-btn-ghost" href={secondary.href} target={secondary.external ? '_blank' : undefined} rel={secondary.external ? 'noopener' : undefined}>{secondary.label}</a>
+          )}
+        </div>
+        {stat.length > 0 && (
+          <div class="om-specs">
+            {stat.slice(0, 3).map((s) => (
+              <div class="om-spec"><div class="om-sv">{s.value}</div><div class="om-sk">{s.label}</div></div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .om-diagnostic {
+    --om-bg:#080611; --om-line:#241a45; --om-text:#f4f1ff; --om-text-mid:#cdc6e6; --om-muted:#8d84ac;
+    --om-magenta:#e25bff; --om-cyan:#00d4ff; --om-scan:#38e0ff; --om-ok:#4ade80;
+    position:relative; overflow:hidden; isolation:isolate; border-bottom:1px solid var(--om-line);
+    background:radial-gradient(80% 70% at 24% 40%, color-mix(in oklab,var(--om-cyan) 10%,transparent), transparent 60%),
+      radial-gradient(70% 60% at 80% 75%, color-mix(in oklab,var(--om-magenta) 9%,transparent), transparent 60%), var(--om-bg);
+  }
+  .om-diagnostic::before { content:''; position:absolute; inset:0; pointer-events:none; opacity:.35; z-index:0;
+    background-image:linear-gradient(color-mix(in oklab,var(--om-cyan) 7%,transparent) 1px,transparent 1px), linear-gradient(90deg,color-mix(in oklab,var(--om-cyan) 7%,transparent) 1px,transparent 1px);
+    background-size:40px 40px; -webkit-mask-image:radial-gradient(120% 100% at 30% 45%,#000,transparent 72%); mask-image:radial-gradient(120% 100% at 30% 45%,#000,transparent 72%); }
+  .om-diagnostic .om-hero { position:relative; z-index:2; max-width:1200px; margin:0 auto; padding:clamp(88px,10vh,120px) clamp(20px,4vw,40px) clamp(44px,7vh,72px); }
+  .om-diagnostic .om-backlink { display:inline-flex; align-items:center; gap:6px; margin-bottom:22px; font-family:var(--font-mono); font-size:12.5px; color:var(--om-muted); text-decoration:none; transition:color .2s; }
+  .om-diagnostic .om-backlink:hover { color:var(--om-text-mid); }
+  .om-diagnostic .om-grid { display:grid; grid-template-columns:1.1fr 1fr; align-items:center; gap:24px; }
+
+  /* ---------- STAGE ---------- */
+  .om-diagnostic .om-stage { position:relative; justify-self:center; width:min(520px,100%); height:540px; perspective:1300px; }
+  .om-diagnostic .om-turntable { position:absolute; left:50%; bottom:92px; width:340px; height:96px; transform:translateX(-50%) rotateX(72deg); border-radius:50%;
+    background:radial-gradient(ellipse at center, color-mix(in oklab,var(--om-cyan) 34%,transparent), transparent 68%); box-shadow:0 0 60px color-mix(in oklab,var(--om-cyan) 40%,transparent); }
+
+  .om-diagnostic .om-rig-tilt { position:absolute; left:50%; top:44%; transform:translate(-50%,-50%) rotateX(-12deg); transform-style:preserve-3d; }
+  .om-diagnostic .om-rig { position:relative; width:150px; height:310px; transform-style:preserve-3d; animation:om-rig-spin 16s linear infinite; }
+  @keyframes om-rig-spin { to { transform:rotateY(360deg); } }
+  .om-diagnostic .om-rig:hover { animation-play-state:paused; }
+  .om-diagnostic .om-face { position:absolute; left:50%; top:50%; }
+  .om-diagnostic .om-front  { width:150px; height:310px; transform:translate(-50%,-50%) translateZ(125px); }
+  .om-diagnostic .om-back   { width:150px; height:310px; transform:translate(-50%,-50%) rotateY(180deg) translateZ(125px); }
+  .om-diagnostic .om-right  { width:250px; height:310px; transform:translate(-50%,-50%) rotateY(90deg) translateZ(75px); }
+  .om-diagnostic .om-left   { width:250px; height:310px; transform:translate(-50%,-50%) rotateY(-90deg) translateZ(75px); }
+  .om-diagnostic .om-top    { width:150px; height:250px; transform:translate(-50%,-50%) rotateX(90deg) translateZ(155px); }
+  .om-diagnostic .om-bottom { width:150px; height:250px; transform:translate(-50%,-50%) rotateX(-90deg) translateZ(155px); }
+  .om-diagnostic .om-case { position:absolute; inset:0; background:linear-gradient(150deg,#1a1730,#100d1f); border:1px solid #2b2350; }
+  .om-diagnostic .om-front .om-case { background:linear-gradient(150deg,#1c1836,#0e0b1c); }
+  .om-diagnostic .om-mesh { position:absolute; inset:14px; background-image:radial-gradient(rgba(255,255,255,.09) 1px, transparent 1.4px); background-size:9px 9px; border-radius:3px; }
+  .om-diagnostic .om-power { position:absolute; top:16px; right:16px; width:8px; height:8px; border-radius:50%; background:var(--om-cyan); box-shadow:0 0 10px var(--om-cyan); animation:om-pwr 2.4s ease-in-out infinite; }
+  @keyframes om-pwr { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .om-diagnostic .om-rgb { position:absolute; left:14px; top:16px; bottom:16px; width:5px; border-radius:3px;
+    background:linear-gradient(180deg,var(--om-magenta),var(--om-cyan),var(--om-magenta)); background-size:100% 300%; animation:om-rgb 4s linear infinite; box-shadow:0 0 12px color-mix(in oklab,var(--om-magenta) 50%,transparent); }
+  @keyframes om-rgb { to { background-position:0 300%; } }
+  .om-diagnostic .om-front .om-emblem { position:absolute; left:50%; top:42%; transform:translate(-50%,-50%); width:26px; height:26px; border-radius:6px;
+    background:radial-gradient(circle, color-mix(in oklab,var(--om-cyan) 34%,transparent), transparent 70%); border:1px solid color-mix(in oklab,var(--om-cyan) 40%,transparent); box-shadow:0 0 14px color-mix(in oklab,var(--om-cyan) 32%,transparent); }
+  .om-diagnostic .om-front .om-vent { position:absolute; left:16px; right:16px; bottom:20px; height:6px; border-radius:4px;
+    background:linear-gradient(90deg, transparent, color-mix(in oklab,var(--om-magenta) 55%,transparent), transparent); box-shadow:0 0 12px color-mix(in oklab,var(--om-magenta) 38%,transparent); }
+  .om-diagnostic .om-right .om-case { background:linear-gradient(150deg,rgba(30,26,58,.6),rgba(14,11,28,.6)); border:1px solid color-mix(in oklab,var(--om-cyan) 26%,transparent); backdrop-filter:blur(1px); }
+  .om-diagnostic .om-fans { position:absolute; left:18px; top:24px; bottom:78px; width:124px; display:flex; flex-direction:column; gap:12px; }
+  .om-diagnostic .om-fan { flex:1; border-radius:50%; border:2px solid color-mix(in oklab,var(--om-cyan) 62%,transparent); position:relative;
+    background:radial-gradient(circle, color-mix(in oklab,var(--om-cyan) 36%,transparent), transparent 66%); box-shadow:0 0 18px color-mix(in oklab,var(--om-cyan) 48%,transparent), inset 0 0 16px color-mix(in oklab,var(--om-cyan) 32%,transparent); }
+  .om-diagnostic .om-fan::before { content:''; position:absolute; inset:15%; border-radius:50%; border:2px solid transparent; border-top-color:var(--om-magenta); border-right-color:color-mix(in oklab,var(--om-cyan) 75%,transparent); animation:om-fan-spin 1s linear infinite; }
+  .om-diagnostic .om-fan::after { content:''; position:absolute; left:50%; top:50%; width:9px; height:9px; margin:-4.5px 0 0 -4.5px; border-radius:50%; background:var(--om-cyan); box-shadow:0 0 12px var(--om-cyan); }
+  .om-diagnostic .om-fan:nth-child(2) { border-color:color-mix(in oklab,var(--om-magenta) 60%,transparent); background:radial-gradient(circle, color-mix(in oklab,var(--om-magenta) 32%,transparent), transparent 66%); box-shadow:0 0 18px color-mix(in oklab,var(--om-magenta) 45%,transparent), inset 0 0 16px color-mix(in oklab,var(--om-magenta) 30%,transparent); }
+  .om-diagnostic .om-fan:nth-child(2)::before { animation-duration:.8s; border-top-color:var(--om-cyan); border-right-color:color-mix(in oklab,var(--om-magenta) 75%,transparent); }
+  .om-diagnostic .om-fan:nth-child(2)::after { background:var(--om-magenta); box-shadow:0 0 12px var(--om-magenta); }
+  .om-diagnostic .om-fan:nth-child(3)::before { animation-duration:1.2s; }
+  @keyframes om-fan-spin { to { transform:rotate(360deg); } }
+  .om-diagnostic .om-gpu { position:absolute; left:20px; right:20px; bottom:26px; height:44px; border-radius:4px; background:linear-gradient(90deg,#241b45,#181230); border:1px solid color-mix(in oklab,var(--om-magenta) 34%,transparent); }
+  .om-diagnostic .om-gpu::after { content:''; position:absolute; left:8px; right:8px; bottom:8px; height:5px; border-radius:3px; background:var(--om-magenta); box-shadow:0 0 10px var(--om-magenta); }
+  .om-diagnostic .om-top .om-case, .om-diagnostic .om-bottom .om-case { background:#0e0b1c; }
+  .om-diagnostic .om-top .om-mesh { inset:20px; }
+
+  /* sweep-line scan */
+  .om-diagnostic .om-scan { position:absolute; left:50%; top:12%; width:300px; height:3px; transform:translateX(-50%); z-index:5; pointer-events:none;
+    background:linear-gradient(90deg, transparent, var(--om-scan) 20%, #fff 50%, var(--om-scan) 80%, transparent);
+    box-shadow:0 0 20px 5px color-mix(in oklab,var(--om-scan) 70%,transparent); animation:om-scan-sweep 2.8s ease-in-out infinite alternate; }
+  .om-diagnostic .om-scan::before { content:''; position:absolute; left:0; right:0; top:2px; height:120px; background:linear-gradient(180deg, color-mix(in oklab,var(--om-scan) 14%,transparent), transparent); }
+  .om-diagnostic .om-scan::after { content:''; position:absolute; left:50%; top:-3px; width:8px; height:8px; margin-left:-4px; border-radius:50%; background:#fff; box-shadow:0 0 12px var(--om-scan); }
+  @keyframes om-scan-sweep { 0%{top:12%} 100%{top:76%} }
+
+  /* orbiting drone */
+  .om-diagnostic .om-orbit { position:absolute; left:50%; top:44%; width:0; height:0; transform-style:preserve-3d; transform:translate(-50%,-50%) rotateX(66deg); animation:om-orbit-spin 9s linear infinite; z-index:6; }
+  @keyframes om-orbit-spin { to { transform:translate(-50%,-50%) rotateX(66deg) rotateZ(360deg); } }
+  .om-diagnostic .om-drone-arm { position:absolute; left:0; top:0; transform:translateY(-224px); }
+  .om-diagnostic .om-drone { position:relative; width:68px; height:30px; transform:translate(-50%,-50%) rotateX(-66deg); animation:om-drone-face 9s linear infinite; }
+  @keyframes om-drone-face { to { transform:translate(-50%,-50%) rotateX(-66deg) rotateZ(-360deg); } }
+  .om-diagnostic .om-drone-body { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:42px; height:16px; border-radius:7px;
+    background:linear-gradient(180deg,#31285e,#171331); border:1.5px solid color-mix(in oklab,var(--om-cyan) 65%,transparent); box-shadow:0 0 20px color-mix(in oklab,var(--om-cyan) 55%,transparent), inset 0 1px 0 rgba(255,255,255,.15); }
+  .om-diagnostic .om-drone-eye { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:9px; height:9px; border-radius:50%; background:#fff; box-shadow:0 0 12px var(--om-scan), 0 0 22px var(--om-scan); animation:om-pwr 1.4s ease-in-out infinite; }
+  .om-diagnostic .om-rotor { position:absolute; top:50%; width:22px; height:22px; margin-top:-11px; border-radius:50%; border:1.5px solid color-mix(in oklab,var(--om-cyan) 55%,transparent); box-shadow:0 0 10px color-mix(in oklab,var(--om-cyan) 35%,transparent); }
+  .om-diagnostic .om-rotor::before { content:''; position:absolute; inset:0; border-radius:50%; border-top:2px solid var(--om-cyan); border-bottom:2px solid color-mix(in oklab,var(--om-magenta) 60%,transparent); animation:om-fan-spin .25s linear infinite; }
+  .om-diagnostic .om-rotor.om-l { left:-9px; } .om-diagnostic .om-rotor.om-r { right:-9px; }
+  .om-diagnostic .om-beam { position:absolute; left:50%; top:96%; width:30px; height:226px; transform:translateX(-50%);
+    background:linear-gradient(180deg, color-mix(in oklab,var(--om-scan) 70%,transparent), color-mix(in oklab,var(--om-scan) 18%,transparent) 55%, transparent 90%); clip-path:polygon(40% 0, 60% 0, 100% 100%, 0 100%); filter:blur(.4px); opacity:.85; }
+  .om-diagnostic .om-beam::after { content:''; position:absolute; left:50%; top:0; width:2px; height:100%; transform:translateX(-50%); background:linear-gradient(180deg,#fff,var(--om-scan) 30%,transparent); box-shadow:0 0 8px var(--om-scan); }
+  .om-diagnostic .om-beam::before { content:''; position:absolute; left:50%; bottom:-6px; width:34px; height:14px; transform:translateX(-50%); border-radius:50%; background:radial-gradient(ellipse, color-mix(in oklab,var(--om-scan) 60%,transparent), transparent 70%); }
+
+  /* diagnostic HUD chips */
+  .om-diagnostic .om-diag { position:absolute; z-index:7; font-family:var(--font-mono); padding:8px 11px; border-radius:9px;
+    background:color-mix(in oklab,var(--om-cyan) 8%,rgba(8,6,17,.86)); border:1px solid color-mix(in oklab,var(--om-cyan) 34%,transparent);
+    box-shadow:0 6px 22px rgba(0,0,0,.5); opacity:0; transform:translateY(6px) scale(.96); transition:opacity .4s, transform .4s; backdrop-filter:blur(3px); }
+  .om-diagnostic .om-diag.om-show { opacity:1; transform:translateY(0) scale(1); }
+  .om-diagnostic .om-k { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--om-muted); }
+  .om-diagnostic .om-v { font-size:16px; font-weight:700; margin-top:2px; }
+  .om-diagnostic .om-v small { font-size:.62em; color:var(--om-muted); font-weight:600; margin-left:3px; }
+  .om-diagnostic .om-diag--cpu { left:-6px;  top:70px; }
+  .om-diagnostic .om-diag--dpc { right:-8px; top:120px; }
+  .om-diagnostic .om-diag--gpu { right:6px;  top:300px; }
+  .om-diagnostic .om-diag--pcie { left:-8px; top:360px; }
+  .om-diagnostic .om-diag::after { content:''; position:absolute; width:34px; height:1px; top:50%; }
+  .om-diagnostic .om-diag--cpu::after, .om-diagnostic .om-diag--pcie::after { right:-34px; background:linear-gradient(90deg,var(--om-cyan),transparent); }
+  .om-diagnostic .om-diag--dpc::after, .om-diagnostic .om-diag--gpu::after { left:-34px; background:linear-gradient(270deg,var(--om-cyan),transparent); }
+  .om-diagnostic .om-report { position:absolute; left:50%; bottom:6px; transform:translateX(-50%); z-index:8; white-space:nowrap;
+    font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--om-scan); opacity:0; transition:opacity .5s; }
+  .om-diagnostic .om-report.om-show { opacity:1; }
+  .om-diagnostic .om-report b { color:var(--om-ok); }
+
+  /* ---------- copy ---------- */
+  .om-diagnostic .om-copy { position:relative; z-index:2; }
+  .om-diagnostic .om-eyebrow { display:inline-flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--om-muted); margin-bottom:16px; }
+  .om-diagnostic .om-dot { width:7px; height:7px; border-radius:50%; background:var(--om-cyan); box-shadow:0 0 10px var(--om-cyan); animation:om-pwr 1.8s ease-in-out infinite; }
+  .om-diagnostic .om-stat { display:flex; align-items:baseline; gap:15px; margin-bottom:6px; }
+  .om-diagnostic .om-num { font-family:var(--font-mono); font-weight:700; font-size:clamp(64px,9vw,118px); line-height:.82; letter-spacing:-.02em; background:linear-gradient(120deg,var(--om-cyan),var(--om-magenta)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .om-diagnostic .om-lbl { font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--om-muted); line-height:1.4; }
+  .om-diagnostic .om-h1 { font-size:clamp(32px,4.4vw,54px); font-weight:700; letter-spacing:-.03em; line-height:1.05; margin:10px 0 0; background:linear-gradient(180deg,#fff,#d7c8ff 130%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .om-diagnostic .om-sub { margin-top:18px; font-size:16.5px; line-height:1.55; color:var(--om-text-mid); max-width:32em; }
+  .om-diagnostic .om-cta { margin-top:30px; display:flex; gap:13px; align-items:center; flex-wrap:wrap; }
+  .om-diagnostic .om-btn { text-decoration:none; font-family:var(--font-mono); font-size:14px; font-weight:600; color:#08121a; padding:14px 22px; border-radius:12px;
+    background:linear-gradient(120deg,var(--om-cyan),#3aa0ff 55%,var(--om-magenta)); display:inline-flex; align-items:center; gap:9px;
+    box-shadow:0 8px 30px color-mix(in oklab,var(--om-cyan) 40%,transparent); transition:transform .18s,box-shadow .3s; position:relative; overflow:hidden; isolation:isolate; border:none; }
+  .om-diagnostic .om-btn:hover { transform:translateY(-2px); box-shadow:0 12px 40px color-mix(in oklab,var(--om-cyan) 55%,transparent); }
+  .om-diagnostic .om-btn::after { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); transform:translateX(-120%); transition:transform .5s; }
+  .om-diagnostic .om-btn:hover::after { transform:translateX(120%); }
+  .om-diagnostic .om-btn-ghost { text-decoration:none; font-family:var(--font-mono); font-size:13px; color:var(--om-text-mid); padding:13px 18px; border-radius:12px; background:transparent; border:1px solid var(--om-line); transition:border-color .2s,color .2s; }
+  .om-diagnostic .om-btn-ghost:hover { border-color:color-mix(in oklab,var(--om-cyan) 55%,transparent); color:var(--om-text); }
+  .om-diagnostic .om-specs { margin-top:26px; display:flex; gap:22px; flex-wrap:wrap; }
+  .om-diagnostic .om-sv { font-family:var(--font-mono); font-size:22px; font-weight:700; color:var(--om-text); }
+  .om-diagnostic .om-sk { font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--om-muted); margin-top:2px; }
+
+  @media (max-width:940px) {
+    .om-diagnostic .om-grid { grid-template-columns:1fr; gap:30px; }
+    .om-diagnostic .om-stage { height:500px; width:min(460px,100%); }
+  }
+  /* static "scanned" frame for reduced motion: rig at a 3/4 angle, no spin/drone */
+  @media (prefers-reduced-motion:reduce) {
+    .om-diagnostic .om-rig { animation:none; transform:rotateY(-30deg); }
+    .om-diagnostic .om-fan::before, .om-diagnostic .om-rotor::before, .om-diagnostic .om-rgb,
+    .om-diagnostic .om-power, .om-diagnostic .om-dot, .om-diagnostic .om-drone-eye { animation:none; }
+    .om-diagnostic .om-scan { animation:none; top:44%; }
+    .om-diagnostic .om-orbit { animation:none; opacity:0; }
+  }
+</style>
+
+<script>
+  /* diagnostics reveal as the scan sweeps their level; then the report lands. */
+  (function () {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var stage = document.getElementById('om-stage');
+    if (!stage) return;
+    var diags = Array.prototype.slice.call(stage.querySelectorAll('.om-diag'));
+    var report = document.getElementById('om-report');
+
+    function tick(el) {
+      var to = parseInt(el.getAttribute('data-to'), 10), t0 = null;
+      function step(ts) { if (!t0) t0 = ts; var k = Math.min((ts - t0) / 700, 1);
+        el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    }
+    function reveal() {
+      var H = stage.clientHeight || 540;
+      diags.forEach(function (d) {
+        var p = (d.offsetTop / H) * 100, t = Math.max(220, (p - 4) / 74 * 2600);
+        setTimeout(function () { d.classList.add('om-show'); tick(d.querySelector('.om-cnt')); }, t);
+      });
+      setTimeout(function () { report.classList.add('om-show'); }, 2500);
+    }
+    if (reduced) {
+      diags.forEach(function (d) { d.classList.add('om-show'); var c = d.querySelector('.om-cnt'); c.textContent = c.getAttribute('data-to'); });
+      report.classList.add('om-show');
+      return;
+    }
+    if ('IntersectionObserver' in window) {
+      var ran = false;
+      new IntersectionObserver(function (e, obs) { if (e[0].isIntersecting && !ran) { ran = true; reveal(); obs.disconnect(); } }, { threshold: 0.2 }).observe(stage);
+    } else { reveal(); }
+  })();
+</script>

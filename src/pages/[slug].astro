@@ -19,6 +19,7 @@ import ReconversionCTA from '../components/ReconversionCTA.astro';
 import AimWarmup from '../components/AimWarmup.astro';
 import AdBlockDivide from '../components/AdBlockDivide.astro';
 import DiscordExhibitHero from '../components/DiscordExhibitHero.astro';
+import OMDiagnosticHero from '../components/OMDiagnosticHero.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -506,7 +507,8 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   <!-- Product hero -->
   {isExt && <AdBlockDivide product={product} />}
   {isDM && <DiscordExhibitHero product={product} />}
-  {!isExt && !isDM && (
+  {isOM && <OMDiagnosticHero product={product} />}
+  {!isExt && !isDM && !isOM && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
@@ -792,7 +794,7 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {/* Bespoke-hero products (AdBlock / Discord) replace the standard hero, so the
       receipts trust strip that lived inside it is re-rendered here — the DM FAQ
       points to "the receipts band above", so it must survive the hero swap. */}
-  {(isExt || isDM) && hasReceiptsBand && receiptsConfig[product.slug] && (
+  {(isExt || isDM || isOM) && hasReceiptsBand && receiptsConfig[product.slug] && (
     <div class="mx-auto max-w-7xl px-5 sm:px-8 pt-14">
       <ReceiptsBand
         version={['streammaxxing', 'extensionmaxxing'].includes(product.slug) && product.version
@@ -809,6 +811,22 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
         accentHex={product.accentHex}
       />
     </div>
+  )}
+
+  {/* OM: its demo video lived in the standard hero's right-column aside; the
+      bespoke Diagnostic hero replaced that column, so re-home the video here,
+      just below the hero + receipts band. */}
+  {isOM && product.demoVideo && (
+    <section class="relative">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 pt-10">
+        <ProductScreenshot
+          src={screenshotMain ?? (Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo.poster)}
+          alt={`${product.name} demo`}
+          extras={[]}
+          video={product.demoVideo}
+        />
+      </div>
+    </section>
   )}
 
   {/* Playlistmaxxing-only: music-themed showcase — spinning vinyl record +
