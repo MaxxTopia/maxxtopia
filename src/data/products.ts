@@ -79,6 +79,10 @@ export type Product = {
   icon?: string;
   /** Suite-canon accent for sidebar + per-product highlights. */
   accentHex: string;
+  /** Optional second accent. Where it's set, gradients run accentHex -> accent2Hex
+   *  instead of mixing toward the suite cyan — which is how a product stops looking
+   *  like the suite and starts looking like itself. */
+  accent2Hex?: string;
   /** Hero shot images under /screenshots/<slug>/. */
   screenshots?: string[];
   /** Optional demo video that replaces the static hero shot.
@@ -1260,7 +1264,8 @@ export const products: Product[] = [
     glyph: '♫',
     logo: '/logos/playlistmaxxing.webp',
     icon: '/logos/playlistmaxxing.webp',
-    accentHex: '#7c5cff',
+    accentHex: '#ff2e88',
+    accent2Hex: '#ffb020',
     screenshots: ['/screenshots/playlistmaxxing/hero.webp'],
     heroStat: { value: '3-in-1', label: 'Spotify · SoundCloud · YouTube' },
     zones: [

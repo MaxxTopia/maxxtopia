@@ -322,6 +322,40 @@
   .gradient-view { animation: none; }
 }
 
+/* Neon-vinyl variant — playlistmaxxing's own colorway. The suite gradient is
+   magenta→cyan, which is exactly why the music page used to read as "another
+   suite page" instead of as a record. This one sweeps hot pink → amber, like a
+   neon sign over a turntable, and belongs to no other product. */
+.gradient-music {
+  background: linear-gradient(
+    115deg,
+    #ff2e88 0%,
+    #ff5fa2 22%,
+    #ff8a4c 52%,
+    #ffb020 76%,
+    #ff2e88 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: neon-vinyl 5.5s ease-in-out infinite;
+}
+@keyframes neon-vinyl {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: brightness(1) drop-shadow(0 0 0 rgba(255, 46, 136, 0));
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.14) drop-shadow(0 0 12px rgba(255, 176, 32, 0.34));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gradient-music { animation: none; }
+}
+
 /* Ben 10 Omnitrix colorway — for the streammaxxing "Instant" hero word.
    Punchier + more electric than .gradient-view: a hot alien-green core that
    sweeps lime→green→emerald like an Omnitrix dial charging, wrapped in a thin

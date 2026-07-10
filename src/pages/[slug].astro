@@ -272,6 +272,7 @@ const screenshotExtras = product.screenshots?.slice(1) ?? [];
 const numGradient =
   product.slug === 'viewmaxxing' ? 'gradient-view'
   : product.slug === 'streammaxxing' ? 'gradient-omni'
+  : product.slug === 'playlistmaxxing' ? 'gradient-music'
   : 'gradient-suite';
 const primaryBtnClass = product.slug === 'viewmaxxing' ? 'btn-view' : 'btn-primary';
 
@@ -758,6 +759,7 @@ const breadcrumbSchema = {
   {isPlaylist && (
     <PlaylistShowcase
       accentHex={product.accentHex}
+      accent2Hex={product.accent2Hex}
       logo={product.logo}
       appUrl={product.primaryCta.href}
     />

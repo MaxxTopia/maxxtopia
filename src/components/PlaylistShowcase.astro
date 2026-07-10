@@ -13,12 +13,14 @@ import VinylDisc from './VinylDisc.astro';
 
 interface Props {
   accentHex?: string;
+  accent2Hex?: string;
   logo?: string;
   appUrl?: string;
 }
 
 const {
-  accentHex = '#7c5cff',
+  accentHex = '#ff2e88',
+  accent2Hex = '#ffb020',
   logo = '/logos/playlistmaxxing.webp',
   appUrl = 'https://music.maxxtopia.com',
 } = Astro.props;
@@ -35,13 +37,13 @@ const karaokeLines = [
 const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
 ---
 
-<section class="pls" style={`--accent: ${accentHex};`} aria-labelledby="pls-heading">
+<section class="pls" style={`--accent: ${accentHex}; --accent-2: ${accent2Hex};`} aria-labelledby="pls-heading">
   <div class="pls__inner">
     <header class="pls__header reveal-on-scroll">
       <p class="pls__eyebrow">The turntable</p>
       <h2 id="pls-heading" class="pls__heading">
         <span class="gradient-text">Three platforms.</span>
-        <span class="serif-accent gradient-suite">One spinning page.</span>
+        <span class="serif-accent gradient-music">One spinning page.</span>
       </h2>
       <p class="pls__sub">
         Spotify, SoundCloud and YouTube side by side. Paste a track or a whole
@@ -53,7 +55,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     <div class="pls__stage">
       <!-- Left: the record + a live equalizer accent + platform chips. -->
       <div class="pls__deck reveal-on-scroll">
-        <VinylDisc accentHex={accentHex} logo={logo} />
+        <VinylDisc accentHex={accentHex} accent2Hex={accent2Hex} logo={logo} />
 
         <div class="pls__eq" aria-hidden="true">
           {eqBars.map((h, i) => (
@@ -133,7 +135,8 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     border-top: 1px solid var(--color-line);
     overflow: hidden;
   }
-  /* Faint accent wash top-center to seat the record in its own light. */
+  /* Two washes, not one — pink from above and amber from below-right, so the record
+     sits in coloured light from two sides the way it would under stage lamps. */
   .pls::before {
     content: '';
     position: absolute;
@@ -142,8 +145,20 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     width: 80%;
     height: 60%;
     transform: translateX(-50%);
-    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 22%, transparent), transparent 68%);
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 24%, transparent), transparent 68%);
     filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .pls::after {
+    content: '';
+    position: absolute;
+    bottom: -14%;
+    right: 4%;
+    width: 46%;
+    height: 52%;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 70%);
+    filter: blur(70px);
     pointer-events: none;
     z-index: 0;
   }
@@ -224,7 +239,8 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     height: var(--h);
     min-height: 6px;
     border-radius: 999px 999px 2px 2px;
-    background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 45%, #00d4ff));
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
     transform-origin: bottom;
     animation: pls-eq 1200ms ease-in-out infinite;
     animation-delay: calc(var(--i) * -140ms);
@@ -367,8 +383,8 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     font-weight: 600;
     padding: 11px 20px;
     border-radius: 999px;
-    color: #0a0612;
-    background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #00d4ff));
+    color: #180509;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
     box-shadow: 0 8px 26px color-mix(in srgb, var(--accent) 35%, transparent);
     transition: transform 160ms ease, box-shadow 160ms ease;
   }

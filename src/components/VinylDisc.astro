@@ -13,12 +13,14 @@
  */
 interface Props {
   accentHex?: string;
+  accent2Hex?: string;
   logo?: string;
   spinning?: boolean;
 }
 
 const {
-  accentHex = '#7c5cff',
+  accentHex = '#ff2e88',
+  accent2Hex = '#ffb020',
   logo = '/logos/playlistmaxxing.webp',
   spinning = true,
 } = Astro.props;
@@ -26,7 +28,7 @@ const {
 
 <div
   class:list={['vinyl', { 'is-still': !spinning }]}
-  style={`--accent: ${accentHex};`}
+  style={`--accent: ${accentHex}; --accent-2: ${accent2Hex};`}
   role="img"
   aria-label="Spinning vinyl record"
 >
@@ -71,7 +73,9 @@ const {
     position: absolute;
     inset: -8%;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 46%, color-mix(in srgb, var(--accent) 55%, transparent) 0%, transparent 62%);
+    background:
+      radial-gradient(circle at 50% 46%, color-mix(in srgb, var(--accent) 55%, transparent) 0%, transparent 62%),
+      radial-gradient(circle at 62% 64%, color-mix(in srgb, var(--accent-2) 40%, transparent) 0%, transparent 58%);
     filter: blur(26px);
     opacity: 0.6;
     z-index: 0;
@@ -160,7 +164,7 @@ const {
     place-items: center;
     background:
       radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.28), transparent 55%),
-      linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 55%, #00d4ff) 100%);
+      linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
     box-shadow:
       0 0 0 2px rgba(0, 0, 0, 0.55),
       inset 0 0 18px rgba(0, 0, 0, 0.35);
