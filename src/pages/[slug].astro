@@ -18,6 +18,7 @@ import ReceiptsBand from '../components/ReceiptsBand.astro';
 import ReconversionCTA from '../components/ReconversionCTA.astro';
 import AimWarmup from '../components/AimWarmup.astro';
 import AdBlockDivide from '../components/AdBlockDivide.astro';
+import DiscordExhibitHero from '../components/DiscordExhibitHero.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -504,7 +505,8 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <!-- Product hero -->
   {isExt && <AdBlockDivide product={product} />}
-  {!isExt && (
+  {isDM && <DiscordExhibitHero product={product} />}
+  {!isExt && !isDM && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
@@ -785,6 +787,28 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
       )}
     </div>
   </section>
+  )}
+
+  {/* Bespoke-hero products (AdBlock / Discord) replace the standard hero, so the
+      receipts trust strip that lived inside it is re-rendered here — the DM FAQ
+      points to "the receipts band above", so it must survive the hero swap. */}
+  {(isExt || isDM) && hasReceiptsBand && receiptsConfig[product.slug] && (
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 pt-14">
+      <ReceiptsBand
+        version={['streammaxxing', 'extensionmaxxing'].includes(product.slug) && product.version
+          ? `v${product.version}`
+          : receiptsConfig[product.slug].version}
+        versionDate={receiptsConfig[product.slug].versionDate}
+        repoUrl={product.slug === 'extensionmaxxing'
+          ? product.primaryCta.href
+          : receiptsConfig[product.slug].repoUrl}
+        repoLabel={receiptsConfig[product.slug].repoLabel}
+        linkLabel={receiptsConfig[product.slug].linkLabel}
+        linkSub={receiptsConfig[product.slug].linkSub}
+        stats={receiptsConfig[product.slug].stats}
+        accentHex={product.accentHex}
+      />
+    </div>
   )}
 
   {/* Playlistmaxxing-only: music-themed showcase — spinning vinyl record +

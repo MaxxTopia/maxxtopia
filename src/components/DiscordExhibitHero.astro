@@ -1,0 +1,435 @@
+---
+/**
+ * DiscordExhibitHero — the bespoke hero for Discordmaxxer (/discordmaxxer).
+ *
+ * "EXHIBIT A": the demon-Clyde mark (dm-mark-killshot.png) takes three rounds
+ * LIVE — muzzle flash → tracer → impact flash + shockwave + crack burst +
+ * screen-shake, one per bullet hole — while the RAM meter drains 1,041 → 288 MB
+ * and a round "CASE CLOSED" rubber stamp thuds into the corner. It's the
+ * DiscordKillshot ribbon promoted to the full hero, made kinetic.
+ *
+ * REPLACES the shared product hero for DM only (see [slug].astro:
+ * `{isDM && <DiscordExhibitHero .../>}`, standard hero behind `{!isDM}`). The
+ * receipts band the DM FAQ points to is re-rendered right after this hero.
+ *
+ * The evidence FOLDER randomly renders SLATE (default) or MANILA per visit —
+ * an inline script rolls 50/50. Palette = Discord blurple + violent red on
+ * gunmetal; classes/ids are all `dx-` prefixed + styles scoped under
+ * `.discord-exhibit` (is:global, because impacts/cracks/tracers are created at
+ * runtime and would miss Astro's scoped attribute).
+ *
+ * prefers-reduced-motion → a strong STATIC "shot-up" frame (holes cracked,
+ * RAM at 288, stamp landed) so it still reads as intentional when frozen.
+ */
+import type { Product } from '../data/products';
+
+type Props = { product: Product };
+const { product } = Astro.props;
+const mark = '/logos/dm-mark-killshot.png';
+const primary = product.primaryCta;
+const secondary = product.secondaryCta;
+---
+
+<section class="discord-exhibit" aria-label={`${product.name} hero`}>
+  <div class="dx-hero">
+    <a href="/#apps" class="dx-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All products
+    </a>
+
+    <div class="dx-grid">
+      <!-- LEFT: the crime scene -->
+      <div class="dx-scene" id="dx-scene" title="click to re-run the shots">
+        <div class="dx-folder" id="dx-folder">
+          <span class="dx-folder__tab">Exhibit A</span>
+          <span class="dx-folder__conf">CONFIDENTIAL</span>
+          <div class="dx-photo">
+            <span class="dx-tape dx-tape--tl" aria-hidden="true"></span>
+            <span class="dx-tape dx-tape--br" aria-hidden="true"></span>
+            <div class="dx-photo__img">
+              <img src={mark} alt="" width="512" height="512" loading="eager" decoding="async" />
+              <div class="dx-fx" id="dx-fx"></div>
+              <div class="dx-verdict" id="dx-verdict">
+                <svg viewBox="0 0 132 132" class="dx-rstamp" aria-hidden="true">
+                  <defs><path id="dx-ringpath" d="M66,66 m-49,0 a49,49 0 1,1 98,0 a49,49 0 1,1 -98,0"/></defs>
+                  <circle class="dx-ring dx-ring--outer" cx="66" cy="66" r="59"/>
+                  <circle class="dx-ring dx-ring--inner" cx="66" cy="66" r="47"/>
+                  <text class="dx-ringtext"><textPath href="#dx-ringpath" startOffset="1%">&#183; DISCORDMAXXER FORENSICS &#183; CASE No. DM-753 &#183; </textPath></text>
+                  <text class="dx-ctr dx-ctr--big" x="66" y="61">CASE</text>
+                  <text class="dx-ctr dx-ctr--big" x="66" y="83">CLOSED</text>
+                </svg>
+              </div>
+            </div>
+            <div class="dx-photo__cap"><span>CASE No. DM-753</span><span class="dx-stamp">3 RNDS &middot; CONFIRMED</span></div>
+          </div>
+        </div>
+        <script is:inline>
+          /* roll the folder colour: slate (default) or manila, 50/50 per visit */
+          (function () { var f = document.getElementById('dx-folder'); if (f && Math.random() < 0.5) f.classList.add('dx-folder--manila'); })();
+        </script>
+
+        <div class="dx-ram">
+          <div class="dx-ram__row">
+            <div class="dx-ram__now"><span id="dx-ramNum">1,041</span><span class="dx-ram__u">MB</span><span class="dx-ram__saved" id="dx-ramSaved">&minus;753 MB</span></div>
+            <div class="dx-ram__tag" id="dx-ramTag">stock discord &middot; resident RAM</div>
+          </div>
+          <div class="dx-ram__bar"><div class="dx-ram__fill" id="dx-ramFill"></div></div>
+          <div class="dx-ram__scale"><span>288 MB (ours)</span><span>1,041 MB (stock)</span></div>
+        </div>
+        <button class="dx-rerun" id="dx-rerun" type="button">&#9654; Re-run the shots</button>
+      </div>
+
+      <!-- RIGHT: copy -->
+      <div class="dx-copy">
+        <p class="dx-eyebrow"><span class="dx-dot" aria-hidden="true"></span>Three rounds &middot; one client</p>
+        <h1 class="dx-h1">We put three holes<br>in <span class="dx-strike" id="dx-strike">Discord</span><span class="dx-period">.</span></h1>
+        <p class="dx-sub">Stock Discord weighs 1,041 MB on this machine. Same servers, same friends on the
+          other end &mdash; we just shot out the parts that phone home to Discord, Inc. Three rounds, one client.</p>
+
+        <ul class="dx-rounds" role="list">
+          <li class="dx-round"><span class="dx-round__idx">01</span><span class="dx-round__body"><span class="dx-round__label">Telemetry</span><span class="dx-round__detail">14 &rarr; 0 outbound domains</span></span><span class="dx-round__hole" aria-hidden="true"></span></li>
+          <li class="dx-round"><span class="dx-round__idx">02</span><span class="dx-round__body"><span class="dx-round__label">Bloat</span><span class="dx-round__detail">753 MB removed from RAM</span></span><span class="dx-round__hole" aria-hidden="true"></span></li>
+          <li class="dx-round"><span class="dx-round__idx">03</span><span class="dx-round__body"><span class="dx-round__label">Lag</span><span class="dx-round__detail">0% idle CPU &middot; Tournament Mode</span></span><span class="dx-round__hole" aria-hidden="true"></span></li>
+        </ul>
+
+        <div class="dx-cta-row">
+          <a class="dx-btn" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>
+            {primary.label}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          {secondary && (
+            <a class="dx-btn-ghost" href={secondary.href} target={secondary.external ? '_blank' : undefined} rel={secondary.external ? 'noopener' : undefined}>
+              {secondary.label}
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .discord-exhibit {
+    --dx-bg:#0a0b14; --dx-line:#242848; --dx-text:#eef0ff; --dx-text-mid:#c3c7e6; --dx-muted:#8a8fb8;
+    --dx-blurple:#5865F2; --dx-blurple-bright:#8b95ff; --dx-red:#ff3d8b; --dx-red-deep:#b81e1e; --dx-cream:#efe9dc;
+    position:relative; overflow:hidden; isolation:isolate;
+    background:
+      radial-gradient(90% 70% at 20% 30%, color-mix(in oklab,var(--dx-blurple) 12%,transparent), transparent 60%),
+      radial-gradient(70% 60% at 85% 80%, color-mix(in oklab,var(--dx-red) 8%,transparent), transparent 60%),
+      var(--dx-bg);
+    border-bottom:1px solid var(--dx-line);
+  }
+  .discord-exhibit::before {
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.5; z-index:0;
+    background-image:linear-gradient(color-mix(in oklab,var(--dx-blurple) 8%,transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab,var(--dx-blurple) 8%,transparent) 1px, transparent 1px);
+    background-size:44px 44px; -webkit-mask-image:radial-gradient(120% 100% at 30% 40%, #000, transparent 75%);
+    mask-image:radial-gradient(120% 100% at 30% 40%, #000, transparent 75%);
+  }
+  .discord-exhibit .dx-hero {
+    position:relative; z-index:2; max-width:1200px; margin:0 auto;
+    padding:clamp(80px,9vh,110px) clamp(20px,4vw,40px) clamp(40px,6vh,64px);
+  }
+  .discord-exhibit .dx-back {
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:26px;
+    font-family:var(--font-mono); font-size:12.5px; color:var(--dx-muted); text-decoration:none; transition:color .2s ease;
+  }
+  .discord-exhibit .dx-back:hover { color:var(--dx-text-mid); }
+  .discord-exhibit .dx-grid { display:grid; grid-template-columns:1.05fr 1fr; align-items:center; gap:28px; }
+
+  /* ---- LEFT: crime scene ---- */
+  .discord-exhibit .dx-scene { position:relative; justify-self:center; width:min(505px,100%); }
+  .discord-exhibit .dx-scene.dx-shaking { animation:dx-shake .32s cubic-bezier(.36,.07,.19,.97); }
+  @keyframes dx-shake {
+    10%{transform:translate(-5px,3px)} 25%{transform:translate(6px,-3px)} 40%{transform:translate(-4px,-4px)}
+    55%{transform:translate(5px,4px)} 70%{transform:translate(-3px,2px)} 85%{transform:translate(3px,-2px)} 100%{transform:translate(0,0)}
+  }
+  .discord-exhibit .dx-folder {
+    position:relative; width:100%; padding:16px 18px 20px; border-radius:4px 12px 12px 12px;
+    background:linear-gradient(176deg,#20233a 0%,#191c30 58%,#141627 100%); transform:rotate(-1.6deg);
+    box-shadow:0 28px 64px rgba(0,0,0,.62), inset 0 1px 0 rgba(139,149,255,.14),
+      0 0 0 1px rgba(88,101,242,.16), 0 0 48px color-mix(in oklab,var(--dx-blurple) 20%,transparent);
+  }
+  .discord-exhibit .dx-folder::before {
+    content:''; position:absolute; top:-17px; left:20px; width:154px; height:20px; border-radius:9px 9px 0 0;
+    background:linear-gradient(180deg,#2a2e4a,#23273f); box-shadow:inset 0 1px 0 rgba(139,149,255,.18);
+  }
+  .discord-exhibit .dx-folder__tab {
+    position:absolute; top:-15px; left:34px; z-index:2; font-family:var(--font-mono); font-size:11px;
+    letter-spacing:.18em; text-transform:uppercase; color:#aab0d8; font-weight:700;
+  }
+  .discord-exhibit .dx-folder__conf {
+    position:absolute; top:12px; right:14px; z-index:4; font-family:var(--font-mono); font-size:12.5px;
+    letter-spacing:.18em; font-weight:800; color:#ff5a6e; border:2px solid #ff5a6e;
+    padding:2px 8px; border-radius:3px; transform:rotate(6deg); opacity:.85;
+  }
+  /* MANILA variant (rolled in ~50% of visits) */
+  .discord-exhibit .dx-folder--manila {
+    background:linear-gradient(176deg,#c2a562 0%,#ac8c4c 58%,#977a3f 100%);
+    box-shadow:0 28px 64px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.35),
+      0 0 44px color-mix(in oklab,var(--dx-blurple) 16%,transparent);
+  }
+  .discord-exhibit .dx-folder--manila::before { background:linear-gradient(180deg,#e0c78f,#d3b57f); box-shadow:inset 0 1px 0 rgba(255,255,255,.4); }
+  .discord-exhibit .dx-folder--manila .dx-folder__tab { color:#3a2c12; }
+  .discord-exhibit .dx-folder--manila .dx-folder__conf { color:var(--dx-red-deep); border-color:var(--dx-red-deep); }
+
+  .discord-exhibit .dx-photo {
+    position:relative; background:var(--dx-cream); border-radius:3px; padding:11px 11px 0; transform:rotate(0deg);
+    box-shadow:0 10px 24px rgba(0,0,0,.45), 0 1px 0 rgba(255,255,255,.6) inset;
+  }
+  .discord-exhibit .dx-tape {
+    position:absolute; z-index:6; width:70px; height:22px; background:rgba(234,229,214,.5);
+    box-shadow:0 1px 3px rgba(0,0,0,.28); border-left:1px solid rgba(255,255,255,.25); border-right:1px solid rgba(255,255,255,.25);
+  }
+  .discord-exhibit .dx-tape--tl { top:-9px; left:-12px; transform:rotate(-30deg); }
+  .discord-exhibit .dx-tape--br { bottom:44px; right:-14px; transform:rotate(-30deg); }
+  .discord-exhibit .dx-photo__img { position:relative; }
+  .discord-exhibit .dx-photo__img img { display:block; width:100%; height:auto; border-radius:2px; }
+  /* age the PAPER, not the ink: soft-light warm tint + edge-only vignette */
+  .discord-exhibit .dx-photo__img::before {
+    content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:rgba(196,165,98,.10); mix-blend-mode:soft-light;
+  }
+  .discord-exhibit .dx-photo__img::after {
+    content:''; position:absolute; inset:0; z-index:1; pointer-events:none; border-radius:2px;
+    background:radial-gradient(120% 120% at 50% 45%, transparent 58%, rgba(74,52,26,.20) 88%, rgba(50,34,18,.34) 100%);
+    mix-blend-mode:multiply;
+  }
+  .discord-exhibit .dx-photo__cap {
+    display:flex; justify-content:space-between; align-items:center; padding:10px 4px 12px;
+    font-family:var(--font-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#1f1815;
+  }
+  .discord-exhibit .dx-stamp { color:var(--dx-red-deep); border:1.5px solid var(--dx-red-deep); padding:2px 6px; border-radius:2px; transform:rotate(-3deg); font-weight:700; }
+
+  /* FX overlay */
+  .discord-exhibit .dx-fx { position:absolute; inset:0; pointer-events:none; overflow:visible; z-index:5; }
+  .discord-exhibit .dx-impact { position:absolute; width:16px; height:16px; transform:translate(-50%,-50%); }
+  .discord-exhibit .dx-flash { position:absolute; inset:-40px; border-radius:50%; opacity:0; background:radial-gradient(circle, #fff 0%, var(--dx-red) 30%, transparent 60%); }
+  .discord-exhibit .dx-shock { position:absolute; inset:0; left:50%; top:50%; border-radius:50%; border:2px solid var(--dx-red); transform:translate(-50%,-50%) scale(.2); opacity:0; }
+  .discord-exhibit .dx-impact.dx-go .dx-flash { animation:dx-flash .32s ease-out forwards; }
+  .discord-exhibit .dx-impact.dx-go .dx-shock { animation:dx-shock .5s ease-out forwards; }
+  @keyframes dx-flash { 0%{opacity:0;transform:scale(.4)} 15%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.3)} }
+  @keyframes dx-shock { 0%{opacity:.9;transform:translate(-50%,-50%) scale(.2)} 100%{opacity:0;transform:translate(-50%,-50%) scale(4)} }
+  .discord-exhibit .dx-cracks { position:absolute; transform:translate(-50%,-50%) scale(0); transform-origin:center; }
+  .discord-exhibit .dx-cracks.dx-go { animation:dx-crackpop .4s cubic-bezier(.2,1.3,.4,1) forwards; }
+  @keyframes dx-crackpop { to { transform:translate(-50%,-50%) scale(1); } }
+  .discord-exhibit .dx-cracks line { stroke:#141414; stroke-width:2; stroke-linecap:round; }
+  .discord-exhibit .dx-tracer {
+    position:absolute; height:2px; transform-origin:left center; z-index:6; opacity:0; pointer-events:none;
+    background:linear-gradient(90deg, color-mix(in oklab,var(--dx-red) 90%,#fff), transparent); box-shadow:0 0 8px var(--dx-red);
+  }
+  .discord-exhibit .dx-tracer.dx-go { animation:dx-tracer .12s linear forwards; }
+  @keyframes dx-tracer { 0%{opacity:0} 30%{opacity:1} 100%{opacity:0} }
+  .discord-exhibit .dx-muzzle {
+    position:absolute; width:60px; height:60px; transform:translate(-50%,-50%); z-index:6; opacity:0; pointer-events:none;
+    background:radial-gradient(circle, #fff 0%, #ffd36a 22%, var(--dx-red) 45%, transparent 65%);
+  }
+  .discord-exhibit .dx-muzzle.dx-go { animation:dx-muzzle .16s ease-out forwards; }
+  @keyframes dx-muzzle { 0%{opacity:0;transform:translate(-50%,-50%) scale(.4)} 30%{opacity:1;transform:translate(-50%,-50%) scale(1.1)} 100%{opacity:0;transform:translate(-50%,-50%) scale(.8)} }
+
+  /* RAM meter */
+  .discord-exhibit .dx-ram { margin-top:22px; }
+  .discord-exhibit .dx-ram__row { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px; gap:12px; }
+  .discord-exhibit .dx-ram__now { font-family:var(--font-mono); font-weight:700; font-size:clamp(30px,4vw,42px); letter-spacing:-.02em; color:var(--dx-text); }
+  .discord-exhibit .dx-ram__u { font-size:.5em; color:var(--dx-muted); margin-left:4px; }
+  .discord-exhibit .dx-ram__saved {
+    font-family:var(--font-mono); font-size:13px; font-weight:700; color:var(--dx-blurple-bright); margin-left:12px;
+    padding:3px 9px; border-radius:6px; border:1px solid color-mix(in oklab,var(--dx-blurple) 48%,transparent);
+    background:color-mix(in oklab,var(--dx-blurple) 14%,transparent); box-shadow:0 0 14px color-mix(in oklab,var(--dx-blurple) 30%,transparent);
+    opacity:0; transform:translateY(4px); transition:opacity .3s, transform .3s; white-space:nowrap;
+  }
+  .discord-exhibit .dx-ram__saved.dx-show { opacity:1; transform:translateY(0); }
+  .discord-exhibit .dx-ram__tag { font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dx-muted); text-align:right; }
+  .discord-exhibit .dx-ram__bar { position:relative; height:10px; border-radius:6px; overflow:hidden; background:color-mix(in oklab,var(--dx-red) 22%, #1a1030); border:1px solid var(--dx-line); }
+  .discord-exhibit .dx-ram__fill { position:absolute; inset:0; width:100%; transform-origin:left; border-radius:6px; background:linear-gradient(90deg,var(--dx-blurple),var(--dx-blurple-bright)); transition:transform .45s cubic-bezier(.4,0,.2,1); }
+  .discord-exhibit .dx-ram__scale { display:flex; justify-content:space-between; margin-top:6px; font-family:var(--font-mono); font-size:10px; color:var(--dx-muted); }
+
+  /* round CASE CLOSED stamp */
+  .discord-exhibit .dx-verdict { position:absolute; top:-28px; left:-24px; z-index:8; width:132px; height:132px; opacity:0; pointer-events:none; transform:rotate(-13deg) scale(2.1); }
+  .discord-exhibit .dx-verdict::before { content:''; position:absolute; inset:8px; border-radius:50%; opacity:0; background:radial-gradient(circle, rgba(184,30,30,.4), transparent 66%); }
+  .discord-exhibit .dx-rstamp { width:100%; height:100%; overflow:visible; filter:drop-shadow(0 2px 4px rgba(0,0,0,.4)); opacity:.9; }
+  .discord-exhibit .dx-ring { fill:none; stroke:var(--dx-red-deep); }
+  .discord-exhibit .dx-ring--outer { stroke-width:3; }
+  .discord-exhibit .dx-ring--inner { stroke-width:1.4; }
+  .discord-exhibit .dx-ringtext { fill:var(--dx-red-deep); font-family:var(--font-mono); font-size:8.2px; font-weight:700; letter-spacing:1.5px; }
+  .discord-exhibit .dx-ctr { fill:var(--dx-red-deep); text-anchor:middle; font-family:var(--font-mono); font-weight:800; }
+  .discord-exhibit .dx-ctr--big { font-size:19px; letter-spacing:.3px; }
+  .discord-exhibit .dx-verdict.dx-go { animation:dx-thud .45s cubic-bezier(.2,1.4,.35,1) forwards; }
+  .discord-exhibit .dx-verdict.dx-go::before { animation:dx-inkblot .5s ease-out forwards; }
+  @keyframes dx-thud { 0%{opacity:0;transform:rotate(-13deg) scale(2.1)} 55%{opacity:1;transform:rotate(-13deg) scale(.9)} 78%{transform:rotate(-13deg) scale(1.05)} 100%{opacity:1;transform:rotate(-13deg) scale(1)} }
+  @keyframes dx-inkblot { 0%{opacity:0;transform:scale(.4)} 45%{opacity:1} 100%{opacity:0;transform:scale(1.7)} }
+
+  .discord-exhibit .dx-rerun { margin-top:16px; font-family:var(--font-mono); font-size:11px; color:var(--dx-muted); background:none; border:1px solid var(--dx-line); padding:7px 12px; border-radius:8px; cursor:pointer; transition:border-color .2s,color .2s; }
+  .discord-exhibit .dx-rerun:hover { border-color:color-mix(in oklab,var(--dx-red) 50%,transparent); color:var(--dx-text); }
+
+  /* ---- RIGHT: copy ---- */
+  .discord-exhibit .dx-copy { position:relative; z-index:2; }
+  .discord-exhibit .dx-eyebrow { display:inline-flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dx-muted); margin-bottom:16px; }
+  .discord-exhibit .dx-dot { width:7px; height:7px; border-radius:50%; background:var(--dx-red); box-shadow:0 0 10px var(--dx-red),0 0 22px rgba(255,61,139,.6); animation:dx-pulse 1.8s ease-in-out infinite; }
+  @keyframes dx-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.82)} }
+  .discord-exhibit .dx-h1 { font-size:clamp(34px,4.6vw,58px); font-weight:700; letter-spacing:-.03em; line-height:1.05; color:var(--dx-text); margin:0; }
+  .discord-exhibit .dx-strike { position:relative; }
+  .discord-exhibit .dx-strike::after {
+    content:''; position:absolute; left:-6%; right:-6%; top:52%; height:4px; border-radius:2px;
+    background:linear-gradient(90deg, transparent 0%, var(--dx-red) 10%, #fff 50%, var(--dx-red) 90%, transparent 100%);
+    box-shadow:0 0 10px var(--dx-red), 0 0 22px rgba(255,61,139,.55); transform:scaleX(0); transform-origin:left;
+  }
+  .discord-exhibit .dx-strike.dx-cut::after { animation:dx-cut .42s cubic-bezier(.2,.85,.2,1) forwards; }
+  @keyframes dx-cut { 0%{transform:scaleX(0)} 82%{transform:scaleX(1.04)} 100%{transform:scaleX(1)} }
+  .discord-exhibit .dx-period { color:var(--dx-blurple-bright); transition:color .3s ease; }
+  .discord-exhibit .dx-strike.dx-cut + .dx-period { color:var(--dx-red); transition-delay:.42s; }
+  .discord-exhibit .dx-sub { margin-top:18px; font-size:16.5px; line-height:1.55; color:var(--dx-text-mid); max-width:34em; }
+
+  .discord-exhibit .dx-rounds { list-style:none; margin:24px 0 0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .discord-exhibit .dx-round { position:relative; display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--dx-line); border-radius:12px; background:rgba(255,255,255,.015); opacity:.4; transition:opacity .3s,border-color .3s,background .3s,transform .3s; }
+  .discord-exhibit .dx-round.dx-lit { opacity:1; border-color:color-mix(in oklab,var(--dx-red) 40%,transparent); background:color-mix(in oklab,var(--dx-red) 6%,transparent); transform:translateX(2px); }
+  .discord-exhibit .dx-round__idx { font-family:var(--font-mono); font-size:12px; color:var(--dx-red); flex:none; }
+  .discord-exhibit .dx-round__body { display:flex; flex-direction:column; gap:1px; }
+  .discord-exhibit .dx-round__label { font-size:14.5px; font-weight:600; color:var(--dx-text); }
+  .discord-exhibit .dx-round__detail { font-family:var(--font-mono); font-size:11.5px; color:var(--dx-muted); }
+  .discord-exhibit .dx-round__hole { margin-left:auto; width:12px; height:12px; border-radius:50%; opacity:0; transform:scale(0); background:radial-gradient(circle at 36% 34%, rgba(255,255,255,.14), #000 30%, #000 62%, transparent 100%); box-shadow:inset 0 1px 2px #000, 0 0 6px rgba(0,0,0,.6); }
+  .discord-exhibit .dx-round.dx-lit .dx-round__hole { opacity:1; transform:scale(1); transition:opacity .2s .1s, transform .3s cubic-bezier(.2,1.5,.4,1) .1s; }
+
+  .discord-exhibit .dx-cta-row { margin-top:30px; display:flex; gap:13px; align-items:center; flex-wrap:wrap; }
+  .discord-exhibit .dx-btn { text-decoration:none; font-family:var(--font-mono); font-size:14px; font-weight:600; color:#fff; padding:14px 22px; border-radius:12px; background:linear-gradient(120deg,var(--dx-blurple-bright),var(--dx-blurple) 55%,#3a44c9); display:inline-flex; align-items:center; gap:9px; box-shadow:0 8px 30px color-mix(in oklab,var(--dx-blurple) 45%,transparent); transition:transform .18s,box-shadow .3s; position:relative; overflow:hidden; isolation:isolate; border:none; }
+  .discord-exhibit .dx-btn:hover { transform:translateY(-2px); box-shadow:0 12px 40px color-mix(in oklab,var(--dx-blurple) 60%,transparent); }
+  .discord-exhibit .dx-btn::after { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent); transform:translateX(-120%); transition:transform .5s; }
+  .discord-exhibit .dx-btn:hover::after { transform:translateX(120%); }
+  .discord-exhibit .dx-btn-ghost { text-decoration:none; font-family:var(--font-mono); font-size:13px; color:var(--dx-text-mid); padding:13px 18px; border-radius:12px; background:transparent; border:1px solid var(--dx-line); transition:border-color .2s,color .2s; }
+  .discord-exhibit .dx-btn-ghost:hover { border-color:color-mix(in oklab,var(--dx-blurple) 55%,transparent); color:var(--dx-text); }
+
+  @media (max-width:920px) {
+    .discord-exhibit .dx-grid { grid-template-columns:1fr; gap:40px; }
+    .discord-exhibit .dx-scene { width:min(480px,100%); }
+    .discord-exhibit .dx-hero { padding-top:clamp(80px,10vh,110px); }
+  }
+</style>
+
+<script>
+  /* EXHIBIT A — three rounds land live on the mark; RAM drains; stamp thuds in.
+     Pure DOM, no libraries. Plays once when scrolled into view; re-runs on
+     click / the Re-run button. prefers-reduced-motion → static shot-up frame. */
+  (function () {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var scene = document.getElementById('dx-scene');
+    var fx = document.getElementById('dx-fx');
+    if (!scene || !fx) return;
+    var img = fx.parentElement.querySelector('img');
+    var ramNum = document.getElementById('dx-ramNum');
+    var ramTag = document.getElementById('dx-ramTag');
+    var ramFill = document.getElementById('dx-ramFill');
+    var ramSaved = document.getElementById('dx-ramSaved');
+    var verdict = document.getElementById('dx-verdict');
+    var strike = document.getElementById('dx-strike');
+    var rounds = Array.prototype.slice.call(scene.parentElement.querySelectorAll('.dx-round'));
+
+    var HOLES = [ { x:49, y:39 }, { x:34, y:53 }, { x:63, y:53 } ];
+    var RAM = [1041, 545, 396, 288];
+
+    function crackSVG() {
+      var ns = 'http://www.w3.org/2000/svg';
+      var el = document.createElementNS(ns, 'svg');
+      el.setAttribute('width', '90'); el.setAttribute('height', '90'); el.setAttribute('viewBox', '-45 -45 90 90');
+      el.setAttribute('class', 'dx-cracks');
+      for (var i = 0; i < 8; i++) {
+        var a = (i / 8) * 6.283 + (i * 0.7), r = 24 + (i % 3) * 8;
+        var mx = Math.cos(a) * (r * 0.5), my = Math.sin(a) * (r * 0.5);
+        var ex = Math.cos(a + 0.15) * r, ey = Math.sin(a + 0.15) * r;
+        var ln = document.createElementNS(ns, 'polyline');
+        ln.setAttribute('points', '0,0 ' + mx.toFixed(1) + ',' + my.toFixed(1) + ' ' + ex.toFixed(1) + ',' + ey.toFixed(1));
+        ln.setAttribute('fill', 'none'); el.appendChild(ln);
+      }
+      return el;
+    }
+
+    function tweenRam(from, to) {
+      var t0 = null, dur = 420;
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var k = Math.min((ts - t0) / dur, 1);
+        var v = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)));
+        ramNum.textContent = v.toLocaleString();
+        if (k < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function impactAt(hole, origin) {
+      var hx = hole.x, hy = hole.y;
+      var sRect = scene.getBoundingClientRect(), iRect = img.getBoundingClientRect();
+      var px = (iRect.left - sRect.left) + iRect.width * hx / 100;
+      var py = (iRect.top - sRect.top) + iRect.height * hy / 100;
+      var ox = origin.x, oy = origin.y;
+      var mz = document.createElement('div'); mz.className = 'dx-muzzle';
+      mz.style.left = ox + 'px'; mz.style.top = oy + 'px'; scene.appendChild(mz);
+      void mz.offsetWidth; mz.classList.add('dx-go');
+      var dx = px - ox, dy = py - oy, len = Math.sqrt(dx * dx + dy * dy), ang = Math.atan2(dy, dx) * 180 / Math.PI;
+      var tr = document.createElement('div'); tr.className = 'dx-tracer';
+      tr.style.left = ox + 'px'; tr.style.top = oy + 'px'; tr.style.width = len + 'px'; tr.style.transform = 'rotate(' + ang + 'deg)';
+      scene.appendChild(tr); void tr.offsetWidth; tr.classList.add('dx-go');
+      setTimeout(function () {
+        var im = document.createElement('div'); im.className = 'dx-impact';
+        im.style.left = hx + '%'; im.style.top = hy + '%';
+        im.innerHTML = '<div class="dx-flash"></div><div class="dx-shock"></div>';
+        fx.appendChild(im); void im.offsetWidth; im.classList.add('dx-go');
+        var ck = crackSVG(); ck.style.position = 'absolute'; ck.style.left = hx + '%'; ck.style.top = hy + '%';
+        fx.appendChild(ck); void ck.getBBox; ck.classList.add('dx-go');
+        scene.classList.remove('dx-shaking'); void scene.offsetWidth; scene.classList.add('dx-shaking');
+        setTimeout(function () { mz.remove(); tr.remove(); }, 200);
+      }, 90);
+    }
+
+    var timers = [];
+    function clearAll() {
+      timers.forEach(clearTimeout); timers = [];
+      fx.querySelectorAll('.dx-impact,.dx-cracks').forEach(function (n) { n.remove(); });
+      verdict.classList.remove('dx-go');
+      rounds.forEach(function (r) { r.classList.remove('dx-lit'); });
+      strike.classList.remove('dx-cut');
+    }
+
+    function setRam(i) {
+      var v = RAM[i];
+      ramFill.style.transform = 'scaleX(' + (v / 1041) + ')';
+      ramTag.textContent = i === 3 ? 'discordmaxxer · resident RAM' : 'stock discord · resident RAM';
+      tweenRam(RAM[Math.max(0, i - 1)], v);
+      if (i === 3) ramSaved.classList.add('dx-show');
+    }
+
+    function run() {
+      clearAll();
+      ramNum.textContent = '1,041'; ramFill.style.transform = 'scaleX(1)'; ramSaved.classList.remove('dx-show');
+      var sRect = scene.getBoundingClientRect();
+      var origin = { x: sRect.width * 0.06, y: sRect.height * 0.86 };
+      HOLES.forEach(function (hole, i) {
+        timers.push(setTimeout(function () {
+          impactAt(hole, origin); setRam(i + 1); rounds[i].classList.add('dx-lit');
+          if (i === 2) strike.classList.add('dx-cut');
+        }, 380 + i * 560));
+      });
+      timers.push(setTimeout(function () { verdict.classList.add('dx-go'); }, 380 + 2 * 560 + 280));
+    }
+
+    function finalState() {
+      ramNum.textContent = '288'; ramFill.style.transform = 'scaleX(' + (288 / 1041) + ')';
+      ramTag.textContent = 'discordmaxxer · resident RAM'; ramSaved.classList.add('dx-show');
+      rounds.forEach(function (r) { r.classList.add('dx-lit'); });
+      strike.classList.add('dx-cut'); verdict.classList.add('dx-go');
+      HOLES.forEach(function (hole) {
+        var ck = crackSVG(); ck.style.position = 'absolute'; ck.style.left = hole.x + '%'; ck.style.top = hole.y + '%';
+        ck.classList.add('dx-go'); fx.appendChild(ck);
+      });
+    }
+
+    scene.addEventListener('click', run);
+    var rerun = document.getElementById('dx-rerun');
+    if (rerun) rerun.addEventListener('click', function (e) { e.stopPropagation(); run(); });
+
+    if (reduced) { finalState(); return; }
+    var played = false;
+    function trigger() { if (played) return; played = true; if (img.complete) setTimeout(run, 250); else img.addEventListener('load', function () { setTimeout(run, 250); }); }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (e, obs) { if (e[0].isIntersecting) { trigger(); obs.disconnect(); } }, { threshold: 0.25 }).observe(scene);
+    } else { trigger(); }
+  })();
+</script>
