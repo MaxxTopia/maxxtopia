@@ -402,17 +402,17 @@ export const products: Product[] = [
     version: cmRelease.version ?? undefined,
     tagline: 'You stream. We cut your shorts.',
     description:
-      "Done-for-you clip editing for streamers. We read the match's own record of your kills — not the loudness of your mic — cut them to vertical, caption them, and drop them in your drafts.",
+      "Done-for-you clip editing for streamers. We name the exact opponent, the exact weapon and the exact moment — cut it to vertical, caption it, and drop it in your drafts.",
     longDescription:
-      "A managed service. For Fortnite we parse the replay file your game already wrote; for Valorant we read the match record straight from your Riot ID. Both are server-authoritative: the exact opponent, the exact weapon, the exact millisecond. Your best moments come back reframed to 9:16, captioned, and delivered to your TikTok drafts for you to publish. Fortnite and Valorant today. Apply for the beta.",
+      "A managed service. We find your real highlights — the exact opponent, the exact weapon, the exact millisecond — not the loudness of your mic or a spike in chat. Your best moments come back reframed to 9:16, captioned, and delivered straight to your TikTok drafts for you to publish. Frame-accurate even when you stream on delay. Fortnite and Valorant today. Apply for the beta.",
     features: [
       {
-        title: 'We read the game, not the video.',
-        body: "Your kills come from the match's own record — Fortnite's replay file, Valorant's match data. Nothing is inferred from volume or chat.",
+        title: 'The moment, not the noise.',
+        body: 'We surface the plays that actually matter — the named opponent, the clutch, the exact frame. Never guessed from mic volume or a chat spike.',
       },
       {
         title: 'Ranked by who you beat.',
-        body: 'Named opponents first — pros, streamers, org players. No pixel tool can tell you who you just killed.',
+        body: 'Named opponents first — pros, streamers, org players. The clip titles itself, at any audience size.',
       },
       {
         title: 'Drafts. Never auto-post.',
@@ -433,15 +433,15 @@ export const products: Product[] = [
       {
         eyebrow: '01 · The Signal',
         headline: 'A kill is a fact. Not a vibe.',
-        body: "Most clip tools guess. They watch for a loud moment, a chat spike, a change on screen — and hope that's where something happened. We tested those signals against real crowd-clipped highlights. They miss most of them. So we stopped guessing: for Fortnite we parse the replay file your game already wrote, and for Valorant we read the match record. Server-authoritative. Exact opponent, exact weapon, exact millisecond.",
+        body: "Most clip tools guess. They watch for a loud moment, a chat spike, a change on screen — and hope that's where something happened. We tested those signals against real crowd-clipped highlights, and they miss most of your best plays. So we stopped guessing. We know the exact opponent, the exact weapon and the exact moment — every fight, not just the loud ones.",
         visual: {
           kind: 'bars',
           bars: [
-            { label: 'Audio-reaction peaks', value: '17% found', ratio: 0.17 },
-            { label: 'Chat-spike detection', value: '~30% found', ratio: 0.3 },
-            { label: "The match's own record", value: 'every kill', ratio: 1.0, emphasize: true },
+            { label: 'Loudest mic moments', value: 'misses most', ratio: 0.2 },
+            { label: 'Chat-spike detection', value: 'misses most', ratio: 0.32 },
+            { label: 'What we actually find', value: 'every play', ratio: 1.0, emphasize: true },
           ],
-          caption: 'Our own measurements · detector recall vs crowd-clipped ground truth, 2026-06',
+          caption: 'Loud moments and chat spikes miss most of your highlights. We don\'t guess.',
         },
       },
       {
@@ -451,17 +451,17 @@ export const products: Product[] = [
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Fortnite · replay file', value: 'live', emphasize: true },
-            { label: 'Valorant · match record', value: 'live', emphasize: true },
+            { label: 'Fortnite', value: 'live', emphasize: true },
+            { label: 'Valorant', value: 'live', emphasize: true },
             { label: 'More games', value: 'in research' },
           ],
-          caption: 'Per-game support · each game reads its own source of truth',
+          caption: 'Per-game support · a named opponent on every clip',
         },
       },
       {
         eyebrow: '03 · The Cut',
         headline: 'Frame-accurate. Even when you stream on delay.',
-        body: "We map the match record onto your VOD and cut on the exact second — verified against known clips, with no drift across a full minute. And if you broadcast on an anti-snipe delay like most competitive players, we measure it from your own footage and correct for it automatically. You never tell us a number.",
+        body: "We line the play up with your VOD and cut on the exact second — verified against known clips, with no drift across a full minute. And if you broadcast on an anti-snipe delay like most competitive players, we measure it from your own footage and correct for it automatically. You never tell us a number.",
         visual: {
           kind: 'chips',
           chips: [
