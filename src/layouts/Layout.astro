@@ -216,6 +216,32 @@ const yandexVerify = import.meta.env.PUBLIC_YANDEX_VERIFICATION;
         </script>
       </>
     )}
+    <!-- Kill switch: fail-open per-product maintenance banner. Reads a flag from the
+         maxxtopia-status worker and shows a red banner ONLY if the CURRENT product is
+         flagged. Any error/timeout/empty response = no banner (site fully unaffected).
+         Toggle products at the worker's control panel; nothing here touches site code. -->
+    <script>
+      (function () {
+        try {
+          var seg = (location.pathname.split('/').filter(Boolean)[0] || '').toLowerCase();
+          if (!seg) return;
+          fetch('https://maxxtopia-status.maxxtopia.workers.dev/s.json', { cache: 'no-store' })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+              var m = d && d.m && d.m[seg];
+              if (!m) return;
+              var name = seg.charAt(0).toUpperCase() + seg.slice(1);
+              var bar = document.createElement('div');
+              bar.setAttribute('role', 'status');
+              bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#b3203a;color:#fff;font:600 14px/1.4 system-ui,-apple-system,sans-serif;padding:11px 16px;text-align:center;box-shadow:0 2px 14px rgba(0,0,0,.45)';
+              bar.textContent = (m.msg && String(m.msg).slice(0, 200)) || (name + ' is temporarily under maintenance -- back soon.');
+              document.body.appendChild(bar);
+              document.body.style.paddingTop = (bar.offsetHeight || 44) + 'px';
+            })
+            .catch(function () {});
+        } catch (e) {}
+      })();
+    </script>
   </body>
 </html>
 

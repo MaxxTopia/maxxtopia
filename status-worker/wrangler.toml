@@ -1,0 +1,11 @@
+name = "maxxtopia-status"
+main = "worker.js"
+compatibility_date = "2026-05-10"
+
+# The maintenance/kill-switch flag store. One key, "maint", holds the map of
+# products currently in maintenance mode. Writes happen only when Diggy toggles
+# a product (rare), so this consumes ~nothing of the KV write budget.
+# Create with:  wrangler kv namespace create "SITE_STATUS"
+[[kv_namespaces]]
+binding = "SITE_STATUS"
+id = "99d5797d82814776b2d2bd1ceef006df"
