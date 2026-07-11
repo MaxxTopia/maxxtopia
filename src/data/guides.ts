@@ -17,6 +17,17 @@ export type Guide = {
 
 export const guides: Guide[] = [
   {
+    slug: 'viewmaxxing-on-pc',
+    title: 'How to Run Viewmaxxing on PC Without a TV Box (2026)',
+    description:
+      "No SuperBox or Fire Stick? Run viewmaxxing on Windows with a free Android emulator. Install BlueStacks, sideload the APK, drive it with your arrow keys.",
+    date: '2026-07-11',
+    product: 'viewmaxxing',
+    excerpt:
+      "Don't own an Android TV box? Get the whole app on your PC with a free emulator — install, sideload, and the keyboard drives it.",
+    readMins: 6,
+  },
+  {
     slug: 'reduce-discord-ram-usage',
     title: "How to Reduce Discord's RAM Usage on Windows (2026)",
     description:

@@ -56,7 +56,7 @@ const { heroStat, closingLine, ctaLabel, ctaHref, ctaExternal, faqs, accentHex }
     </div>
 
     <div class="reconvert__faq reveal-on-scroll">
-      <p class="reconvert__faq-tag">Three questions you were going to ask anyway</p>
+      <p class="reconvert__faq-tag">{faqs.length === 3 ? 'Three questions you were going to ask anyway' : 'Questions you were going to ask anyway'}</p>
       <div class="reconvert__faq-list">
         {faqs.map((f) => (
           <details class="reconvert__faq-row">

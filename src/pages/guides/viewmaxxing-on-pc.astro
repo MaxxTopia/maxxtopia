@@ -1,0 +1,149 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+---
+
+<GuideLayout slug="viewmaxxing-on-pc">
+  <div class="tldr">
+    <p class="tldr__label">TL;DR</p>
+    <p>
+      No SuperBox, Fire Stick, or Android TV box? You can still run <strong>viewmaxxing</strong> on a
+      Windows PC. Install a free Android emulator (<strong>BlueStacks</strong> is the easiest), drop in
+      the viewmaxxing APK, and drive it with your keyboard's arrow keys. It's the exact same app the box
+      runs — nothing about it is box-locked. About ten minutes, start to finish.
+    </p>
+  </div>
+
+  <p>
+    Viewmaxxing is a single Android app that folds YouTube, Twitch, movies, TV and anime into one
+    ad-free, remote-first surface. It's built for Android TV boxes, but "built for TV boxes" isn't the
+    same as "only works on TV boxes." It's a normal Android APK, and an emulator is just Android running
+    in a window on your PC. So if you don't own a box — or you just want it on the same screen you play
+    on — here's the honest, no-nonsense way to get it running well.
+  </p>
+
+  <h2>Why this works at all</h2>
+  <p>
+    Three things make viewmaxxing a clean fit for a PC emulator, and they're worth understanding so you
+    know nothing sketchy is going on:
+  </p>
+  <ul>
+    <li><strong>It's a standard APK, not a box-exclusive.</strong> It runs on any Android 8 or newer.
+      BlueStacks and LDPlayer both ship Android 9 or 11, so it installs without a fight.</li>
+    <li><strong>It's built for both a TV launcher and a normal app drawer.</strong> That means the icon
+      actually shows up inside a phone-style emulator — the usual reason TV apps refuse to appear on
+      BlueStacks simply doesn't apply here.</li>
+    <li><strong>It ships every CPU flavor in one file.</strong> The APK includes native code for Intel
+      and AMD chips, so it runs at full speed on your PC instead of crawling through a translation layer.</li>
+  </ul>
+  <p>
+    Put together: it launches, it's fast, and the keyboard drives it. Now the steps.
+  </p>
+
+  <h2>Step 1 — Install an Android emulator</h2>
+  <p>
+    An emulator is a free program that runs Android on your PC, the same way people use one to play
+    mobile games with a keyboard and mouse. Two solid, free picks in 2026:
+  </p>
+  <ul>
+    <li><strong>BlueStacks 5 (recommended).</strong> The most popular one, the most forgiving to set up,
+      and the best at running an app that never came from the Play Store. Start here unless you have a
+      reason not to.</li>
+    <li><strong>LDPlayer 9 (lighter alternative).</strong> Leaner on older or lower-spec PCs. Same
+      drag-and-drop install, slightly smaller footprint.</li>
+  </ul>
+  <p>
+    Download it from the maker's official site, run the installer, and let it finish its first-time
+    setup. You do <em>not</em> need to sign in to a Google account — sideloading works without one. If
+    the installer asks you to enable <strong>virtualization (VT-x / AMD-V)</strong>, say yes; that one
+    toggle is the single biggest difference between "smooth" and "sluggish," and it's usually flipped in
+    your PC's BIOS. On any modern machine (a 4-core CPU, 8&nbsp;GB of RAM) viewmaxxing runs comfortably.
+  </p>
+
+  <h2>Step 2 — Get the viewmaxxing APK</h2>
+  <p>
+    The build lives in the Maxxtopia Discord. Join at <strong>discord.gg/S78eecbWdx</strong>, open the
+    <strong>#free-stuff</strong> channel, and grab the latest posted APK file — it's updated often, and
+    the app keeps itself current with a built-in updater after that. Download the <code>.apk</code>
+    somewhere easy to find, like your Desktop.
+  </p>
+  <blockquote>
+    Only ever sideload an APK you actually trust and downloaded from where you expected. That's true for
+    any app, ours included — grab it from the channel above, not a random re-upload site.
+  </blockquote>
+
+  <h2>Step 3 — Install the APK into the emulator</h2>
+  <p>
+    Both emulators make this a drag-and-drop job:
+  </p>
+  <ul>
+    <li><strong>Easiest:</strong> with the emulator open, drag the <code>.apk</code> file from your
+      Desktop straight onto the emulator window and drop it. It installs, and the viewmaxxing icon
+      appears on the home screen a few seconds later.</li>
+    <li><strong>If drag-and-drop doesn't take:</strong> look for an <strong>Install APK</strong> button
+      in the emulator's side toolbar (BlueStacks tucks it under "System apps"), click it, and pick the
+      file from your PC.</li>
+  </ul>
+  <p>
+    Open viewmaxxing once it's installed. First launch paints the home screen with the tab bar across
+    the top — Home, Anime, Movies, TV, YouTube, Search, Twitch, Library, Settings.
+  </p>
+
+  <h2>Step 4 — The controls (make it feel native)</h2>
+  <p>
+    Viewmaxxing is remote-first, which on a PC is a <em>good</em> thing: it maps perfectly to a keyboard.
+    You don't need to build a custom key layout like you would for a shooter — the defaults already work.
+  </p>
+  <ul>
+    <li><strong>Arrow keys</strong> — move around (this is the box's D-pad).</li>
+    <li><strong>Enter</strong> — select / play / OK.</li>
+    <li><strong>Esc</strong> or <strong>Backspace</strong> — go back.</li>
+    <li><strong>Mouse</strong> — works too. Click a show to open it, click a player button to press it.
+      Handy for the movie and anime players, which use an in-page web player you can just click.</li>
+  </ul>
+  <p>
+    For the most TV-like feel, put the emulator in <strong>full screen</strong> (BlueStacks: F11). The
+    app already forces landscape, so you'll never fight a sideways window.
+  </p>
+
+  <h2>Getting it to run its best</h2>
+  <ul>
+    <li><strong>Enable virtualization.</strong> Repeating it because it matters most. If playback stutters
+      or the UI feels heavy, this is almost always why — turn on VT-x / AMD-V in BIOS.</li>
+    <li><strong>Give it room.</strong> In the emulator's settings, 2-4 CPU cores and 2-4&nbsp;GB of RAM is
+      plenty. You don't need to max it out.</li>
+    <li><strong>Leave the in-app updater on.</strong> Settings keeps the app current on its own, so you
+      only sideload once.</li>
+    <li><strong>Keep "Block ads in player" ON</strong> (it is by default) for ad-free YouTube and Twitch.
+      The one time to flip it off: if a movie or anime stream loads to a white screen — then toggle it and
+      retry.</li>
+  </ul>
+
+  <h2>Troubleshooting</h2>
+  <h3>"Nothing plays"</h3>
+  <p>
+    Almost always the network, not the app. On a PC emulator this is rare, but if streams won't start,
+    first just try another title or hit "Choose server" — most misses are a single dead mirror upstream,
+    not a broken install. If <em>everything</em> fails, your PC's DNS may be filtering the stream hosts;
+    setting your DNS to 1.1.1.1 clears it.
+  </p>
+  <h3>The icon didn't appear after install</h3>
+  <p>
+    Give it a few seconds, then check the emulator's app drawer. Viewmaxxing ships a normal launcher
+    entry, so it will show — if a drag-and-drop install looked like it did nothing, use the
+    <strong>Install APK</strong> button instead.
+  </p>
+  <h3>It feels slow</h3>
+  <p>
+    Virtualization is off, or the emulator is starved for resources. Enable VT-x / AMD-V and give the
+    instance a couple of cores. A real TV box has a tiny CPU; your PC has far more headroom once it's
+    actually using it.
+  </p>
+
+  <h2>The honest note</h2>
+  <p>
+    Viewmaxxing is a personal-grade, sideloaded app — free, no account, watch history stays on the
+    device. An emulator adds a little overhead versus a dedicated box, but any modern PC swallows that
+    without noticing. If you already own an Android TV box, that's still the comfiest couch experience.
+    If you don't, this gets you the whole thing on the screen you already have.
+  </p>
+</GuideLayout>
