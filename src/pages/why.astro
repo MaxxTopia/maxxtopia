@@ -6,11 +6,27 @@ import { liveProducts, products } from '../data/products';
 const liveCount = liveProducts.length;
 const totalCount = products.length;
 
+// Instant-read identity chips under the hero.
+const creds = [
+  { i: '🎮', t: 'Player-built' },
+  { i: '🪶', t: 'Native, no Chromium' },
+  { i: '🆓', t: 'Free to run' },
+  { i: '🔒', t: '0 trackers by default' },
+];
+
 // Named competitors — we have specs, we beat them. Call it out.
 const villains = [
   { name: 'Hone',           stat: '200 MB',  body: 'An Electron wrapper around a settings panel.' },
   { name: 'Paragon',        stat: '81 MB',   body: 'Heavier than the settings it tunes.' },
   { name: 'Stock Discord',  stat: '1,041 MB', body: 'A gig of RAM before you say a word.' },
+];
+
+// The rules — every one is a claim the rest of this page backs up.
+const rules = [
+  { k: 'Native, not Chromium', v: 'Real code — no browser hiding in your task list.' },
+  { k: 'Light on purpose', v: "Small enough you forget it's running. Every MB your game keeps." },
+  { k: 'Off by default', v: 'Zero trackers unless you choose to opt in. Anonymous if you do.' },
+  { k: 'Milliseconds matter', v: 'Built by a player who counts them — for everyone who does too.' },
 ];
 
 // Real numbers we can defend.
@@ -26,36 +42,43 @@ const receipts = [
   title="Why — Built stuff I'd use"
   description="A competitive player got tired of bloated, paywalled tools — so I built the ones I actually wanted. Receipts, rules, and a refusal."
 >
-  <article class="relative">
+  <article class="relative why">
     <Aurora intensity="low" />
     <div class="absolute inset-0 bg-grid opacity-30"></div>
 
     <!-- Hero -->
-    <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-24 pb-20">
-      <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono reveal reveal-1">
-        Why · v0.1
-      </p>
-      <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[80px] font-semibold tracking-[-0.035em] leading-[1.08]">
-        <span class="gradient-text">Built stuff</span> <span class="serif-accent gradient-suite">I'd use.</span>
-      </h1>
-      <p class="reveal reveal-3 mt-7 text-[20px] sm:text-[24px] leading-[1.35] text-[var(--color-text-mid)] max-w-xl">
-        I'm a player first. These are the tools I wanted on my own rig — light, native, free. So I built them.
-      </p>
+    <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-24 pb-14">
+      <div class="why-hero reveal reveal-1">
+        <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
+          Why · v0.1
+        </p>
+        <h1 class="mt-4 text-[44px] sm:text-[80px] font-semibold tracking-[-0.035em] leading-[1.08]">
+          <span class="gradient-text">Built stuff</span> <span class="serif-accent gradient-suite">I'd use.</span>
+        </h1>
+        <p class="mt-7 text-[20px] sm:text-[24px] leading-[1.35] text-[var(--color-text-mid)] max-w-xl">
+          I'm a player first. These are the tools I wanted on my own rig — light, native, free. So I built them.
+        </p>
+        <div class="why-creds">
+          {creds.map((c) => (
+            <span class="why-cred"><span class="why-cred__i">{c.i}</span> {c.t}</span>
+          ))}
+        </div>
+      </div>
     </div>
 
     <!-- Bloat — three named competitors we beat. -->
-    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
+    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-16">
       <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-6">
         ◇ What they ship
       </p>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {villains.map((v, i) => (
-          <div class={`reveal-on-scroll reveal-delay-${i + 1} bg-[var(--color-bg-card)] p-7 sm:p-8`}>
+          <div class={`why-villain reveal-on-scroll reveal-delay-${i + 1}`}>
             <p class="flex items-center gap-2 text-[12px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
               <span class="rounded border border-[var(--color-magenta)] px-1.5 py-0.5 text-[9px] leading-none tracking-[0.12em] text-[var(--color-magenta)]">BLOAT</span>
               {v.name}
             </p>
-            <p class="font-display mt-3 text-[56px] sm:text-[72px] leading-none text-[var(--color-subtle)] line-through decoration-[var(--color-magenta)] decoration-[3px]">
+            <p class="font-display mt-3 text-[52px] sm:text-[68px] leading-none text-[var(--color-subtle)] line-through decoration-[var(--color-magenta)] decoration-[3px]">
               {v.stat}
             </p>
             <p class="mt-4 text-[14.5px] leading-[1.5] text-[var(--color-text-mid)]">
@@ -66,24 +89,38 @@ const receipts = [
       </div>
     </section>
 
-    <!-- The refusal -->
-    <section class="relative mx-auto max-w-3xl px-5 sm:px-8 py-16">
-      <h2 class="reveal-on-scroll text-[40px] sm:text-[60px] font-semibold tracking-[-0.03em] leading-[1.1] text-[var(--color-text)]">
-        We don't ship that. <span class="serif-accent gradient-suite">Period.</span>
-      </h2>
-      <p class="reveal-on-scroll mt-6 text-[18px] sm:text-[20px] leading-[1.4] text-[var(--color-text-mid)] max-w-xl">
-        Native code, no Chromium. Small enough you forget it's running — which is the whole point. Every megabyte we don't take is a megabyte your game keeps. Here's what that buys you. ↓
-      </p>
+    <!-- The refusal + the rules -->
+    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 py-8">
+      <div class="max-w-3xl">
+        <h2 class="reveal-on-scroll text-[40px] sm:text-[60px] font-semibold tracking-[-0.03em] leading-[1.1] text-[var(--color-text)]">
+          We don't ship that. <span class="serif-accent gradient-suite">Period.</span>
+        </h2>
+        <p class="reveal-on-scroll mt-6 text-[18px] sm:text-[20px] leading-[1.4] text-[var(--color-text-mid)] max-w-xl">
+          Native code, no Chromium. Small enough you forget it's running — which is the whole point. Every
+          megabyte we don't take is a megabyte your game keeps. Four rules make that true:
+        </p>
+      </div>
+      <div class="why-rules">
+        {rules.map((r, i) => (
+          <div class={`why-rule reveal-on-scroll reveal-delay-${(i % 4) + 1}`}>
+            <span class="why-rule__n">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <p class="why-rule__k">{r.k}</p>
+              <p class="why-rule__v">{r.v}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
 
     <!-- Receipts -->
-    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
+    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 py-16">
       <p class="reveal-on-scroll text-[11px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono mb-6">
         ✦ Receipts
       </p>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {receipts.map((r, i) => (
-          <div class={`reveal-on-scroll reveal-delay-${(i % 4) + 1} bg-[var(--color-bg-card)] p-6 sm:p-7`}>
+          <div class={`why-receipt reveal-on-scroll reveal-delay-${(i % 4) + 1}`}>
             <p class="text-[11px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
               {r.label}
             </p>
@@ -100,24 +137,100 @@ const receipts = [
 
     <!-- Closing — slogan, CTA. -->
     <section class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-32">
-      <h2 class="reveal-on-scroll text-[36px] sm:text-[52px] font-semibold tracking-[-0.025em] leading-[1.05]">
-        Different tools. <span class="serif-accent gradient-suite">Same energy.</span>
-      </h2>
-      <p class="reveal-on-scroll mt-6 text-[16px] text-[var(--color-text-mid)]">
-        Built by a player who counts milliseconds. For everyone else who does too.
-      </p>
-      <p class="reveal-on-scroll mt-10">
-        <span class="slogan">made by diggy</span>
-      </p>
-
-      <div class="reveal-on-scroll mt-12 pt-10 border-t border-[var(--color-line)]">
-        <a href="/#apps" class="btn-primary">
-          Browse the apps
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14M13 5l7 7-7 7"/>
-          </svg>
-        </a>
+      <div class="why-close reveal-on-scroll">
+        <h2 class="text-[36px] sm:text-[52px] font-semibold tracking-[-0.025em] leading-[1.05]">
+          Different tools. <span class="serif-accent gradient-suite">Same energy.</span>
+        </h2>
+        <p class="mt-6 text-[16px] text-[var(--color-text-mid)]">
+          Built by a player who counts milliseconds. For everyone else who does too.
+        </p>
+        <p class="mt-10">
+          <span class="slogan">made by diggy</span>
+        </p>
+        <div class="mt-12 pt-10 border-t border-[var(--color-line)]">
+          <a href="/#apps" class="btn-primary">
+            Browse the apps
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
   </article>
 </Layout>
+
+<style>
+  /* Hero glow panel */
+  .why-hero {
+    border: 1px solid color-mix(in srgb, var(--color-magenta) 32%, transparent);
+    border-radius: 1.4rem; padding: 2rem 1.8rem 1.9rem;
+    background:
+      radial-gradient(130% 150% at 0% 0%, color-mix(in srgb, var(--color-magenta) 14%, transparent), transparent 60%),
+      radial-gradient(130% 150% at 100% 100%, color-mix(in srgb, var(--color-cyan) 10%, transparent), transparent 60%),
+      #ffffff04;
+  }
+
+  /* Identity chips */
+  .why-creds { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.6rem; }
+  .why-cred {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; color: #ece9f4;
+    background: #ffffff0d; border: 1px solid #ffffff20; border-radius: 999px; padding: 0.36rem 0.8rem;
+  }
+  .why-cred__i { font-size: 0.95rem; }
+
+  /* Villain cards — glow on hover */
+  .why-villain {
+    background: var(--color-bg-card); border: 1px solid var(--color-line);
+    border-radius: 1rem; padding: 1.75rem 1.75rem 1.6rem;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .why-villain:hover {
+    border-color: color-mix(in srgb, var(--color-magenta) 45%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.4), 0 0 0 1px color-mix(in srgb, var(--color-magenta) 20%, transparent);
+  }
+
+  /* The rules — numbered cards */
+  .why-rules {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 0.9rem; margin-top: 2rem;
+  }
+  .why-rule {
+    display: flex; gap: 0.9rem; align-items: flex-start;
+    background: linear-gradient(180deg, #ffffff08, #ffffff03);
+    border: 1px solid var(--color-line); border-left: 3px solid var(--color-magenta);
+    border-radius: 0.9rem; padding: 1.15rem 1.25rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .why-rule:hover { transform: translateY(-2px); border-left-color: var(--color-cyan); }
+  .why-rule__n {
+    flex: 0 0 auto; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700;
+    color: transparent; background: linear-gradient(135deg, var(--color-magenta), var(--color-cyan));
+    -webkit-background-clip: text; background-clip: text; padding-top: 0.15rem;
+  }
+  .why-rule__k { font-size: 1.05rem; font-weight: 700; color: #f3f1f8; margin: 0 0 0.3rem; }
+  .why-rule__v { font-size: 0.94rem; line-height: 1.5; color: #b6b3c4; margin: 0; }
+
+  /* Receipt tiles — glow */
+  .why-receipt {
+    background: var(--color-bg-card); border: 1px solid var(--color-line);
+    border-radius: 1rem; padding: 1.5rem 1.4rem;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .why-receipt:hover {
+    border-color: color-mix(in srgb, var(--color-cyan) 40%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+
+  /* Closing panel */
+  .why-close {
+    border: 1px solid color-mix(in srgb, var(--color-magenta) 26%, transparent);
+    border-radius: 1.4rem; padding: 2rem 1.9rem;
+    background:
+      radial-gradient(120% 160% at 50% 0%, color-mix(in srgb, var(--color-magenta) 12%, transparent), transparent 62%),
+      #ffffff04;
+  }
+</style>
