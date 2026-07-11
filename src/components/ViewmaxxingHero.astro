@@ -1,0 +1,256 @@
+---
+/**
+ * ViewmaxxingHero — bespoke hero for Viewmaxxing (/viewmaxxing).
+ *
+ * "One Remote": a living-room TV self-surfs through the real app's five+ surfaces
+ * — Home, Movies, TV, Anime, YouTube (native/ad-free) and a live Twitch stream
+ * with chat — while a floating remote's D-pad flashes on every hop. Every frame
+ * is a REAL screenshot captured from the app running on the Android-TV emulator
+ * (public/screenshots/viewmaxxing/*.webp), so the TV literally shows the product.
+ *
+ * REPLACES the shared hero for isView (see [slug].astro). Background is a soft
+ * emerald ambient glow (no technical grid). Classes `vm-` prefixed, styles
+ * `<style is:global>` scoped under `.viewmaxxing-tv` so nothing bleeds. The
+ * screenshot cross-fade is treated as core content and keeps cycling; decorative
+ * motion (aurora drift, ken-burns, blink, ripple) is disabled under
+ * prefers-reduced-motion, leaving a strong static Home frame + clean hard cuts.
+ */
+import type { Product } from '../data/products';
+type Props = { product: Product };
+const { product } = Astro.props;
+const primary = product.primaryCta;
+const stat = product.stats ?? [];
+const heroVal = product.heroStat?.value ?? '5';
+const [statTop, statBot] = (product.heroStat?.label ?? 'apps in one · $0 forever').split(' · ');
+
+const shots = [
+  { src: '/screenshots/viewmaxxing/home.webp',   alt: 'Viewmaxxing home screen',        cap: 'Home &middot; <b>picks up where you left off</b>' },
+  { src: '/screenshots/viewmaxxing/movies.webp', alt: 'Viewmaxxing movies catalog',      cap: 'Movies &middot; <b>thousands, one tap</b>' },
+  { src: '/screenshots/viewmaxxing/tv.webp',     alt: 'Viewmaxxing TV catalog',          cap: 'TV shows &middot; <b>continue watching</b>' },
+  { src: '/screenshots/viewmaxxing/anime.webp',  alt: 'Viewmaxxing anime catalog',       cap: 'Anime &middot; <b>sub or dub, real art</b>' },
+  { src: '/screenshots/viewmaxxing/youtube.webp',alt: 'Viewmaxxing ad-free YouTube',     cap: 'YouTube &middot; <b>native, zero ads</b>' },
+  { src: '/screenshots/viewmaxxing/twitch.webp', alt: 'Viewmaxxing live Twitch with chat',cap: 'Twitch &middot; <b>live, with chat, zero ads</b>' },
+  { src: '/screenshots/viewmaxxing/snowfall-search.webp', alt: 'Viewmaxxing search results', cap: 'One search &middot; <b>every app at once</b>' },
+];
+---
+
+<section class="viewmaxxing-tv" aria-label={`${product.name} hero`}>
+  <div class="vm-hero">
+    <a href="/#apps" class="vm-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All products
+    </a>
+
+    <div class="vm-grid">
+      <!-- LEFT: the TV, running the real app -->
+      <div class="vm-stage" id="vm-stage">
+        <div class="vm-room" aria-hidden="true"></div>
+
+        <div class="vm-tv">
+          <div class="vm-bezel">
+            <div class="vm-screen">
+              {shots.map((s, i) => (
+                <img class:list={["vm-shot", { on: i === 0 }]} data-shot data-cap={s.cap}
+                  src={s.src} alt={s.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              ))}
+              <div class="vm-glare" aria-hidden="true"></div>
+              <div class="vm-cap" id="vm-cap" aria-hidden="true"><i></i><span set:html={shots[0].cap}></span></div>
+            </div>
+          </div>
+          <div class="vm-stand" aria-hidden="true"></div>
+          <div class="vm-foot" aria-hidden="true"></div>
+        </div>
+
+        <!-- the one remote -->
+        <div class="vm-remote" aria-hidden="true">
+          <div class="vm-pwr"></div>
+          <div class="vm-dpad">
+            <div class="ring"></div>
+            <div class="vm-ripple" id="vm-ripple"></div>
+            <span class="vm-arrow up"><svg viewBox="0 0 24 24"><path d="M12 4l7 8H5z"/></svg></span>
+            <span class="vm-arrow down"><svg viewBox="0 0 24 24"><path d="M12 4l7 8H5z"/></svg></span>
+            <span class="vm-arrow left" id="vm-al"><svg viewBox="0 0 24 24"><path d="M12 4l7 8H5z"/></svg></span>
+            <span class="vm-arrow right" id="vm-ar"><svg viewBox="0 0 24 24"><path d="M12 4l7 8H5z"/></svg></span>
+            <div class="vm-ok"></div>
+          </div>
+          <div class="vm-btns"><span></span><span></span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: copy -->
+      <div class="vm-copy">
+        <p class="vm-eyebrow"><span class="vm-edot" aria-hidden="true"></span>Five surfaces &middot; one remote</p>
+        <div class="vm-num"><b>{heroVal}</b><small>{statTop}<br>{statBot}</small></div>
+        <h1 class="vm-h1">One app.<br>Every mood.</h1>
+        <p class="vm-sub">YouTube (native, ad-free), movies, shows, anime and Twitch &mdash; all on one
+          remote-first home that runs local on your box and learns what you watch. No account, no
+          subscription, no monthly bill.</p>
+        <div class="vm-cta">
+          <a class="vm-btn" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>
+            {primary.label}
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        {stat.length > 0 && (
+          <div class="vm-specs">
+            {stat.slice(0, 3).map((s) => (
+              <div class="vm-spec"><div class="sv">{s.value}</div><div class="sk">{s.label}</div></div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .viewmaxxing-tv{
+    --em:#10b981; --em2:#34e6a8; --em3:#0b7a5b;
+    --vm-bg:#080611; --vm-line:#221a3d; --vm-text:#f3fbf7; --vm-mid:#c7d8d0; --vm-muted:#7f9a8e;
+    position:relative; overflow:hidden; isolation:isolate; border-bottom:1px solid var(--vm-line);
+    background:
+      radial-gradient(62% 80% at 16% 24%, color-mix(in oklab,var(--em) 15%,transparent), transparent 62%),
+      radial-gradient(55% 76% at 88% 78%, color-mix(in oklab,var(--em3) 22%,transparent), transparent 66%),
+      radial-gradient(46% 60% at 60% 106%, color-mix(in oklab,var(--em2) 9%,transparent), transparent 60%),
+      var(--vm-bg);
+  }
+  /* soft drifting aurora sheen (replaces the grid) */
+  .viewmaxxing-tv::before{ content:''; position:absolute; inset:-12%; z-index:0; pointer-events:none; opacity:.75;
+    background:
+      radial-gradient(36% 40% at 26% 34%, color-mix(in oklab,var(--em) 24%,transparent), transparent 70%),
+      radial-gradient(32% 38% at 80% 66%, color-mix(in oklab,var(--em3) 30%,transparent), transparent 72%);
+    filter:blur(46px); animation:vm-aurora 22s ease-in-out infinite alternate; }
+  @keyframes vm-aurora{ 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(1.5%,-3%,0) scale(1.06)} }
+  /* gentle vignette to seat the TV */
+  .viewmaxxing-tv::after{ content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(118% 92% at 50% 40%, transparent 58%, rgba(3,2,9,.5)); }
+
+  .viewmaxxing-tv .vm-hero{ position:relative; z-index:2; max-width:1200px; margin:0 auto; padding:clamp(84px,10vh,120px) clamp(20px,4vw,40px) clamp(44px,7vh,72px); }
+  .viewmaxxing-tv .vm-back{ display:inline-flex; align-items:center; gap:6px; margin-bottom:22px; font-family:var(--font-mono); font-size:12.5px; color:var(--vm-muted); text-decoration:none; transition:color .2s; }
+  .viewmaxxing-tv .vm-back:hover{ color:var(--vm-mid); }
+  .viewmaxxing-tv .vm-grid{ display:grid; grid-template-columns:1.12fr 1fr; align-items:center; gap:26px; }
+
+  /* ---------- STAGE: the TV ---------- */
+  .viewmaxxing-tv .vm-stage{ position:relative; justify-self:center; width:min(560px,100%); height:560px; }
+  .viewmaxxing-tv .vm-room{ position:absolute; left:50%; bottom:34px; width:132%; height:220px; transform:translateX(-50%);
+    background:radial-gradient(60% 100% at 50% 0%, color-mix(in oklab,var(--em) 20%,transparent), transparent 70%); filter:blur(6px); opacity:.7; }
+  .viewmaxxing-tv .vm-tv{ position:absolute; left:50%; top:36px; transform:translateX(-50%); width:min(494px,100%); }
+  .viewmaxxing-tv .vm-bezel{ position:relative; border-radius:20px; padding:13px; background:linear-gradient(160deg,#17132b,#0b0817);
+    border:1px solid #2a2350; box-shadow:0 40px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.02) inset, 0 0 60px color-mix(in oklab,var(--em) 16%,transparent); }
+  .viewmaxxing-tv .vm-screen{ position:relative; aspect-ratio:16/9; border-radius:11px; overflow:hidden; background:#05040c; box-shadow:0 0 0 1px rgba(255,255,255,.05) inset; }
+  .viewmaxxing-tv .vm-shot{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center;
+    opacity:0; transform:scale(1.04); transition:opacity .7s ease, transform 3.2s ease; z-index:1; }
+  .viewmaxxing-tv .vm-shot.on{ opacity:1; transform:scale(1); z-index:2; }
+  .viewmaxxing-tv .vm-glare{ position:absolute; inset:0; z-index:3; pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,255,255,.10), transparent 34%), radial-gradient(120% 80% at 50% -10%, rgba(255,255,255,.06), transparent 55%); }
+  .viewmaxxing-tv .vm-glare::after{ content:''; position:absolute; inset:0; opacity:.14; background:repeating-linear-gradient(0deg, rgba(0,0,0,.5) 0 1px, transparent 1px 3px); }
+  .viewmaxxing-tv .vm-cap{ position:absolute; left:10px; bottom:10px; z-index:4; display:inline-flex; align-items:center; gap:7px;
+    font-family:var(--font-mono); font-size:10px; letter-spacing:.03em; color:var(--vm-text); padding:5px 10px; border-radius:999px;
+    background:rgba(5,4,12,.72); border:1px solid color-mix(in oklab,var(--em) 40%,transparent); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    box-shadow:0 6px 18px rgba(0,0,0,.4); max-width:calc(100% - 20px); transition:opacity .4s ease; }
+  .viewmaxxing-tv .vm-cap b{ color:var(--em2); font-weight:700; }
+  .viewmaxxing-tv .vm-cap i{ width:6px; height:6px; border-radius:50%; background:var(--em); box-shadow:0 0 8px var(--em); flex:none; font-style:normal; }
+  .viewmaxxing-tv .vm-stand{ position:absolute; left:50%; top:calc(36px + 100%); transform:translateX(-50%); width:120px; height:20px; margin-top:-2px;
+    background:linear-gradient(180deg,#1a1533,#0c0a1c); border:1px solid #2a2350; border-radius:0 0 6px 6px; }
+  .viewmaxxing-tv .vm-foot{ position:absolute; left:50%; top:calc(36px + 100% + 16px); transform:translateX(-50%); width:210px; height:8px;
+    background:linear-gradient(180deg,#151030,#0a0818); border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,.5); }
+
+  /* ---------- REMOTE ---------- */
+  .viewmaxxing-tv .vm-remote{ position:absolute; right:-6px; bottom:22px; width:78px; height:186px; z-index:8; border-radius:40px;
+    background:linear-gradient(160deg,#1a1636,#0c0a1e); border:1px solid #2c2452; box-shadow:0 24px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.03) inset;
+    transform:rotate(9deg); padding:14px 0; }
+  .viewmaxxing-tv .vm-pwr{ width:9px; height:9px; border-radius:50%; margin:0 auto 12px; background:var(--em); box-shadow:0 0 10px var(--em); animation:vm-blink 2.4s ease-in-out infinite; }
+  @keyframes vm-blink{ 0%,100%{opacity:1} 50%{opacity:.3} }
+  .viewmaxxing-tv .vm-dpad{ position:relative; width:56px; height:56px; margin:0 auto; }
+  .viewmaxxing-tv .vm-dpad .ring{ position:absolute; inset:0; border-radius:50%; border:1px solid #ffffff14; background:#0a0818; }
+  .viewmaxxing-tv .vm-ok{ position:absolute; inset:18px; border-radius:50%; background:linear-gradient(160deg,#241d47,#140f2c); border:1px solid #ffffff18; }
+  .viewmaxxing-tv .vm-arrow{ position:absolute; width:10px; height:10px; color:#5a5378; transition:color .25s, filter .25s; }
+  .viewmaxxing-tv .vm-arrow svg{ width:100%; height:100%; fill:currentColor; }
+  .viewmaxxing-tv .vm-arrow.up{ top:3px; left:50%; transform:translateX(-50%); }
+  .viewmaxxing-tv .vm-arrow.down{ bottom:3px; left:50%; transform:translateX(-50%) rotate(180deg); }
+  .viewmaxxing-tv .vm-arrow.left{ left:3px; top:50%; transform:translateY(-50%) rotate(-90deg); }
+  .viewmaxxing-tv .vm-arrow.right{ right:3px; top:50%; transform:translateY(-50%) rotate(90deg); }
+  .viewmaxxing-tv .vm-arrow.flash{ color:var(--em2); filter:drop-shadow(0 0 6px var(--em)); }
+  .viewmaxxing-tv .vm-btns{ display:flex; justify-content:center; gap:8px; margin-top:16px; }
+  .viewmaxxing-tv .vm-btns span{ width:16px; height:16px; border-radius:5px; background:#0a0818; border:1px solid #ffffff12; }
+  .viewmaxxing-tv .vm-ripple{ position:absolute; inset:0; margin:auto; width:56px; height:56px; border-radius:50%; pointer-events:none; border:2px solid var(--em2); opacity:0; }
+  .viewmaxxing-tv .vm-ripple.go{ animation:vm-ripple .6s ease-out; }
+  @keyframes vm-ripple{ 0%{opacity:.7; transform:scale(.6)} 100%{opacity:0; transform:scale(1.5)} }
+
+  /* ---------- COPY ---------- */
+  .viewmaxxing-tv .vm-copy{ position:relative; z-index:2; }
+  .viewmaxxing-tv .vm-eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--vm-muted); margin-bottom:16px; }
+  .viewmaxxing-tv .vm-edot{ width:7px; height:7px; border-radius:50%; background:var(--em); box-shadow:0 0 10px var(--em); animation:vm-blink 2s ease-in-out infinite; }
+  .viewmaxxing-tv .vm-num{ display:flex; align-items:baseline; gap:16px; margin-bottom:6px; }
+  .viewmaxxing-tv .vm-num b{ font-weight:800; font-size:clamp(70px,10vw,128px); line-height:.8; letter-spacing:-.02em;
+    background:linear-gradient(150deg,var(--em2),var(--em) 55%,var(--em3)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .viewmaxxing-tv .vm-num small{ font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--vm-muted); line-height:1.4; }
+  .viewmaxxing-tv .vm-h1{ font-size:clamp(34px,4.6vw,58px); font-weight:800; letter-spacing:-.03em; line-height:1.03; margin:8px 0 0;
+    background:linear-gradient(180deg,#fff,#bff0dc 150%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .viewmaxxing-tv .vm-sub{ margin-top:18px; font-size:16.5px; line-height:1.55; color:var(--vm-mid); max-width:33em; }
+  .viewmaxxing-tv .vm-cta{ margin-top:30px; display:flex; gap:13px; align-items:center; flex-wrap:wrap; }
+  .viewmaxxing-tv .vm-btn{ text-decoration:none; font-family:var(--font-mono); font-size:14px; font-weight:700; color:#04140d; padding:14px 22px; border-radius:12px;
+    background:linear-gradient(120deg,var(--em2),var(--em) 60%,var(--em3)); display:inline-flex; align-items:center; gap:9px;
+    box-shadow:0 8px 30px color-mix(in oklab,var(--em) 40%,transparent); transition:transform .18s, box-shadow .3s; border:none; }
+  .viewmaxxing-tv .vm-btn:hover{ transform:translateY(-2px); box-shadow:0 12px 40px color-mix(in oklab,var(--em) 55%,transparent); }
+  .viewmaxxing-tv .vm-btn svg{ width:14px; height:14px; fill:none; stroke:#04140d; stroke-width:2.5; }
+  .viewmaxxing-tv .vm-specs{ margin-top:26px; display:flex; gap:22px; flex-wrap:wrap; }
+  .viewmaxxing-tv .vm-spec .sv{ font-family:var(--font-mono); font-size:22px; font-weight:700; color:var(--vm-text); }
+  .viewmaxxing-tv .vm-spec .sk{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--vm-muted); margin-top:2px; }
+
+  @media (max-width:940px){
+    .viewmaxxing-tv .vm-grid{ grid-template-columns:1fr; gap:34px; }
+    .viewmaxxing-tv .vm-stage{ height:520px; width:min(500px,100%); }
+  }
+  @media (max-width:520px){
+    .viewmaxxing-tv .vm-remote{ right:2px; bottom:14px; width:66px; height:158px; transform:rotate(9deg) scale(.92); }
+    .viewmaxxing-tv .vm-cap{ font-size:9px; }
+  }
+  /* Respect reduced motion: keep the surface cross-fade (core content) but as
+     instant hard cuts, and kill decorative motion — leaving a clean static frame. */
+  @media (prefers-reduced-motion:reduce){
+    .viewmaxxing-tv::before{ animation:none; }
+    .viewmaxxing-tv .vm-shot{ transition:opacity .001s linear; transform:none; }
+    .viewmaxxing-tv .vm-shot.on{ transform:none; }
+    .viewmaxxing-tv .vm-pwr, .viewmaxxing-tv .vm-edot{ animation:none; }
+    .viewmaxxing-tv .vm-ripple.go{ animation:none; }
+  }
+</style>
+
+<script>
+  (function () {
+    var stage = document.getElementById('vm-stage');
+    if (!stage) return;
+    var shots = Array.prototype.slice.call(stage.querySelectorAll('[data-shot]'));
+    if (shots.length < 2) return;
+    var capEl = document.getElementById('vm-cap');
+    var capText = capEl ? capEl.querySelector('span') : null;
+    var ar = document.getElementById('vm-ar');
+    var al = document.getElementById('vm-al');
+    var ripple = document.getElementById('vm-ripple');
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var i = 0;
+
+    function show(n) {
+      shots[i].classList.remove('on');
+      i = n;
+      shots[i].classList.add('on');
+      if (capEl && capText) {
+        capEl.style.opacity = '0';
+        setTimeout(function () { capText.innerHTML = shots[i].getAttribute('data-cap') || ''; capEl.style.opacity = '1'; }, reduced ? 0 : 260);
+      }
+      if (!reduced) {
+        if (ar) { ar.classList.add('flash'); setTimeout(function () { ar.classList.remove('flash'); }, 260); }
+        if (ripple) { ripple.classList.remove('go'); void ripple.offsetWidth; ripple.classList.add('go'); }
+      }
+    }
+    var timer = setInterval(function () { show((i + 1) % shots.length); }, 2800);
+    // pause when the hero scrolls out of view (cheap, avoids needless work)
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (e) {
+        if (e[0].isIntersecting) { if (!timer) timer = setInterval(function () { show((i + 1) % shots.length); }, 2800); }
+        else { clearInterval(timer); timer = null; }
+      }, { threshold: 0.05 }).observe(stage);
+    }
+  })();
+</script>

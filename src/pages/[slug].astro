@@ -20,6 +20,7 @@ import AimWarmup from '../components/AimWarmup.astro';
 import AdBlockDivide from '../components/AdBlockDivide.astro';
 import DiscordExhibitHero from '../components/DiscordExhibitHero.astro';
 import OMDiagnosticHero from '../components/OMDiagnosticHero.astro';
+import ViewmaxxingHero from '../components/ViewmaxxingHero.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -315,6 +316,10 @@ const isDrop = product.slug === 'dropmaxxer';
 // Playlistmaxxing gets a bespoke music-themed showcase (spinning vinyl +
 // the 3-platform / mini-player / karaoke story) after the hero.
 const isPlaylist = product.slug === 'playlistmaxxing';
+// Viewmaxxing gets a bespoke "One Remote" hero — a living-room TV that self-surfs
+// through the real app's surfaces (Home/Movies/TV/Anime/YouTube/Twitch/Search),
+// each a real captured screenshot. Replaces the shared hero.
+const isView = product.slug === 'viewmaxxing';
 
 // Products that pull their hero media UP into the right column, filling the
 // empty space beside the giant hero number/tagline instead of the full-width
@@ -512,7 +517,8 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {isExt && <AdBlockDivide product={product} />}
   {isDM && <DiscordExhibitHero product={product} />}
   {isOM && <OMDiagnosticHero product={product} />}
-  {!isExt && !isDM && !isOM && (
+  {isView && <ViewmaxxingHero product={product} />}
+  {!isExt && !isDM && !isOM && !isView && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
