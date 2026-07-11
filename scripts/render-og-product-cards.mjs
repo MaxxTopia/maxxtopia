@@ -44,6 +44,7 @@ const PRODUCTS = [
   { slug: 'extensionmaxxing',    name: 'AdBlock-Maxxer',      category: 'Browser Extension', status: 'live', tagline: "The ad blocker they couldn't ban.", accent: '#00d4ff', stat: '0 ads · every browser' },
   { slug: 'streammaxxing',       name: 'Streammaxxing',       category: 'Stream Alerts',    status: 'live', tagline: 'Alerts that fire the instant it happens.', accent: '#22d3a0', stat: 'instant · fired on your PC' },
   { slug: 'snipemaxxer',         name: 'Snipemaxxer',         category: 'Fortnite',         status: 'beta', tagline: "Know who's in your lobby.",        accent: '#ff3b3b', stat: 'the whole lobby · named' },
+  { slug: 'playlistmaxxing',     name: 'Playlistmaxxing',     category: 'Music',            status: 'live', tagline: 'Every platform. One playlist.',    accent: '#ff2e88', stat: '3-in-1 · Spotify · SoundCloud · YouTube' },
 ];
 
 const STATUS_LABEL = { live: 'LIVE', beta: 'BETA', soon: 'COMING SOON', dev: 'IN DEV', waitlist: 'WAITLIST' };

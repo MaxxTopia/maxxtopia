@@ -33,7 +33,7 @@ export const GET: APIRoute = () => {
       <guid isPermaLink="false">${guid}</guid>
       <pubDate>${date}</pubDate>
       <category>${esc(entry.product)}</category>
-      <description>${esc(entry.body)}</description>
+      <description>${esc(entry.body ?? '')}</description>
     </item>`;
     })
     .join('\n');
@@ -42,7 +42,7 @@ export const GET: APIRoute = () => {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maxxtopia — Updates</title>
-    <link>${SITE}/updates</link>
+    <link>${SITE}/updates/</link>
     <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />
     <description>Native gaming utilities for the players who count frame times. Every release, one feed.</description>
     <language>en-us</language>
