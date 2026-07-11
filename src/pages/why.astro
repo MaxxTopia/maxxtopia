@@ -48,21 +48,19 @@ const receipts = [
 
     <!-- Hero -->
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-24 pb-14">
-      <div class="why-hero reveal reveal-1">
-        <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
-          Why · v0.1
-        </p>
-        <h1 class="mt-4 text-[44px] sm:text-[80px] font-semibold tracking-[-0.035em] leading-[1.08]">
-          <span class="gradient-text">Built stuff</span> <span class="serif-accent gradient-suite">I'd use.</span>
-        </h1>
-        <p class="mt-7 text-[20px] sm:text-[24px] leading-[1.35] text-[var(--color-text-mid)] max-w-xl">
-          I'm a player first. These are the tools I wanted on my own rig — light, native, free. So I built them.
-        </p>
-        <div class="why-creds">
-          {creds.map((c) => (
-            <span class="why-cred"><span class="why-cred__i">{c.i}</span> {c.t}</span>
-          ))}
-        </div>
+      <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono reveal reveal-1">
+        Why · v0.1
+      </p>
+      <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[80px] font-semibold tracking-[-0.035em] leading-[1.08]">
+        <span class="gradient-text">Built stuff</span> <span class="serif-accent gradient-suite">I'd use.</span>
+      </h1>
+      <p class="reveal reveal-3 mt-7 text-[20px] sm:text-[24px] leading-[1.35] text-[var(--color-text-mid)] max-w-xl">
+        I'm a player first. These are the tools I wanted on my own rig — light, native, free. So I built them.
+      </p>
+      <div class="why-creds reveal reveal-4">
+        {creds.map((c) => (
+          <span class="why-cred"><span class="why-cred__i">{c.i}</span> {c.t}</span>
+        ))}
       </div>
     </div>
 
@@ -74,16 +72,12 @@ const receipts = [
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {villains.map((v, i) => (
           <div class={`why-villain reveal-on-scroll reveal-delay-${i + 1}`}>
-            <p class="flex items-center gap-2 text-[12px] uppercase tracking-[0.1em] text-[var(--color-subtle)] font-mono">
-              <span class="rounded border border-[var(--color-magenta)] px-1.5 py-0.5 text-[9px] leading-none tracking-[0.12em] text-[var(--color-magenta)]">BLOAT</span>
-              {v.name}
+            <p class="why-villain__head">
+              <span class="why-villain__badge">BLOAT</span>
+              <span class="why-villain__name">{v.name}</span>
             </p>
-            <p class="font-display mt-3 text-[52px] sm:text-[68px] leading-none text-[var(--color-subtle)] line-through decoration-[var(--color-magenta)] decoration-[3px]">
-              {v.stat}
-            </p>
-            <p class="mt-4 text-[14.5px] leading-[1.5] text-[var(--color-text-mid)]">
-              {v.body}
-            </p>
+            <p class="font-display why-villain__stat">{v.stat}</p>
+            <p class="why-villain__body">{v.body}</p>
           </div>
         ))}
       </div>
@@ -161,16 +155,6 @@ const receipts = [
 </Layout>
 
 <style>
-  /* Hero glow panel */
-  .why-hero {
-    border: 1px solid color-mix(in srgb, var(--color-magenta) 32%, transparent);
-    border-radius: 1.4rem; padding: 2rem 1.8rem 1.9rem;
-    background:
-      radial-gradient(130% 150% at 0% 0%, color-mix(in srgb, var(--color-magenta) 14%, transparent), transparent 60%),
-      radial-gradient(130% 150% at 100% 100%, color-mix(in srgb, var(--color-cyan) 10%, transparent), transparent 60%),
-      #ffffff04;
-  }
-
   /* Identity chips */
   .why-creds { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.6rem; }
   .why-cred {
@@ -180,17 +164,37 @@ const receipts = [
   }
   .why-cred__i { font-size: 0.95rem; }
 
-  /* Villain cards — glow on hover */
+  /* Villain cards — "bloat = bad" danger treatment */
   .why-villain {
-    background: var(--color-bg-card); border: 1px solid var(--color-line);
-    border-radius: 1rem; padding: 1.75rem 1.75rem 1.6rem;
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, color-mix(in srgb, #ff5c6a 7%, var(--color-bg-card)), var(--color-bg-card));
+    border: 1px solid color-mix(in srgb, #ff5c6a 22%, transparent);
+    border-radius: 1rem; padding: 1.65rem 1.7rem 1.55rem;
     transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   }
-  .why-villain:hover {
-    border-color: color-mix(in srgb, var(--color-magenta) 45%, transparent);
-    transform: translateY(-3px);
-    box-shadow: 0 18px 44px rgba(0,0,0,0.4), 0 0 0 1px color-mix(in srgb, var(--color-magenta) 20%, transparent);
+  .why-villain::before {
+    content: ''; position: absolute; left: 0; top: 0; height: 3px; width: 100%;
+    background: linear-gradient(90deg, #ff5c6a, transparent 80%);
   }
+  .why-villain:hover {
+    border-color: color-mix(in srgb, #ff5c6a 48%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.45), 0 0 40px color-mix(in srgb, #ff5c6a 12%, transparent);
+  }
+  .why-villain__head { display: flex; align-items: center; gap: 0.55rem; margin: 0; }
+  .why-villain__badge {
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.14em; font-weight: 700;
+    color: #0a0612; background: #ff6b6b; border-radius: 0.3rem; padding: 0.2rem 0.42rem; line-height: 1;
+  }
+  .why-villain__name {
+    font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: #cbaab0;
+  }
+  .why-villain__stat {
+    margin: 1.05rem 0 0; font-size: clamp(2.9rem, 7vw, 4.1rem); line-height: 0.92; font-weight: 800;
+    color: #8f838a;
+    text-decoration: line-through; text-decoration-color: #ff5c6a; text-decoration-thickness: 3px;
+  }
+  .why-villain__body { margin: 0.9rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--color-text-mid); }
 
   /* The rules — numbered cards */
   .why-rules {
