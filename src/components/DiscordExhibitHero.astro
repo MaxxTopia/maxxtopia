@@ -34,9 +34,10 @@ const secondary = product.secondaryCta;
 <section class="discord-exhibit" aria-label={`${product.name} hero`}>
   <Starfield accent="#8b95ff" />
   <div class="dx-aurora" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span></div>
-  <!-- background gunfire: muzzle-flash blooms pop across the backdrop, synced to the shots -->
+  <!-- the backdrop cracks with a lightning strike as each round hits the mark -->
   <div class="dx-warzone" id="dx-warzone" aria-hidden="true">
-    <div class="dx-flashbg" id="dx-flashbg"></div>
+    <div class="dx-lightning" id="dx-lightning"></div>
+    <svg class="dx-bolt" id="dx-bolt" viewBox="0 0 120 300" preserveAspectRatio="xMidYMin meet" aria-hidden="true"><path d="M60 0 L42 98 L70 106 L40 210 L58 300 M70 106 L94 170"/></svg>
   </div>
   <div class="dx-hero">
     <a href="/#apps" class="dx-back">
@@ -139,20 +140,22 @@ const secondary = product.secondaryCta;
     content:''; position:absolute; inset:0; pointer-events:none; z-index:1;
     background:radial-gradient(120% 95% at 50% 40%, transparent 56%, rgba(5,6,16,.5));
   }
-  /* ---------- BACKGROUND GUNFIRE: muzzle-flash blooms + a room-lighting flash ---------- */
+  /* ---------- LIGHTNING: the backdrop cracks with a strike as each round hits ---------- */
   .discord-exhibit .dx-warzone { position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
-  /* the whole backdrop briefly lights when a round lands */
-  .discord-exhibit .dx-flashbg { position:absolute; inset:0; opacity:0; mix-blend-mode:screen;
+  .discord-exhibit .dx-lightning { position:absolute; inset:0; opacity:0; mix-blend-mode:screen;
     background:
-      radial-gradient(48% 58% at 12% 86%, rgba(255,255,255,.5), rgba(255,80,120,.32) 34%, color-mix(in oklab,var(--dx-blurple) 40%,transparent) 60%, transparent 78%),
-      radial-gradient(120% 100% at 50% 58%, color-mix(in oklab,var(--dx-blurple) 12%,transparent), transparent 62%); }
-  .discord-exhibit .dx-flashbg.fire { animation:dx-roomflash .3s ease-out; }
-  @keyframes dx-roomflash { 0%{opacity:0} 9%{opacity:1} 24%{opacity:.32} 34%{opacity:.66} 100%{opacity:0} }
-  /* each shot = a bright muzzle-flash bloom that pops + fades fast, anywhere on the backdrop */
-  .discord-exhibit .dx-bloom { position:absolute; width:120px; height:120px; transform:translate(-50%,-50%) scale(.3); opacity:0; mix-blend-mode:screen; pointer-events:none; will-change:transform,opacity;
-    background:radial-gradient(circle, rgba(255,255,255,.96) 0%, rgba(255,86,120,.6) 24%, color-mix(in oklab,var(--dx-blurple) 55%,transparent) 50%, transparent 72%); }
-  .discord-exhibit .dx-bloom.go { animation:dx-bloom .22s ease-out forwards; }
-  @keyframes dx-bloom { 0%{opacity:0;transform:translate(-50%,-50%) scale(.3)} 20%{opacity:1;transform:translate(-50%,-50%) scale(1)} 45%{opacity:.5;transform:translate(-50%,-50%) scale(1.18)} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.34)} }
+      radial-gradient(72% 64% at 50% -8%, rgba(224,236,255,.92), rgba(139,149,255,.5) 32%, transparent 68%),
+      radial-gradient(120% 100% at 50% 40%, color-mix(in oklab,var(--dx-blurple) 26%,transparent), transparent 64%),
+      rgba(206,220,255,.12); }
+  .discord-exhibit .dx-lightning.strike { animation:dx-lightning .5s ease-out; }
+  /* real lightning flickers — bright, quick dim, bright again, gone */
+  @keyframes dx-lightning { 0%{opacity:0} 4%{opacity:1} 11%{opacity:.22} 16%{opacity:.92} 24%{opacity:.1} 32%{opacity:.55} 44%{opacity:.06} 100%{opacity:0} }
+  /* jagged bolt that stabs down toward the mark, repositioned per strike */
+  .discord-exhibit .dx-bolt { position:absolute; top:-3%; left:50%; height:70%; width:auto; transform:translateX(-50%); opacity:0;
+    filter:drop-shadow(0 0 5px rgba(210,226,255,.95)) drop-shadow(0 0 16px var(--dx-blurple)); }
+  .discord-exhibit .dx-bolt path { fill:none; stroke:#eef3ff; stroke-width:2.4; stroke-linejoin:round; stroke-linecap:round; }
+  .discord-exhibit .dx-bolt.go { animation:dx-boltflash .42s ease-out; }
+  @keyframes dx-boltflash { 0%{opacity:0} 6%{opacity:1} 16%{opacity:.14} 24%{opacity:.85} 38%{opacity:.1} 100%{opacity:0} }
 
   .discord-exhibit .dx-hero {
     position:relative; z-index:2; max-width:1200px; margin:0 auto;
@@ -351,30 +354,17 @@ const secondary = product.secondaryCta;
     var strike = document.getElementById('dx-strike');
     var rounds = Array.prototype.slice.call(scene.parentElement.querySelectorAll('.dx-round'));
     var warzone = document.getElementById('dx-warzone');
-    var flashbg = document.getElementById('dx-flashbg');
+    var lightning = document.getElementById('dx-lightning');
+    var bolt = document.getElementById('dx-bolt');
     var flashT = [];
-    // pop a muzzle-flash bloom on the backdrop, auto-removed after it fades
-    function spawnBloom(xPct, yPct, size) {
-      if (!warzone) return;
-      var b = document.createElement('div');
-      b.className = 'dx-bloom';
-      b.style.left = xPct + '%'; b.style.top = yPct + '%';
-      b.style.width = size + 'px'; b.style.height = size + 'px';
-      warzone.appendChild(b);
-      void b.offsetWidth; b.classList.add('go');
-      flashT.push(setTimeout(function () { b.remove(); }, 300));
-    }
-    // strong = a landed round (big flash from the shooter's corner + a room-lighting wash);
-    // faint = distant gunfire flashing anywhere on the backdrop
-    function bgFire(strong) {
-      if (strong) {
-        if (flashbg) { flashbg.classList.remove('fire'); void flashbg.offsetWidth; flashbg.classList.add('fire'); flashT.push(setTimeout(function () { flashbg.classList.remove('fire'); }, 360)); }
-        spawnBloom(11, 86, 300);
-        spawnBloom(11 + Math.random() * 6, 80 + Math.random() * 8, 150);
-      } else {
-        // muzzle flicker from the SAME corner the rounds fire from (not scattered —
-        // stray flashes in empty space read as missing shots)
-        spawnBloom(3 + Math.random() * 20, 74 + Math.random() * 20, 44 + Math.random() * 60);
+    // the backdrop cracks with a lightning strike as a round lands on the mark
+    function lightningStrike() {
+      if (lightning) { lightning.classList.remove('strike'); void lightning.offsetWidth; lightning.classList.add('strike'); flashT.push(setTimeout(function () { lightning.classList.remove('strike'); }, 520)); }
+      if (bolt) {
+        bolt.style.left = (34 + Math.random() * 32) + '%';
+        bolt.style.transform = 'translateX(-50%) scaleX(' + (Math.random() < 0.5 ? -1 : 1) + ')';
+        bolt.classList.remove('go'); void bolt.offsetWidth; bolt.classList.add('go');
+        flashT.push(setTimeout(function () { bolt.classList.remove('go'); }, 440));
       }
     }
 
@@ -423,6 +413,7 @@ const secondary = product.secondaryCta;
       tr.style.left = ox + 'px'; tr.style.top = oy + 'px'; tr.style.width = len + 'px'; tr.style.transform = 'rotate(' + ang + 'deg)';
       scene.appendChild(tr); void tr.offsetWidth; tr.classList.add('dx-go');
       setTimeout(function () {
+        lightningStrike();
         var im = document.createElement('div'); im.className = 'dx-impact';
         im.style.left = hx + '%'; im.style.top = hy + '%';
         im.innerHTML = '<div class="dx-flash"></div><div class="dx-shock"></div>';
@@ -438,8 +429,8 @@ const secondary = product.secondaryCta;
     function clearAll() {
       timers.forEach(clearTimeout); timers = [];
       flashT.forEach(clearTimeout); flashT = [];
-      if (flashbg) flashbg.classList.remove('fire');
-      if (warzone) warzone.querySelectorAll('.dx-bloom').forEach(function (n) { n.remove(); });
+      if (lightning) lightning.classList.remove('strike');
+      if (bolt) bolt.classList.remove('go');
       fx.querySelectorAll('.dx-impact,.dx-cracks').forEach(function (n) { n.remove(); });
       verdict.classList.remove('dx-go');
       rounds.forEach(function (r) { r.classList.remove('dx-lit'); });
@@ -459,13 +450,8 @@ const secondary = product.secondaryCta;
       ramNum.textContent = '1,041'; ramFill.style.transform = 'scaleX(1)'; ramSaved.classList.remove('dx-show');
       var sRect = scene.getBoundingClientRect();
       var origin = { x: sRect.width * 0.06, y: sRect.height * 0.86 };
-      // muzzle flicker from the shooter's corner between the three landed rounds
-      [180, 470, 760, 1150, 1520].forEach(function (ms) {
-        timers.push(setTimeout(function () { bgFire(false); }, ms));
-      });
       HOLES.forEach(function (hole, i) {
         timers.push(setTimeout(function () {
-          bgFire(true);
           impactAt(hole, origin); setRam(i + 1); rounds[i].classList.add('dx-lit');
           if (i === 2) strike.classList.add('dx-cut');
         }, 380 + i * 560));
