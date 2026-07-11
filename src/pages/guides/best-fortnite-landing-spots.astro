@@ -3,61 +3,84 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 ---
 
 <GuideLayout slug="best-fortnite-landing-spots">
-  <div class="tldr">
-    <p class="tldr__label">TL;DR</p>
+  <div class="gx-guide">
+    <div class="gx-hero">
+      <p class="gx-hero__kicker">Win the drop, not just the loot</p>
+      <p class="gx-hero__line">
+        Don't just drop where the loot is — drop somewhere you can <strong>rotate out of</strong>, land the
+        <strong>high ground</strong> inside it, and cut your glider so you touch down <strong>first</strong>.
+      </p>
+      <div class="gx-glance">
+        <span class="gx-chip"><span class="gx-chip__i">🗺</span> Rotate-friendly spot</span>
+        <span class="gx-chip"><span class="gx-chip__i">⛰</span> Land high</span>
+        <span class="gx-chip"><span class="gx-chip__i">🪂</span> Cut = land first</span>
+      </div>
+    </div>
+
+    <p class="gx-intro">
+      Picking where to drop is half of every Fortnite match — and most guides stop at "go where the loot
+      is." The other half is <strong>getting there first</strong>, which comes down to timing and bus
+      geometry. Here's how to nail both.
+    </p>
+
+    <h2>🎯 Choosing the spot: 3 trade-offs</h2>
+    <div class="gx-steps">
+      <div class="gx-step">
+        <div class="gx-step__num">1</div>
+        <div class="gx-step__body">
+          <h3>Loot vs. fights</h3>
+          <p>Named POIs have the best loot — and the most enemies. Drop one and you either win the early
+            fight or die with nothing. Warming up or playing for placement? A quieter landmark on the edge of
+            a POI gets you geared without the coin-flip.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">2</div>
+        <div class="gx-step__body">
+          <h3>Think rotation, not just loot</h3>
+          <p>A great spot you can't leave is a trap. Check where the early circles usually pull and whether
+            you've got a clean way out — high ground, a vehicle, or a low-traffic path. Landing on the wrong
+            side of the map quietly costs you the mid-game.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">3</div>
+        <div class="gx-step__body">
+          <h3>Land high, then drop down</h3>
+          <p>Inside a POI, grab the highest building or hill first. Height = first weapon, first shots, and
+            the option to back off if it goes bad. Roll-land so you keep full HP.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>🪂 Getting there first: the part nobody calculates</h2>
     <p>
-      Don't just drop where the loot is — drop somewhere you can <strong>rotate out of</strong>. Land
-      the <strong>high ground</strong> inside that spot. Then actually win the drop by cutting your
-      glider at the right point so you land <strong>first</strong>. (Dropmaxxer does the cut math for
-      you.)
+      Whoever lands first wins the fight before it starts. In the current glider-cut meta, that comes down
+      to exactly where you jump and where you cut the glider — not holding forward and hoping. The physics
+      are fixed:
+    </p>
+    <div class="gx-specs">
+      <div class="gx-spec"><div class="gx-spec__v">~75 m/s</div><div class="gx-spec__l">Bus speed</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">832 m</div><div class="gx-spec__l">Bus altitude</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">100 m</div><div class="gx-spec__l">Glider auto-deploys</div></div>
+    </div>
+    <p>
+      The fastest line: <strong>cut the glider</strong>, nosedive, and only glide at the very end. The cut
+      point sits somewhere between the bus and your target — never right on top of either. Eyeballing it is
+      guesswork, and being half a second late loses the fight.
+    </p>
+
+    <div class="gx-callout">
+      <p class="gx-callout__tag">🧮 That's the whole reason we built Dropmaxxer</p>
+      <p>
+        Pick any POI and it hands you the fastest cut-and-dive line, the safe glide line, both ETAs, and the
+        exact spot to cut — from cited physics, not vibes.
+      </p>
+    </div>
+
+    <p class="gx-outro">
+      <strong>The play:</strong> pick a spot you can rotate out of, land the high ground inside it, and cut
+      your glider at the right point so you're the one holding a gun when the fight starts.
     </p>
   </div>
-
-  <p>
-    Picking where to drop is half of every Fortnite match — and most guides stop at "go where the
-    loot is." The other half is <strong>getting there first</strong>, which comes down to timing and
-    bus geometry. Here's how to nail both.
-  </p>
-
-  <h2>Choosing the spot: 3 trade-offs</h2>
-  <h3>Loot vs. fights</h3>
-  <p>
-    Named POIs have the best loot — and the most enemies. Drop one and you either win the early fight
-    or die with nothing. If you're warming up or playing for placement, a quieter landmark on the
-    edge of a POI gets you geared without the coin-flip.
-  </p>
-  <h3>Think rotation, not just loot</h3>
-  <p>
-    A great spot you can't leave is a trap. Check where the early circles usually pull and whether
-    you've got a clean way out — high ground, a vehicle, or a low-traffic path. Landing on the wrong
-    side of the map quietly costs you the mid-game.
-  </p>
-  <h3>Land high, then drop down</h3>
-  <p>
-    Inside a POI, grab the highest building or hill first. Height = first weapon, first shots, and the
-    option to back off if it goes bad. Roll-land so you keep full HP.
-  </p>
-
-  <h2>Getting there first: the part nobody calculates</h2>
-  <p>
-    Whoever lands first wins the fight before it starts. In the current glider-cut meta, that comes
-    down to exactly where you jump and where you cut the glider — not holding forward and hoping. The
-    physics are fixed:
-  </p>
-  <ul>
-    <li>The bus flies at <strong>~75 m/s</strong>, at <strong>832 m</strong> altitude.</li>
-    <li>Free-fall is fast. Your glider auto-deploys at <strong>100 m</strong> above ground.</li>
-    <li>The fastest line: <strong>cut the glider</strong>, nosedive, and only glide at the very end. The cut point sits somewhere between the bus and your target — never right on top of either.</li>
-  </ul>
-  <p>
-    Eyeballing that cut point is guesswork, and being half a second late loses the fight. That's the
-    whole reason we built <strong>Dropmaxxer</strong>: pick any POI and it hands you the fastest
-    cut-and-dive line, the safe glide line, both ETAs, and the exact spot to cut — from cited physics,
-    not vibes.
-  </p>
-
-  <blockquote>
-    Pick a spot you can rotate out of, land the high ground inside it, and cut your glider at
-    the right point so you're the one holding a gun when the fight starts.
-  </blockquote>
 </GuideLayout>

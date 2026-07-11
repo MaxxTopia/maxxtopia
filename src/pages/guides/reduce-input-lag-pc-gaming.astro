@@ -3,68 +3,79 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 ---
 
 <GuideLayout slug="reduce-input-lag-pc-gaming">
-  <div class="tldr">
-    <p class="tldr__label">TL;DR</p>
-    <p>
-      Input lag is a chain, not one setting. Fix the <strong>big three</strong> first: turn
-      <strong>Reflex on</strong>, turn <strong>V-Sync off</strong> and cap your FPS just under your
-      refresh rate, and make sure Windows is actually running your monitor at its
-      <strong>real refresh rate</strong>. That's ~90% of the lag, handled.
+  <div class="gx-guide">
+    <div class="gx-hero">
+      <p class="gx-hero__kicker">It's a chain, not one setting</p>
+      <p class="gx-hero__line">
+        Fix the <strong>big three</strong> first: <strong>Reflex on</strong>, <strong>V-Sync off</strong>
+        with FPS capped just under your refresh, and Windows actually running your monitor at its
+        <strong>real refresh rate</strong>. That's ~90% of the lag, handled.
+      </p>
+      <div class="gx-glance">
+        <span class="gx-chip"><span class="gx-chip__i">🎯</span> Reflex on</span>
+        <span class="gx-chip"><span class="gx-chip__i">🚫</span> V-Sync off + cap</span>
+        <span class="gx-chip"><span class="gx-chip__i">🖥</span> Real refresh rate</span>
+      </div>
+    </div>
+
+    <p class="gx-intro">
+      Input lag isn't one setting — it's a chain, from the moment you move your mouse to the moment a new
+      frame hits your eye. Every link adds milliseconds. Most guides throw 20 tweaks at you with no sense of
+      which ones matter. Here they are, ranked by how much they actually move the needle.
+    </p>
+
+    <h2>🥇 The big three (do these first)</h2>
+    <div class="gx-steps">
+      <div class="gx-step">
+        <div class="gx-step__num">1</div>
+        <div class="gx-step__body">
+          <h3>Turn on Reflex / GPU low-latency mode</h3>
+          <p>If your game has NVIDIA Reflex (or the AMD/Intel version), turn it on. It stops the GPU from
+            queuing frames ahead of your inputs — the single biggest, easiest latency win there is, bigger
+            than any registry tweak.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">2</div>
+        <div class="gx-step__body">
+          <h3>V-Sync off, cap FPS just under your refresh</h3>
+          <p>V-Sync adds a full frame (or more) of latency — turn it off. To avoid tearing without it, cap
+            your framerate a few FPS below your refresh (e.g. <strong>141 on a 144 Hz</strong> panel) so the
+            GPU never fully maxes out. Reflex on + V-Sync off + capped FPS is the competitive standard.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">3</div>
+        <div class="gx-step__body">
+          <h3>Actually run your monitor at its real refresh rate</h3>
+          <p>Sounds obvious, but Windows quietly defaults plenty of 144/240 Hz monitors back to 60 Hz. Check
+            <strong>Display Settings → Advanced display.</strong> Going 60 → 240 Hz alone removes more felt
+            lag than every micro-tweak combined.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>✅ The small stuff (real, but minor)</h2>
+    <ul class="gx-checks">
+      <li><strong>Mouse polling rate</strong> — 1000 Hz is plenty. Chasing 4000/8000 Hz can cost more CPU than the latency it saves.</li>
+      <li><strong>Frame pacing / stutter</strong> — steady frametimes feel lower-latency than a high-but-spiky average. Smoothing your 1% lows beats chasing peak FPS.</li>
+      <li><strong>Background load</strong> — a maxed-out CPU delays your inputs. Close the real hogs (not "every background app").</li>
+      <li><strong>Wired peripherals + a good USB port</strong> — wireless is fine these days, but a flaky port or hub adds jitter.</li>
+    </ul>
+
+    <h2>🚫 What doesn't help (skip it)</h2>
+    <ul class="gx-nope">
+      <li><strong>Random "input lag" registry packs</strong> — mostly do nothing measurable.</li>
+      <li><strong>Sketchy mouse "acceleration fix" <code>.reg</code> files</strong> — often just break things.</li>
+      <li><strong>Disabling services wholesale</strong> — no measurable latency win, plenty of collateral.</li>
+    </ul>
+    <p>If a fix can't tell you <em>which</em> millisecond it removes, be skeptical.</p>
+
+    <p class="gx-outro">
+      <strong>The 90% rule:</strong> Reflex on, V-Sync off, FPS capped under your real refresh rate — get
+      those three right and you've fixed most input lag before touching anything advanced. The fiddly
+      last 10% (DPC latency, frame pacing, power-plan behavior) is what Optimizationmaxxing is for: it probes
+      your actual latency, applies only documented changes, and snapshots each so you can roll back.
     </p>
   </div>
-
-  <p>
-    Input lag isn't one setting — it's a chain, from the moment you move your mouse to the moment a
-    new frame hits your eye. Every link adds milliseconds. Most "reduce input lag" guides throw 20
-    tweaks at you with no sense of which ones matter. Here they are, ranked by how much they actually
-    move the needle.
-  </p>
-
-  <h2>The big three (do these first)</h2>
-  <h3>1. Turn on Reflex / GPU low-latency mode</h3>
-  <p>
-    If your game has NVIDIA Reflex (or the AMD/Intel version), turn it on. It stops the GPU from
-    queuing up frames ahead of your inputs. This is the single biggest, easiest latency win there is —
-    bigger than any registry tweak.
-  </p>
-  <h3>2. Turn off V-Sync, cap FPS just under your refresh</h3>
-  <p>
-    V-Sync adds a full frame (or more) of latency — turn it off. To avoid screen tearing without it,
-    cap your framerate a few FPS below your monitor's refresh rate (e.g. <strong>141 on a 144 Hz</strong>
-    panel) so the GPU never fully maxes out. Reflex on + V-Sync off + capped FPS is the competitive
-    standard.
-  </p>
-  <h3>3. Actually run your monitor at its real refresh rate</h3>
-  <p>
-    Sounds obvious, but Windows quietly defaults plenty of 144/240 Hz monitors back to 60 Hz. Check
-    <strong>Display Settings → Advanced display.</strong> Going from 60 → 240 Hz alone removes more
-    felt lag than every micro-tweak combined.
-  </p>
-
-  <h2>The small stuff (real, but minor)</h2>
-  <ul>
-    <li><strong>Mouse polling rate</strong> — 1000 Hz is plenty. Chasing 4000/8000 Hz can cost more CPU than the latency it saves.</li>
-    <li><strong>Frame pacing / stutter</strong> — steady frametimes feel lower-latency than a high-but-spiky average. Smoothing your 1% lows beats chasing peak FPS.</li>
-    <li><strong>Background load</strong> — a maxed-out CPU delays your inputs. Close the real hogs (not "every background app").</li>
-    <li><strong>Wired peripherals + a good USB port</strong> — wireless is fine these days, but a flaky port or hub adds jitter.</li>
-  </ul>
-
-  <h2>What doesn't help (skip it)</h2>
-  <p>
-    Random "input lag" registry packs, sketchy mouse "acceleration fix" <code>.reg</code> files, and
-    disabling services wholesale — these mostly do nothing measurable and sometimes break things. If a
-    fix can't tell you <em>which</em> millisecond it removes, be skeptical.
-  </p>
-
-  <blockquote>
-    Reflex on, V-Sync off, FPS capped under your real refresh rate. Get those three right and
-    you've fixed 90% of input lag before touching anything advanced.
-  </blockquote>
-
-  <p>
-    The advanced 10% — DPC latency, frame pacing, power-plan behavior — is measurable but
-    fiddly, which is what <strong>Optimizationmaxxing</strong> is for: it probes your actual
-    latency, applies only documented changes, and snapshots every one so you can roll back if a
-    tweak doesn't help on your rig.
-  </p>
 </GuideLayout>

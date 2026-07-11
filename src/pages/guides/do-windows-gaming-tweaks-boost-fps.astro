@@ -3,79 +3,85 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 ---
 
 <GuideLayout slug="do-windows-gaming-tweaks-boost-fps">
-  <div class="tldr">
-    <p class="tldr__label">TL;DR</p>
-    <p>
-      Some Windows tweaks are real, most are placebo. The real ones mostly smooth out
-      <strong>stutter, frame pacing, and latency</strong> — not your raw average FPS. Only trust a
-      tweak if it's <strong>sourced, measured, and reversible</strong>. If it fails any of those
-      three, skip it.
+  <div class="gx-guide">
+    <div class="gx-hero">
+      <p class="gx-hero__kicker">Real tweaks vs. placebo</p>
+      <p class="gx-hero__line">
+        Some Windows tweaks are real. Most are <strong>placebo</strong>. The real ones smooth stutter,
+        pacing and latency — not your raw average FPS. Trust one only if it's
+        <strong>sourced, measured, and reversible</strong>.
+      </p>
+      <div class="gx-glance">
+        <span class="gx-chip"><span class="gx-chip__i">✅</span> Real: pacing &amp; latency</span>
+        <span class="gx-chip"><span class="gx-chip__i">🚩</span> Myth: "+50% FPS"</span>
+        <span class="gx-chip"><span class="gx-chip__i">🔍</span> Test: source · measure · undo</span>
+      </div>
+    </div>
+
+    <p class="gx-intro">
+      Search "boost FPS on Windows" and you'll drown in registry edits, services to kill, and "god mode"
+      tweaks promising +50% frames. Some of it is real. A lot is copy-paste that does nothing — or quietly
+      makes things worse. Here's how to tell the two apart.
+    </p>
+
+    <div class="gx-callout">
+      <p class="gx-callout__tag">⚡ The short answer</p>
+      <p>
+        Yes, some tweaks genuinely help — but mostly with <strong>frame pacing, latency, and stutter</strong>,
+        not raw average FPS. If a single registry key claims a big average-FPS jump, be skeptical. What
+        matters for competitive play is smoother 1% lows and lower input lag, and those come from a small
+        handful of documented changes.
+      </p>
+    </div>
+
+    <h2>✅ Tweaks with real, sourced evidence</h2>
+    <ul class="gx-checks">
+      <li><strong>Hardware-Accelerated GPU Scheduling (HAGS)</strong> — a documented Windows feature that can reduce latency on supported GPUs. Vendor-documented, measurable.</li>
+      <li><strong>Disabling Game DVR / background recording</strong> — the background capture pipeline costs CPU and can cause stutter. Turning it off is a legitimate, low-risk win.</li>
+      <li><strong>Power plan + CPU parking behavior</strong> — keeping cores from aggressively parking helps frame consistency on some chips. Backed by vendor guidance.</li>
+      <li><strong>Reflex / low-latency modes (in-game)</strong> — not a Windows tweak, but the single biggest latency win for most players. Always check this first.</li>
+    </ul>
+
+    <h2>🚫 Tweaks that are mostly placebo</h2>
+    <ul class="gx-nope">
+      <li><strong>Deleting "telemetry" services for FPS</strong> — privacy-relevant, maybe; FPS-relevant, no.</li>
+      <li><strong>Random registry "priority" keys</strong> — most do nothing on modern Windows.</li>
+      <li><strong>"Ultimate Performance" as a magic bullet</strong> — helps a little on laptops, negligible on a tuned desktop.</li>
+      <li><strong>Disabling every background app</strong> — you free RAM you weren't short on, and break things you wanted.</li>
+    </ul>
+
+    <h2>🔍 How to tell real from placebo</h2>
+    <p>Run every tweak through three questions. A good tuner passes all three:</p>
+    <div class="gx-steps">
+      <div class="gx-step">
+        <div class="gx-step__num">1</div>
+        <div class="gx-step__body">
+          <h3>Is there a source?</h3>
+          <p>A Microsoft Learn doc or a vendor whitepaper beats a random Reddit comment every time.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">2</div>
+        <div class="gx-step__body">
+          <h3>Did you measure before and after?</h3>
+          <p>Use a frametime graph and 1%-low numbers — not vibes.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">3</div>
+        <div class="gx-step__body">
+          <h3>Can you undo it?</h3>
+          <p>If you can't cleanly revert a tweak, it's a liability, not an optimization.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="gx-outro">
+      <strong>The honest takeaway:</strong> don't paste a 200-line <code>.bat</code> from a stranger. Apply
+      the few tweaks that are actually documented, measure the result, and keep a way back. Sourced,
+      measured, reversible — fail any of the three and it doesn't belong on a competitive machine. That's
+      exactly why our tuner cites the doc behind every tweak, applies behind one prompt, and snapshots each
+      change so you can roll any of it back.
     </p>
   </div>
-
-  <p>
-    Search "boost FPS on Windows" and you'll drown in registry edits, services to kill, and "god
-    mode" tweaks promising +50% frames. Some of it is real. A lot of it is copy-paste that does
-    nothing — or quietly makes things worse. Here's how to tell the two apart.
-  </p>
-
-  <h2>The short answer</h2>
-  <p>
-    Yes, some tweaks genuinely help — but mostly with <strong>frame pacing, latency, and
-    stutter</strong>, not raw average FPS. If a single registry key claims a big average-FPS jump,
-    be skeptical. What actually matters for competitive play is smoother 1% lows and lower input
-    lag, and those come from a small handful of specific, documented changes.
-  </p>
-
-  <h2>Tweaks with real, sourced evidence</h2>
-  <ul>
-    <li>
-      <strong>Hardware-Accelerated GPU Scheduling (HAGS)</strong> — a documented Windows
-      feature that can reduce latency on supported GPUs. Vendor-documented, measurable.
-    </li>
-    <li>
-      <strong>Disabling Game DVR / background recording</strong> — the background capture
-      pipeline costs CPU and can cause stutter. Turning it off is a legitimate, low-risk win.
-    </li>
-    <li>
-      <strong>Power plan + CPU parking behavior</strong> — keeping cores from aggressively
-      parking helps frame consistency on some chips. Backed by vendor guidance.
-    </li>
-    <li>
-      <strong>Reflex / low-latency modes (in-game)</strong> — not a Windows tweak, but the
-      single biggest latency win for most players. Always check this first.
-    </li>
-  </ul>
-
-  <h2>Tweaks that are mostly placebo</h2>
-  <ul>
-    <li><strong>Deleting "telemetry" services for FPS</strong> — privacy-relevant, maybe; FPS-relevant, no.</li>
-    <li><strong>Random registry "priority" keys</strong> — most do nothing on modern Windows.</li>
-    <li><strong>"Ultimate Performance" as a magic bullet</strong> — helps a little on laptops, negligible on a tuned desktop.</li>
-    <li><strong>Disabling every background app</strong> — you free RAM you weren't short on, and break things you wanted.</li>
-  </ul>
-
-  <h2>How to tell real from placebo</h2>
-  <p>Run every tweak through three questions. A good tuner passes all three:</p>
-  <ol>
-    <li><strong>Is there a source?</strong> A Microsoft Learn doc or a vendor whitepaper beats a random Reddit comment every time.</li>
-    <li><strong>Did you measure before and after?</strong> Use a frametime graph and 1%-low numbers — not vibes.</li>
-    <li><strong>Can you undo it?</strong> If you can't cleanly revert a tweak, it's a liability, not an optimization.</li>
-  </ol>
-
-  <h2>The honest takeaway</h2>
-  <p>
-    Don't paste a 200-line <code>.bat</code> file from a stranger. Apply the few tweaks that are
-    actually documented, measure the result, and keep a way back. That's the whole game — and most
-    "FPS boost" guides skip every step of it.
-  </p>
-  <blockquote>
-    Sourced, measured, reversible. If a tweak fails any of the three, it doesn't belong on a
-    competitive machine.
-  </blockquote>
-  <p>
-    That principle is exactly why we built our tuner the way we did: every tweak cites the
-    Microsoft Learn doc or vendor note behind it, the whole preset applies behind one prompt,
-    and every change is snapshot-backed so you can roll any of it back at any time.
-  </p>
 </GuideLayout>

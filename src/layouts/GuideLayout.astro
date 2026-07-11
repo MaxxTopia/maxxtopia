@@ -153,3 +153,180 @@ const breadcrumbSchema = {
     padding: 0.7rem 1.1rem; border-radius: 0.6rem; text-decoration: none;
   }
 </style>
+
+<!-- Shared "scannable guide" visual system (gx-*). Accent-driven: each guide
+     inherits --accent from its product, so the same blocks recolor per page.
+     Secondary is the site cyan. Global so slotted guide markup can use them. -->
+<style is:global>
+  .guide { --gx-c: #00d4ff; }
+
+  /* Hero panel */
+  .gx-hero {
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 45%, transparent);
+    background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent, #e25bff) 16%, transparent), transparent 60%),
+      radial-gradient(120% 140% at 100% 100%, color-mix(in srgb, var(--gx-c) 12%, transparent), transparent 60%),
+      #ffffff05;
+    border-radius: 1.1rem; padding: 1.5rem 1.4rem; margin: 0 0 1.8rem;
+  }
+  .gx-hero__kicker {
+    font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent, #e25bff); margin: 0 0 0.6rem; font-weight: 700;
+  }
+  .gx-hero__line { font-size: 1.28rem; line-height: 1.4; color: #f3f1f8; margin: 0; font-weight: 600; }
+  .gx-hero__line strong { color: var(--accent, #e25bff); }
+  .gx-hero .gx-glance { margin-top: 1.1rem; }
+
+  /* At-a-glance chips */
+  .gx-glance { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .gx-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; color: #ece9f4;
+    background: #ffffff0d; border: 1px solid #ffffff1f; border-radius: 999px; padding: 0.34rem 0.75rem;
+  }
+  .gx-chip__i { font-size: 0.95rem; }
+
+  .gx-intro { font-size: 1.06rem; line-height: 1.65; color: #cbc8d6; margin: 0 0 1rem; }
+
+  /* Punchier section headers than base prose */
+  .gx-guide h2 { font-size: 1.55rem; margin: 2.4rem 0 1rem; color: #fff; letter-spacing: -0.01em; }
+  .gx-guide h3 { margin: 0 0 0.4rem; color: #fff; font-size: 1.12rem; }
+
+  /* Accent-check list (the "good"/why-it-works list) */
+  .gx-checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem; }
+  .gx-checks li {
+    position: relative; padding: 0.75rem 0.9rem 0.75rem 2.4rem; margin: 0;
+    background: #ffffff06; border: 1px solid #ffffff12; border-radius: 0.7rem;
+    color: #cbc8d6; line-height: 1.5; font-size: 0.99rem;
+  }
+  .gx-checks li::before {
+    content: "\2713"; position: absolute; left: 0.85rem; top: 0.7rem;
+    color: var(--accent, #e25bff); font-weight: 900; font-size: 1rem;
+  }
+  .gx-checks strong { color: #f3f1f8; }
+
+  /* Red-cross list (the "skip this"/placebo list) */
+  .gx-nope { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; }
+  .gx-nope li {
+    position: relative; padding: 0.7rem 0.9rem 0.7rem 2.4rem; margin: 0;
+    background: color-mix(in srgb, #ff5c5c 6%, transparent); border: 1px solid color-mix(in srgb, #ff5c5c 22%, transparent);
+    border-radius: 0.7rem; color: #d7c8c8; line-height: 1.5; font-size: 0.97rem;
+  }
+  .gx-nope li::before {
+    content: "\2715"; position: absolute; left: 0.9rem; top: 0.7rem; color: #ff6b6b; font-weight: 900; font-size: 0.95rem;
+  }
+  .gx-nope strong { color: #ffd9d9; }
+
+  /* Numbered step / ranked cards */
+  .gx-steps { display: grid; gap: 0.9rem; }
+  .gx-step {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: linear-gradient(180deg, #ffffff08, #ffffff03);
+    border: 1px solid #ffffff14; border-left: 3px solid var(--accent, #e25bff);
+    border-radius: 0.9rem; padding: 1.1rem 1.2rem;
+  }
+  .gx-step__num {
+    flex: 0 0 auto; width: 2.4rem; height: 2.4rem; border-radius: 0.7rem;
+    display: grid; place-items: center; font-family: var(--font-display), sans-serif;
+    font-size: 1.5rem; font-weight: 800; color: #0a0612;
+    background: linear-gradient(135deg, var(--accent, #e25bff), var(--gx-c));
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent, #e25bff) 35%, transparent);
+  }
+  .gx-step__body { min-width: 0; }
+  .gx-step__body p { margin: 0 0 0.45rem; color: #c5c2d2; line-height: 1.55; font-size: 0.99rem; }
+  .gx-step__body p:last-child { margin-bottom: 0; }
+  .gx-note {
+    font-size: 0.9rem !important;
+    color: color-mix(in srgb, var(--accent, #e25bff) 55%, #d8d5e2) !important;
+    background: color-mix(in srgb, var(--accent, #e25bff) 9%, transparent); border-radius: 0.5rem;
+    padding: 0.5rem 0.65rem; margin-top: 0.5rem !important;
+  }
+  .gx-tag {
+    font-family: var(--font-mono); font-size: 0.86em; color: var(--gx-c);
+    background: color-mix(in srgb, var(--gx-c) 14%, transparent); border-radius: 0.35rem; padding: 0.05rem 0.4rem;
+  }
+
+  /* Keycaps + controls grid */
+  .gx-key {
+    display: inline-grid; place-items: center; min-width: 1.7rem; height: 1.7rem; padding: 0 0.4rem;
+    font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: #f3f1f8;
+    background: linear-gradient(180deg, #2a2740, #1a1830);
+    border: 1px solid #4a4668; border-bottom-width: 3px; border-radius: 0.4rem; margin: 0 0.12rem;
+    vertical-align: middle;
+  }
+  .gx-key--wide { min-width: 3.2rem; }
+  .gx-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.7rem; margin: 1rem 0; }
+  .gx-ctrl {
+    display: flex; flex-direction: column; align-items: center; gap: 0.55rem; text-align: center;
+    background: #ffffff06; border: 1px solid #ffffff14; border-radius: 0.8rem; padding: 1rem 0.6rem;
+  }
+  .gx-ctrl__keys { display: flex; flex-wrap: wrap; justify-content: center; }
+  .gx-ctrl__label { font-size: 0.86rem; color: #b9b6c7; font-weight: 600; }
+
+  /* Big-number spec tiles (stats, physics constants) */
+  .gx-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: 0.7rem; margin: 1rem 0; }
+  .gx-spec {
+    background: #ffffff06; border: 1px solid #ffffff14; border-radius: 0.8rem; padding: 0.9rem 0.8rem; text-align: center;
+  }
+  .gx-spec__v {
+    font-family: var(--font-display), sans-serif; font-size: 1.9rem; line-height: 1; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent, #e25bff), var(--gx-c));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .gx-spec__l { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.04em; color: #8f8ca0; margin-top: 0.35rem; }
+
+  /* Callout box (accent default, cyan variant) */
+  .gx-callout {
+    border-radius: 0.9rem; padding: 1.1rem 1.2rem; margin: 1.4rem 0;
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 40%, transparent);
+    background: color-mix(in srgb, var(--accent, #e25bff) 8%, transparent);
+  }
+  .gx-callout--cyan { border-color: color-mix(in srgb, var(--gx-c) 40%, transparent); background: color-mix(in srgb, var(--gx-c) 8%, transparent); }
+  .gx-callout__tag {
+    font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--accent, #e25bff); font-weight: 700; margin: 0 0 0.5rem;
+  }
+  .gx-callout--cyan .gx-callout__tag { color: var(--gx-c); }
+  .gx-callout p { margin: 0 0 0.6rem; color: #d3d0de; line-height: 1.55; }
+  .gx-callout p:last-child { margin-bottom: 0; }
+  .gx-mini { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 0.5rem; }
+  .gx-mini li { color: #c5c2d2; line-height: 1.5; padding-left: 1.1rem; position: relative; font-size: 0.96rem; }
+  .gx-mini li::before { content: "\25B8"; position: absolute; left: 0; color: var(--accent, #e25bff); }
+  .gx-callout--cyan .gx-mini li::before { color: var(--gx-c); }
+  .gx-mini strong { color: #f3f1f8; }
+
+  /* Icon tip rows */
+  .gx-tips { display: grid; gap: 0.6rem; }
+  .gx-tip {
+    display: flex; gap: 0.8rem; align-items: flex-start;
+    background: #ffffff06; border: 1px solid #ffffff12; border-radius: 0.7rem; padding: 0.8rem 0.95rem;
+    color: #c5c2d2; line-height: 1.5; font-size: 0.98rem;
+  }
+  .gx-tip__i { font-size: 1.15rem; flex: 0 0 auto; }
+  .gx-tip strong { color: #f3f1f8; }
+
+  /* Problem -> fix rows */
+  .gx-fixes { display: grid; gap: 0.6rem; }
+  .gx-fix {
+    display: grid; grid-template-columns: minmax(8.5rem, 0.42fr) 1fr; gap: 0.9rem; align-items: center;
+    background: #ffffff06; border: 1px solid #ffffff12; border-radius: 0.7rem; padding: 0.8rem 0.95rem;
+  }
+  .gx-fix__p { font-weight: 700; color: #ffcaca; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem; }
+  .gx-fix__p::before { content: "\2715"; color: #ff6b6b; font-weight: 900; }
+  .gx-fix__f { color: #c5c2d2; line-height: 1.5; font-size: 0.95rem; }
+  .gx-fix__f strong { color: #f3f1f8; }
+
+  /* Closing note */
+  .gx-outro {
+    margin: 1.8rem 0 0; padding: 1.1rem 1.2rem; border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--accent, #e25bff) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 30%, transparent);
+    color: #d3d0de; line-height: 1.6; font-size: 1rem;
+  }
+  .gx-outro strong { color: var(--accent, #e25bff); }
+
+  @media (max-width: 480px) {
+    .gx-fix { grid-template-columns: 1fr; gap: 0.35rem; }
+    .gx-step { padding: 1rem; }
+  }
+</style>
