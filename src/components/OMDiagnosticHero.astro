@@ -113,7 +113,7 @@ const stat = product.stats ?? [];
   }
   /* drifting aurora (replaces the technical grid) */
   .om-diagnostic .om-aurora { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
-  .om-diagnostic .om-aurora span { position:absolute; display:block; border-radius:46% 54% 58% 42% / 52% 44% 56% 48%; filter:blur(74px); opacity:.42; mix-blend-mode:screen; will-change:transform; }
+  .om-diagnostic .om-aurora span { position:absolute; display:block; border-radius:46% 54% 58% 42% / 52% 44% 56% 48%; filter:blur(74px); opacity:.5; will-change:transform; }
   .om-diagnostic .om-aurora .b1 { width:64vw; height:52vw; max-width:820px; max-height:660px; left:-8%; top:-24%; background:radial-gradient(circle at 36% 34%, var(--om-cyan), transparent 62%); animation:om-aur1 27s ease-in-out infinite alternate; }
   .om-diagnostic .om-aurora .b2 { width:58vw; height:56vw; max-width:760px; max-height:720px; right:-12%; top:0%; background:radial-gradient(circle at 60% 42%, var(--om-magenta), transparent 62%); animation:om-aur2 34s ease-in-out infinite alternate; }
   .om-diagnostic .om-aurora .b3 { width:62vw; height:48vw; max-width:800px; max-height:620px; left:16%; bottom:-30%; background:radial-gradient(circle at 48% 54%, #4c51f7, transparent 60%); animation:om-aur3 31s ease-in-out infinite alternate; }
@@ -242,14 +242,8 @@ const stat = product.stats ?? [];
     .om-diagnostic .om-grid { grid-template-columns:1fr; gap:30px; }
     .om-diagnostic .om-stage { height:500px; width:min(460px,100%); }
   }
-  /* static "scanned" frame for reduced motion: rig at a 3/4 angle, no spin/drone */
-  @media (prefers-reduced-motion:reduce) {
-    .om-diagnostic .om-rig { animation:none; transform:rotateY(-30deg); }
-    .om-diagnostic .om-fan::before, .om-diagnostic .om-rotor::before, .om-diagnostic .om-rgb,
-    .om-diagnostic .om-power, .om-diagnostic .om-dot, .om-diagnostic .om-drone-eye { animation:none; }
-    .om-diagnostic .om-scan { animation:none; top:44%; }
-    .om-diagnostic .om-orbit { animation:none; opacity:0; }
-  }
+  /* The diagnostic scan IS this hero's content, so it plays even with OS
+     animations off (gamers commonly disable them for perf). */
 </style>
 
 <script>
@@ -274,11 +268,6 @@ const stat = product.stats ?? [];
         setTimeout(function () { d.classList.add('om-show'); tick(d.querySelector('.om-cnt')); }, t);
       });
       setTimeout(function () { report.classList.add('om-show'); }, 2500);
-    }
-    if (reduced) {
-      diags.forEach(function (d) { d.classList.add('om-show'); var c = d.querySelector('.om-cnt'); c.textContent = c.getAttribute('data-to'); });
-      report.classList.add('om-show');
-      return;
     }
     if ('IntersectionObserver' in window) {
       var ran = false;

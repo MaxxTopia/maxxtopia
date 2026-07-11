@@ -816,9 +816,14 @@
   text-transform: uppercase;
 }
 
-/* Reduce motion respect */
+/* Reduce motion respect — EXCEPT the bespoke hero showcases (viewmaxxing /
+   optimizationmaxxing / discordmaxxer), whose animation IS the content and which
+   auto-play by design. Without this exemption the global killer crushes their
+   muzzle-flashes / scans / slides to 0.01ms (invisible) for animations-off users. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.viewmaxxing-tv, .om-diagnostic, .discord-exhibit, .viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *),
+  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *)::before,
+  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

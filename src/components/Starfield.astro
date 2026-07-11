@@ -28,8 +28,8 @@ const { accent = '#9fb4ff' } = Astro.props;
       var ctx = canvas.getContext('2d');
       if (!ctx) return;
       var acc = hexToRgb(canvas.getAttribute('data-accent') || '#9fb4ff');
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      var W = 0, H = 0, stars = [], shooter = null, nextShot = 0, t = 0, raf = null, running = false;
+      var dpr = 1; // stars are tiny dots — 1x is plenty and far cheaper to redraw
+      var W = 0, H = 0, stars = [], shooter = null, nextShot = 0, t = 0, raf = null, running = false, last = 0;
 
       function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -38,7 +38,7 @@ const { accent = '#9fb4ff' } = Astro.props;
         if (!rect.width || !rect.height) return;
         W = canvas.width = Math.round(rect.width * dpr);
         H = canvas.height = Math.round(rect.height * dpr);
-        var count = Math.min(160, Math.round((rect.width * rect.height) / 5200));
+        var count = Math.min(80, Math.round((rect.width * rect.height) / 12000));
         stars = [];
         for (var i = 0; i < count; i++) {
           var depth = Math.random();               // 0 far … 1 near
@@ -69,8 +69,11 @@ const { accent = '#9fb4ff' } = Astro.props;
         };
       }
 
-      function frame() {
+      function frame(ts) {
         if (!running) return;
+        // throttle to ~30fps — twinkle/drift are slow, so half the redraws are invisible but save ~50% CPU
+        if (ts && ts - last < 32) { raf = requestAnimationFrame(frame); return; }
+        last = ts || 0;
         t++;
         ctx.clearRect(0, 0, W, H);
         for (var i = 0; i < stars.length; i++) {
@@ -122,9 +125,11 @@ const { accent = '#9fb4ff' } = Astro.props;
       if (ro) ro.observe(canvas); else window.addEventListener('resize', resize);
       resize();
 
+      var onScreen = true;
       if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (e) { e[0].isIntersecting ? start() : stop(); }, { threshold: 0.02 }).observe(canvas);
+        new IntersectionObserver(function (e) { onScreen = e[0].isIntersecting; onScreen && !document.hidden ? start() : stop(); }, { threshold: 0.02 }).observe(canvas);
       } else { start(); }
+      document.addEventListener('visibilitychange', function () { document.hidden ? stop() : (onScreen && start()); });
     }
 
     function boot() {

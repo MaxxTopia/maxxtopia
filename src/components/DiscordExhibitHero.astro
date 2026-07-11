@@ -128,7 +128,7 @@ const secondary = product.secondaryCta;
   }
   /* drifting aurora (replaces the technical grid) */
   .discord-exhibit .dx-aurora { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
-  .discord-exhibit .dx-aurora span { position:absolute; display:block; border-radius:46% 54% 58% 42% / 52% 44% 56% 48%; filter:blur(74px); opacity:.46; mix-blend-mode:screen; will-change:transform; }
+  .discord-exhibit .dx-aurora span { position:absolute; display:block; border-radius:46% 54% 58% 42% / 52% 44% 56% 48%; filter:blur(74px); opacity:.5; will-change:transform; }
   .discord-exhibit .dx-aurora .b1 { width:64vw; height:52vw; max-width:820px; max-height:660px; left:-8%; top:-24%; background:radial-gradient(circle at 36% 34%, var(--dx-blurple), transparent 62%); animation:dx-aur1 27s ease-in-out infinite alternate; }
   .discord-exhibit .dx-aurora .b2 { width:58vw; height:56vw; max-width:760px; max-height:720px; right:-12%; top:0%; background:radial-gradient(circle at 60% 42%, var(--dx-blurple-bright), transparent 62%); animation:dx-aur2 34s ease-in-out infinite alternate; }
   .discord-exhibit .dx-aurora .b3 { width:62vw; height:48vw; max-width:800px; max-height:620px; left:16%; bottom:-30%; background:radial-gradient(circle at 48% 54%, #4752c4, transparent 60%); animation:dx-aur3 31s ease-in-out infinite alternate; }
@@ -427,7 +427,7 @@ const secondary = product.secondaryCta;
         fx.appendChild(im); void im.offsetWidth; im.classList.add('dx-go');
         var ck = crackSVG(); ck.style.position = 'absolute'; ck.style.left = hx + '%'; ck.style.top = hy + '%';
         fx.appendChild(ck); void ck.getBBox; ck.classList.add('dx-go');
-        scene.classList.remove('dx-shaking'); void scene.offsetWidth; scene.classList.add('dx-shaking');
+        if (!reduced) { scene.classList.remove('dx-shaking'); void scene.offsetWidth; scene.classList.add('dx-shaking'); }
         setTimeout(function () { mz.remove(); tr.remove(); }, 200);
       }, 90);
     }
@@ -486,7 +486,10 @@ const secondary = product.secondaryCta;
     var rerun = document.getElementById('dx-rerun');
     if (rerun) rerun.addEventListener('click', function (e) { e.stopPropagation(); run(); });
 
-    if (reduced) { finalState(); return; }
+    // The animated killshot IS this hero's content, so it auto-plays even with
+    // OS animations off — only the viewport screen-shake is suppressed under
+    // reduced-motion (see impactAt), keeping the jarring bit off for those who
+    // genuinely need it while everyone still sees the shots + muzzle flashes.
     var played = false;
     function trigger() { if (played) return; played = true; if (img.complete) setTimeout(run, 250); else img.addEventListener('load', function () { setTimeout(run, 250); }); }
     if ('IntersectionObserver' in window) {
