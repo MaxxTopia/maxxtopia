@@ -38,7 +38,7 @@ const { accent = '#9fb4ff' } = Astro.props;
         if (!rect.width || !rect.height) return;
         W = canvas.width = Math.round(rect.width * dpr);
         H = canvas.height = Math.round(rect.height * dpr);
-        var count = Math.min(80, Math.round((rect.width * rect.height) / 12000));
+        var count = Math.min(55, Math.round((rect.width * rect.height) / 17000));
         stars = [];
         for (var i = 0; i < count; i++) {
           var depth = Math.random();               // 0 far … 1 near
@@ -69,11 +69,9 @@ const { accent = '#9fb4ff' } = Astro.props;
         };
       }
 
-      function frame(ts) {
+      function frame() {
         if (!running) return;
-        // throttle to ~30fps — twinkle/drift are slow, so half the redraws are invisible but save ~50% CPU
-        if (ts && ts - last < 32) { raf = requestAnimationFrame(frame); return; }
-        last = ts || 0;
+        // full 60fps (throttling looked choppy); kept cheap via 1x pixels + a light star count
         t++;
         ctx.clearRect(0, 0, W, H);
         for (var i = 0; i < stars.length; i++) {

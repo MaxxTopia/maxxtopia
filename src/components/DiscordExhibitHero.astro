@@ -132,9 +132,9 @@ const secondary = product.secondaryCta;
   .discord-exhibit .dx-aurora .b1 { width:64vw; height:52vw; max-width:820px; max-height:660px; left:-8%; top:-24%; background:radial-gradient(circle at 36% 34%, var(--dx-blurple), transparent 62%); animation:dx-aur1 27s ease-in-out infinite alternate; }
   .discord-exhibit .dx-aurora .b2 { width:58vw; height:56vw; max-width:760px; max-height:720px; right:-12%; top:0%; background:radial-gradient(circle at 60% 42%, var(--dx-blurple-bright), transparent 62%); animation:dx-aur2 34s ease-in-out infinite alternate; }
   .discord-exhibit .dx-aurora .b3 { width:62vw; height:48vw; max-width:800px; max-height:620px; left:16%; bottom:-30%; background:radial-gradient(circle at 48% 54%, #4752c4, transparent 60%); animation:dx-aur3 31s ease-in-out infinite alternate; }
-  @keyframes dx-aur1 { 0%{transform:translate3d(0,0,0) rotate(0deg) scale(1)} 100%{transform:translate3d(10%,7%,0) rotate(26deg) scale(1.16)} }
-  @keyframes dx-aur2 { 0%{transform:translate3d(0,0,0) rotate(0deg) scale(1.05)} 100%{transform:translate3d(-9%,6%,0) rotate(-22deg) scale(1.2)} }
-  @keyframes dx-aur3 { 0%{transform:translate3d(0,0,0) rotate(0deg) scale(1)} 100%{transform:translate3d(6%,-9%,0) rotate(18deg) scale(1.14)} }
+  @keyframes dx-aur1 { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(9%,7%,0)} }
+  @keyframes dx-aur2 { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(-8%,6%,0)} }
+  @keyframes dx-aur3 { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(6%,-8%,0)} }
   .discord-exhibit::before {
     content:''; position:absolute; inset:0; pointer-events:none; z-index:1;
     background:radial-gradient(120% 95% at 50% 40%, transparent 56%, rgba(5,6,16,.5));
@@ -372,7 +372,9 @@ const secondary = product.secondaryCta;
         spawnBloom(11, 86, 300);
         spawnBloom(11 + Math.random() * 6, 80 + Math.random() * 8, 150);
       } else {
-        spawnBloom(6 + Math.random() * 88, 14 + Math.random() * 76, 66 + Math.random() * 78);
+        // muzzle flicker from the SAME corner the rounds fire from (not scattered —
+        // stray flashes in empty space read as missing shots)
+        spawnBloom(3 + Math.random() * 20, 74 + Math.random() * 20, 44 + Math.random() * 60);
       }
     }
 
@@ -457,8 +459,8 @@ const secondary = product.secondaryCta;
       ramNum.textContent = '1,041'; ramFill.style.transform = 'scaleX(1)'; ramSaved.classList.remove('dx-show');
       var sRect = scene.getBoundingClientRect();
       var origin = { x: sRect.width * 0.06, y: sRect.height * 0.86 };
-      // distant background gunfire flickering throughout the burst
-      [120, 300, 560, 800, 1080, 1330, 1620, 1860].forEach(function (ms) {
+      // muzzle flicker from the shooter's corner between the three landed rounds
+      [180, 470, 760, 1150, 1520].forEach(function (ms) {
         timers.push(setTimeout(function () { bgFire(false); }, ms));
       });
       HOLES.forEach(function (hole, i) {
