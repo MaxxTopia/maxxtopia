@@ -3,165 +3,288 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 ---
 
 <GuideLayout slug="viewmaxxing-on-pc">
-  <div class="tldr">
-    <p class="tldr__label">TL;DR</p>
-    <p>
-      No SuperBox, Fire Stick, or Android TV box? You can still run <strong>viewmaxxing</strong> on a
-      Windows PC. Install a free Android emulator (<strong>BlueStacks</strong> is the easiest), drop in
-      the viewmaxxing APK, and drive it with your keyboard's arrow keys. It's the exact same app the box
-      runs — nothing about it is box-locked. About ten minutes, start to finish.
+  <div class="vm-guide">
+    <div class="vm-hero">
+      <p class="vm-hero__kicker">No box? No problem.</p>
+      <p class="vm-hero__line">
+        Run <strong>viewmaxxing</strong> on your PC with a free Android emulator. Same app the TV box
+        runs — driven by your keyboard, mouse, or a controller.
+      </p>
+      <div class="vm-glance">
+        <span class="vm-chip"><span class="vm-chip__i">⏱</span> ~10 min</span>
+        <span class="vm-chip"><span class="vm-chip__i">💵</span> $0</span>
+        <span class="vm-chip"><span class="vm-chip__i">🎮</span> Easy</span>
+        <span class="vm-chip"><span class="vm-chip__i">🖥</span> Windows PC</span>
+      </div>
+    </div>
+
+    <p class="vm-intro">
+      Viewmaxxing folds <strong>YouTube, Twitch, movies, TV and anime</strong> into one ad-free app.
+      It's built for TV boxes — but "built for" isn't "locked to." It's a normal Android app, and an
+      emulator is just Android in a window on your PC. Here's the fast way to get it running <em>well</em>.
+    </p>
+
+    <h2>⚡ Why it just works</h2>
+    <ul class="vm-checks">
+      <li><strong>It's a standard APK.</strong> Runs on any Android 8+. Every emulator ships newer than that.</li>
+      <li><strong>The icon actually shows up.</strong> It's built for a normal app drawer too — the usual reason TV apps hide on PC doesn't apply.</li>
+      <li><strong>Full speed, no lag tax.</strong> The app ships Intel/AMD code, so it runs native instead of crawling through translation.</li>
+    </ul>
+
+    <h2>🛠 Get it running — 4 steps</h2>
+
+    <div class="vm-steps">
+      <div class="vm-step">
+        <div class="vm-step__num">1</div>
+        <div class="vm-step__body">
+          <h3>Install an emulator</h3>
+          <p>Grab <strong>BlueStacks 5</strong> from its official site (easiest). On a low-spec PC,
+            <strong>LDPlayer 9</strong> is lighter. No Google login needed.</p>
+          <p class="vm-note">👉 If setup offers <strong>virtualization (VT-x / AMD-V)</strong>, turn it on. It's the #1 thing that makes it smooth vs. sluggish.</p>
+        </div>
+      </div>
+
+      <div class="vm-step">
+        <div class="vm-step__num">2</div>
+        <div class="vm-step__body">
+          <h3>Grab the APK</h3>
+          <p>Join the Maxxtopia Discord → open <span class="vm-tag">#free-stuff</span> → download the latest
+            <code>.apk</code> to your Desktop.</p>
+          <p class="vm-note">🔗 <strong>discord.gg/S78eecbWdx</strong> — the app self-updates after this, so you only do it once.</p>
+        </div>
+      </div>
+
+      <div class="vm-step">
+        <div class="vm-step__num">3</div>
+        <div class="vm-step__body">
+          <h3>Drag it in</h3>
+          <p>With the emulator open, <strong>drag the <code>.apk</code> onto the window</strong> and drop.
+            The icon appears in a few seconds.</p>
+          <p class="vm-note">🧩 Drag not working? Use the <strong>Install APK</strong> button in the side toolbar (BlueStacks: under "System apps").</p>
+        </div>
+      </div>
+
+      <div class="vm-step">
+        <div class="vm-step__num">4</div>
+        <div class="vm-step__body">
+          <h3>Open it &amp; play</h3>
+          <p>Launch viewmaxxing. Home paints with the tab bar up top. Go <strong>full screen</strong>
+            (BlueStacks: <span class="vm-key">F11</span>) for the couch feel — it's landscape already.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>🎮 The controls</h2>
+    <p>Remote-first, which on PC is a <em>good</em> thing — the defaults already work, no custom setup:</p>
+    <div class="vm-controls">
+      <div class="vm-ctrl">
+        <div class="vm-ctrl__keys">
+          <span class="vm-key">↑</span><span class="vm-key">↓</span><span class="vm-key">←</span><span class="vm-key">→</span>
+        </div>
+        <span class="vm-ctrl__label">Move around</span>
+      </div>
+      <div class="vm-ctrl">
+        <div class="vm-ctrl__keys"><span class="vm-key vm-key--wide">Enter</span></div>
+        <span class="vm-ctrl__label">Select / play</span>
+      </div>
+      <div class="vm-ctrl">
+        <div class="vm-ctrl__keys"><span class="vm-key vm-key--wide">Esc</span></div>
+        <span class="vm-ctrl__label">Go back</span>
+      </div>
+      <div class="vm-ctrl">
+        <div class="vm-ctrl__keys"><span class="vm-key">🖱</span></div>
+        <span class="vm-ctrl__label">Click anything</span>
+      </div>
+    </div>
+
+    <div class="vm-callout vm-callout--cyan">
+      <p class="vm-callout__tag">⌨️ No arrow keys? (60% boards, laptops)</p>
+      <p>Totally fine — arrows are just the convenient default. Any one of these drives the whole app:</p>
+      <ul class="vm-mini">
+        <li><strong>Mouse only</strong> — everything's clickable. Zero keys. Simplest answer.</li>
+        <li><strong>Remap keys</strong> — bind <span class="vm-key">W</span><span class="vm-key">A</span><span class="vm-key">S</span><span class="vm-key">D</span> to the D-pad in the emulator's key editor. 30 seconds.</li>
+        <li><strong>Plug in a controller</strong> — Xbox/PS pad works as a D-pad out of the box.</li>
+        <li><strong>Fn layer</strong> — most 60% boards put arrows on <span class="vm-key">Fn</span>+WASD or IJKL.</li>
+      </ul>
+    </div>
+
+    <h2>🚀 Make it run its best</h2>
+    <div class="vm-tips">
+      <div class="vm-tip"><span class="vm-tip__i">⚙️</span><div><strong>Enable virtualization.</strong> Biggest single win. Stutter = this is off. Turn on VT-x / AMD-V in BIOS.</div></div>
+      <div class="vm-tip"><span class="vm-tip__i">🧠</span><div><strong>Give it room.</strong> 2–4 CPU cores and 2–4 GB RAM in the emulator's settings is plenty.</div></div>
+      <div class="vm-tip"><span class="vm-tip__i">🔄</span><div><strong>Leave the updater on.</strong> The app keeps itself current, so you sideload once and forget it.</div></div>
+      <div class="vm-tip"><span class="vm-tip__i">🚫</span><div><strong>Keep "Block ads in player" ON</strong> for ad-free YouTube/Twitch. Only flip it off if a movie loads to a white screen.</div></div>
+    </div>
+
+    <h2>🩹 Stuck? Quick fixes</h2>
+    <div class="vm-fixes">
+      <div class="vm-fix">
+        <span class="vm-fix__p">Nothing plays</span>
+        <span class="vm-fix__f">Try another title or "Choose server" — usually one dead mirror, not you. If <em>everything</em> fails, set your DNS to <strong>1.1.1.1</strong>.</span>
+      </div>
+      <div class="vm-fix">
+        <span class="vm-fix__p">No icon after install</span>
+        <span class="vm-fix__f">Wait a few seconds, check the app drawer. Still missing? Use the <strong>Install APK</strong> button instead of drag-drop.</span>
+      </div>
+      <div class="vm-fix">
+        <span class="vm-fix__p">Feels slow</span>
+        <span class="vm-fix__f">Virtualization is off, or it's starved. Enable VT-x / AMD-V and give it a couple cores.</span>
+      </div>
+    </div>
+
+    <p class="vm-outro">
+      <strong>Real talk:</strong> viewmaxxing is a free, sideloaded, personal-grade app — no account, history
+      stays on your device. An emulator adds a little overhead vs. a real box, but any modern PC eats that
+      without blinking. Own a box? That's still the comfiest couch setup. Don't? This gets you the whole
+      thing on the screen you already own. 🎉
     </p>
   </div>
-
-  <p>
-    Viewmaxxing is a single Android app that folds YouTube, Twitch, movies, TV and anime into one
-    ad-free, remote-first surface. It's built for Android TV boxes, but "built for TV boxes" isn't the
-    same as "only works on TV boxes." It's a normal Android APK, and an emulator is just Android running
-    in a window on your PC. So if you don't own a box — or you just want it on the same screen you play
-    on — here's the honest, no-nonsense way to get it running well.
-  </p>
-
-  <h2>Why this works at all</h2>
-  <p>
-    Three things make viewmaxxing a clean fit for a PC emulator, and they're worth understanding so you
-    know nothing sketchy is going on:
-  </p>
-  <ul>
-    <li><strong>It's a standard APK, not a box-exclusive.</strong> It runs on any Android 8 or newer.
-      BlueStacks and LDPlayer both ship Android 9 or 11, so it installs without a fight.</li>
-    <li><strong>It's built for both a TV launcher and a normal app drawer.</strong> That means the icon
-      actually shows up inside a phone-style emulator — the usual reason TV apps refuse to appear on
-      BlueStacks simply doesn't apply here.</li>
-    <li><strong>It ships every CPU flavor in one file.</strong> The APK includes native code for Intel
-      and AMD chips, so it runs at full speed on your PC instead of crawling through a translation layer.</li>
-  </ul>
-  <p>
-    Put together: it launches, it's fast, and the keyboard drives it. Now the steps.
-  </p>
-
-  <h2>Step 1 — Install an Android emulator</h2>
-  <p>
-    An emulator is a free program that runs Android on your PC, the same way people use one to play
-    mobile games with a keyboard and mouse. Two solid, free picks in 2026:
-  </p>
-  <ul>
-    <li><strong>BlueStacks 5 (recommended).</strong> The most popular one, the most forgiving to set up,
-      and the best at running an app that never came from the Play Store. Start here unless you have a
-      reason not to.</li>
-    <li><strong>LDPlayer 9 (lighter alternative).</strong> Leaner on older or lower-spec PCs. Same
-      drag-and-drop install, slightly smaller footprint.</li>
-  </ul>
-  <p>
-    Download it from the maker's official site, run the installer, and let it finish its first-time
-    setup. You do <em>not</em> need to sign in to a Google account — sideloading works without one. If
-    the installer asks you to enable <strong>virtualization (VT-x / AMD-V)</strong>, say yes; that one
-    toggle is the single biggest difference between "smooth" and "sluggish," and it's usually flipped in
-    your PC's BIOS. On any modern machine (a 4-core CPU, 8&nbsp;GB of RAM) viewmaxxing runs comfortably.
-  </p>
-
-  <h2>Step 2 — Get the viewmaxxing APK</h2>
-  <p>
-    The build lives in the Maxxtopia Discord. Join at <strong>discord.gg/S78eecbWdx</strong>, open the
-    <strong>#free-stuff</strong> channel, and grab the latest posted APK file — it's updated often, and
-    the app keeps itself current with a built-in updater after that. Download the <code>.apk</code>
-    somewhere easy to find, like your Desktop.
-  </p>
-  <blockquote>
-    Only ever sideload an APK you actually trust and downloaded from where you expected. That's true for
-    any app, ours included — grab it from the channel above, not a random re-upload site.
-  </blockquote>
-
-  <h2>Step 3 — Install the APK into the emulator</h2>
-  <p>
-    Both emulators make this a drag-and-drop job:
-  </p>
-  <ul>
-    <li><strong>Easiest:</strong> with the emulator open, drag the <code>.apk</code> file from your
-      Desktop straight onto the emulator window and drop it. It installs, and the viewmaxxing icon
-      appears on the home screen a few seconds later.</li>
-    <li><strong>If drag-and-drop doesn't take:</strong> look for an <strong>Install APK</strong> button
-      in the emulator's side toolbar (BlueStacks tucks it under "System apps"), click it, and pick the
-      file from your PC.</li>
-  </ul>
-  <p>
-    Open viewmaxxing once it's installed. First launch paints the home screen with the tab bar across
-    the top — Home, Anime, Movies, TV, YouTube, Search, Twitch, Library, Settings.
-  </p>
-
-  <h2>Step 4 — The controls (make it feel native)</h2>
-  <p>
-    Viewmaxxing is remote-first, which on a PC is a <em>good</em> thing: it maps perfectly to a keyboard.
-    You don't need to build a custom key layout like you would for a shooter — the defaults already work.
-  </p>
-  <ul>
-    <li><strong>Arrow keys</strong> — move around (this is the box's D-pad).</li>
-    <li><strong>Enter</strong> — select / play / OK.</li>
-    <li><strong>Esc</strong> or <strong>Backspace</strong> — go back.</li>
-    <li><strong>Mouse</strong> — works too. Click a show to open it, click a player button to press it.
-      Handy for the movie and anime players, which use an in-page web player you can just click.</li>
-  </ul>
-  <p>
-    For the most TV-like feel, put the emulator in <strong>full screen</strong> (BlueStacks: F11). The
-    app already forces landscape, so you'll never fight a sideways window.
-  </p>
-
-  <h3>No arrow keys? (60% keyboards, laptops)</h3>
-  <p>
-    Plenty of keyboards — most 60% boards and some laptops — don't have a dedicated arrow cluster. You're
-    still completely fine; arrow keys are the convenient default, not a requirement. Any one of these
-    drives the whole app:
-  </p>
-  <ul>
-    <li><strong>Just use the mouse.</strong> Every screen is clickable — click a title to open it, click
-      the player buttons to control it. Zero keys needed. This is the simplest answer.</li>
-    <li><strong>Remap keys in the emulator.</strong> BlueStacks and LDPlayer both have a key-mapping
-      editor — bind <strong>W/A/S/D</strong> (or I/J/K/L) to the D-pad directions and Enter to select. A
-      one-time, 30-second setup.</li>
-    <li><strong>Plug in a controller.</strong> An Xbox or PlayStation pad works as a D-pad out of the box
-      — arguably the most couch-like way to run it on a PC anyway.</li>
-    <li><strong>Use your Fn layer.</strong> On most 60% keyboards the arrows live under
-      <strong>Fn + W/A/S/D</strong> or <strong>Fn + I/J/K/L</strong> — check your keyboard's manual.</li>
-  </ul>
-
-  <h2>Getting it to run its best</h2>
-  <ul>
-    <li><strong>Enable virtualization.</strong> Repeating it because it matters most. If playback stutters
-      or the UI feels heavy, this is almost always why — turn on VT-x / AMD-V in BIOS.</li>
-    <li><strong>Give it room.</strong> In the emulator's settings, 2-4 CPU cores and 2-4&nbsp;GB of RAM is
-      plenty. You don't need to max it out.</li>
-    <li><strong>Leave the in-app updater on.</strong> Settings keeps the app current on its own, so you
-      only sideload once.</li>
-    <li><strong>Keep "Block ads in player" ON</strong> (it is by default) for ad-free YouTube and Twitch.
-      The one time to flip it off: if a movie or anime stream loads to a white screen — then toggle it and
-      retry.</li>
-  </ul>
-
-  <h2>Troubleshooting</h2>
-  <h3>"Nothing plays"</h3>
-  <p>
-    Almost always the network, not the app. On a PC emulator this is rare, but if streams won't start,
-    first just try another title or hit "Choose server" — most misses are a single dead mirror upstream,
-    not a broken install. If <em>everything</em> fails, your PC's DNS may be filtering the stream hosts;
-    setting your DNS to 1.1.1.1 clears it.
-  </p>
-  <h3>The icon didn't appear after install</h3>
-  <p>
-    Give it a few seconds, then check the emulator's app drawer. Viewmaxxing ships a normal launcher
-    entry, so it will show — if a drag-and-drop install looked like it did nothing, use the
-    <strong>Install APK</strong> button instead.
-  </p>
-  <h3>It feels slow</h3>
-  <p>
-    Virtualization is off, or the emulator is starved for resources. Enable VT-x / AMD-V and give the
-    instance a couple of cores. A real TV box has a tiny CPU; your PC has far more headroom once it's
-    actually using it.
-  </p>
-
-  <h2>The honest note</h2>
-  <p>
-    Viewmaxxing is a personal-grade, sideloaded app — free, no account, watch history stays on the
-    device. An emulator adds a little overhead versus a dedicated box, but any modern PC swallows that
-    without noticing. If you already own an Android TV box, that's still the comfiest couch experience.
-    If you don't, this gets you the whole thing on the screen you already have.
-  </p>
 </GuideLayout>
+
+<style is:global>
+  /* Scoped-by-prefix: .vm-guide only exists on this page, so these never leak. */
+  .vm-guide { --g: #10b981; --c: #00d4ff; --amber: #fbbf24; }
+
+  /* Hero */
+  .vm-guide .vm-hero {
+    border: 1px solid color-mix(in srgb, var(--g) 45%, transparent);
+    background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--g) 16%, transparent), transparent 60%),
+      radial-gradient(120% 140% at 100% 100%, color-mix(in srgb, var(--c) 12%, transparent), transparent 60%),
+      #ffffff05;
+    border-radius: 1.1rem; padding: 1.5rem 1.4rem; margin: 0 0 1.8rem;
+  }
+  .vm-guide .vm-hero__kicker {
+    font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--g); margin: 0 0 0.6rem; font-weight: 700;
+  }
+  .vm-guide .vm-hero__line { font-size: 1.28rem; line-height: 1.4; color: #f3f1f8; margin: 0 0 1.1rem; font-weight: 600; }
+  .vm-guide .vm-hero__line strong { color: var(--g); }
+
+  .vm-guide .vm-glance { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .vm-guide .vm-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; color: #ece9f4;
+    background: #ffffff0d; border: 1px solid #ffffff1f; border-radius: 999px; padding: 0.34rem 0.75rem;
+  }
+  .vm-guide .vm-chip__i { font-size: 0.95rem; }
+
+  .vm-guide .vm-intro { font-size: 1.06rem; line-height: 1.65; color: #cbc8d6; margin: 0 0 1rem; }
+
+  /* Section headers get a touch more punch than the base prose h2 */
+  .vm-guide h2 { font-size: 1.55rem; margin: 2.4rem 0 1rem; color: #fff; letter-spacing: -0.01em; }
+  .vm-guide h3 { margin: 0 0 0.4rem; color: #fff; font-size: 1.12rem; }
+
+  /* Green-check list */
+  .vm-guide .vm-checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem; }
+  .vm-guide .vm-checks li {
+    position: relative; padding: 0.75rem 0.9rem 0.75rem 2.4rem; margin: 0;
+    background: #ffffff06; border: 1px solid #ffffff12; border-radius: 0.7rem;
+    color: #cbc8d6; line-height: 1.5; font-size: 0.99rem;
+  }
+  .vm-guide .vm-checks li::before {
+    content: "✓"; position: absolute; left: 0.85rem; top: 0.7rem;
+    color: var(--g); font-weight: 900; font-size: 1rem;
+  }
+  .vm-guide .vm-checks strong { color: #f3f1f8; }
+
+  /* Step cards */
+  .vm-guide .vm-steps { display: grid; gap: 0.9rem; }
+  .vm-guide .vm-step {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: linear-gradient(180deg, #ffffff08, #ffffff03);
+    border: 1px solid #ffffff14; border-left: 3px solid var(--g);
+    border-radius: 0.9rem; padding: 1.1rem 1.2rem;
+  }
+  .vm-guide .vm-step__num {
+    flex: 0 0 auto; width: 2.4rem; height: 2.4rem; border-radius: 0.7rem;
+    display: grid; place-items: center; font-family: var(--font-display), sans-serif;
+    font-size: 1.5rem; font-weight: 800; color: #05140f;
+    background: linear-gradient(135deg, var(--g), var(--c));
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--g) 35%, transparent);
+  }
+  .vm-guide .vm-step__body { min-width: 0; }
+  .vm-guide .vm-step__body p { margin: 0 0 0.45rem; color: #c5c2d2; line-height: 1.55; font-size: 0.99rem; }
+  .vm-guide .vm-step__body p:last-child { margin-bottom: 0; }
+  .vm-guide .vm-note {
+    font-size: 0.9rem !important; color: #a9d9c8 !important;
+    background: color-mix(in srgb, var(--g) 9%, transparent); border-radius: 0.5rem;
+    padding: 0.5rem 0.65rem; margin-top: 0.5rem !important;
+  }
+  .vm-guide .vm-tag {
+    font-family: var(--font-mono); font-size: 0.86em; color: var(--c);
+    background: color-mix(in srgb, var(--c) 14%, transparent); border-radius: 0.35rem; padding: 0.05rem 0.4rem;
+  }
+
+  /* Keycaps */
+  .vm-guide .vm-key {
+    display: inline-grid; place-items: center; min-width: 1.7rem; height: 1.7rem; padding: 0 0.4rem;
+    font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: #f3f1f8;
+    background: linear-gradient(180deg, #2a2740, #1a1830);
+    border: 1px solid #4a4668; border-bottom-width: 3px; border-radius: 0.4rem; margin: 0 0.12rem;
+    vertical-align: middle;
+  }
+  .vm-guide .vm-key--wide { min-width: 3.2rem; }
+
+  .vm-guide .vm-controls {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.7rem; margin: 1rem 0;
+  }
+  .vm-guide .vm-ctrl {
+    display: flex; flex-direction: column; align-items: center; gap: 0.55rem; text-align: center;
+    background: #ffffff06; border: 1px solid #ffffff14; border-radius: 0.8rem; padding: 1rem 0.6rem;
+  }
+  .vm-guide .vm-ctrl__keys { display: flex; flex-wrap: wrap; justify-content: center; }
+  .vm-guide .vm-ctrl__label { font-size: 0.86rem; color: #b9b6c7; font-weight: 600; }
+
+  /* Callout */
+  .vm-guide .vm-callout {
+    border-radius: 0.9rem; padding: 1.1rem 1.2rem; margin: 1.4rem 0;
+    border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+    background: color-mix(in srgb, var(--c) 8%, transparent);
+  }
+  .vm-guide .vm-callout__tag {
+    font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--c); font-weight: 700; margin: 0 0 0.5rem;
+  }
+  .vm-guide .vm-callout p { margin: 0 0 0.6rem; color: #d3d0de; line-height: 1.55; }
+  .vm-guide .vm-mini { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 0.5rem; }
+  .vm-guide .vm-mini li { color: #c5c2d2; line-height: 1.5; padding-left: 1.1rem; position: relative; font-size: 0.96rem; }
+  .vm-guide .vm-mini li::before { content: "▸"; position: absolute; left: 0; color: var(--c); }
+  .vm-guide .vm-mini strong { color: #f3f1f8; }
+
+  /* Tips */
+  .vm-guide .vm-tips { display: grid; gap: 0.6rem; }
+  .vm-guide .vm-tip {
+    display: flex; gap: 0.8rem; align-items: flex-start;
+    background: #ffffff06; border: 1px solid #ffffff12; border-radius: 0.7rem; padding: 0.8rem 0.95rem;
+    color: #c5c2d2; line-height: 1.5; font-size: 0.98rem;
+  }
+  .vm-guide .vm-tip__i { font-size: 1.15rem; flex: 0 0 auto; }
+  .vm-guide .vm-tip strong { color: #f3f1f8; }
+
+  /* Problem -> fix */
+  .vm-guide .vm-fixes { display: grid; gap: 0.6rem; }
+  .vm-guide .vm-fix {
+    display: grid; grid-template-columns: minmax(8.5rem, 0.4fr) 1fr; gap: 0.9rem; align-items: center;
+    background: #ffffff06; border: 1px solid #ffffff12; border-radius: 0.7rem; padding: 0.8rem 0.95rem;
+  }
+  .vm-guide .vm-fix__p {
+    font-weight: 700; color: #ffcaca; font-size: 0.95rem;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .vm-guide .vm-fix__p::before { content: "✕"; color: #ff6b6b; font-weight: 900; }
+  .vm-guide .vm-fix__f { color: #c5c2d2; line-height: 1.5; font-size: 0.95rem; }
+
+  .vm-guide .vm-outro {
+    margin: 1.8rem 0 0; padding: 1.1rem 1.2rem; border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--g) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--g) 30%, transparent);
+    color: #d3d0de; line-height: 1.6; font-size: 1rem;
+  }
+  .vm-guide .vm-outro strong { color: var(--g); }
+
+  @media (max-width: 480px) {
+    .vm-guide .vm-fix { grid-template-columns: 1fr; gap: 0.35rem; }
+    .vm-guide .vm-step { padding: 1rem; }
+  }
+</style>
