@@ -1,0 +1,433 @@
+---
+/**
+ * StreammaxxingBroadcastHero — a living local broadcast desk.
+ *
+ * The visitor can fire the same five surfaces Streammaxxing controls: alerts,
+ * donations/TTS, merged chat, scenes, and now-playing. A signal pulse travels
+ * from the local event rail into the program monitor before the surface reacts.
+ * Audio stays opt-in; this hero communicates cleanly while muted.
+ */
+import type { Product } from '../data/products';
+
+type Props = { product: Product };
+const { product } = Astro.props;
+const primary = product.primaryCta;
+---
+
+<section class="streammaxxing-broadcast" aria-label={`${product.name} broadcast control room`}>
+  <div class="smx-ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="smx-scanlines" aria-hidden="true"></div>
+
+  <div class="smx-shell">
+    <a href="/#apps" class="smx-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+      All products
+    </a>
+
+    <div class="smx-grid">
+      <div class="smx-copy">
+        <p class="smx-eyebrow"><span></span>Local broadcast engine · v{product.version}</p>
+        <h1>Your whole stream.<br /><em>One local app.</em></h1>
+        <p class="smx-lede">
+          Alerts, overlays, every platform’s chat and donation read-outs —
+          controlled from your PC, with no cloud hop and no monthly bill.
+        </p>
+
+        <div class="smx-actions">
+          <a class="smx-download" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>
+            {primary.label}
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+          </a>
+          <span class="smx-os">Windows 10 / 11 · 64-bit</span>
+        </div>
+
+        <div class="smx-specs" aria-label="Streammaxxing highlights">
+          <div><strong>0</strong><span>cloud hops</span></div>
+          <div><strong>21</strong><span>overlays</span></div>
+          <div><strong>$0</strong><span>monthly</span></div>
+        </div>
+      </div>
+
+      <div class="smx-rig" data-smx-rig data-mode="follow">
+        <div class="smx-event-rail" aria-hidden="true">
+          <span class="smx-source"><i></i><b data-smx-source>TWITCH EVENTSUB</b></span>
+          <span class="smx-route"><i class="smx-pulse"></i></span>
+          <span class="smx-latency"><b>LOCAL</b><small>NO CLOUD QUEUE</small></span>
+        </div>
+
+        <div class="smx-monitor">
+          <div class="smx-monitor-top">
+            <span class="smx-brand"><img src={product.icon} alt="" />STREAMMAXXING</span>
+            <span class="smx-session"><i></i>SESSION 02:14:38</span>
+            <span class="smx-live"><i></i>LIVE</span>
+          </div>
+
+          <div class="smx-program">
+            <div class="smx-world" aria-hidden="true">
+              <img class="smx-live-feed" src="/screenshots/viewmaxxing/twitch.webp" alt="" />
+              <div class="smx-stream-id">
+                <span><i></i>FNCS SCRIMS</span>
+                <strong>DIGGYTREE2</strong>
+                <em>12.8K WATCHING</em>
+              </div>
+            </div>
+            <div class="smx-scene-card" aria-hidden="true">
+              <img src="/screenshots/streammaxxing/howto/overlay-scene.webp" alt="" />
+            </div>
+
+            <div class="smx-program-bar">
+              <span>PROGRAM</span>
+              <div class="smx-real-goal">
+                <div class="smx-real-ghead">
+                  <span data-smx-goal-label>FOLLOWER GOAL</span>
+                  <b><i data-smx-goal-current>848</i> / <i data-smx-goal-target>1,000</i><em data-smx-goal-pct>85%</em></b>
+                </div>
+                <div class="smx-real-track"><i data-smx-goal-fill style="width:85%"></i></div>
+              </div>
+            </div>
+
+            <!-- Direct port of the real alert overlay's Battle Royale starter
+                 pack: themed glyph badge, pill, highlighted name, wave text. -->
+            <div class="smx-real-alert" aria-live="polite">
+              <div class="smx-real-alert-anim">
+                <div class="smx-real-alert-badge" data-smx-alert-glyph>❤</div>
+                <div class="smx-real-alert-pill">
+                  <div class="smx-real-alert-text">
+                    <span data-smx-alert-name>orbitalsam</span><b data-smx-alert-copy> just followed!</b>
+                    <small data-smx-alert-message></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Canonical unified-chat markup: transparent shell, branded SVGs,
+                 platform tint strips, role/first tags, heavy stream-safe shadow. -->
+            <div class="smx-real-chat">
+              <div class="smx-real-chat-hd">
+                <span>CHAT</span>
+                <i>
+                  <svg viewBox="0 0 24 24"><path fill="#9146FF" d="M4 2 3 6v13h4v3h3l3-3h4l5-5V2H4zm15 11-3 3h-4l-3 3v-3H7V4h12v9z"/></svg>
+                  <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" fill="#53FC18"/><path fill="#0b0e10" d="M7 6h3v3.5L13.5 6H17l-4.7 6L17 18h-3.5L10 14v4H7z"/></svg>
+                  <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path fill="#fff" d="M10 8.5 16 12l-6 3.5z"/></svg>
+                </i>
+              </div>
+              <div class="smx-real-chat-body">
+                <p class="plat-twitch"><b class="ico"><svg viewBox="0 0 24 24"><path fill="#9146FF" d="M4 2 3 6v13h4v3h3l3-3h4l5-5V2H4zm15 11-3 3h-4l-3 3v-3H7V4h12v9z"/></svg></b><strong style="color:#c77dff">orbitalsam</strong><span>that was clean</span></p>
+                <p class="plat-kick"><b class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="3" fill="#53FC18"/><path fill="#0b0e10" d="M7 6h3v3.5L13.5 6H17l-4.7 6L17 18h-3.5L10 14v4H7z"/></svg></b><strong style="color:#53FC18">vexn</strong><span>W setup</span></p>
+                <p class="plat-youtube"><b class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path fill="#fff" d="M10 8.5 16 12l-6 3.5z"/></svg></b><strong style="color:#ff8fab">mira</strong><span>one more game</span></p>
+                <p class="plat-tiktok smx-chat-new"><b class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="#010101"/><path fill="#25F4EE" d="M14.6 5.6c.3 1.8 1.5 3 3.4 3.2v2.1c-1 0-2-.3-2.9-.8v4.3c0 2.3-1.8 4-4 4-1.2 0-2.3-.5-3-1.4 1.9 1 4.3-.3 4.3-2.5V5.6h2.2z"/></svg></b><em>FIRST</em><strong style="color:#4dd0e1">nova</strong><span>the alert was instant</span></p>
+              </div>
+            </div>
+
+            <!-- Faithful scaled port of nowplaying-vinyl.html: transparent
+                 vertical record stack, seeker ring, large label and source chip. -->
+            <div class="smx-real-np" aria-hidden="true">
+              <div class="smx-real-np-glow"></div>
+              <div class="smx-real-disc-wrap">
+                <svg class="smx-real-ring" viewBox="0 0 150 150">
+                  <defs><linearGradient id="smx-ring-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5bb8d4"/><stop offset="1" stop-color="#c77dff"/></linearGradient></defs>
+                  <circle class="track" cx="75" cy="75" r="72"></circle>
+                  <circle class="fill" cx="75" cy="75" r="72"></circle>
+                </svg>
+                <div class="smx-real-disc"><div class="smx-real-label"></div></div>
+                <div class="smx-real-arm"><i></i><b></b><span></span></div>
+              </div>
+              <div class="smx-real-np-meta">
+                <small><svg viewBox="0 0 24 24"><path fill="#1DB954" d="M12 2a10 10 0 100 20 10 10 0 000-20zm4.6 14.4a.6.6 0 01-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 11-.28-1.2c3.8-.87 7.06-.5 9.7 1.1.3.18.4.57.23.86z"/></svg>SPOTIFY <i></i><i></i><i></i></small>
+                <strong>NOKIA</strong>
+                <span>Drake</span>
+              </div>
+            </div>
+
+            <div class="smx-event-toast" aria-hidden="true"><i></i><span data-smx-toast>FOLLOW RECEIVED · FIRED LOCALLY</span></div>
+          </div>
+
+          <div class="smx-monitor-bottom">
+            <span><i></i>HUB CONNECTED</span>
+            <span>OBS · PROGRAM 1080P60</span>
+            <span data-smx-engine-status>ALERT QUEUE · CLEAR</span>
+          </div>
+        </div>
+
+        <div class="smx-controls" aria-label="Test the Streammaxxing broadcast">
+          <button type="button" class="is-active" data-smx-action="follow"><span>＋</span>Follow</button>
+          <button type="button" data-smx-action="donation"><span>$</span>Donation</button>
+          <button type="button" data-smx-action="chat"><span>⌁</span>Chat</button>
+          <button type="button" data-smx-action="scene"><span>▦</span>Scene</button>
+          <button type="button" data-smx-action="music"><span>♪</span>Now playing</button>
+        </div>
+        <p class="smx-hint"><span></span>Live controls · try the broadcast</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .streammaxxing-broadcast{
+    --smx-mint:#22d3a0;--smx-mint2:#8effd9;--smx-red:#ff4058;--smx-violet:#a970ff;
+    --smx-bg:#06080c;--smx-panel:#0d1218;--smx-line:#26323b;--smx-text:#effff9;--smx-muted:#82919a;
+    position:relative;isolation:isolate;overflow:hidden;min-height:clamp(780px,calc(100svh - 58px),980px);
+    color:var(--smx-text);background:
+      radial-gradient(68% 80% at 78% 46%,rgba(34,211,160,.09),transparent 64%),
+      radial-gradient(45% 50% at 17% 20%,rgba(108,63,189,.08),transparent 72%),var(--smx-bg);
+    border-bottom:1px solid #172129;
+  }
+  .streammaxxing-broadcast *{box-sizing:border-box}
+  .streammaxxing-broadcast .smx-ambient{position:absolute;inset:0;z-index:-2;pointer-events:none}
+  .streammaxxing-broadcast .smx-ambient i{position:absolute;border-radius:50%;filter:blur(68px);opacity:.28;animation:smx-drift 10s ease-in-out infinite alternate}
+  .streammaxxing-broadcast .smx-ambient i:nth-child(1){width:340px;height:340px;right:8%;top:5%;background:#22d3a0}
+  .streammaxxing-broadcast .smx-ambient i:nth-child(2){width:260px;height:260px;right:38%;bottom:-8%;background:#7655df;animation-delay:-3s}
+  .streammaxxing-broadcast .smx-ambient i:nth-child(3){width:180px;height:180px;left:4%;top:22%;background:#173c5a;animation-delay:-6s}
+  @keyframes smx-drift{to{transform:translate3d(22px,-18px,0);opacity:.4}}
+  .streammaxxing-broadcast .smx-scanlines{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.035;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 4px)}
+  .streammaxxing-broadcast .smx-shell{position:relative;z-index:2;max-width:1380px;margin:0 auto;padding:clamp(76px,9vh,108px) clamp(20px,4vw,54px) 58px}
+  .streammaxxing-broadcast .smx-back{display:inline-flex;align-items:center;gap:7px;margin-bottom:30px;color:var(--smx-muted);font:600 11px/1 var(--font-mono),monospace;letter-spacing:.09em;text-transform:uppercase;text-decoration:none;transition:color .2s}
+  .streammaxxing-broadcast .smx-back:hover{color:#fff}
+  .streammaxxing-broadcast .smx-grid{display:grid;grid-template-columns:minmax(330px,.78fr) minmax(620px,1.42fr);gap:clamp(44px,6vw,88px);align-items:center}
+  .streammaxxing-broadcast .smx-copy{position:relative;z-index:4}
+  .streammaxxing-broadcast .smx-eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 20px;color:var(--smx-mint);font:600 10px/1 var(--font-mono),monospace;letter-spacing:.15em;text-transform:uppercase}
+  .streammaxxing-broadcast .smx-eyebrow span{width:7px;height:7px;border-radius:50%;background:var(--smx-mint);box-shadow:0 0 15px var(--smx-mint);animation:smx-status 1.8s ease-in-out infinite}
+  @keyframes smx-status{50%{opacity:.36;box-shadow:0 0 5px var(--smx-mint)}}
+  .streammaxxing-broadcast .smx-copy h1{margin:0;font-size:clamp(58px,6vw,96px);font-weight:780;line-height:.86;letter-spacing:-.06em}
+  .streammaxxing-broadcast .smx-copy h1 em{color:var(--smx-mint);font-style:normal;text-shadow:0 0 42px rgba(34,211,160,.18)}
+  .streammaxxing-broadcast .smx-lede{max-width:530px;margin:28px 0 0;color:#aebbc1;font-size:clamp(15px,1.2vw,18px);line-height:1.62}
+  .streammaxxing-broadcast .smx-actions{display:flex;align-items:center;flex-wrap:wrap;gap:16px;margin-top:32px}
+  .streammaxxing-broadcast .smx-download{display:inline-flex;align-items:center;gap:10px;min-height:50px;padding:0 22px;border-radius:7px;background:var(--smx-mint);color:#03140f;font-size:13px;font-weight:800;text-decoration:none;box-shadow:0 14px 34px rgba(34,211,160,.18);transition:transform .2s,box-shadow .2s}
+  .streammaxxing-broadcast .smx-download:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(34,211,160,.3)}
+  .streammaxxing-broadcast .smx-download svg{width:15px;fill:none;stroke:currentColor;stroke-width:2.4}
+  .streammaxxing-broadcast .smx-os{color:#74828b;font:10px/1.4 var(--font-mono),monospace;letter-spacing:.06em;text-transform:uppercase}
+  .streammaxxing-broadcast .smx-specs{display:grid;grid-template-columns:repeat(3,1fr);max-width:470px;margin-top:38px;border-top:1px solid var(--smx-line)}
+  .streammaxxing-broadcast .smx-specs div{padding:16px 18px 0 0}
+  .streammaxxing-broadcast .smx-specs div+div{padding-left:18px;border-left:1px solid var(--smx-line)}
+  .streammaxxing-broadcast .smx-specs strong{display:block;color:#eafff8;font:600 25px/1 var(--font-display),sans-serif;letter-spacing:.02em}
+  .streammaxxing-broadcast .smx-specs span{display:block;margin-top:7px;color:#718089;font:9px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase}
+
+  .streammaxxing-broadcast .smx-rig{position:relative;min-width:0}
+  .streammaxxing-broadcast .smx-event-rail{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;margin:0 18px 9px;color:#7e8e96;font:9px/1 var(--font-mono),monospace;letter-spacing:.12em}
+  .streammaxxing-broadcast .smx-source,.streammaxxing-broadcast .smx-latency{display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .streammaxxing-broadcast .smx-source i{width:6px;height:6px;border-radius:50%;background:var(--smx-violet);box-shadow:0 0 10px var(--smx-violet)}
+  .streammaxxing-broadcast .smx-route{position:relative;height:1px;overflow:visible;background:linear-gradient(90deg,rgba(169,112,255,.5),rgba(34,211,160,.5))}
+  .streammaxxing-broadcast .smx-pulse{position:absolute;top:-3px;left:0;width:28px;height:7px;border-radius:50%;opacity:0;background:var(--smx-mint);filter:blur(1px);box-shadow:0 0 18px 5px rgba(34,211,160,.56)}
+  .streammaxxing-broadcast .smx-rig.smx-firing .smx-pulse{animation:smx-signal .72s cubic-bezier(.2,.75,.2,1)}
+  @keyframes smx-signal{0%{left:0;opacity:0;transform:scaleX(.3)}15%{opacity:1}85%{opacity:1}100%{left:calc(100% - 24px);opacity:0;transform:scaleX(1.5)}}
+  .streammaxxing-broadcast .smx-latency{color:var(--smx-mint)}
+  .streammaxxing-broadcast .smx-latency small{color:#617078;font-size:7px}
+
+  .streammaxxing-broadcast .smx-monitor{position:relative;border:1px solid #32414b;border-radius:14px;overflow:hidden;background:#070b10;box-shadow:0 34px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.025) inset,0 0 70px rgba(34,211,160,.08)}
+  .streammaxxing-broadcast .smx-monitor::before{content:"";position:absolute;inset:0;z-index:12;pointer-events:none;border-radius:inherit;box-shadow:inset 0 0 30px rgba(0,0,0,.7)}
+  .streammaxxing-broadcast .smx-monitor-top,.streammaxxing-broadcast .smx-monitor-bottom{display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 13px;background:linear-gradient(180deg,#141b22,#0b1015);color:#718089;font:8px/1 var(--font-mono),monospace;letter-spacing:.1em}
+  .streammaxxing-broadcast .smx-brand,.streammaxxing-broadcast .smx-session,.streammaxxing-broadcast .smx-live{display:flex;align-items:center;gap:7px}
+  .streammaxxing-broadcast .smx-brand{color:#c8d5d4;font-weight:700}
+  .streammaxxing-broadcast .smx-brand img{width:17px;height:17px;object-fit:contain}
+  .streammaxxing-broadcast .smx-session i,.streammaxxing-broadcast .smx-monitor-bottom i{width:5px;height:5px;border-radius:50%;background:var(--smx-mint);box-shadow:0 0 8px var(--smx-mint)}
+  .streammaxxing-broadcast .smx-live{padding:5px 8px;border:1px solid rgba(255,64,88,.45);border-radius:4px;color:#ff7487;background:rgba(255,64,88,.08);font-weight:700}
+  .streammaxxing-broadcast .smx-live i{width:6px;height:6px;border-radius:50%;background:var(--smx-red);box-shadow:0 0 9px var(--smx-red);animation:smx-live 1.2s steps(1) infinite}
+  @keyframes smx-live{50%{opacity:.28}}
+  .streammaxxing-broadcast .smx-program{position:relative;aspect-ratio:16/9;overflow:hidden;background:#101924}
+  .streammaxxing-broadcast .smx-world{position:absolute;inset:0;overflow:hidden;background:#030507}
+  .streammaxxing-broadcast .smx-live-feed{position:absolute;left:0;top:50%;width:165%;height:165%;max-width:none;object-fit:cover;object-position:left center;transform:translateY(-50%);filter:saturate(.88) contrast(1.06) brightness(.72)}
+  .streammaxxing-broadcast .smx-world::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,5,8,.08),transparent 48%,rgba(2,5,8,.18)),linear-gradient(0deg,rgba(2,5,8,.32),transparent 34%),radial-gradient(circle,transparent 52%,rgba(2,5,8,.34));box-shadow:inset 0 0 28px rgba(0,0,0,.52)}
+  .streammaxxing-broadcast .smx-stream-id{position:absolute;z-index:2;left:10px;bottom:10px;display:grid;grid-template-columns:auto auto;gap:2px 9px;align-items:center;padding:7px 9px;border-left:2px solid var(--smx-red);background:rgba(4,7,10,.72);backdrop-filter:blur(6px);font-family:var(--font-mono),monospace}
+  .streammaxxing-broadcast .smx-stream-id span{grid-column:1/-1;display:flex;align-items:center;gap:5px;color:#ff8291;font-size:6px;letter-spacing:.14em}
+  .streammaxxing-broadcast .smx-stream-id span i{width:4px;height:4px;border-radius:50%;background:var(--smx-red);box-shadow:0 0 7px var(--smx-red)}
+  .streammaxxing-broadcast .smx-stream-id strong{color:#fff;font-size:8px;letter-spacing:.08em}.streammaxxing-broadcast .smx-stream-id em{color:#94a0a5;font-size:6px;font-style:normal;letter-spacing:.08em}
+  .streammaxxing-broadcast .smx-scene-card{position:absolute;inset:0;z-index:5;opacity:0;transform:scale(1.04);transition:opacity .45s,transform .7s}
+  .streammaxxing-broadcast .smx-scene-card img{width:100%;height:100%;object-fit:cover}
+  .streammaxxing-broadcast [data-mode="scene"] .smx-scene-card{opacity:1;transform:scale(1)}
+  .streammaxxing-broadcast .smx-program-bar{position:absolute;z-index:8;left:12px;right:12px;top:10px;display:flex;align-items:center;gap:10px}
+  .streammaxxing-broadcast .smx-program-bar>span{padding:4px 7px;border-radius:3px;background:rgba(255,64,88,.85);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.13em}
+  /* Exact scaled port of overlay/goals.html's follower/sub/bits/tip card. */
+  .streammaxxing-broadcast .smx-real-goal{--ac:#22d3a0;position:relative;flex:1;max-width:250px;padding:8px 10px 9px;border-radius:9px;background:radial-gradient(120% 90% at 16% -10%,rgba(82,102,176,.18),transparent 55%),linear-gradient(150deg,rgba(24,18,38,.97),rgba(8,5,16,.98));box-shadow:0 0 0 1px rgba(0,0,0,.55),0 8px 18px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.07)}
+  .streammaxxing-broadcast .smx-real-goal::before{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid color-mix(in srgb,var(--ac) 58%,transparent);pointer-events:none}
+  .streammaxxing-broadcast .smx-real-ghead{display:flex;align-items:baseline;gap:6px;margin-bottom:6px}.streammaxxing-broadcast .smx-real-ghead>span{color:color-mix(in srgb,var(--ac) 70%,white);font:700 8px/1 'Saira Semi Condensed',var(--font-sans);letter-spacing:.14em;white-space:nowrap}.streammaxxing-broadcast .smx-real-ghead b{margin-left:auto;color:#fff;font:800 9px/1 'Saira Semi Condensed',var(--font-sans);white-space:nowrap}.streammaxxing-broadcast .smx-real-ghead b i{font-style:normal}.streammaxxing-broadcast .smx-real-ghead b i+ i{color:#a99fc4;font-size:8px}.streammaxxing-broadcast .smx-real-ghead em{margin-left:5px;color:color-mix(in srgb,var(--ac) 80%,white);font:800 7px/1 var(--font-mono);font-style:normal}
+  .streammaxxing-broadcast .smx-real-track{position:relative;height:8px;border-radius:7px;overflow:hidden;background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.32));box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}.streammaxxing-broadcast .smx-real-track i{position:absolute;inset:0 auto 0 0;border-radius:inherit;background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 65%,white),var(--ac) 55%,color-mix(in srgb,var(--ac) 72%,black));box-shadow:0 0 12px color-mix(in srgb,var(--ac) 70%,transparent);transition:width .7s cubic-bezier(.2,.8,.2,1)}
+
+  /* Exact alert-engine vocabulary: Battle Royale pack + real badge/pill/text. */
+  .streammaxxing-broadcast .smx-real-alert{position:absolute;z-index:9;left:50%;top:48%;max-width:70%;text-align:center;opacity:0;transform:translate(-50%,-50%)}
+  .streammaxxing-broadcast .smx-real-alert-anim{display:flex;flex-direction:column;align-items:center;gap:9px}
+  .streammaxxing-broadcast .smx-real-alert-badge{--b1:#7c5cff;--b2:#22d3a0;display:grid;place-items:center;width:82px;height:82px;border:2px solid color-mix(in srgb,var(--b2) 75%,#fff 0%);border-radius:19px;color:#fff;font-size:42px;line-height:1;background:linear-gradient(150deg,color-mix(in srgb,var(--b1) 42%,#0c0c18),color-mix(in srgb,var(--b2) 30%,#0c0c18));box-shadow:0 0 24px color-mix(in srgb,var(--b1) 55%,transparent),inset 0 0 14px rgba(255,255,255,.08);text-shadow:0 2px 8px rgba(0,0,0,.45)}
+  .streammaxxing-broadcast .smx-real-alert-pill{padding:7px 14px;border-radius:999px;background:rgba(13,16,48,.78);backdrop-filter:blur(2px)}
+  .streammaxxing-broadcast .smx-real-alert-text{color:#7c5cff;font:800 20px/1.15 'Russo One',Impact,sans-serif;text-shadow:0 2px 6px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9)}.streammaxxing-broadcast .smx-real-alert-text>span{color:#22d3a0}.streammaxxing-broadcast .smx-real-alert-text b{font-weight:800}.streammaxxing-broadcast .smx-real-alert-text small{display:block;margin-top:6px;color:#fff;font:600 11px/1.2 var(--font-sans);opacity:.95}
+  .streammaxxing-broadcast .smx-rig.smx-firing:not([data-mode="chat"]):not([data-mode="scene"]):not([data-mode="music"]) .smx-real-alert{animation:smx-real-alert-fire 2.9s ease .52s both}
+  .streammaxxing-broadcast .smx-rig.smx-firing:not([data-mode="chat"]):not([data-mode="scene"]):not([data-mode="music"]) .smx-real-alert-anim{animation:smx-real-fade .6s ease .52s both}
+  @keyframes smx-real-alert-fire{0%,100%{opacity:0}12%,82%{opacity:1}}
+  @keyframes smx-real-fade{from{opacity:0}to{opacity:1}}
+
+  /* Direct chat.css port: transparent shell, gradient body and platform strips. */
+  .streammaxxing-broadcast .smx-real-chat{position:absolute;z-index:8;right:9px;bottom:9px;width:38%;background:transparent;border-radius:7px;font:8px/1.4 Inter,var(--font-sans);user-select:none}
+  .streammaxxing-broadcast .smx-real-chat-hd{display:flex;align-items:center;gap:6px;padding:5px 7px;border-radius:6px 6px 0 0;background:rgba(0,0,0,.55);color:#fff;font-size:7px;font-weight:800;letter-spacing:.05em}.streammaxxing-broadcast .smx-real-chat-hd>span{color:#22d3a0}.streammaxxing-broadcast .smx-real-chat-hd>i{display:flex;gap:3px;margin-left:auto}.streammaxxing-broadcast .smx-real-chat-hd svg{display:block;width:9px;height:9px}
+  .streammaxxing-broadcast .smx-real-chat-body{padding:6px 7px 7px;border-radius:0 0 7px 7px;background:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,.16))}
+  .streammaxxing-broadcast .smx-real-chat p{display:block;margin:0;padding:2px 0 2px 6px;color:#fff;line-height:1.45;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.9);border-left:2px solid rgba(255,255,255,.16);border-radius:2px;white-space:normal}.streammaxxing-broadcast .smx-real-chat p.plat-twitch{border-left-color:#9146ff}.streammaxxing-broadcast .smx-real-chat p.plat-kick{border-left-color:#53fc18}.streammaxxing-broadcast .smx-real-chat p.plat-youtube{border-left-color:#f00}.streammaxxing-broadcast .smx-real-chat p.plat-tiktok{border-left-color:#25f4ee}
+  .streammaxxing-broadcast .smx-real-chat .ico{display:inline-block;width:9px;height:9px;margin-right:4px;vertical-align:-2px}.streammaxxing-broadcast .smx-real-chat .ico svg{display:block;width:9px;height:9px}.streammaxxing-broadcast .smx-real-chat p strong{font-weight:800}.streammaxxing-broadcast .smx-real-chat p strong::after{content:":";color:rgba(255,255,255,.85);margin-right:3px}.streammaxxing-broadcast .smx-real-chat p span{color:#f3f4f8}.streammaxxing-broadcast .smx-real-chat p em{margin-right:4px;padding:0 3px;border-radius:2px;background:#ffcf5c;color:#1a1205;font-size:6px;font-weight:900;letter-spacing:.05em;font-style:normal;text-shadow:none}
+  .streammaxxing-broadcast .smx-chat-new{opacity:0;transform:translateY(6px)}.streammaxxing-broadcast [data-mode="chat"].smx-firing .smx-chat-new{animation:smx-chat-in 2.8s ease .58s both}@keyframes smx-chat-in{0%{opacity:0;transform:translateY(8px)}15%,85%{opacity:1;transform:none}100%{opacity:.45}}
+
+  /* Scaled port of nowplaying-vinyl.html's final refined vinyl stack. */
+  .streammaxxing-broadcast .smx-real-np{--ac:#5bb8d4;--ac2:#c77dff;position:absolute;z-index:10;left:12%;bottom:5%;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;transform:translateY(8px) scale(.72);transform-origin:left bottom}
+  .streammaxxing-broadcast .smx-real-np-glow{position:absolute;z-index:0;top:-14px;left:50%;width:136px;height:136px;margin-left:-68px;border-radius:50%;filter:blur(24px);opacity:.48;background:radial-gradient(circle at 50% 46%,var(--ac),transparent 64%),radial-gradient(circle at 64% 62%,var(--ac2),transparent 66%);animation:smx-real-glow 8s ease-in-out infinite alternate}@keyframes smx-real-glow{to{transform:translate(5px,-4px) scale(1.07)}}
+  .streammaxxing-broadcast .smx-real-disc-wrap{position:relative;z-index:1;width:150px;height:150px}.streammaxxing-broadcast .smx-real-ring{position:absolute;inset:0;z-index:2;width:150px;height:150px;transform:rotate(-90deg);overflow:visible}.streammaxxing-broadcast .smx-real-ring .track{fill:none;stroke:rgba(255,255,255,.1);stroke-width:3}.streammaxxing-broadcast .smx-real-ring .fill{fill:none;stroke:url(#smx-ring-grad);stroke-width:3.6;stroke-linecap:round;stroke-dasharray:452;stroke-dashoffset:138;filter:drop-shadow(0 0 5px #5bb8d4)}
+  .streammaxxing-broadcast .smx-real-disc{position:absolute;inset:8px;border-radius:50%;background:repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.02) 0 .6px,rgba(0,0,0,.17) .6px 2px),radial-gradient(circle at 50% 50%,transparent 0 26%,rgba(0,0,0,.26) 74%,rgba(0,0,0,.52) 100%),radial-gradient(circle at 50% 44%,#24252c,#131419 52%,#08090c);box-shadow:0 10px 26px rgba(0,0,0,.6),inset 0 0 30px rgba(0,0,0,.85);animation:smx-real-spin 7s linear infinite}@keyframes smx-real-spin{to{transform:rotate(360deg)}}
+  .streammaxxing-broadcast .smx-real-disc::after{content:"";position:absolute;inset:18%;border-radius:50%;background:radial-gradient(120% 120% at 30% 22%,#5bb8d4,#c77dff 62%,#090c11 118%);box-shadow:0 0 0 2px rgba(0,0,0,.7),0 0 0 3.5px rgba(91,184,212,.34),0 8px 18px rgba(0,0,0,.55)}
+  .streammaxxing-broadcast .smx-real-disc-wrap::before{content:"";position:absolute;inset:8px;z-index:5;border-radius:50%;pointer-events:none;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.16),inset 0 2px 3px rgba(255,255,255,.12),inset 0 -3px 6px rgba(0,0,0,.6),0 0 10px -2px rgba(91,184,212,.45)}
+  .streammaxxing-broadcast .smx-real-arm{position:absolute;z-index:7;right:-4px;top:1px;width:38px;height:75px;transform-origin:30px 7px;transform:rotate(15deg)}.streammaxxing-broadcast .smx-real-arm i{position:absolute;right:2px;top:0;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#92959d,#33353c 60%,#16171c);box-shadow:0 2px 4px #000}.streammaxxing-broadcast .smx-real-arm b{position:absolute;right:15px;top:12px;width:4px;height:66px;border-radius:4px;transform:rotate(31deg);transform-origin:top;background:linear-gradient(90deg,#63666f,#f4f6fa 48%,#494c53);box-shadow:0 1px 2px #000}.streammaxxing-broadcast .smx-real-arm span{position:absolute;left:-8px;bottom:-2px;width:14px;height:9px;border-radius:2px;background:#292b31;box-shadow:inset 0 1px rgba(255,255,255,.2),0 0 4px var(--ac)}
+  .streammaxxing-broadcast .smx-real-np-meta{z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center}.streammaxxing-broadcast .smx-real-np-meta small{display:flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;background:rgba(9,11,17,.44);color:rgba(233,238,247,.72);font:700 7px/1 var(--font-sans);letter-spacing:.14em}.streammaxxing-broadcast .smx-real-np-meta small svg{width:9px;height:9px}.streammaxxing-broadcast .smx-real-np-meta small i{width:2px;height:7px;border-radius:1px;background:var(--ac);animation:smx-real-eq .9s ease-in-out infinite}.streammaxxing-broadcast .smx-real-np-meta small i:nth-of-type(2){animation-delay:-.3s}.streammaxxing-broadcast .smx-real-np-meta small i:nth-of-type(3){animation-delay:-.6s}@keyframes smx-real-eq{50%{transform:scaleY(.3)}}.streammaxxing-broadcast .smx-real-np-meta strong{margin-top:6px;color:#fff;font:800 14px/1.1 var(--font-sans);text-shadow:0 2px 12px #000}.streammaxxing-broadcast .smx-real-np-meta span{margin-top:2px;color:rgba(233,238,247,.72);font:600 9px/1 var(--font-sans)}
+  .streammaxxing-broadcast [data-mode="music"].smx-firing .smx-real-np{animation:smx-real-surface 2.8s ease .62s both}@keyframes smx-real-surface{0%{opacity:0;transform:translateY(8px) scale(.68)}14%,84%{opacity:1;transform:translateY(0) scale(.72)}100%{opacity:0;transform:translateY(-4px) scale(.72)}}
+  .streammaxxing-broadcast .smx-event-toast{position:absolute;z-index:11;left:50%;bottom:7px;display:flex;align-items:center;gap:7px;padding:5px 9px;opacity:0;transform:translateX(-50%);border:1px solid rgba(34,211,160,.26);background:rgba(4,10,12,.82);color:var(--smx-mint);font:6px/1 var(--font-mono),monospace;letter-spacing:.12em;white-space:nowrap}
+  .streammaxxing-broadcast .smx-event-toast i{width:4px;height:4px;border-radius:50%;background:var(--smx-mint);box-shadow:0 0 7px var(--smx-mint)}
+  .streammaxxing-broadcast .smx-rig.smx-firing .smx-event-toast{animation:smx-toast 2.9s ease .62s both}
+  @keyframes smx-toast{0%{opacity:0;transform:translate(-50%,5px)}12%,82%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+  .streammaxxing-broadcast .smx-monitor-bottom{height:29px}.streammaxxing-broadcast .smx-monitor-bottom span{display:flex;align-items:center;gap:6px}
+
+  .streammaxxing-broadcast .smx-controls{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:11px}
+  .streammaxxing-broadcast .smx-controls button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 8px;border:1px solid #28363f;border-radius:6px;background:#0c1217;color:#819098;font:600 8px/1 var(--font-mono),monospace;letter-spacing:.06em;cursor:pointer;transition:border-color .18s,color .18s,background .18s,transform .18s}
+  .streammaxxing-broadcast .smx-controls button:hover,.streammaxxing-broadcast .smx-controls button:focus-visible{color:#eafff8;border-color:rgba(34,211,160,.55);outline:none;transform:translateY(-1px)}
+  .streammaxxing-broadcast .smx-controls button.is-active{color:#061713;background:var(--smx-mint);border-color:var(--smx-mint)}
+  .streammaxxing-broadcast .smx-controls button span{font-size:12px}
+  .streammaxxing-broadcast .smx-hint{display:flex;align-items:center;justify-content:center;gap:7px;margin:10px 0 0;color:#53616a;font:8px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase}
+  .streammaxxing-broadcast .smx-hint span{width:5px;height:5px;border-radius:50%;background:var(--smx-mint);box-shadow:0 0 7px var(--smx-mint)}
+
+  @media(max-width:1080px){
+    .streammaxxing-broadcast .smx-grid{grid-template-columns:1fr;gap:46px}
+    .streammaxxing-broadcast .smx-copy{max-width:760px}.streammaxxing-broadcast .smx-rig{width:min(820px,100%);margin:0 auto}
+    .streammaxxing-broadcast .smx-copy h1{font-size:clamp(60px,10vw,96px)}
+  }
+  @media(max-width:620px){
+    .streammaxxing-broadcast{min-height:0}.streammaxxing-broadcast .smx-shell{padding:76px 18px 46px}
+    .streammaxxing-broadcast .smx-back{margin-bottom:28px}.streammaxxing-broadcast .smx-copy h1{font-size:clamp(50px,15vw,72px)}
+    .streammaxxing-broadcast .smx-rig{order:-1}
+    .streammaxxing-broadcast .smx-lede{font-size:15px}.streammaxxing-broadcast .smx-specs{margin-top:30px}
+    .streammaxxing-broadcast .smx-event-rail{margin-inline:2px;gap:7px}.streammaxxing-broadcast .smx-source b{font-size:7px}.streammaxxing-broadcast .smx-latency small{display:none}
+    .streammaxxing-broadcast .smx-session{display:none}.streammaxxing-broadcast .smx-monitor-top{height:32px;padding-inline:8px}
+    .streammaxxing-broadcast .smx-program{aspect-ratio:4/3}.streammaxxing-broadcast .smx-real-chat{width:46%}
+    .streammaxxing-broadcast .smx-real-alert{max-width:78%}.streammaxxing-broadcast .smx-real-alert-badge{width:62px;height:62px;border-radius:15px;font-size:32px}.streammaxxing-broadcast .smx-real-alert-text{font-size:14px}
+    .streammaxxing-broadcast .smx-real-goal{max-width:none}.streammaxxing-broadcast .smx-real-np{left:6%}
+    .streammaxxing-broadcast .smx-controls{grid-template-columns:repeat(3,1fr)}.streammaxxing-broadcast .smx-controls button:nth-child(4),.streammaxxing-broadcast .smx-controls button:nth-child(5){grid-column:span 1}
+    .streammaxxing-broadcast .smx-monitor-bottom span:nth-child(2){display:none}.streammaxxing-broadcast .smx-panel-head i{display:none}
+  }
+</style>
+
+<script>
+  const setups = {
+    follow: {
+      source: 'TWITCH EVENTSUB',
+      glyph: '❤',
+      name: 'orbitalsam',
+      copy: ' just followed!',
+      message: '',
+      toast: 'FOLLOW RECEIVED · FIRED LOCALLY',
+      engine: 'ALERT QUEUE · CLEAR',
+      goalLabel: 'FOLLOWER GOAL',
+      goalCurrent: '848',
+      goalTarget: '1,000',
+      goalPct: '85%',
+      goalWidth: '85%',
+    },
+    donation: {
+      source: 'STREAM ELEMENTS · TIP',
+      glyph: '💰',
+      name: 'midnightace',
+      copy: ' tipped $25!',
+      message: '“that clutch was unreal”',
+      toast: 'TIP RECEIVED · CLONED VOICE READING',
+      engine: 'TTS · READING CLONED VOICE',
+      goalLabel: 'TIP GOAL',
+      goalCurrent: '$742',
+      goalTarget: '$1,000',
+      goalPct: '74%',
+      goalWidth: '74%',
+    },
+    chat: {
+      source: '4 CHAT CONNECTIONS',
+      glyph: '❤',
+      name: 'four platforms',
+      copy: ' one widget',
+      message: '',
+      toast: 'MESSAGE RECEIVED · MODERATION PASSED',
+      engine: 'CHAT · 4 CONNECTED',
+      goalLabel: 'FOLLOWER GOAL',
+      goalCurrent: '848',
+      goalTarget: '1,000',
+      goalPct: '85%',
+      goalWidth: '85%',
+    },
+    scene: {
+      source: 'STREAM DECK · SCENE',
+      glyph: '◆',
+      name: 'Starting Soon',
+      copy: ' sent to OBS',
+      message: '',
+      toast: 'SCENE CHANGED · OBS CONFIRMED',
+      engine: 'OBS · SCENE CONFIRMED',
+      goalLabel: 'FOLLOWER GOAL',
+      goalCurrent: '848',
+      goalTarget: '1,000',
+      goalPct: '85%',
+      goalWidth: '85%',
+    },
+    music: {
+      source: 'PLAYLISTMAXXING',
+      glyph: '♫',
+      name: 'Every platform',
+      copy: ' one turning page',
+      message: '',
+      toast: 'TRACK CHANGED · OVERLAY UPDATED',
+      engine: 'NOW PLAYING · SPOTIFY',
+      goalLabel: 'FOLLOWER GOAL',
+      goalCurrent: '848',
+      goalTarget: '1,000',
+      goalPct: '85%',
+      goalWidth: '85%',
+    },
+  } as const;
+
+  document.querySelectorAll<HTMLElement>('[data-smx-rig]').forEach((rig) => {
+    const buttons = Array.from(rig.querySelectorAll<HTMLButtonElement>('[data-smx-action]'));
+    const source = rig.querySelector<HTMLElement>('[data-smx-source]');
+    const glyph = rig.querySelector<HTMLElement>('[data-smx-alert-glyph]');
+    const name = rig.querySelector<HTMLElement>('[data-smx-alert-name]');
+    const copy = rig.querySelector<HTMLElement>('[data-smx-alert-copy]');
+    const message = rig.querySelector<HTMLElement>('[data-smx-alert-message]');
+    const toast = rig.querySelector<HTMLElement>('[data-smx-toast]');
+    const engine = rig.querySelector<HTMLElement>('[data-smx-engine-status]');
+    const goalLabel = rig.querySelector<HTMLElement>('[data-smx-goal-label]');
+    const goalCurrent = rig.querySelector<HTMLElement>('[data-smx-goal-current]');
+    const goalTarget = rig.querySelector<HTMLElement>('[data-smx-goal-target]');
+    const goalPct = rig.querySelector<HTMLElement>('[data-smx-goal-pct]');
+    const goalFill = rig.querySelector<HTMLElement>('[data-smx-goal-fill]');
+    const order = ['follow', 'donation', 'chat', 'scene', 'music'] as const;
+    let index = 0;
+    let timer = 0;
+
+    const fire = (mode: keyof typeof setups, fromUser = false) => {
+      const setup = setups[mode];
+      rig.dataset.mode = mode;
+      source && (source.textContent = setup.source);
+      glyph && (glyph.textContent = setup.glyph);
+      name && (name.textContent = setup.name);
+      copy && (copy.textContent = setup.copy);
+      message && (message.textContent = setup.message);
+      toast && (toast.textContent = setup.toast);
+      engine && (engine.textContent = setup.engine);
+      goalLabel && (goalLabel.textContent = setup.goalLabel);
+      goalCurrent && (goalCurrent.textContent = setup.goalCurrent);
+      goalTarget && (goalTarget.textContent = setup.goalTarget);
+      goalPct && (goalPct.textContent = setup.goalPct);
+      goalFill && (goalFill.style.width = setup.goalWidth);
+      buttons.forEach((button) => button.classList.toggle('is-active', button.dataset.smxAction === mode));
+      rig.classList.remove('smx-firing');
+      void rig.offsetWidth;
+      rig.classList.add('smx-firing');
+      index = order.indexOf(mode);
+      if (fromUser) {
+        window.clearInterval(timer);
+        timer = window.setInterval(next, 7000);
+      }
+    };
+
+    const next = () => fire(order[(index + 1) % order.length]);
+    buttons.forEach((button) => button.addEventListener('click', () => fire(button.dataset.smxAction as keyof typeof setups, true)));
+    fire('follow');
+    timer = window.setInterval(next, 4300);
+  });
+</script>
