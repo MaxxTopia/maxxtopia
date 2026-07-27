@@ -4,7 +4,8 @@
  * centerpiece for the playlistmaxxing page: black disc with concentric
  * grooves, an accent-colored center label (product logo if present), a
  * spindle hole, a slow specular sheen sweep, and a tonearm resting on the
- * record. Spins via CSS; the spin pauses under prefers-reduced-motion.
+ * record. The disc keeps spinning when Windows animations are disabled because
+ * the motion communicates the product itself; secondary page motion is reduced.
  *
  * Props:
  *   accentHex  center-label + glow accent (default the playlistmaxxing purple)
@@ -259,11 +260,4 @@ const {
     50% { opacity: 0.72; transform: scale(1.04); }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .vinyl__disc,
-    .vinyl__sheen,
-    .vinyl__glow {
-      animation: none !important;
-    }
-  }
 </style>

@@ -314,8 +314,8 @@ const isDM = product.slug === 'discordmaxxer';
 // Dropmaxxer is a browser app — embed it live so visitors can test it in-page
 // instead of just seeing a screenshot.
 const isDrop = product.slug === 'dropmaxxer';
-// Playlistmaxxing gets a bespoke music-themed showcase (spinning vinyl +
-// the 3-platform / mini-player / karaoke story) after the hero.
+// Playlistmaxxing promotes its bespoke spinning-vinyl showcase to the hero;
+// the 3-platform / mini-player / karaoke story continues beneath the deck.
 const isPlaylist = product.slug === 'playlistmaxxing';
 // Viewmaxxing gets a bespoke "One Remote" hero — a living-room TV that self-surfs
 // through the real app's surfaces (Home/Movies/TV/Anime/YouTube/Twitch/Search),
@@ -520,7 +520,15 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {isOM && <OMDiagnosticHero product={product} />}
   {isView && <ViewmaxxingHero product={product} />}
   {isSnipe && <SnipeMaxxerHero product={product} />}
-  {!isExt && !isDM && !isOM && !isView && !isSnipe && (
+  {isPlaylist && (
+    <PlaylistShowcase
+      accentHex={product.accentHex}
+      accent2Hex={product.accent2Hex}
+      logo={product.logo}
+      appUrl={product.primaryCta.href}
+    />
+  )}
+  {!isExt && !isDM && !isOM && !isView && !isSnipe && !isPlaylist && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
@@ -839,18 +847,6 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
         />
       </div>
     </section>
-  )}
-
-  {/* Playlistmaxxing-only: music-themed showcase — spinning vinyl record +
-      the 3-platform / floating mini-player / karaoke story. Sits right after
-      the hero as the "how it looks" centerpiece. */}
-  {isPlaylist && (
-    <PlaylistShowcase
-      accentHex={product.accentHex}
-      accent2Hex={product.accent2Hex}
-      logo={product.logo}
-      appUrl={product.primaryCta.href}
-    />
   )}
 
   {/* OM + dropmaxxer show the How-it-works walkthrough ABOVE the feature
