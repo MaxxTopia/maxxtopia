@@ -821,9 +821,9 @@
    auto-play by design. Without this exemption the global killer crushes their
    muzzle-flashes / scans / slides to 0.01ms (invisible) for animations-off users. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.viewmaxxing-tv, .om-diagnostic, .discord-exhibit, .viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *),
-  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *)::before,
-  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *)::after {
+  *:not(.viewmaxxing-tv, .om-diagnostic, .discord-exhibit, .snx-hero, .viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *),
+  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *)::before,
+  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

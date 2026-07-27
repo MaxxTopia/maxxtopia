@@ -21,6 +21,7 @@ import AdBlockDivide from '../components/AdBlockDivide.astro';
 import DiscordExhibitHero from '../components/DiscordExhibitHero.astro';
 import OMDiagnosticHero from '../components/OMDiagnosticHero.astro';
 import ViewmaxxingHero from '../components/ViewmaxxingHero.astro';
+import SnipeMaxxerHero from '../components/SnipeMaxxerHero.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -518,7 +519,8 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {isDM && <DiscordExhibitHero product={product} />}
   {isOM && <OMDiagnosticHero product={product} />}
   {isView && <ViewmaxxingHero product={product} />}
-  {!isExt && !isDM && !isOM && !isView && (
+  {isSnipe && <SnipeMaxxerHero product={product} />}
+  {!isExt && !isDM && !isOM && !isView && !isSnipe && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
