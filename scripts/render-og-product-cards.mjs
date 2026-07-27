@@ -41,7 +41,7 @@ const PRODUCTS = [
   { slug: 'dropmaxxer',          name: 'Dropmaxxer',          category: 'Fortnite',         status: 'beta', tagline: 'Stop guessing your drop.',         accent: '#4c51f7', stat: '832 m · bus altitude, cited' },
   { slug: 'aimmaxxer',           name: 'Aimmaxxer',           category: 'Training',         status: 'soon', tagline: 'Aim is four metrics. Not one.',    accent: '#f3af19', stat: '4 metrics · not one' },
   { slug: 'viewmaxxing',         name: 'Viewmaxxing',         category: 'Streamer Tools',   status: 'soon', tagline: 'A tool for streamers.',           accent: '#10b981', stat: 'operator-first · slot reserved' },
-  { slug: 'extensionmaxxing',    name: 'AdBlock-Maxxer',      category: 'Browser Extension', status: 'live', tagline: "The ad blocker they couldn't ban.", accent: '#00d4ff', stat: '0 ads · every browser' },
+  { slug: 'adblockmaxxer',       name: 'AdBlock-Maxxer',      category: 'Browser Extension', status: 'live', tagline: "The ad blocker they couldn't ban.", accent: '#00d4ff', stat: '0 ads · every browser' },
   { slug: 'streammaxxing',       name: 'Streammaxxing',       category: 'Stream Alerts',    status: 'live', tagline: 'Alerts that fire the instant it happens.', accent: '#22d3a0', stat: 'instant · fired on your PC' },
   { slug: 'snipemaxxer',         name: 'Snipemaxxer',         category: 'Fortnite',         status: 'beta', tagline: "Know who's in your lobby.",        accent: '#ff3b3b', stat: 'the whole lobby · named' },
   { slug: 'playlistmaxxing',     name: 'Playlistmaxxing',     category: 'Music',            status: 'live', tagline: 'Every platform. One playlist.',    accent: '#ff2e88', stat: '3-in-1 · Spotify · SoundCloud · YouTube' },

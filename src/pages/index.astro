@@ -12,7 +12,7 @@ const totalCount = products.length;
 // Lead the live grid with the strongest-pull products, not raw array order:
 // the flagship tuner, then the widest-appeal ad blocker, then the deepest
 // streamer app, then the Discord client.
-const liveOrder = ['extensionmaxxing', 'discordmaxxer', 'optimizationmaxxing', 'playlistmaxxing', 'streammaxxing'];
+const liveOrder = ['adblockmaxxer', 'discordmaxxer', 'optimizationmaxxing', 'playlistmaxxing', 'streammaxxing'];
 const liveSorted = [...liveProducts].sort(
   (a, b) => liveOrder.indexOf(a.slug) - liveOrder.indexOf(b.slug),
 );

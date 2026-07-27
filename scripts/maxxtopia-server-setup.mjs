@@ -205,7 +205,7 @@ const SHOWCASE_POSTS = [
             'Various extensions. Direction in flux — slot reserved while we figure out where this lands.',
             '',
             '⬇ Status:         soon',
-            '📝 Site:           https://maxxtopia.com/extensionmaxxing',
+            '📝 Site:           https://maxxtopia.com/adblockmaxxer',
         ].join('\n'),
     },
 ];
@@ -242,7 +242,7 @@ const WELCOME_MESSAGE = [
     '— **MAXXER** $4/mo · **MAXXER+** $9/mo · **MAXXER++** $17/mo (each tier adds cosmetic + perf perks)',
     '— Founder #(x) — first 33 ever · $67 one-time · your own numbered badge + perks for life',
     '',
-    '🎬 **clipmaxxer / dropmaxxer / aimmaxxer / viewmaxxing / extensionmaxxing** — beta or soon. Pricing announced as each ships.',
+    '🎬 **clipmaxxer / dropmaxxer / aimmaxxer / viewmaxxing / adblockmaxxer** — beta or soon. Pricing announced as each ships.',
     '',
     '**To buy anything:** open a ticket in **#open-ticket** → TicketTool spawns a private thread (only you + Diggy see it) → tell Diggy your preferred payment (PayPal / BTC / Venmo / Cash App) → pay → receive activation code.',
     '',

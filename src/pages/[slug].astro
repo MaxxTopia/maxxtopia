@@ -135,7 +135,7 @@ const reconvertConfig: Record<string, {
       },
     ],
   },
-  extensionmaxxing: {
+  adblockmaxxer: {
     closingLine: 'One blocker. Four browsers. Zero ads.',
     faqs: [
       {
@@ -223,7 +223,7 @@ const receiptsConfig: Record<string, {
   },
   // Closed-source live products: no public repo, so the 4th cell becomes a
   // download CTA instead of a repo link.
-  extensionmaxxing: {
+  adblockmaxxer: {
     version: 'v1.2.7',
     versionDate: 'Jul 2026',
     repoUrl: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.2.7.zip',
@@ -299,7 +299,7 @@ const primaryBtnClass = product.slug === 'viewmaxxing' ? 'btn-view' : 'btn-prima
 
 // AdBlock-Maxxer: pull the hero screenshot up into the empty right column
 // (under the Live / version pills) instead of the full-width shot below.
-const isExt = product.slug === 'extensionmaxxing';
+const isExt = product.slug === 'adblockmaxxer';
 
 // Aimmaxxer: interim resource page — per-game KovaaK warmups + gear advice +
 // a "v2, the real deal" teaser (the AimWarmup section) instead of the generic
@@ -355,13 +355,13 @@ const isExeDownload = !!product.primaryCta?.href?.toLowerCase().endsWith('.exe')
 const seoTitleOverride: Record<string, string> = {
   discordmaxxer: 'Lightweight Discord Client — 750 MB Less RAM | Discordmaxxer',
   optimizationmaxxing: 'Windows Game Optimizer — 100 Audited FPS Tweaks | Maxxtopia',
-  extensionmaxxing: 'Free YouTube & Twitch Ad Blocker + More | AdBlock-Maxxer',
+  adblockmaxxer: 'Free YouTube & Twitch Ad Blocker + More | AdBlock-Maxxer',
   streammaxxing: 'Free Stream Alerts, Overlays & TTS | Streammaxxing',
 };
 const seoDescOverride: Record<string, string> = {
   discordmaxxer: 'A lightweight Discord client that runs at 288 MB instead of 1,041 — same servers, friends and pings, 753 MB lighter. Free, native, zero telemetry.',
   optimizationmaxxing: 'A free Windows game optimizer: 100 audited, reversible FPS tweaks with cited sources and one-click undo. No placebos, no bloat, no telemetry.',
-  extensionmaxxing: 'Free ad blocker for YouTube, Twitch and Spotify across Chrome, Brave, Edge and Firefox. Manifest V3-ready, no Web Store gatekeeping — and more than ads.',
+  adblockmaxxer: 'Free ad blocker for YouTube, Twitch and Spotify across Chrome, Brave, Edge and Firefox. Manifest V3-ready, no Web Store gatekeeping — and more than ads.',
   streammaxxing: 'Free, local Twitch stream alerts, overlays and TTS — no cloud hop, no delay. Import Botrix, trim clips, normalize loudness. Runs on your PC.',
 };
 const pageTitle = seoTitleOverride[product.slug] ?? `${product.name} — ${product.tagline}`;
@@ -374,7 +374,7 @@ const howItWorksFirst =
   isDM ||
   product.slug === 'dropmaxxer' ||
   product.slug === 'streammaxxing' ||
-  product.slug === 'extensionmaxxing';
+  product.slug === 'adblockmaxxer';
 const hasBespokeStory = isLive && (isOM || isDM);
 const hasZones = Array.isArray(product.zones) && product.zones.length > 0;
 // Any live product with a receipts config shows the trust strip (and hides
@@ -393,7 +393,7 @@ const featureHeadings: Record<string, FeatureHeading> = {
   dropmaxxer:          { eyebrow: 'The math',        left: 'Cited physics.',           right: 'Current map.' },
   aimmaxxer:           { eyebrow: 'The metrics',     left: 'Aim is four things.',      right: 'Drilled four ways.' },
   viewmaxxing:         { eyebrow: 'The lineup',      left: 'Five surfaces.',           right: 'One remote.' },
-  extensionmaxxing:    { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
+  adblockmaxxer:       { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
   streammaxxing:       { eyebrow: 'The latency',     left: 'No cloud hop.',            right: 'No delay.' },
   snipemaxxer:         { eyebrow: 'The edge',        left: 'Intel you can\'t get',     right: 'from inside the game.' },
   playlistmaxxing:     { eyebrow: 'The mixtape',     left: 'Every song you love,',     right: 'one page.' },
@@ -411,7 +411,7 @@ const softwareKeywords: Record<string, string> = {
   dropmaxxer: 'fortnite drop calculator, drop spot tool, drop path calculator, droppingcalc alternative, fortnite poi planner, fortnite bus speed, fortnite landing optimization',
   aimmaxxer: 'kovaaks warmup routine, best kovaaks scenarios, valorant warmup routine, apex aim warmup, cs2 aim warmup, fortnite aim warmup, overwatch aim warmup, voltaic vdim, best mouse skates, ptfe vs glass mouse skates, tiger arc 2, ai aim trainer, kovaaks alternative',
   viewmaxxing: 'free streaming app for android tv, tv box streaming app, firestick streaming app, ad-free youtube on tv, free movie streaming app, anime streaming app, all-in-one streaming app, android tv box apk, kodi alternative, cord cutting app, twitch on tv box',
-  extensionmaxxing: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
+  adblockmaxxer: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
   streammaxxing: 'stream alerts, twitch alerts, local stream alerts, botrix alternative, streamlabs alerts alternative, twitch eventsub overlay, donation tts, voice clone tts alerts, obs alert overlay, free stream alerts, clip trimmer, loudness normalize alerts',
   snipemaxxer: 'fortnite lobby scout, fortnite tournament tool, fncs scout, cash cup helper, fortnite replay analyzer, who is in my fortnite lobby, fortnite pro tracker, fortnite live streamer detector, fortnite points calculator, fortnite qualify calculator, fortnite surge tracker, fortnite tournament coach',
   playlistmaxxing: 'cross-platform playlist, combine spotify soundcloud youtube, one playlist all platforms, unified music player, free online music player, no login music player, listen to soundcloud and youtube together, embed music player, music aggregator, web music hub, playlist across services, songs not on spotify',
@@ -783,11 +783,11 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
           Replaces the hero stats aside that was dropped in Phase 1. */}
       {hasReceiptsBand && receiptsConfig[product.slug] && (
         <ReceiptsBand
-          version={['streammaxxing', 'extensionmaxxing'].includes(product.slug) && product.version
+          version={['streammaxxing', 'adblockmaxxer'].includes(product.slug) && product.version
             ? `v${product.version}`
             : receiptsConfig[product.slug].version}
           versionDate={receiptsConfig[product.slug].versionDate}
-          repoUrl={product.slug === 'extensionmaxxing'
+          repoUrl={product.slug === 'adblockmaxxer'
             ? product.primaryCta.href
             : receiptsConfig[product.slug].repoUrl}
           repoLabel={receiptsConfig[product.slug].repoLabel}
@@ -821,11 +821,11 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {(isExt || isDM || isOM || isStream) && hasReceiptsBand && receiptsConfig[product.slug] && (
     <div class="mx-auto max-w-7xl px-5 sm:px-8 pt-14">
       <ReceiptsBand
-        version={['streammaxxing', 'extensionmaxxing'].includes(product.slug) && product.version
+        version={['streammaxxing', 'adblockmaxxer'].includes(product.slug) && product.version
           ? `v${product.version}`
           : receiptsConfig[product.slug].version}
         versionDate={receiptsConfig[product.slug].versionDate}
-        repoUrl={product.slug === 'extensionmaxxing'
+        repoUrl={product.slug === 'adblockmaxxer'
           ? product.primaryCta.href
           : receiptsConfig[product.slug].repoUrl}
         repoLabel={receiptsConfig[product.slug].repoLabel}

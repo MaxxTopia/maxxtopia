@@ -784,7 +784,7 @@ export const products: Product[] = [
     ],
   },
   {
-    slug: 'extensionmaxxing',
+    slug: 'adblockmaxxer',
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',

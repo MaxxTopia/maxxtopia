@@ -28,7 +28,7 @@ const SLUGS = [
   'dropmaxxer',
   'aimmaxxer',
   'viewmaxxing',
-  'extensionmaxxing',
+  'adblockmaxxer',
 ];
 
 // Trailing slash required — CF Pages 308-redirects no-slash URLs.

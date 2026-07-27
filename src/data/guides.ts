@@ -55,7 +55,7 @@ export const guides: Guide[] = [
     description:
       'The honest, free ways to block YouTube ads on desktop in 2026 — what still works, what got patched, and the trade-offs of each. No sketchy installers.',
     date: '2026-06-17',
-    product: 'extensionmaxxing',
+    product: 'adblockmaxxer',
     excerpt:
       'What actually still blocks YouTube ads for free in 2026 on desktop — and the trade-offs of each route.',
     readMins: 5,

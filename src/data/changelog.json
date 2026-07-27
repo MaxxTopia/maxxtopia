@@ -18,7 +18,7 @@
   {
     "date": "2026-07-09",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.3",
     "title": "Playback speed is back on the YouTube Reclaim player.",
     "body": "The Reclaim player swaps in its own video, which meant YouTube's speed menu was out of reach. It now has its own - and it remembers what you picked.",
@@ -80,7 +80,7 @@
   {
     "date": "2026-07-06",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.0",
     "title": "Daily Quest System: the Penalty Zone no longer gets stuck.",
     "body": "Fixed a bug where the red Penalty Zone re-appeared every single day. It now fires once when you break the chain, then stays quiet until you fully clear a day again.",
@@ -93,7 +93,7 @@
   {
     "date": "2026-07-06",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.5.9",
     "title": "Sprite Cannon balance + a full sound pass.",
     "body": "The bundled Sprite Cannon game gets a tuning + audio pass: a tougher Trial by Fire, cleaner sound design, and a coin/quest/secret-skin rebalance.",
@@ -108,7 +108,7 @@
   {
     "date": "2026-07-06",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.5.8",
     "title": "Sprite Cannon's big ability + skin overhaul.",
     "body": "The bundled Sprite Cannon game gets a huge pass: reworked powers across the roster, secret skins that auto-unlock with notifications, bigger skins, and a full rarity/price rebalance.",
@@ -178,7 +178,7 @@
   {
     "date": "2026-07-05",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.5.7",
     "title": "Gorilla Warfare lands in Sprite Cannon.",
     "body": "The bundled Sprite Cannon game gets a brand-new boss level plus an in-game coin shop.",
@@ -221,7 +221,7 @@
   {
     "date": "2026-06-29",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.5.1",
     "title": "Sprite Cannon: portals, daily quests, and a world map.",
     "body": "The built-in arcade gets a big content + polish drop, and the Daily Quest panel keeps improving.",
@@ -235,7 +235,7 @@
   {
     "date": "2026-06-29",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.5.0",
     "title": "Daily Quest timers + Sprite Cannon cloud save.",
     "body": "THE SYSTEM daily-quest panel gets timed quests (a stopwatch fills the bar and auto-completes), a minimize button, and Solo-Leveling effects. The built-in Sprite Cannon arcade adds cross-device cloud save.",
@@ -249,7 +249,7 @@
   {
     "date": "2026-06-29",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.4.7",
     "title": "THE SYSTEM: a built-in daily quest tracker.",
     "body": "A new gamified Daily Quest panel lives in the extension - add your own goals, check them off, earn XP and rank up E to S, build a streak. Plus a big update to the built-in Sprite Cannon arcade.",
@@ -263,7 +263,7 @@
   {
     "date": "2026-06-28",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.4.6",
     "title": "Weekly arcade leaderboard with coin prizes.",
     "body": "Refreshed the filter lists, and the built-in Sprite Cannon arcade now runs a weekly leaderboard that pays coins to the top 5 each week, with rebalanced earning and cheat-resistant scores.",
@@ -277,7 +277,7 @@
   {
     "date": "2026-06-28",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.4.5",
     "title": "Fresh filters and a bigger built-in arcade.",
     "body": "Refreshed EasyList/EasyPrivacy and the Twitch fix, and updated the built-in Sprite Cannon arcade with new abilities, shop polish, and a wave of new map names.",
@@ -291,7 +291,7 @@
   {
     "date": "2026-06-26",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.4.0",
     "title": "Ad-free YouTube that just turns itself on.",
     "body": "The YouTube Reclaim companion - the piece that beats YouTube's server-side ad enforcement - no longer needs starting by hand. Run it once, and from then on your browser launches it automatically whenever Reclaim is on. Set it up on a second PC in under a minute.",
@@ -334,7 +334,7 @@
   {
     "date": "2026-06-25",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.3.9",
     "title": "A real scrub bar on YouTube, and chat over your Twitch VODs.",
     "body": "The YouTube Reclaim player now draws its own control bar instead of leaning on the browser's basic controls - so you get a proper draggable seek bar, play/pause, time, volume and fullscreen on every ad-free video. And the fullscreen Twitch chat overlay now works on VODs and chat replay, not only live streams.",
@@ -430,7 +430,7 @@
   {
     "date": "2026-06-19",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.3.1",
     "title": "YouTube Reclaim - ad-free YouTube on enforced accounts, now one click.",
     "body": "YouTube's server-side ad enforcement (the black screen / 'allow ads' wall) can't be beaten by any in-browser blocker - the ad is welded to the stream on Google's servers. The new optional companion fetches the same video ad-free and plays it inside the normal YouTube page. It's now a single download with nothing to install.",
@@ -638,7 +638,7 @@
   {
     "date": "2026-06-17",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.2.23",
     "title": "YouTube enforcement safeguard.",
     "body": "When YouTube hard-enforces ads on an account server-side (videos go black), AdBlock-Maxxer now handles it gracefully instead of breaking.",
@@ -667,7 +667,7 @@
   {
     "date": "2026-06-17",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.2.22",
     "title": "YouTube stability.",
     "body": "Reverted to the stable YouTube ad blocker after testing against YouTube’s newest server-side enforcement.",
@@ -736,7 +736,7 @@
   {
     "date": "2026-06-13",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.2.7",
     "title": "Twitch chat overlay + QoL pass.",
     "body": "Newest app in the suite keeps stacking Twitch extras.",
@@ -781,7 +781,7 @@
   {
     "date": "2026-06-12",
     "product": "AdBlock-Maxxer",
-    "productSlug": "extensionmaxxing",
+    "productSlug": "adblockmaxxer",
     "version": "v1.2.1",
     "title": "The blocker they couldn't ban — live.",
     "body": "New to the suite: one ad blocker that loads where the others got banned.",
