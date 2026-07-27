@@ -23,6 +23,7 @@ import OMDiagnosticHero from '../components/OMDiagnosticHero.astro';
 import ViewmaxxingHero from '../components/ViewmaxxingHero.astro';
 import SnipeMaxxerHero from '../components/SnipeMaxxerHero.astro';
 import StreammaxxingBroadcastHero from '../components/StreammaxxingBroadcastHero.astro';
+import AimDiagnosticHero from '../components/AimDiagnosticHero.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -522,6 +523,7 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {isView && <ViewmaxxingHero product={product} />}
   {isSnipe && <SnipeMaxxerHero product={product} />}
   {isStream && <StreammaxxingBroadcastHero product={product} />}
+  {isAim && <AimDiagnosticHero product={product} />}
   {isPlaylist && (
     <PlaylistShowcase
       accentHex={product.accentHex}
@@ -530,7 +532,7 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
       appUrl={product.primaryCta.href}
     />
   )}
-  {!isExt && !isDM && !isOM && !isView && !isSnipe && !isPlaylist && !isStream && (
+  {!isExt && !isDM && !isOM && !isView && !isSnipe && !isPlaylist && !isStream && !isAim && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
