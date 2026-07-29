@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-const updated = 'June 28, 2026';
+const updated = 'July 28, 2026';
 ---
 
 <Layout
@@ -30,6 +30,20 @@ const updated = 'June 28, 2026';
 
       <h2 class="text-white text-xl font-semibold pt-4">Desktop apps</h2>
       <p>Our desktop apps are local-first: your media, settings, and accounts stay on your device. Where an app offers optional usage telemetry, it is <strong class="text-white">off by default</strong> and anonymous when enabled.</p>
+
+      <h2 class="text-white text-xl font-semibold pt-4">Streammaxxing and YouTube data</h2>
+      <p>Streammaxxing offers an optional <strong class="text-white">Connect YouTube</strong> feature for its unified chat overlay. The integration requests the read-only <code>youtube.readonly</code> permission only after you choose to connect your Google account.</p>
+      <p>When connected, Streammaxxing accesses only the YouTube data needed to find and display your live chat:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong class="text-white">Your YouTube channel ID and channel name</strong>, so the app can identify the channel you connected.</li>
+        <li><strong class="text-white">Your active live-broadcast and live-chat identifiers</strong>, so the app can detect when you go live and connect automatically.</li>
+        <li><strong class="text-white">Live-chat messages and their public author details</strong>, so messages can appear in the local Streammaxxing chat and OBS overlay.</li>
+      </ul>
+      <p>Streammaxxing does <strong class="text-white">not</strong> request your Google password or email address, and it cannot upload, edit, or delete videos; manage playlists or subscriptions; or post as you.</p>
+      <p>Google access tokens are used in memory. The refresh token, connected channel ID, and channel name are encrypted with Windows user-scoped DPAPI and stored only in Streammaxxing's app-data folder on your PC. Live-chat messages are processed locally and are not retained by Maxxtopia or sent to Maxxtopia servers. If you add the chat overlay to OBS, you intentionally choose to display those messages on your broadcast.</p>
+      <p>We do not sell, share, advertise against, profile from, or use Google user data to train generalized AI or machine-learning models. Our use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including its Limited Use requirements.</p>
+      <p>You can stop YouTube access in Streammaxxing with <strong class="text-white">Forget Google link</strong>, which revokes the saved Google authorization and removes the local encrypted token files. You can also revoke access from your <a href="https://myaccount.google.com/connections">Google Account connections</a>. Uninstalling Streammaxxing stops access; use Forget Google link or Google Account connections first if you also want the saved authorization revoked.</p>
+      <p>Google and YouTube process data under their own <a href="https://policies.google.com/privacy">Privacy Policy</a> and <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>. Questions about Streammaxxing's YouTube integration: <a href="mailto:streammaxxing-support@googlegroups.com">streammaxxing-support@googlegroups.com</a>.</p>
 
       <h2 class="text-white text-xl font-semibold pt-4">Website</h2>
       <p>maxxtopia.com is a static site hosted on Cloudflare Pages. Standard server logs (such as IP address and request metadata) may be processed by our hosting provider to deliver and secure the site. We do not place advertising cookies.</p>
