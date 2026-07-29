@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-07-29",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.4",
+    "title": "YouTube Reclaim no longer stays frozen when a stream drops.",
+    "body": "Rare HD stream failures now recover automatically instead of leaving the Reclaim player stuck.",
+    "items": [
+      "Resumes through the fallback stream at the same timestamp.",
+      "Recovers from post-start proxy errors, early stream endings, and silent stalls.",
+      "Ignores stale callbacks from an older seek or quality selection."
+    ]
+  },
+  {
     "date": "2026-07-10",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
