@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-07-29",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "title": "Playlistmaxxing now finds the full song—not the nearest clip.",
+    "body": "Discover and song repair now make cleaner choices, keep artist signals honest, and keep the popout matched to what you hear.",
+    "items": [
+      "Rejects snippets, previews, Shorts, covers, and altered versions.",
+      "Collapses VEVO aliases and ignores random reupload channel handles.",
+      "Keeps the popout synced to the video actually playing.",
+      "Dismisses one Discover song without muting the whole artist."
+    ]
+  },
+  {
+    "date": "2026-07-29",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
     "version": "v1.6.4",
