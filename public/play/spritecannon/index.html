@@ -639,6 +639,8 @@ const Q = new URLSearchParams(location.search);
 const DEV = Q.has("dev"); // dev test mode (?dev): every skin unlocked to preview - never set for shipped users
 const GORILLA_TEST = Q.has("gorilla") || Q.get("gauntlet")==="gorilla"; // ?gorilla -> drop straight into GORILLA WARFARE for testing
 const STANDALONE = (window.SC_STANDALONE===true) || (location.port!=="4747" && !/^(127\.0\.0\.1|localhost)$/.test(location.hostname)); // hosted web build (injected flag, or any non-hub host) vs in-app OBS hub; the hub always serves on :4747 so treat that port as in-app even via LAN IP
+const WEB_TOP = STANDALONE && window.top === window.self; // the full-page Maxxtopia/itch surface; extension and OBS embeds stay untouched
+const WEB_RENDER_PIXELS = 800000; // cap only the backing store; CSS/gameplay scale stays resolution-independent
 const AB = STANDALONE ? "imported/" : "/imported/"; // asset base: relative when hosted standalone, absolute under the app hub
 const SKIN_VIS = 1.70; // in-game skin visual scale (hitbox/collision UNCHANGED) - Diggy-tuned so bought skins read big enough to enjoy while flying
 // PWA: register the service worker ONLY on the hosted standalone web build (Add-to-Home-Screen + offline).
@@ -662,14 +664,14 @@ if (STANDALONE && window.top === window.self) {
       else if(_scIsIOS){ _scTxt("Tap the Share icon, then 'Add to Home Screen'"); } }; };
   if(document.readyState!=="loading") _scWire(); else window.addEventListener("DOMContentLoaded", _scWire);
 }
-const cv = document.getElementById("game"); let ctx = cv.getContext("2d"); // ctx is `let` so drawScapes can briefly retarget it at an offscreen buffer during a world crossfade (restored synchronously)
+const cv = document.getElementById("game"); let ctx = cv.getContext("2d", WEB_TOP ? {alpha:false, desynchronized:true} : undefined); // ctx is `let` so drawScapes can briefly retarget it at an offscreen buffer during a world crossfade (restored synchronously)
 // Resolution independence. CRISP = retina sharpness (canvas pixels per CSS pixel - backing-store only).
 // DPR = the GAMEPLAY unit scale = CRISP * a viewport-fit factor, so the SAME play area is shown at any
 // window size. Below the reference design box the world zooms OUT (small window => you see the same world,
 // not "everything whips by and the kitty flies off the top"); at/above it the fit is capped to 1 so DPR
 // == CRISP and fullscreen/OBS is byte-for-byte unchanged. Every gameplay constant is in *DPR units, so
 // scaling this one value rescales the whole game (speeds, sizes, gravity, camera, world spawn).
-const CRISP=Math.min(2, window.devicePixelRatio||1);
+let CRISP=Math.min(2, window.devicePixelRatio||1);
 // Reference "design window" the world scales to fit. Desktop = wide 1600x900 cabinet framing. PHONES use a
 // much smaller box so the world doesn't zoom way out (tiny sprites + everything crawling = "hella slow"); a
 // smaller reference = bigger sprites + punchier scroll. (IS_TOUCH is defined later, so detect inline here.)
@@ -685,6 +687,9 @@ function resize(){
   // backing store + gameplay scale to match what's actually rendered.
   const cw = cv.clientWidth  || innerWidth;
   const ch = cv.clientHeight || innerHeight;
+  const nativeDpr = Math.min(2, window.devicePixelRatio||1);
+  const nativePixels = Math.max(1, cw*ch*nativeDpr*nativeDpr);
+  CRISP = WEB_TOP ? nativeDpr*Math.min(1, Math.sqrt(WEB_RENDER_PIXELS/nativePixels)) : nativeDpr;
   W = cv.width  = Math.floor(cw*CRISP);
   H = cv.height = Math.floor(ch*CRISP);
   const fit = Math.min(1, cw/REF_W, ch/REF_H); // contain both axes; never upscale past design
