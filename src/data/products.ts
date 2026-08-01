@@ -1160,7 +1160,7 @@ export const products: Product[] = [
     name: 'Snipemaxxer',
     category: 'Fortnite',
     status: 'beta',
-    version: '0.1.71',
+    version: '0.2.2',
     tagline: 'Know who\'s in your lobby.',
     description:
       "Auto-detects your match and names the whole lobby — pros, live streamers, who dropped where, off-region — plus more features to help in-game.",
@@ -1232,7 +1232,7 @@ export const products: Product[] = [
         visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp?v=2', alt: 'Where Everyone Was map — the current-season Fortnite map showing each pro and streamer\'s skin icon and IGN at the POI they landed, with the field as dots and per-POI head-counts.' },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.1.71.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.2.2.exe', external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',

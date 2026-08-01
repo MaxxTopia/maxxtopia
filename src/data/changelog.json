@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-08-01",
+    "product": "Snipemaxxer",
+    "productSlug": "snipemaxxer",
+    "version": "v0.2.2",
+    "title": "Snipemaxxer now follows your live Valorant lobby.",
+    "body": "The new Valorant side connects to Riot directly on your main PC—or through the one-time gaming-PC link—so your live lobby can open without repeating setup every session.",
+    "items": [
+      "Shows the current full lobby with teammates and enemies clearly separated.",
+      "Reconnect bridge refreshes a two-PC link from inside the app.",
+      "Local Riot detection takes priority when the app and game share a PC.",
+      "The Windows installer and updater are live."
+    ]
+  },
+  {
     "date": "2026-07-29",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
