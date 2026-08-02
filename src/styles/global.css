@@ -334,18 +334,15 @@
   .gradient-view { animation: none; }
 }
 
-/* Neon-vinyl variant — playlistmaxxing's own colorway. The suite gradient is
-   magenta→cyan, which is exactly why the music page used to read as "another
-   suite page" instead of as a record. This one sweeps hot pink → amber, like a
-   neon sign over a turntable, and belongs to no other product. */
+/* Cyber-vinyl variant — playlistmaxxing's vibrant music colorway.
+   Electric magenta → neon violet → electric cyan → cyan-turquoise. */
 .gradient-music {
   background: linear-gradient(
     115deg,
     #ff2e88 0%,
-    #ff5fa2 22%,
-    #ff8a4c 52%,
-    #ffb020 76%,
-    #ff2e88 100%
+    #a855f7 30%,
+    #00d4ff 70%,
+    #00f2fe 100%
   );
   background-size: 260% 100%;
   -webkit-background-clip: text;
@@ -361,7 +358,7 @@
   }
   50% {
     background-position: 100% 50%;
-    filter: brightness(1.14) drop-shadow(0 0 12px rgba(255, 176, 32, 0.34));
+    filter: brightness(1.18) drop-shadow(0 0 14px rgba(0, 212, 255, 0.4));
   }
 }
 @media (prefers-reduced-motion: reduce) {

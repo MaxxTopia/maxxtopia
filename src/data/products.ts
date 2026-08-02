@@ -1291,7 +1291,7 @@ export const products: Product[] = [
     logo: '/logos/playlistmaxxing.webp',
     icon: '/logos/playlistmaxxing.webp',
     accentHex: '#ff2e88',
-    accent2Hex: '#ffb020',
+    accent2Hex: '#00d4ff',
     screenshots: ['/screenshots/playlistmaxxing/hero.webp'],
     heroStat: { value: '3-in-1', label: 'Spotify · SoundCloud · YouTube' },
     zones: [

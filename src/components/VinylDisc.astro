@@ -2,13 +2,13 @@
 /**
  * VinylDisc — an animated, realistic spinning vinyl record. The showcase
  * centerpiece for the playlistmaxxing page: black disc with concentric
- * grooves, an accent-colored center label (product logo if present), a
- * spindle hole, a slow specular sheen sweep, and a tonearm resting on the
- * record. The disc keeps spinning when Windows animations are disabled because
- * the motion communicates the product itself; secondary page motion is reduced.
+ * grooves, an accent-colored center label, spindle hole, specular sheen sweep,
+ * tonearm with glowing stylus light, and dynamic pop-out cards featuring real
+ * famous songs with actual album cover art (The Weeknd, Harry Styles, Dua Lipa).
  *
  * Props:
- *   accentHex  center-label + glow accent (default the playlistmaxxing purple)
+ *   accentHex  center-label + glow accent (default playlistmaxxing magenta #ff2e88)
+ *   accent2Hex secondary glow accent (default electric cyan #00d4ff)
  *   logo       optional logo image dropped onto the spinning label
  *   spinning   set false to render a still record (default true)
  */
@@ -21,17 +21,53 @@ interface Props {
 
 const {
   accentHex = '#ff2e88',
-  accent2Hex = '#ffb020',
+  accent2Hex = '#00d4ff',
   logo = '/logos/playlistmaxxing.webp',
   spinning = true,
 } = Astro.props;
+
+// Real famous songs with actual album cover art image paths
+const famousSongs = [
+  {
+    title: 'Blinding Lights',
+    artist: 'The Weeknd',
+    platform: 'Spotify',
+    platformBadge: 'sp',
+    time: '2:14 / 3:20',
+    coverImg: '/album-art/blinding-lights.jpg',
+  },
+  {
+    title: 'Starboy',
+    artist: 'The Weeknd ft. Daft Punk',
+    platform: 'YouTube',
+    platformBadge: 'yt',
+    time: '1:45 / 3:50',
+    coverImg: '/album-art/starboy.jpg',
+  },
+  {
+    title: 'Levitating',
+    artist: 'Dua Lipa',
+    platform: 'SoundCloud',
+    platformBadge: 'sc',
+    time: '3:02 / 3:23',
+    coverImg: '/album-art/levitating.jpg',
+  },
+  {
+    title: 'As It Was',
+    artist: 'Harry Styles',
+    platform: 'Spotify',
+    platformBadge: 'sp',
+    time: '2:01 / 2:47',
+    coverImg: '/album-art/as-it-was.jpg',
+  },
+];
 ---
 
 <div
   class:list={['vinyl', { 'is-still': !spinning }]}
   style={`--accent: ${accentHex}; --accent-2: ${accent2Hex};`}
   role="img"
-  aria-label="Spinning vinyl record"
+  aria-label="Spinning vinyl record with floating popout music player"
 >
   <div class="vinyl__glow" aria-hidden="true"></div>
 
@@ -50,12 +86,51 @@ const {
     </div>
   </div>
 
-  <!-- Tonearm: pivot at top-right, arm angled down onto the record. -->
+  <!-- Tonearm: pivot at top-right, arm angled down onto the record with glowing stylus -->
   <div class="vinyl__tonearm" aria-hidden="true">
     <span class="vinyl__pivot"></span>
     <span class="vinyl__arm">
-      <span class="vinyl__headshell"></span>
+      <span class="vinyl__headshell">
+        <span class="vinyl__stylus-light"></span>
+      </span>
     </span>
+  </div>
+
+  <!-- Real Famous Songs Popout Cards floating around the spinning record with real album cover art -->
+  <div class="vinyl__popouts" aria-hidden="true">
+    {famousSongs.map((song, i) => (
+      <div class={`vinyl__popout-card vinyl__popout-card--${i + 1}`} style={`--card-idx: ${i};`}>
+        <div class="popout__header">
+          <span class="popout__dots">
+            <i class="dot dot--red"></i>
+            <i class="dot dot--yellow"></i>
+            <i class="dot dot--green"></i>
+          </span>
+          <span class="popout__label">Floating Pop-out</span>
+          <span class={`popout__platform-chip popout__platform-chip--${song.platformBadge}`}>
+            {song.platform}
+          </span>
+        </div>
+        <div class="popout__body">
+          <div class="popout__cover">
+            <img src={song.coverImg} alt={song.title} width="40" height="40" loading="eager" decoding="async" />
+          </div>
+          <div class="popout__info">
+            <span class="popout__title">{song.title}</span>
+            <span class="popout__artist">{song.artist}</span>
+            <div class="popout__progress-bar">
+              <span class="popout__progress-fill"></span>
+            </div>
+            <div class="popout__meta">
+              <span class="popout__time">{song.time}</span>
+              <span class="popout__mini-waves">
+                <span></span><span></span><span></span><span></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
   </div>
 </div>
 
@@ -63,50 +138,51 @@ const {
   .vinyl {
     position: relative;
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     margin: 0 auto;
     aspect-ratio: 1 / 1;
     isolation: isolate;
   }
 
-  /* Soft accent bloom behind the record. */
+  /* Soft accent bloom behind the record — electric cyan & magenta. */
   .vinyl__glow {
     position: absolute;
-    inset: -8%;
+    inset: -10%;
     border-radius: 50%;
     background:
-      radial-gradient(circle at 50% 46%, color-mix(in srgb, var(--accent) 55%, transparent) 0%, transparent 62%),
-      radial-gradient(circle at 62% 64%, color-mix(in srgb, var(--accent-2) 40%, transparent) 0%, transparent 58%);
-    filter: blur(26px);
-    opacity: 0.6;
+      radial-gradient(circle at 45% 42%, color-mix(in srgb, var(--accent) 55%, transparent) 0%, transparent 64%),
+      radial-gradient(circle at 65% 68%, color-mix(in srgb, var(--accent-2) 48%, transparent) 0%, transparent 62%);
+    filter: blur(32px);
+    opacity: 0.65;
     z-index: 0;
     animation: vinyl-breathe 6s ease-in-out infinite;
   }
 
   .vinyl__platter {
     position: absolute;
-    inset: 6%;
+    inset: 8%;
     border-radius: 50%;
     z-index: 1;
     box-shadow:
-      0 30px 70px rgba(0, 0, 0, 0.6),
-      0 0 0 1px rgba(255, 255, 255, 0.05);
+      0 30px 80px rgba(0, 0, 0, 0.75),
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 0 30px color-mix(in srgb, var(--accent-2) 20%, transparent);
   }
 
-  /* The disc itself — this is what rotates. */
+  /* The disc itself — rotates smoothly. */
   .vinyl__disc {
     position: absolute;
     inset: 0;
     border-radius: 50%;
     background:
-      radial-gradient(circle at 50% 50%, #201430 0 28%, transparent 28.4%),
-      radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.08), transparent 40%),
-      #0b0710;
+      radial-gradient(circle at 50% 50%, #1e1028 0 28%, transparent 28.4%),
+      radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.12), transparent 40%),
+      #0a0710;
     transform-origin: center;
     animation: vinyl-spin 4s linear infinite;
   }
 
-  /* Concentric grooves — fine repeating rings + a few brighter reflective bands. */
+  /* Fine concentric grooves. */
   .vinyl__grooves {
     position: absolute;
     inset: 0;
@@ -114,24 +190,23 @@ const {
     background:
       repeating-radial-gradient(
         circle at 50% 50%,
-        rgba(255, 255, 255, 0.045) 0px,
-        rgba(255, 255, 255, 0.045) 1px,
+        rgba(255, 255, 255, 0.05) 0px,
+        rgba(255, 255, 255, 0.05) 1px,
         rgba(0, 0, 0, 0) 2px,
         rgba(0, 0, 0, 0) 4px
       ),
       repeating-radial-gradient(
         circle at 50% 50%,
-        rgba(0, 0, 0, 0.5) 0px,
-        rgba(0, 0, 0, 0.5) 6px,
-        rgba(255, 255, 255, 0.02) 7px,
-        rgba(0, 0, 0, 0.5) 9px
+        rgba(0, 0, 0, 0.55) 0px,
+        rgba(0, 0, 0, 0.55) 6px,
+        rgba(255, 255, 255, 0.025) 7px,
+        rgba(0, 0, 0, 0.55) 9px
       );
     -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 27%, #000 27.6% 99.6%, transparent 100%);
     mask: radial-gradient(circle at 50% 50%, transparent 0 27%, #000 27.6% 99.6%, transparent 100%);
   }
 
-  /* Specular highlight sweep — a soft light band that rotates opposite the
-     disc so the record reads as glossy. Sits above the grooves. */
+  /* Specular sheen sweep. */
   .vinyl__sheen {
     position: absolute;
     inset: 0;
@@ -139,20 +214,19 @@ const {
     background: conic-gradient(
       from 0deg at 50% 50%,
       transparent 0deg,
-      rgba(255, 255, 255, 0.16) 24deg,
+      rgba(255, 255, 255, 0.18) 24deg,
       transparent 70deg,
       transparent 180deg,
-      rgba(255, 255, 255, 0.1) 210deg,
+      rgba(255, 255, 255, 0.12) 210deg,
       transparent 255deg,
       transparent 360deg
     );
     mix-blend-mode: screen;
-    opacity: 0.9;
-    animation: vinyl-sheen 7s linear infinite;
+    opacity: 0.92;
+    animation: vinyl-sheen 6.5s linear infinite;
   }
 
-  /* Center label — accent gradient, carries the logo, does NOT counter-rotate
-     so the mark spins with the record like a real label. */
+  /* Center label — neon cyan and magenta gradient ring. */
   .vinyl__label {
     position: absolute;
     top: 50%;
@@ -164,17 +238,18 @@ const {
     display: grid;
     place-items: center;
     background:
-      radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.28), transparent 55%),
+      radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.3), transparent 55%),
       linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
     box-shadow:
-      0 0 0 2px rgba(0, 0, 0, 0.55),
+      0 0 0 2px rgba(0, 0, 0, 0.6),
+      0 0 20px color-mix(in srgb, var(--accent-2) 40%, transparent),
       inset 0 0 18px rgba(0, 0, 0, 0.35);
   }
   .vinyl__logo {
     width: 62%;
     height: 62%;
     object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
   }
   .vinyl__label-mark {
     font-size: clamp(28px, 8vw, 48px);
@@ -182,7 +257,7 @@ const {
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
   }
 
-  /* Spindle hole in the middle of the label. */
+  /* Spindle hole. */
   .vinyl__spindle {
     position: absolute;
     top: 50%;
@@ -192,21 +267,20 @@ const {
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(circle at 40% 35%, #2a2140, #05030a);
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
 
-  /* Tonearm — anchored to the top-right, angled down so the headshell rests
-     on the outer groove of the record. */
+  /* Tonearm with active stylus light. */
   .vinyl__tonearm {
     position: absolute;
-    top: 2%;
-    right: 3%;
+    top: 3%;
+    right: 4%;
     width: 46%;
     height: 46%;
     z-index: 3;
     transform: rotate(0deg);
     transform-origin: 82% 18%;
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.6));
   }
   .vinyl__pivot {
     position: absolute;
@@ -216,7 +290,7 @@ const {
     height: 26%;
     border-radius: 50%;
     background: radial-gradient(circle at 38% 32%, #4a4560, #1a1726);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08), inset 0 0 6px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), inset 0 0 6px rgba(0, 0, 0, 0.7);
   }
   .vinyl__arm {
     position: absolute;
@@ -240,13 +314,194 @@ const {
     border-radius: 3px;
     background: linear-gradient(180deg, #3a3450, #17141f);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 3px;
+  }
+  .vinyl__stylus-light {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent-2), 0 0 12px var(--accent);
+    animation: stylus-pulse 2s ease-in-out infinite;
   }
 
-  /* Still variant — no motion at all. */
-  .vinyl.is-still .vinyl__disc,
-  .vinyl.is-still .vinyl__sheen,
-  .vinyl.is-still .vinyl__glow {
-    animation: none;
+  /* ── Floating Famous Song Popout Mini Players ────────────────── */
+  .vinyl__popouts {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .vinyl__popout-card {
+    position: absolute;
+    width: 224px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(14, 10, 26, 0.88);
+    backdrop-filter: blur(16px);
+    box-shadow:
+      0 14px 34px rgba(0, 0, 0, 0.6),
+      0 0 24px color-mix(in srgb, var(--accent-2) 25%, transparent);
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+    animation: popout-cycle 16s ease-in-out infinite;
+    animation-delay: calc(var(--card-idx) * 4s);
+  }
+
+  .vinyl__popout-card--1 { top: -6%; left: -8%; }
+  .vinyl__popout-card--2 { bottom: 2%; right: -8%; }
+  .vinyl__popout-card--3 { top: 42%; left: -14%; }
+  .vinyl__popout-card--4 { top: 10%; right: -12%; }
+
+  .popout__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .popout__dots {
+    display: flex;
+    gap: 4px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .dot--red { background: #ff5f56; }
+  .dot--yellow { background: #ffbd2e; }
+  .dot--green { background: #27c93f; }
+
+  .popout__label {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .popout__platform-chip {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1.5px 6px;
+    border-radius: 999px;
+  }
+  .popout__platform-chip--sp { background: rgba(30, 215, 96, 0.22); color: #45e07f; border: 1px solid rgba(30, 215, 96, 0.45); }
+  .popout__platform-chip--yt { background: rgba(255, 45, 60, 0.22); color: #ff5a6a; border: 1px solid rgba(255, 45, 60, 0.45); }
+  .popout__platform-chip--sc { background: rgba(255, 85, 0, 0.22); color: #ff7a3d; border: 1px solid rgba(255, 85, 0, 0.45); }
+
+  .popout__body {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .popout__cover {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .popout__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .popout__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .popout__title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .popout__artist {
+    font-size: 9.5px;
+    color: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .popout__progress-bar {
+    height: 3px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    margin-top: 3px;
+    overflow: hidden;
+  }
+  .popout__progress-fill {
+    display: block;
+    height: 100%;
+    width: 62%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+  }
+  .popout__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1px;
+  }
+  .popout__time {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .popout__mini-waves {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 8px;
+  }
+  .popout__mini-waves span {
+    width: 1.5px;
+    height: 100%;
+    background: var(--accent-2);
+    border-radius: 1px;
+    animation: mini-wave 800ms ease-in-out infinite alternate;
+  }
+  .popout__mini-waves span:nth-child(1) { animation-delay: 0ms; }
+  .popout__mini-waves span:nth-child(2) { animation-delay: 200ms; }
+  .popout__mini-waves span:nth-child(3) { animation-delay: 400ms; }
+  .popout__mini-waves span:nth-child(4) { animation-delay: 600ms; }
+
+  /* ── Keyframe Animations ────────────────────────────────────── */
+  @keyframes popout-cycle {
+    0% { opacity: 0; transform: translateY(18px) scale(0.92); }
+    5% { opacity: 1; transform: translateY(0) scale(1); }
+    22% { opacity: 1; transform: translateY(-4px) scale(1); }
+    27% { opacity: 0; transform: translateY(-14px) scale(0.95); }
+    100% { opacity: 0; transform: translateY(-14px) scale(0.95); }
+  }
+
+  @keyframes mini-wave {
+    from { transform: scaleY(0.25); }
+    to { transform: scaleY(1); }
+  }
+
+  @keyframes stylus-pulse {
+    0%, 100% { opacity: 0.7; box-shadow: 0 0 6px var(--accent-2); }
+    50% { opacity: 1; box-shadow: 0 0 12px var(--accent-2), 0 0 16px var(--accent); }
   }
 
   @keyframes vinyl-spin {
@@ -256,8 +511,18 @@ const {
     to { transform: rotate(-360deg); }
   }
   @keyframes vinyl-breathe {
-    0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 0.72; transform: scale(1.04); }
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 0.75; transform: scale(1.04); }
   }
 
+  /* Still variant — only if explicitly passed spinning={false} prop.
+     Note: Product showcase animations play regardless of OS reduced-motion. */
+  .vinyl.is-still .vinyl__disc,
+  .vinyl.is-still .vinyl__sheen,
+  .vinyl.is-still .vinyl__glow,
+  .vinyl.is-still .vinyl__stylus-light,
+  .vinyl.is-still .vinyl__popout-card {
+    animation: none;
+  }
+  .vinyl.is-still .vinyl__popout-card--1 { opacity: 1; transform: none; }
 </style>

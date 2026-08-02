@@ -20,13 +20,12 @@ interface Props {
 
 const {
   accentHex = '#ff2e88',
-  accent2Hex = '#ffb020',
+  accent2Hex = '#00d4ff',
   logo = '/logos/playlistmaxxing.webp',
   appUrl = 'https://music.maxxtopia.com',
 } = Astro.props;
 
-// Illustrative karaoke lines (original demo copy describing the product, not
-// a real song's lyrics) — they light up one at a time like synced lyrics.
+// Illustrative karaoke lines
 const karaokeLines = [
   'the lights go down, the needle drops',
   'every platform on one turning page',
@@ -47,7 +46,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     </a>
 
     <div class="pls__stage">
-      <!-- The record is the hero now: first in the DOM and first on mobile. -->
+      <!-- The record is the hero center exhibit -->
       <div class="pls__deck">
         <VinylDisc accentHex={accentHex} accent2Hex={accent2Hex} logo={logo} />
 
@@ -83,7 +82,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
       </header>
     </div>
 
-    <!-- The existing story survives below the opening turntable. -->
+    <!-- Reverted story pillars layout — original structure & spacing -->
     <div class="pls__pillars">
       <article class="pls__card reveal-on-scroll">
         <span class="pls__num">01</span>
@@ -120,7 +119,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
       </article>
     </div>
 
-    <!-- Footer strip: the one-toggle push to the Streammaxxing overlay. -->
+    <!-- Reverted footer strip layout — original structure & spacing -->
     <div class="pls__stream reveal-on-scroll">
       <div class="pls__stream-copy">
         <p class="pls__stream-tag">One toggle</p>
@@ -147,8 +146,8 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     min-height: calc(100svh - 56px);
     overflow: hidden;
   }
-  /* Two washes, not one — pink from above and amber from below-right, so the record
-     sits in coloured light from two sides the way it would under stage lamps. */
+
+  /* Two washes — electric pink/magenta from above and cyan from below-right (no yellow) */
   .pls::before {
     content: '';
     position: absolute;
@@ -157,7 +156,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     width: 80%;
     height: 60%;
     transform: translateX(-50%);
-    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 24%, transparent), transparent 68%);
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 26%, transparent), transparent 68%);
     filter: blur(60px);
     pointer-events: none;
     z-index: 0;
@@ -169,7 +168,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     right: 4%;
     width: 46%;
     height: 52%;
-    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 70%);
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%);
     filter: blur(70px);
     pointer-events: none;
     z-index: 0;
@@ -212,15 +211,15 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-2);
     margin: 0 0 14px;
   }
   .pls__eyebrow span {
     width: 7px;
     height: 7px;
     border-radius: 999px;
-    background: var(--accent);
-    box-shadow: 0 0 16px var(--accent);
+    background: var(--accent-2);
+    box-shadow: 0 0 16px var(--accent-2);
   }
   .pls__heading {
     font-family: var(--font-sans);
@@ -276,12 +275,12 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     height: var(--h);
     min-height: 6px;
     border-radius: 999px 999px 2px 2px;
-    background: linear-gradient(180deg, var(--accent-2), var(--accent));
-    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
+    background: linear-gradient(180deg, var(--accent-2), #a855f7, var(--accent));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent-2) 40%, transparent);
     transform-origin: bottom;
     animation: pls-eq 1200ms ease-in-out infinite;
     animation-delay: calc(var(--i) * -140ms);
-    opacity: 0.9;
+    opacity: 0.95;
   }
   @keyframes pls-eq {
     0%, 100% { transform: scaleY(0.35); }
@@ -309,6 +308,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
   .pls__chip--sc { border-color: rgba(255, 85, 0, 0.45); color: #ff7a3d; }
   .pls__chip--yt { border-color: rgba(255, 45, 60, 0.45); color: #ff5a6a; }
 
+  /* ── Open Playlistmaxxing Primary CTA ──────────────────────── */
   .pls__primary {
     display: inline-flex;
     align-items: center;
@@ -316,16 +316,18 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     margin-top: 28px;
     padding: 13px 22px;
     border-radius: 999px;
-    color: #180509;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 12px 34px color-mix(in srgb, var(--accent) 38%, transparent);
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--accent-2), #a855f7 50%, var(--accent));
+    box-shadow: 0 12px 34px color-mix(in srgb, var(--accent-2) 42%, transparent);
     font-size: 14px;
     font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     transition: transform 180ms ease, box-shadow 180ms ease;
   }
   .pls__primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 42px color-mix(in srgb, var(--accent) 50%, transparent);
+    box-shadow: 0 16px 42px color-mix(in srgb, var(--accent-2) 55%, transparent);
   }
 
   /* ── Story pillars ────────────────────────────────────────── */
@@ -344,14 +346,14 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     position: relative;
     border: 1px solid var(--color-line);
     background:
-      linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, transparent), transparent 45%),
+      linear-gradient(180deg, color-mix(in srgb, var(--accent-2) 6%, transparent), transparent 45%),
       var(--color-bg-card);
     border-radius: 16px;
     padding: 22px 24px;
     transition: border-color 200ms ease, transform 200ms ease, background 200ms ease;
   }
   .pls__card:hover {
-    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    border-color: color-mix(in srgb, var(--accent-2) 55%, transparent);
     transform: translateY(-2px);
     background: var(--color-bg-card-hover);
   }
@@ -359,7 +361,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     font-family: var(--font-mono);
     font-size: 12px;
     letter-spacing: 0.1em;
-    color: var(--accent);
+    color: var(--accent-2);
   }
   .pls__card-title {
     font-size: 18px;
@@ -375,7 +377,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     margin: 0;
   }
 
-  /* Karaoke demo — lines light up in sequence. */
+  /* Karaoke demo — lines light up in sequence */
   .pls__karaoke {
     margin-top: 16px;
     display: flex;
@@ -402,7 +404,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     16%, 30% {
       color: #fff;
       opacity: 1;
-      text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 70%, transparent);
+      text-shadow: 0 0 18px color-mix(in srgb, var(--accent-2) 75%, transparent);
     }
     40%, 100% { color: var(--color-subtle); opacity: 0.45; text-shadow: none; }
   }
@@ -417,9 +419,9 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     gap: 20px;
     padding: 22px 26px;
     border-radius: 18px;
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--color-line-strong));
+    border: 1px solid color-mix(in srgb, var(--accent-2) 30%, var(--color-line-strong));
     background:
-      linear-gradient(120deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
+      linear-gradient(120deg, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 60%),
       var(--color-bg-card);
   }
   .pls__stream-tag {
@@ -427,7 +429,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     font-size: 11px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-2);
     margin: 0 0 6px;
   }
   .pls__stream-line {
@@ -447,22 +449,20 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     font-weight: 600;
     padding: 11px 20px;
     border-radius: 999px;
-    color: #180509;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 8px 26px color-mix(in srgb, var(--accent) 35%, transparent);
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--accent-2), #a855f7 50%, var(--accent));
+    box-shadow: 0 8px 26px color-mix(in srgb, var(--accent-2) 35%, transparent);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     transition: transform 160ms ease, box-shadow 160ms ease;
   }
   .pls__stream-cta:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 32px color-mix(in srgb, var(--accent) 45%, transparent);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--accent-2) 45%, transparent);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .pls__lyric {
-      animation: none !important;
-    }
-    .pls__lyric { opacity: 0.85; color: var(--color-text-mid); }
-  }
+  /* Note: Audio showcase animations (equalizer, karaoke lyrics lighting) continue
+     playing so the product demo remains visible even on PCs with reduced motion. */
 
   @media (max-width: 919px) {
     .pls { padding-top: 28px; }
