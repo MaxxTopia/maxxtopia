@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource/bebas-neue": "^5.2.7",
     "@fontsource/bowlby-one": "^5.2.8",
     "@fontsource/crimson-pro": "^5.2.8",
