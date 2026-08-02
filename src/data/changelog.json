@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-08-01",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.5",
+    "title": "YouTube Reclaim recovers when audio outlasts the picture.",
+    "body": "A rare HD playback race could leave audio running against a black video. Reclaim now detects missing video frames and switches to the fallback stream automatically.",
+    "items": [
+      "Keeps the current timestamp when recovering.",
+      "Catches silent video-frame starvation even when the playhead advances.",
+      "Leaves healthy HD playback, HLS, and existing stall recovery unchanged."
+    ]
+  },
+  {
+    "date": "2026-08-01",
     "product": "Snipemaxxer",
     "productSlug": "snipemaxxer",
     "version": "v0.2.2",
