@@ -20,6 +20,7 @@ export type DemoVariant = {
   src: string;       // 1080p mp4
   src720?: string;   // smaller mp4 served on mobile
   poster: string;    // still frame shown while loading + fallback
+  hasAudio?: boolean; // false for clean app-capture tours with no soundtrack
 };
 
 /** Alternating full-width "Apple-style" story zone. LIVE products use these
@@ -1158,91 +1159,124 @@ export const products: Product[] = [
   {
     slug: 'snipemaxxer',
     name: 'Snipemaxxer',
-    category: 'Fortnite',
+    category: 'Fortnite + Valorant',
     status: 'beta',
-    version: '0.2.2',
-    tagline: 'Know who\'s in your lobby.',
+    version: '0.2.7',
+    tagline: 'Read the lobby. Review the round.',
     description:
-      "Auto-detects your match and names the whole lobby — pros, live streamers, who dropped where, off-region — plus more features to help in-game.",
+      'A local two-game match-intelligence desk for Fortnite tournaments and Valorant sessions — live standing context, official replay scouting, full-lobby reports, Riot Client context, crosshairs, alerts, and a voice coach in one Windows app.',
     longDescription:
-      "Auto-detects your match and names the whole lobby — pros, live streamers, who dropped where, off-region — plus more features to help in-game.",
+      'Fortnite is the tournament desk: Epic standing, qualify math, replay-backed Scout, full-map Strategy Lab review, Reports, and a voice coach. Valorant is the session desk: rank, RR, peak, completed-match history, live phase and full lobby, teammate intel and skins, friends, personal offers, watchlists, alerts, and a local crosshair vault. Both modes keep reports in the same window and label live, delayed, cached, and unavailable data honestly.',
     features: [
       {
-        title: 'The whole lobby, named.',
-        body: 'Every account in your tournament game resolved to a name and cross-checked against a 300-player pro brain and live Twitch/YouTube/Kick streams. Who you\'re really up against.',
+        title: 'Fortnite tournament desk.',
+        body: 'Keep Epic standing, points, rank, games left, cutoff, event timing, freshness, and the placement-vs-push call in one view. Standing data stays current; replay data is slower by design.',
       },
       {
-        title: 'Who to key. Who to fade.',
-        body: 'Surfaces beaten-down players (took more than they dealt), low-HP teams, and off-region (high-ping) opponents — the easy points you can\'t see from inside your own box fight.',
+        title: 'Fortnite replay scout.',
+        body: 'When Epic\'s official server replay lands, name the field, pin pros and live streamers, map drops, and surface keyable targets, threats, survivors, and loadout reads.',
       },
       {
-        title: 'Push, or place?',
-        body: 'An always-on HUD does the math live: your surge-safety, what your finish is worth right now, how many must die for the next tier, and whether a kill or a placement pays more.',
+        title: 'Strategy Lab + voice coach.',
+        body: 'Compare official replay IDs, isolate a team, and scrub the full map from landing to endgame: player landings, observed pre-rotate loot paths, route timing, team shape, killfeed moments, captured zone rings, and the decision spine. Exact item pickups stay labeled unavailable when the replay packet does not expose them.',
       },
       {
-        title: 'Qualify math, automatically.',
-        body: 'Enter your points and the cutoff once. The HUD tells you the gap, how many elims close it, and the moment you\'re safe to play for the qualify.',
+        title: 'Valorant session intelligence.',
+        body: 'Track rank, RR, peak, and completed matches, then attach read-only to Riot Client for agent select or in-match phase, the full lobby split, teammate intel, friends, personal offers, and teammate skins when Riot returns them.',
       },
       {
-        title: 'A voice in your ear.',
-        body: 'Alluka, the built-in coach, speaks the one read that matters and stays quiet otherwise — so you can glance, not read, mid-game. Ask her anything with push-to-talk.',
+        title: 'Reports, crosshairs, alerts.',
+        body: 'Open Fortnite and Valorant reports in one window. Keep a local crosshair vault, persistent watchlists, and notifications for friends, players, matches, and skins.',
       },
       {
-        title: 'Unbannable by design.',
-        body: 'No memory reading, no injection, no overlay hooked into the game. It downloads the official server replay through your own Epic login and reads it — nothing for BattlEye or EAC to flag. That\'s the trade: the scouting report arrives about five minutes into the match, never the instant you land.',
+        title: 'Boundaries you can see.',
+        body: 'Live, delayed, cached, offline, and unavailable are separate states. No game-memory reading, no Riot password collection, no login automation, and no session tokens exposed to the renderer.',
       },
     ],
     zones: [
       {
-        eyebrow: 'Read this first',
-        headline: 'It\'s a replay, not a radar.',
-        body: 'Snipemaxxer stays unbannable by never touching Fortnite — it downloads the official server replay of your match through your own Epic login and reads that. The replay is what the server has already recorded, so the scouting report trails the live game by roughly five minutes. Drop in and nothing appears for the first few minutes: that is the tool working, not failing. The tournament standing is the exception — it comes from the live leaderboard, so your points, rank and qualify math have no delay at all.',
+        eyebrow: '01 / THE SPLIT',
+        headline: 'Two games. One command desk.',
+        body: 'Snipemaxxer keeps each game\'s real data path visible: Fortnite tournament standing and replay intelligence on one side, Valorant Riot context and match history on the other. Reports stay in the same window.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'First minutes of the match', value: 'no report yet' },
-            { label: 'Scouting: lobby, keys, map', value: '~5 min behind', emphasize: true },
-            { label: 'Standing, points, qualify math', value: 'live, no delay', emphasize: true },
+            { label: 'Fortnite', value: 'standing + replay', emphasize: true },
+            { label: 'Valorant', value: 'Riot + matches', emphasize: true },
+            { label: 'Reports', value: 'one window' },
+            { label: 'Freshness', value: 'always labeled' },
           ],
-          caption: 'Two surfaces, two speeds — the replay is history, the standing is now',
+          caption: 'Different data paths. One honest read.',
         },
       },
       {
-        eyebrow: 'The hidden roster',
-        headline: 'Who\'s actually in your lobby.',
-        body: 'The server replay captures all 100 players — not just the ones you fought. Snipemaxxer resolves every account to a name, pins the pros and live streamers to the top with their skin and where they dropped, and lists the rest. The intel you simply cannot get from inside your own game.',
-        visual: { kind: 'image', src: '/screenshots/snipemaxxer/whos-in-lobby.webp', alt: 'The Who\'s in your lobby panel — pros and live streamers pinned to the top with skins and drop locations, the rest of the lobby below.' },
+        eyebrow: '02 / FORTNITE',
+        headline: 'Play the cutoff, not a feeling.',
+        body: 'The tournament desk keeps your points, rank, games left, qualify gap, event window, and placement-vs-push call together. Epic standing is the fast surface; it never pretends a replay is live.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/fortnite-home.webp', alt: 'Snipemaxxer Fortnite tournament desk captured from the current app.' },
       },
       {
-        eyebrow: 'Right now',
-        headline: 'Who to key. Who to fade.',
-        body: 'A single triage board: your surge standing up top, then who\'s keyable now (beaten down, low HP, off-region — with their last-seen POI), then which big names are still alive and where. One glance tells you the easy points and the real threats.',
-        visual: { kind: 'image', src: '/screenshots/snipemaxxer/right-now.webp', alt: 'The Right Now board — Keyable Now lists beaten-down targets with damage and location; Threats Still In lists alive pros and live streamers.' },
+        eyebrow: '03 / FORTNITE REPLAY',
+        headline: 'See the lobby the game hides.',
+        body: 'When Epic\'s official server replay becomes available, Snipemaxxer names the field, flags pros and live streamers, maps drops, and gives you a Right Now read on keyable targets, threats, survivors, and loadouts.',
+        visual: { kind: 'image', src: '/screenshots/snipemaxxer/fortnite-scout.webp', alt: 'Snipemaxxer Fortnite Scout surface captured from the current app.' },
       },
       {
-        eyebrow: 'The points brain',
-        headline: 'Push, or place?',
-        body: 'Between games the overlay polls your live tournament standing — your points, your rank, and the games you have left — and reads it against the cutoff and the cup\'s format. Then it gives you the one call that decides the next game: play for placement, or push for elims to qualify. No manual point-tracking, no spreadsheet.',
-        visual: { kind: 'image', src: '/screenshots/snipemaxxer/overlay-hud.webp?v=2', alt: 'The overlay HUD — your live tournament standing: points, rank, games left, the qualify gap, and the call to play for placement or push to qualify.' },
+        eyebrow: '04 / STRATEGY LAB',
+        headline: 'Copy decisions. Not just drops.',
+        body: 'Study tournament replays by team or player in an interactive map scrub. Compare where each player lands, observed movement and loot paths, route timing, team shape, contest pressure, killfeed moments, captured zone rings, and endgame position. The board separates replay facts from inference.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/snipemaxxer/fortnite-strategy-lab.webp',
+          alt: 'Snipemaxxer Strategy Lab replay comparison surface captured from the current app.',
+        },
       },
       {
-        eyebrow: 'The whole map',
-        headline: 'Where everyone was.',
-        body: 'The pros and live streamers in your game, shown with their skin and IGN right on the POI they landed — colour-coded for you, pros and streamers. The rest of the lobby as dots, with a head-count per POI. A snapshot from the replay; click the map to open it full-size.',
-        visual: { kind: 'image', src: '/screenshots/snipemaxxer/scout-map.webp?v=2', alt: 'Where Everyone Was map — the current-season Fortnite map showing each pro and streamer\'s skin icon and IGN at the POI they landed, with the field as dots and per-POI head-counts.' },
+        eyebrow: '05 / VALORANT LINK',
+        headline: 'Live context, read-only.',
+        body: 'Attach to Riot Client on the same PC or through the one-time gaming-PC link. Read the current phase, lobby, team split, ranks, friends, personal offers, and teammate skins when Riot returns them.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'Same PC', value: 'local lockfile', emphasize: true },
+            { label: 'Two PCs', value: 'one-time relay', emphasize: true },
+            { label: 'Riot access', value: 'read-only' },
+            { label: 'Credentials', value: 'stay on-device' },
+          ],
+          caption: 'No Riot password. No login automation. No session token in the renderer.',
+        },
+      },
+      {
+        eyebrow: '06 / VALORANT REPORTS',
+        headline: 'Review the round with receipts.',
+        body: 'Completed-match reports carry map, agent, K/D/A, score, headshots, and a full lobby. The round spine adds KAST, trades, first deaths, clutches, and economy when the provider includes those fields.',
+        visual: {
+          kind: 'image',
+          src: '/screenshots/snipemaxxer/valorant-live-report.webp',
+          alt: 'Snipemaxxer Valorant live full-lobby report captured from the current app.',
+        },
       },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.2.2.exe', external: true },
+    stats: [
+      { label: 'Modes', value: '2' },
+      { label: 'Reports', value: '1 window' },
+      { label: 'Riot path', value: 'Read-only' },
+      { label: 'Freshness', value: 'Labeled' },
+    ],
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.2.7.exe', external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
-    accentHex: '#ff3b3b',
-    screenshots: ['/screenshots/snipemaxxer/scout-glance.webp'],
-    /* The old hero stat was "0 game memory read". True, and it sold the ban-safety —
-     * but it read as "instant", and the scouting report is about five minutes behind
-     * the live match. A first-time user who saw nothing appear assumed it was broken.
-     * Lead with the timing instead; ban-safety still carries in the features + FAQ. */
-    heroStat: { value: '~5 min', label: 'behind live — it reads Epic\'s replay, never your game', inline: true },
+    accentHex: '#ffb547',
+    accent2Hex: '#ff6472',
+    screenshots: ['/screenshots/snipemaxxer/valorant-home-live.webp', '/screenshots/snipemaxxer/fortnite-home.webp'],
+    demoVideo: {
+      src: '/screenshots/snipemaxxer/demo.mp4',
+      src720: '/screenshots/snipemaxxer/demo-720.mp4',
+      poster: '/screenshots/snipemaxxer/demo-poster.jpg',
+      hasAudio: false,
+    },
+    heroStat: { value: '2', label: 'games · one local command desk' },
   },
   {
     slug: 'playlistmaxxing',

@@ -153,23 +153,19 @@ const reconvertConfig: Record<string, {
     ],
   },
   snipemaxxer: {
-    closingLine: 'Know the lobby. Win the points game.',
+    closingLine: 'Two games. One better read.',
     faqs: [
       {
-        q: 'Will this get me banned?',
-        a: "No. Snipemaxxer never touches Fortnite's process — no memory reading, no injection, no overlay hooked into the game. It reads the official server replay of your match, the same public match data Fortnite Tracker and fortnite.gg work from. There's nothing for BattlEye or EAC to flag.",
+        q: 'Does it read game memory or automate Riot login?',
+        a: "No. Fortnite scouting uses Epic's official server replay and leaderboard path without memory reading, injection, or a game-hooked overlay. Valorant uses a read-only attachment to an already-running Riot Client on the same PC or through the optional gaming-PC link. Snipemaxxer never asks for a Riot password, automates login, or exposes session tokens to the renderer.",
       },
       {
-        q: "I've landed and the report is empty. Is it broken?",
-        a: "Almost certainly not — that's how it works. Snipemaxxer reads the official server replay of your match rather than the game's memory, and the replay is only what the server has already recorded. So the scouting report shows up roughly five minutes into the match and then trails the live game by about that much. Nothing appears in the first minutes because there is nothing to read yet. The one thing that is instant is your tournament standing: points, rank and qualify math come from the live leaderboard, not the replay.",
+        q: 'Why is a panel delayed or unavailable?',
+        a: "The app keeps data speeds separate. Fortnite tournament standing can be current, while its official server replay normally trails the match by roughly five minutes. Valorant match history needs a HenrikDev key; live Riot panels need Riot Client or the one-time gaming-PC relay. Cached, offline, and missing provider fields stay labeled instead of being passed off as live.",
       },
       {
-        q: 'How does it actually help mid-tournament?',
-        a: "Two ways, at two speeds. Between games, the HUD polls your live tournament standing — your points, your rank, and how many games you have left in the window — and tells you, for the format you're playing, whether to play for placement or push for elims to make the cutoff. That part has no delay. Then, about five minutes into a match, the scouting report names the lobby: which pros and live streamers are in it, who's beaten down for an easy key, who's off-region, and where everyone landed. It's a read on the game you're in, not a live radar — but it's intel you cannot get from inside your own box fight.",
-      },
-      {
-        q: 'Which modes does it work in?',
-        a: "Tournaments only — FNCS, Cash Cups and other standard BR competitive events. It reads the official server replay Epic generates for those matches, so it's built for cups, not casual play. If it's not finding a game in Ranked, pubs, Reload or Zero Build arena, that's expected — those modes don't produce a downloadable replay to read. Set your Fortnite name once, tick auto-detect, and it finds your cup matches on its own. Runs on the same PC you play on — no second PC or capture card needed.",
+        q: 'What does each game actually cover?',
+        a: "Fortnite is the tournament desk: standing, qualify math, replay scouting, landing and player reads, Strategy Lab, Reports, and the voice coach. Valorant is the session desk: rank, RR, completed-match history, live lobby and phase, friends, personal offers, teammate skins, watchlists, alerts, and a local crosshair vault. Both feed the same in-window Reports workbench.",
       },
     ],
   },
@@ -363,6 +359,7 @@ const seoDescOverride: Record<string, string> = {
   optimizationmaxxing: 'A free Windows game optimizer: 100 audited, reversible FPS tweaks with cited sources and one-click undo. No placebos, no bloat, no telemetry.',
   adblockmaxxer: 'Free ad blocker for YouTube, Twitch and Spotify across Chrome, Brave, Edge and Firefox. Manifest V3-ready, no Web Store gatekeeping — and more than ads.',
   streammaxxing: 'Free, local Twitch stream alerts, overlays and TTS — no cloud hop, no delay. Import Botrix, trim clips, normalize loudness. Runs on your PC.',
+  snipemaxxer: 'Local competitive match intelligence for Fortnite tournaments and Valorant sessions: standing, replay scouting, live Riot context, reports, crosshairs, watchlists, and a voice coach.',
 };
 const pageTitle = seoTitleOverride[product.slug] ?? `${product.name} — ${product.tagline}`;
 const pageDescription = seoDescOverride[product.slug] ?? product.description;
@@ -395,7 +392,7 @@ const featureHeadings: Record<string, FeatureHeading> = {
   viewmaxxing:         { eyebrow: 'The lineup',      left: 'Five surfaces.',           right: 'One remote.' },
   adblockmaxxer:       { eyebrow: 'The coverage',    left: 'Four browsers.',           right: 'One blocker.' },
   streammaxxing:       { eyebrow: 'The latency',     left: 'No cloud hop.',            right: 'No delay.' },
-  snipemaxxer:         { eyebrow: 'The edge',        left: 'Intel you can\'t get',     right: 'from inside the game.' },
+  snipemaxxer:         { eyebrow: 'The desk',        left: 'Two games.',              right: 'One honest read.' },
   playlistmaxxing:     { eyebrow: 'The mixtape',     left: 'Every song you love,',     right: 'one page.' },
 };
 const featureHeading: FeatureHeading | undefined = featureHeadings[product.slug];
@@ -413,7 +410,7 @@ const softwareKeywords: Record<string, string> = {
   viewmaxxing: 'free streaming app for android tv, tv box streaming app, firestick streaming app, ad-free youtube on tv, free movie streaming app, anime streaming app, all-in-one streaming app, android tv box apk, kodi alternative, cord cutting app, twitch on tv box',
   adblockmaxxer: 'ad blocker, youtube ad blocker, twitch ad blocker, manifest v3 ad blocker, ublock origin alternative, ad blocker for chrome brave edge firefox, spotify ad blocker, twitch ads 1080p, ad blocker not on chrome web store, free ad blocker',
   streammaxxing: 'stream alerts, twitch alerts, local stream alerts, botrix alternative, streamlabs alerts alternative, twitch eventsub overlay, donation tts, voice clone tts alerts, obs alert overlay, free stream alerts, clip trimmer, loudness normalize alerts',
-  snipemaxxer: 'fortnite lobby scout, fortnite tournament tool, fncs scout, cash cup helper, fortnite replay analyzer, who is in my fortnite lobby, fortnite pro tracker, fortnite live streamer detector, fortnite points calculator, fortnite qualify calculator, fortnite surge tracker, fortnite tournament coach',
+  snipemaxxer: 'fortnite tournament coach, fortnite replay scout, fncs scout, cash cup helper, fortnite lobby analyzer, fortnite points calculator, fortnite qualify calculator, valorant match history, valorant lobby tracker, valorant rank tracker, valorant crosshair vault, valorant live lobby, riot client companion, competitive match reports',
   playlistmaxxing: 'cross-platform playlist, combine spotify soundcloud youtube, one playlist all platforms, unified music player, free online music player, no login music player, listen to soundcloud and youtube together, embed music player, music aggregator, web music hub, playlist across services, songs not on spotify',
 };
 
@@ -522,6 +519,23 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {isOM && <OMDiagnosticHero product={product} />}
   {isView && <ViewmaxxingHero product={product} />}
   {isSnipe && <SnipeMaxxerHero product={product} />}
+  {isSnipe && product.demoVideo && (
+    <section class="relative overflow-hidden border-t border-[var(--color-line)] bg-[var(--color-bg)]">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div class="reveal-on-scroll mb-9 max-w-3xl">
+          <p class="text-[11px] uppercase tracking-[0.12em] text-[var(--color-magenta)] font-mono">Real app capture / v{product.version}</p>
+          <h2 class="mt-3 text-[38px] sm:text-[58px] font-semibold tracking-[-0.045em] leading-[0.96]">One desk. Two modes. <span class="serif-accent gradient-suite">Every read.</span></h2>
+          <p class="mt-5 max-w-2xl text-[15px] leading-7 text-[var(--color-muted)]">A cut from the current Windows build: Valorant live context and reports, then Fortnite standing, Scout, Strategy Lab, Coach, and settings. The capture is intentionally silent and keeps the app surface unobstructed.</p>
+        </div>
+        <ProductScreenshot
+          src={Array.isArray(product.demoVideo) ? product.demoVideo[0].poster : product.demoVideo.poster}
+          alt="Snipemaxxer current app product tour"
+          extras={[]}
+          video={product.demoVideo}
+        />
+      </div>
+    </section>
+  )}
   {isStream && <StreammaxxingBroadcastHero product={product} />}
   {isAim && <AimDiagnosticHero product={product} />}
   {isPlaylist && (

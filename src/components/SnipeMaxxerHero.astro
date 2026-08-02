@@ -6,7 +6,7 @@ const primary = product.primaryCta;
 const secondary = product.secondaryCta;
 ---
 
-<section class="snx-hero" aria-label={`${product.name} replay intelligence hero`}>
+<section class="snx-hero" data-mode="fortnite" aria-label={`${product.name} match intelligence hero`}>
   <div class="snx-scene" aria-hidden="true"></div>
   <div class="snx-atmosphere" aria-hidden="true"></div>
   <div class="snx-freeze" aria-hidden="true"></div>
@@ -17,10 +17,14 @@ const secondary = product.secondaryCta;
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       All products
     </a>
-    <p class="snx-eyebrow">Replay intelligence · beta {product.version}</p>
-    <h1>Know the lobby.<br /><span>Play the points.</span></h1>
-    <p class="snx-lede">The replay names the threats. The live leaderboard tells you what to do next.</p>
-    <div class="snx-timing"><strong>~5 MIN</strong><i></i><span>Replay behind live · leaderboard live</span></div>
+    <p class="snx-eyebrow">Match intelligence · beta {product.version}</p>
+    <h1>Know the lobby.<br /><span data-mode-copy="headline">Play the points.</span></h1>
+    <p class="snx-lede" data-mode-copy="lede">The replay names the threats. The live leaderboard tells you what to do next.</p>
+    <div class="snx-mode-switch" role="group" aria-label="Choose a game mode">
+      <button type="button" class="snx-mode-button snx-mode-button-fortnite" data-mode-target="fortnite" aria-pressed="true"><span>FN</span><strong>Fortnite</strong><small>Tournament desk</small></button>
+      <button type="button" class="snx-mode-button snx-mode-button-valorant" data-mode-target="valorant" aria-pressed="false"><span>V</span><strong>Valorant</strong><small>Session desk</small></button>
+    </div>
+    <div class="snx-timing"><strong data-mode-copy="timingValue">~5 MIN</strong><i></i><span data-mode-copy="timingLabel">Replay behind live · leaderboard live</span></div>
     <div class="snx-actions">
       <a class="snx-cta snx-primary" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>{primary.label}</a>
       {secondary && <a class="snx-cta" href={secondary.href} target={secondary.external ? '_blank' : undefined} rel={secondary.external ? 'noopener' : undefined}>{secondary.label}</a>}
@@ -29,8 +33,8 @@ const secondary = product.secondaryCta;
 
   <div class="snx-scope" aria-hidden="true">
     <div class="snx-lens"></div>
-    <p class="snx-scope-label snx-top">Official tournament replay · resolving account</p>
-    <p class="snx-scope-label snx-bottom">Tracked tendency read · zero game memory access</p>
+    <p class="snx-scope-label snx-top" data-mode-copy="scopeTop">Official tournament replay · resolving field</p>
+    <p class="snx-scope-label snx-bottom" data-mode-copy="scopeBottom">Tracked tendency read · zero game memory access</p>
   </div>
 
   <div class="snx-bioscan" aria-hidden="true">
@@ -43,41 +47,136 @@ const secondary = product.secondaryCta;
       <g class="snx-joint"><circle cx="97" cy="90" r="2.5"/><circle cx="85" cy="103" r="2.5"/><circle cx="110" cy="102" r="2.5"/><circle cx="74" cy="115" r="2.5"/><circle cx="61" cy="124" r="2.5"/><circle cx="117" cy="118" r="2.5"/><circle cx="123" cy="135" r="2.5"/><circle cx="96" cy="128" r="2.5"/><circle cx="96" cy="166" r="2.5"/><circle cx="84" cy="210" r="2.5"/><circle cx="108" cy="211" r="2.5"/><circle cx="72" cy="258" r="2.5"/><circle cx="113" cy="257" r="2.5"/></g>
       <circle class="snx-vitals" cx="96" cy="126" r="8"/>
     </svg>
-    <span class="snx-life-sign">Life sign confirmed · account resolved</span>
+    <span class="snx-life-sign" data-mode-copy="lifeSign">Life sign confirmed · official replay path</span>
   </div>
   <div class="snx-target-box" aria-hidden="true"></div>
 
   <article class="snx-card snx-identity">
-    <div class="snx-data-label">Identity resolved</div>
-    <div class="snx-data-main"><span>falcon peterbotǃ</span><em>LEGEND · NA</em></div>
-    <div class="snx-data-meta">2024 FNCS GLOBAL CHAMPION · KNOWN PRO</div>
+    <div class="snx-data-label" data-mode-copy="identityLabel">Identity resolved</div>
+    <div class="snx-data-main"><span data-mode-copy="identityMain">falcon peterbotǃ</span><em data-mode-copy="identityMeta">LEGEND · NA</em></div>
+    <div class="snx-data-meta" data-mode-copy="identityFoot">2024 FNCS GLOBAL CHAMPION · KNOWN PRO</div>
   </article>
   <article class="snx-card snx-keyable">
-    <div class="snx-data-label">Tracked landing tendency</div>
-    <div class="snx-data-main"><span>Sinister Strip</span><em>10 / 10</em></div>
-    <div class="snx-data-meta">TEN TRACKED TOURNAMENT GAMES · SAME DROP EVERY GAME</div>
+    <div class="snx-data-label" data-mode-copy="keyableLabel">Tracked landing tendency</div>
+    <div class="snx-data-main"><span data-mode-copy="keyableMain">Sinister Strip</span><em data-mode-copy="keyableScore">10 / 10</em></div>
+    <div class="snx-data-meta" data-mode-copy="keyableMeta">TEN TRACKED TOURNAMENT GAMES · SAME DROP EVERY GAME</div>
   </article>
   <article class="snx-card snx-points">
-    <div class="snx-data-label">Tracked form · real replay history</div>
-    <div class="snx-points-grid"><div><strong>#1</strong><span>Best finish</span></div><div><strong>13</strong><span>Elims</span></div><div><strong>20.2K</strong><span>Damage dealt</span></div></div>
-    <div class="snx-call">Threat read · +8,179 damage trade</div>
+    <div class="snx-data-label" data-mode-copy="pointsLabel">Tracked form · real replay history</div>
+    <div class="snx-points-grid">
+      <div><strong data-mode-copy="stat1Value">#1</strong><span data-mode-copy="stat1Label">Best finish</span></div>
+      <div><strong data-mode-copy="stat2Value">13</strong><span data-mode-copy="stat2Label">Elims</span></div>
+      <div><strong data-mode-copy="stat3Value">20.2K</strong><span data-mode-copy="stat3Label">Damage dealt</span></div>
+    </div>
+    <div class="snx-call" data-mode-copy="call">Threat read · +8,179 damage trade</div>
   </article>
   <article class="snx-leaderboard">
-    <strong>Points brain · live leaderboard</strong>
-    <span>Your points · rank · games left · qualify gap · placement or push call — no replay delay</span>
+    <strong data-mode-copy="leaderboardTitle">Points brain · live leaderboard</strong>
+    <span data-mode-copy="leaderboardText">Your points · rank · games left · qualify gap · placement or push call — no replay delay</span>
   </article>
-  <div class="snx-stage"><span>Replay fallback</span> · Overwolf live GEP access was not approved</div>
-  <div class="snx-replay-clock">Reads Epic's replay · never your game</div>
+  <div class="snx-stage"><span data-mode-copy="stageLabel">Replay boundary</span><i aria-hidden="true"> · </i><b data-mode-copy="stageText">official server replay, usually ~5 min behind</b></div>
+  <div class="snx-replay-clock" data-mode-copy="replayClock">Fortnite · Epic replay + leaderboard</div>
+</section>
+
+<section class="snx-desk" data-mode="fortnite" aria-labelledby="snx-desk-title">
+  <div class="snx-desk-shell">
+    <header class="snx-desk-header">
+      <div>
+        <p class="snx-desk-eyebrow">The desk · Snipemaxxer {product.version}</p>
+        <h2 id="snx-desk-title">See what the app can show.</h2>
+        <p class="snx-desk-intro" data-desk-copy="deskIntro">Tournament standing first. Then the official replay turns a lobby into a plan.</p>
+      </div>
+      <div class="snx-desk-status" aria-live="polite">
+        <span data-desk-copy="deskModeLabel">FORTNITE / TOURNAMENT DESK</span>
+        <strong data-desk-copy="deskStatus">CURRENT APP SURFACES</strong>
+      </div>
+    </header>
+
+    <div class="snx-desk-summary">
+      <div class="snx-desk-command">
+        <span class="snx-desk-kicker" data-desk-copy="deskKicker">CURRENT APP SURFACES</span>
+        <h3 data-desk-copy="deskHeadline">Keep the race honest.</h3>
+        <p data-desk-copy="deskBody">The live Epic standing is the first read. Scout the official replay when it lands, then turn the lobby into your next decision.</p>
+        <div class="snx-desk-tags">
+          <span data-desk-copy="deskChip1">STANDING / POINTS + CUTOFF</span>
+          <span data-desk-copy="deskChip2">SCOUT / LOBBY + DROPS</span>
+          <span data-desk-copy="deskChip3">STRATEGY LAB / ROUTES + DECISIONS</span>
+          <span data-desk-copy="deskChip4">VOICE COACH / NEXT MOVE</span>
+        </div>
+        <div class="snx-desk-boundary">
+          <span>BOUNDARY</span>
+          <b data-desk-copy="deskBoundary">Epic standing is live; official replay data is commonly about five minutes behind.</b>
+        </div>
+      </div>
+      <div class="snx-desk-metrics" aria-label="Current app surfaces">
+        <div><strong data-desk-copy="deskMetric1Value">LIVE</strong><span data-desk-copy="deskMetric1Label">Epic standing</span></div>
+        <div><strong data-desk-copy="deskMetric2Value">~5M</strong><span data-desk-copy="deskMetric2Label">Replay freshness</span></div>
+        <div><strong data-desk-copy="deskMetric3Value">SCOUT</strong><span data-desk-copy="deskMetric3Label">Lobby intelligence</span></div>
+      </div>
+    </div>
+
+    <div class="snx-desk-proof">
+      <div class="snx-desk-proof-heading">
+        <span data-desk-copy="deskProofLabel">REAL APP CAPTURES / FORTNITE</span>
+        <i aria-hidden="true"></i>
+        <b data-desk-copy="deskProofNote">The desk below is built from the surfaces the app actually uses.</b>
+      </div>
+
+      <div class="snx-desk-proof-grid">
+        <figure class="snx-desk-shot" data-desk-mode="fortnite">
+          <div class="snx-desk-shot-frame"><img src="/screenshots/snipemaxxer/fortnite-home.webp" alt="Snipemaxxer Fortnite tournament desk captured from the current app" loading="lazy" /></div>
+          <figcaption><strong>Tournament desk</strong><span>Standing / cutoff / replay freshness</span></figcaption>
+        </figure>
+        <figure class="snx-desk-shot" data-desk-mode="fortnite">
+          <div class="snx-desk-shot-frame"><img src="/screenshots/snipemaxxer/fortnite-scout.webp" alt="Snipemaxxer Fortnite Scout surface captured from the current app" loading="lazy" /></div>
+          <figcaption><strong>Scout workspace</strong><span>Replay intake / lobby read</span></figcaption>
+        </figure>
+
+        <div class="snx-desk-valorant-preview" data-desk-mode="valorant" hidden>
+          <div class="snx-desk-val-real-grid">
+            <figure class="snx-desk-shot">
+              <div class="snx-desk-shot-frame"><img src="/screenshots/snipemaxxer/valorant-home-live.webp" alt="Snipemaxxer Valorant Home with rank, RR, live phase, and Riot connection captured from the current app" loading="lazy" /></div>
+              <figcaption><strong>Live session desk</strong><span>Rank / RR / phase / lobby</span></figcaption>
+            </figure>
+            <figure class="snx-desk-shot snx-desk-shot-report">
+              <div class="snx-desk-shot-frame"><img src="/screenshots/snipemaxxer/valorant-live-report.webp" alt="Snipemaxxer Valorant full lobby report captured from the current app" loading="lazy" /></div>
+              <figcaption><strong>Full lobby report</strong><span>Teams / rank / win rate / intel</span></figcaption>
+            </figure>
+          </div>
+          <div class="snx-desk-val-top"><span>SNIPEMAXXER / VALORANT HOME</span><b>v{product.version}</b></div>
+          <div class="snx-desk-val-nav"><span class="is-active">HOME</span><span>REPORTS</span><span>CROSSHAIRS</span><span>ALERTS</span></div>
+          <div class="snx-desk-val-grid">
+            <article><span>CURRENT RANK</span><strong>RANK / RR</strong><small>PEAK · LATEST 10</small></article>
+            <article><span>RIGHT NOW</span><strong>RIOT CLIENT</strong><small>PHASE · LOBBY · READ-ONLY</small></article>
+            <article><span>MATCH REPORTS</span><strong>FULL LOBBY</strong><small>K/D/A · SCORE · HS% · ROUND SPINE</small></article>
+            <article><span>PERSONAL TOOLKIT</span><strong>CROSSHAIRS</strong><small>WATCHLISTS · STORE · SKINS · ALERTS</small></article>
+          </div>
+          <div class="snx-desk-val-foot"><span>UI PREVIEW</span><b>Current surfaces · live data fills this panel when linked</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <style is:global>
-  .snx-hero{--red:#ff3b3b;--amber:#ffb547;--safe:#8af5b5;--steel:#8191a1;--cycle:12s;--scene:url("/screenshots/snipemaxxer/hero-red-tiger-v1.webp");position:relative;min-height:clamp(760px,calc(100svh - 66px),980px);isolation:isolate;overflow:hidden;background:#090a0d;color:#e7ecec;font-family:var(--font-sans),system-ui,sans-serif}
+  .snx-hero{--red:#ff3b3b;--valorant:#ff6472;--amber:#ffb547;--safe:#8af5b5;--steel:#8191a1;--cycle:12s;--scene:url("/screenshots/snipemaxxer/hero-red-tiger-v1.webp");position:relative;min-height:clamp(760px,calc(100svh - 66px),980px);isolation:isolate;overflow:hidden;background:#090a0d;color:#e7ecec;font-family:var(--font-sans),system-ui,sans-serif}
   .snx-hero *{box-sizing:border-box}.snx-scene{position:absolute;inset:0;z-index:-5;background:var(--scene) 50% 50%/cover no-repeat;transform:scale(1.025);filter:saturate(1.04) contrast(1.08) brightness(.79);animation:snx-scene var(--cycle) cubic-bezier(.2,.7,.2,1) infinite}
   .snx-scene::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,8,11,.88),rgba(7,8,11,.44) 29%,transparent 57%),linear-gradient(0deg,rgba(7,8,11,.7),transparent 36%),radial-gradient(circle at 50% 51%,transparent 9%,rgba(5,6,8,.12) 43%,rgba(5,6,8,.62))}
   .snx-atmosphere{position:absolute;z-index:-3;inset:0;pointer-events:none;opacity:.55;mix-blend-mode:screen;background:radial-gradient(circle at 12% 74%,rgba(255,132,48,.55) 0 1px,transparent 2px),radial-gradient(circle at 24% 28%,rgba(255,191,88,.48) 0 1px,transparent 2px),radial-gradient(circle at 45% 19%,rgba(255,87,38,.45) 0 1px,transparent 2px),radial-gradient(circle at 62% 31%,rgba(255,188,100,.42) 0 1px,transparent 2px),radial-gradient(circle at 78% 17%,rgba(255,86,42,.5) 0 1px,transparent 2px),radial-gradient(circle at 88% 63%,rgba(255,183,84,.44) 0 1px,transparent 2px);background-size:180px 210px,240px 190px,300px 240px,220px 270px,340px 230px,260px 180px;animation:snx-embers 9s linear infinite}
   .snx-grain{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.17;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
   .snx-copy{position:absolute;z-index:12;left:clamp(28px,6vw,110px);top:9%;width:min(450px,37vw);pointer-events:none}.snx-back{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;margin-bottom:clamp(36px,6vh,68px);color:rgba(231,236,236,.58);font:600 11px/1 var(--font-mono),monospace;letter-spacing:.08em;text-decoration:none;text-transform:uppercase;transition:color .2s}.snx-back:hover{color:#fff}
   .snx-eyebrow,.snx-timing,.snx-scope-label,.snx-data-label,.snx-stage,.snx-replay-clock{font-family:var(--font-mono),monospace;text-transform:uppercase;letter-spacing:.14em}.snx-eyebrow{color:var(--red);font-size:clamp(10px,.85vw,13px);margin:0 0 20px}.snx-copy h1{max-width:440px;margin:0;color:#e7ecec;font-size:clamp(58px,6.2vw,108px);font-weight:800;line-height:.82;letter-spacing:-.055em}.snx-copy h1 span{color:var(--red);text-shadow:0 0 40px rgba(255,59,59,.3)}.snx-lede{max-width:400px;margin:24px 0 0;color:rgba(231,236,236,.7);font-size:clamp(14px,1.1vw,18px);line-height:1.55}
+  .snx-mode-switch{display:flex;gap:8px;margin-top:22px;pointer-events:auto}
+  .snx-mode-button{display:grid;grid-template-columns:30px 1fr;grid-template-rows:1fr 1fr;column-gap:9px;min-width:152px;padding:8px 11px;border:1px solid rgba(255,255,255,.16);color:rgba(231,236,236,.72);background:rgba(8,9,12,.62);font:600 11px/1 var(--font-sans),system-ui,sans-serif;text-align:left;cursor:pointer;backdrop-filter:blur(8px);transition:transform .2s,border-color .2s,background .2s,color .2s}
+  .snx-mode-button:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.42);color:#fff}
+  .snx-mode-button>span{grid-row:1 / span 2;display:grid;place-items:center;width:30px;height:30px;color:#160404;font:800 10px/1 var(--font-mono),monospace}
+  .snx-mode-button>strong{align-self:end;letter-spacing:.04em}
+  .snx-mode-button>small{align-self:start;margin-top:3px;color:var(--steel);font:600 8px/1 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}
+  .snx-mode-button-fortnite>span{background:var(--amber)}
+  .snx-mode-button-valorant>span{background:var(--valorant);color:#21060a}
+  .snx-mode-button-fortnite[aria-pressed="true"]{border-color:var(--amber);background:rgba(255,181,71,.12);color:#fff;box-shadow:inset 3px 0 var(--amber)}
+  .snx-mode-button-valorant[aria-pressed="true"]{border-color:var(--valorant);background:rgba(255,100,114,.12);color:#fff;box-shadow:inset 3px 0 var(--valorant)}
+  .snx-hero[data-mode="valorant"]{--red:var(--valorant)}
   .snx-timing{display:flex;align-items:center;gap:13px;margin-top:28px;font-size:10px;color:var(--steel)}.snx-timing strong{color:var(--amber);font-size:15px}.snx-timing i{width:58px;height:1px;background:linear-gradient(90deg,var(--amber),transparent)}.snx-actions{display:flex;gap:12px;margin-top:32px;pointer-events:auto;opacity:0;transform:translateY(14px);animation:snx-actions var(--cycle) ease infinite}
   .snx-cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border:1px solid rgba(255,255,255,.15);color:#fff;text-decoration:none;font-weight:700;font-size:13px;background:rgba(8,9,12,.7);backdrop-filter:blur(8px);transition:transform .2s,border-color .2s}.snx-cta:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.45)}.snx-cta.snx-primary{background:var(--red);border-color:var(--red);color:#160404;box-shadow:0 0 35px rgba(255,59,59,.2)}
   .snx-scope{position:absolute;z-index:6;left:50%;top:52%;width:min(72vw,820px);aspect-ratio:1;transform:translate(calc(-50% + 41vw),calc(-50% + 4vh)) scale(.16);border-radius:50%;opacity:0;background:radial-gradient(circle at 39% 31%,#252b2e,#131719 23%,#090b0c 60%,#030405);box-shadow:0 0 0 120vmax rgba(2,3,4,.965);animation:snx-scope-in var(--cycle) cubic-bezier(.24,.7,.24,1) infinite}
@@ -93,7 +192,7 @@ const secondary = product.secondaryCta;
   .snx-card{position:absolute;z-index:13;width:230px;padding:13px 15px 14px;opacity:0;transform:translateY(10px);border:1px solid rgba(255,59,59,.28);background:rgba(7,8,11,.8);box-shadow:0 14px 45px rgba(0,0,0,.38),inset 3px 0 var(--red);backdrop-filter:blur(12px)}.snx-card.snx-identity{left:calc(50% + 86px);top:calc(52% - 145px);width:232px;animation:snx-card-a var(--cycle) ease infinite}.snx-card.snx-keyable{left:calc(50% + 92px);top:calc(52% + 18px);width:224px;animation:snx-card-b var(--cycle) ease infinite}
   .snx-identity::before,.snx-keyable::before{content:"";position:absolute;right:100%;top:50%;width:42px;height:1px;background:linear-gradient(90deg,var(--red),rgba(255,59,59,.3));transform-origin:right center}.snx-identity::before{width:96px;transform:rotate(-43deg)}.snx-identity::after{content:"";position:absolute;left:-72px;top:calc(50% + 63px);width:5px;height:5px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red)}.snx-keyable::before{transform:rotate(-9deg)}.snx-card.snx-points{right:3.5%;bottom:20%;width:300px;animation:snx-card-c var(--cycle) ease infinite}
   .snx-data-label{color:var(--steel);font-size:8px;margin-bottom:8px}.snx-data-main{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-weight:700;font-size:15px}.snx-data-main em{color:var(--red);font-style:normal;font-family:var(--font-mono),monospace;font-size:10px}.snx-data-meta{margin-top:7px;color:rgba(231,236,236,.56);font-family:var(--font-mono),monospace;font-size:9px;line-height:1.5}.snx-points-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.snx-points-grid div{border-top:1px solid rgba(255,255,255,.12);padding-top:7px}.snx-points-grid strong{display:block;font-family:var(--font-display),sans-serif;font-size:26px;line-height:1}.snx-points-grid span{color:var(--steel);font-family:var(--font-mono),monospace;font-size:7px;letter-spacing:.1em;text-transform:uppercase}.snx-call{padding:8px 10px;background:var(--red);color:#170404;font-family:var(--font-mono),monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-align:center}
-  .snx-leaderboard{position:absolute;z-index:13;left:50%;bottom:5.5%;width:390px;padding:11px 14px;opacity:0;transform:translate(-50%,10px);border:1px solid rgba(138,245,181,.28);background:rgba(7,8,11,.82);box-shadow:inset 3px 0 var(--safe),0 14px 45px rgba(0,0,0,.38);backdrop-filter:blur(12px);animation:snx-card-d var(--cycle) ease infinite}.snx-leaderboard strong{display:block;color:var(--safe);font-family:var(--font-mono),monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase}.snx-leaderboard span{display:block;margin-top:6px;color:rgba(231,236,236,.62);font-family:var(--font-mono),monospace;font-size:8px;letter-spacing:.07em;line-height:1.45;text-transform:uppercase}.snx-stage,.snx-replay-clock{position:absolute;z-index:14;bottom:22px;font-size:9px}.snx-stage{left:50%;transform:translateX(-50%);color:var(--steel)}.snx-stage span{color:var(--red)}.snx-replay-clock{right:clamp(22px,4vw,70px);color:var(--amber)}
+  .snx-leaderboard{position:absolute;z-index:13;left:50%;bottom:5.5%;width:390px;padding:11px 14px;opacity:0;transform:translate(-50%,10px);border:1px solid rgba(138,245,181,.28);background:rgba(7,8,11,.82);box-shadow:inset 3px 0 var(--safe),0 14px 45px rgba(0,0,0,.38);backdrop-filter:blur(12px);animation:snx-card-d var(--cycle) ease infinite}.snx-leaderboard strong{display:block;color:var(--safe);font-family:var(--font-mono),monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase}.snx-leaderboard span{display:block;margin-top:6px;color:rgba(231,236,236,.62);font-family:var(--font-mono),monospace;font-size:8px;letter-spacing:.07em;line-height:1.45;text-transform:uppercase}.snx-stage,.snx-replay-clock{position:absolute;z-index:14;bottom:22px;font-size:9px}.snx-stage{left:50%;transform:translateX(-50%);color:var(--steel)}.snx-stage span{color:var(--red)}.snx-stage i,.snx-stage b{color:var(--steel);font-style:normal;font-weight:400}.snx-replay-clock{right:clamp(22px,4vw,70px);color:var(--amber)}
   @keyframes snx-scene{0%,5%{transform:scale(1.025);filter:saturate(1.04) contrast(1.08) brightness(.79)}6.5%{transform:scale(1.07) translate3d(-1%,-.25%,0);filter:saturate(.92) contrast(1.13) brightness(.73)}7.5%,92%{transform:scale(1.09) translate3d(0,-.6%,0);filter:saturate(.76) contrast(1.16) brightness(.68)}100%{transform:scale(1.025);filter:saturate(1.04) contrast(1.08) brightness(.79)}}
   @keyframes snx-scope-in{0%,4.9%{opacity:0;transform:translate(calc(-50% + 41vw),calc(-50% + 4vh)) scale(.16);box-shadow:0 0 0 120vmax transparent}5%{opacity:1;transform:translate(calc(-50% + 41vw),calc(-50% + 4vh)) scale(.16);box-shadow:0 0 0 120vmax transparent}5.9%{opacity:1;transform:translate(calc(-50% + 25vw),calc(-50% + 2vh)) scale(.36) rotate(.18deg);box-shadow:0 0 0 120vmax rgba(2,3,4,.08)}6.8%{opacity:1;transform:translate(calc(-50% + 8vw),-50%) scale(.82) rotate(-.15deg);box-shadow:0 0 0 120vmax rgba(2,3,4,.64)}7.5%,92%{opacity:1;transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 120vmax rgba(2,3,4,.965)}97%,100%{opacity:0;transform:translate(-50%,-50%) scale(.72);box-shadow:0 0 0 120vmax rgba(2,3,4,.2)}}
   @keyframes snx-lens{0%,5.8%{background-size:210% auto;filter:saturate(.82) contrast(1.08) brightness(.92) blur(1.6px)}6.8%{background-size:480% auto;filter:saturate(.9) contrast(1.34) brightness(.96) blur(.7px)}7.5%,92%{background-size:450% auto;filter:saturate(.78) contrast(1.25) brightness(.86)}100%{background-size:300% auto}}@keyframes snx-glass{0%,5.9%{opacity:1}6.7%{opacity:.86}7.25%{opacity:.12}7.5%,92%{opacity:0}97%,100%{opacity:1}}@keyframes snx-reticle{0%,7.35%{opacity:0}7.5%,92%{opacity:1}97%,100%{opacity:0}}@keyframes snx-freeze{0%,7.9%,8.8%,100%{opacity:0}8%{opacity:.64}8.25%{opacity:.06}}
@@ -102,10 +201,165 @@ const secondary = product.secondaryCta;
   @keyframes snx-embers{from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}to{background-position:14px -90px,-18px -120px,8px -150px,-12px -105px,16px -140px,-8px -92px}}@keyframes snx-lock{0%,16.2%{opacity:0}16.3%,92%{opacity:1}94%,100%{opacity:0}}@keyframes snx-card-a{0%,17%{opacity:0;transform:translateY(10px)}19.5%,92%{opacity:1;transform:none}96%,100%{opacity:0}}@keyframes snx-card-b{0%,20%{opacity:0;transform:translateY(10px)}22.5%,92%{opacity:1;transform:none}96%,100%{opacity:0}}@keyframes snx-card-c{0%,27%{opacity:0;transform:translateY(10px)}30%,92%{opacity:1;transform:none}96%,100%{opacity:0}}@keyframes snx-card-d{0%,33%{opacity:0;transform:translate(-50%,10px)}36%,92%{opacity:1;transform:translate(-50%)}96%,100%{opacity:0}}@keyframes snx-actions{0%,33%{opacity:0;transform:translateY(14px)}36%,92%{opacity:1;transform:none}96%,100%{opacity:0}}
   @media(max-width:900px){.snx-hero{min-height:900px}.snx-scene::after{background:linear-gradient(180deg,rgba(7,8,11,.9),rgba(7,8,11,.22) 42%,rgba(7,8,11,.96) 79%)}.snx-copy{top:5%;left:24px;width:calc(100% - 48px)}.snx-back{margin-bottom:34px}.snx-copy h1{max-width:380px;font-size:clamp(56px,18vw,84px)}.snx-lede{max-width:330px;font-size:14px}.snx-timing{margin-top:16px}.snx-actions{margin-top:18px}.snx-scope{top:56%;width:min(92vw,620px)}.snx-target-box{left:calc(50% - 42px);top:calc(56% - 34px);width:84px;height:174px}.snx-bioscan{top:58%;width:138px;height:208px}.snx-card{display:none}.snx-card.snx-points{display:block;right:18px;left:18px;bottom:54px;width:auto}.snx-leaderboard,.snx-stage{display:none}.snx-replay-clock{right:18px;bottom:24px}}
   @media(max-width:520px){.snx-hero{min-height:820px}.snx-copy{top:4%}.snx-back{margin-bottom:28px}.snx-lede{display:none}.snx-scope{top:50%}.snx-target-box{top:calc(50% - 34px)}.snx-bioscan{top:52%}.snx-actions .snx-cta:not(.snx-primary){display:none}.snx-card.snx-points{top:57.4%;right:auto;bottom:auto;left:18px;width:270px;padding:9px 12px}.snx-points .snx-data-label{display:none}.snx-points .snx-points-grid{margin:3px 0 6px}.snx-points .snx-call{padding:6px 8px;font-size:9px}}
+
+  .snx-desk{--desk-accent:var(--amber);--desk-line:rgba(255,255,255,.12);position:relative;overflow:hidden;background:linear-gradient(180deg,#080b0f,#0b1015 46%,#080a0d);color:#e7ecec;font-family:var(--font-sans),system-ui,sans-serif}.snx-desk[data-mode="valorant"]{--desk-accent:#24d8ff}.snx-desk::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.6;background:linear-gradient(90deg,transparent 0 8%,rgba(255,255,255,.025) 8.1% 8.2%,transparent 8.3% 91.7%,rgba(255,255,255,.025) 91.8% 91.9%,transparent 92%),linear-gradient(0deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:auto,100% 68px}.snx-desk-shell{position:relative;width:min(1180px,calc(100% - 48px));margin:0 auto;padding:clamp(72px,9vw,132px) 0 clamp(84px,10vw,144px)}.snx-desk-header{display:flex;align-items:flex-end;justify-content:space-between;gap:34px;padding-bottom:34px;border-bottom:1px solid var(--desk-line)}.snx-desk-eyebrow,.snx-desk-kicker,.snx-desk-status,.snx-desk-proof-heading,.snx-desk-boundary,.snx-desk-tags,.snx-desk-val-top,.snx-desk-val-nav,.snx-desk-val-foot{font-family:var(--font-mono),monospace;text-transform:uppercase;letter-spacing:.12em}.snx-desk-eyebrow{margin:0 0 16px;color:var(--desk-accent);font-size:10px}.snx-desk-header h2{max-width:720px;margin:0;color:#f0f4f4;font-size:clamp(42px,5.4vw,78px);font-weight:800;line-height:.9;letter-spacing:-.06em}.snx-desk-intro{max-width:600px;margin:20px 0 0;color:rgba(231,236,236,.62);font-size:clamp(14px,1.2vw,17px);line-height:1.55}.snx-desk-status{display:grid;gap:9px;min-width:210px;padding:14px 16px;border-left:2px solid var(--desk-accent);background:rgba(255,255,255,.035);color:var(--desk-accent);font-size:9px}.snx-desk-status strong{color:rgba(231,236,236,.62);font-size:8px;font-weight:500}.snx-desk-summary{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.65fr);gap:18px;margin-top:24px}.snx-desk-command{position:relative;overflow:hidden;padding:30px;border:1px solid var(--desk-line);background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.015));box-shadow:0 18px 55px rgba(0,0,0,.2)}.snx-desk-command::after{content:"";position:absolute;right:-80px;bottom:-120px;width:300px;height:300px;border:1px solid color-mix(in srgb,var(--desk-accent) 35%,transparent);border-radius:50%;box-shadow:0 0 0 30px color-mix(in srgb,var(--desk-accent) 7%,transparent),0 0 0 60px color-mix(in srgb,var(--desk-accent) 4%,transparent);opacity:.6}.snx-desk-kicker{display:block;color:var(--desk-accent);font-size:9px}.snx-desk-command h3{position:relative;z-index:1;margin:15px 0 0;color:#f0f4f4;font-size:clamp(30px,3.4vw,50px);line-height:.95;letter-spacing:-.045em}.snx-desk-command p{position:relative;z-index:1;max-width:670px;margin:18px 0 24px;color:rgba(231,236,236,.68);font-size:15px;line-height:1.65}.snx-desk-tags{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:7px}.snx-desk-tags span{padding:8px 9px;border:1px solid rgba(255,255,255,.13);color:rgba(231,236,236,.65);font-size:8px;line-height:1.1}.snx-desk-boundary{position:relative;z-index:1;display:flex;gap:13px;align-items:flex-start;margin-top:27px;padding-top:14px;border-top:1px solid var(--desk-line);font-size:8px;line-height:1.5}.snx-desk-boundary span{flex:0 0 auto;color:var(--desk-accent)}.snx-desk-boundary b{max-width:480px;color:rgba(231,236,236,.53);font-weight:400;letter-spacing:.08em}.snx-desk-metrics{display:grid;grid-template-rows:repeat(3,1fr);border:1px solid var(--desk-line);background:rgba(255,255,255,.025)}.snx-desk-metrics div{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 22px;border-bottom:1px solid var(--desk-line)}.snx-desk-metrics div:last-child{border-bottom:0}.snx-desk-metrics strong{color:var(--desk-accent);font-family:var(--font-display),sans-serif;font-size:clamp(25px,3vw,42px);line-height:1}.snx-desk-metrics span{max-width:110px;color:rgba(231,236,236,.54);font-family:var(--font-mono),monospace;font-size:8px;line-height:1.45;text-align:right;text-transform:uppercase;letter-spacing:.1em}.snx-desk-proof{margin-top:58px}.snx-desk-proof-heading{display:flex;align-items:center;gap:14px;color:var(--desk-accent);font-size:9px}.snx-desk-proof-heading i{display:block;width:48px;height:1px;background:var(--desk-accent);opacity:.7}.snx-desk-proof-heading b{color:rgba(231,236,236,.42);font-size:8px;font-weight:400;letter-spacing:.08em}.snx-desk-proof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}.snx-desk-shot{min-width:0;margin:0}.snx-desk-shot-frame{position:relative;overflow:hidden;aspect-ratio:16/10;border:1px solid rgba(255,255,255,.14);background:#090b0d;box-shadow:0 16px 45px rgba(0,0,0,.28)}.snx-desk-shot-frame::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.08),transparent 28%,transparent 72%,rgba(255,181,71,.08));mix-blend-mode:screen}.snx-desk-shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;filter:saturate(.82) contrast(1.08);transition:transform .45s ease,filter .45s ease}.snx-desk-shot:hover img{transform:scale(1.035);filter:saturate(1) contrast(1.08)}.snx-desk-shot figcaption{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 2px 0}.snx-desk-shot figcaption strong{color:#edf2f2;font-size:13px}.snx-desk-shot figcaption span{color:rgba(231,236,236,.46);font-family:var(--font-mono),monospace;font-size:8px;letter-spacing:.08em;text-align:right;text-transform:uppercase}.snx-desk-valorant-preview{grid-column:1 / -1;position:relative;overflow:hidden;border:1px solid rgba(36,216,255,.36);background:linear-gradient(135deg,#10191e,#0b1116 54%,#0c151c);box-shadow:0 18px 55px rgba(0,0,0,.3)}.snx-desk-valorant-preview::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 92% 12%,rgba(36,216,255,.16),transparent 30%),linear-gradient(90deg,transparent 0 49.9%,rgba(36,216,255,.06) 50%,transparent 50.1%)}.snx-desk-val-top{position:relative;z-index:1;display:flex;justify-content:space-between;padding:18px 20px;border-bottom:1px solid rgba(36,216,255,.2);color:#24d8ff;font-size:9px}.snx-desk-val-top b{color:rgba(231,236,236,.5);font-weight:400}.snx-desk-val-nav{position:relative;z-index:1;display:flex;gap:20px;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,.1);color:rgba(231,236,236,.45);font-size:8px}.snx-desk-val-nav .is-active{color:#24d8ff}.snx-desk-val-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:20px}.snx-desk-val-grid article{min-height:118px;padding:15px;border:1px solid rgba(255,255,255,.1);background:rgba(4,8,11,.45)}.snx-desk-val-grid article>span{display:block;color:rgba(231,236,236,.48);font:8px/1.2 var(--font-mono),monospace;letter-spacing:.1em}.snx-desk-val-grid strong{display:block;margin-top:23px;color:#e8f5f6;font-size:17px;line-height:1.05}.snx-desk-val-grid small{display:block;margin-top:8px;color:#24d8ff;font:8px/1.45 var(--font-mono),monospace;letter-spacing:.05em}.snx-desk-val-foot{position:relative;z-index:1;display:flex;gap:14px;align-items:center;padding:13px 20px;border-top:1px solid rgba(255,255,255,.1);font-size:8px}.snx-desk-val-foot span{color:#24d8ff}.snx-desk-val-foot b{color:rgba(231,236,236,.5);font-weight:400;letter-spacing:.08em}
+  @media(max-width:800px){.snx-desk-shell{width:min(100% - 40px,640px);padding:76px 0 92px}.snx-desk-header{display:block}.snx-desk-status{width:max-content;margin-top:26px}.snx-desk-summary{grid-template-columns:1fr}.snx-desk-metrics{grid-template-columns:repeat(3,1fr);grid-template-rows:none}.snx-desk-metrics div{display:block;padding:17px 14px}.snx-desk-metrics span{display:block;margin-top:10px;text-align:left}.snx-desk-val-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.snx-desk-shell{width:calc(100% - 36px);padding:62px 0 78px}.snx-desk-header h2{font-size:clamp(40px,13vw,58px)}.snx-desk-intro{font-size:14px}.snx-desk-command{padding:22px}.snx-desk-command h3{font-size:36px}.snx-desk-command p{font-size:14px}.snx-desk-boundary{display:block}.snx-desk-boundary b{display:block;margin-top:9px}.snx-desk-proof{margin-top:42px}.snx-desk-proof-heading{display:block;line-height:1.5}.snx-desk-proof-heading i{display:none}.snx-desk-proof-heading b{display:block;margin-top:8px}.snx-desk-proof-grid{grid-template-columns:1fr}.snx-desk-shot figcaption{display:block}.snx-desk-shot figcaption span{display:block;margin-top:5px;text-align:left}.snx-desk-val-nav{gap:12px;flex-wrap:wrap}.snx-desk-val-grid{grid-template-columns:1fr;padding:14px}.snx-desk-val-grid article{min-height:0}.snx-desk-val-grid strong{margin-top:14px}.snx-desk-val-foot{display:block;line-height:1.5}.snx-desk-val-foot b{display:block;margin-top:5px}}
+  .snx-desk-val-real-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:18px}.snx-desk-valorant-preview>.snx-desk-val-top,.snx-desk-valorant-preview>.snx-desk-val-nav,.snx-desk-valorant-preview>.snx-desk-val-grid,.snx-desk-valorant-preview>.snx-desk-val-foot{display:none}.snx-desk-val-real-grid .snx-desk-shot-frame{aspect-ratio:16/10}.snx-desk-val-real-grid .snx-desk-shot figcaption{padding-bottom:2px}
+  .snx-desk-val-real-grid{align-items:start}.snx-desk-val-real-grid .snx-desk-shot-report .snx-desk-shot-frame{aspect-ratio:1120/460}.snx-desk-shot-report img{object-fit:cover}
+  @media(max-width:520px){.snx-desk-val-real-grid{grid-template-columns:1fr;padding:14px}}
 </style>
 
 <script>
   document.querySelectorAll<HTMLElement>('.snx-hero').forEach((hero) => {
+    type Mode = 'fortnite' | 'valorant';
+    const modeCopy = {
+      fortnite: {
+        headline: 'Play the points.',
+        lede: 'The replay names the threats. The live leaderboard tells you what to do next.',
+        timingValue: '~5 MIN',
+        timingLabel: 'Replay behind live · leaderboard live',
+        scopeTop: 'Official tournament replay · resolving field',
+        scopeBottom: 'Tracked tendency read · zero game memory access',
+        lifeSign: 'Life sign confirmed · official replay path',
+        identityLabel: 'Identity resolved',
+        identityMain: 'falcon peterbotǃ',
+        identityMeta: 'LEGEND · NA',
+        identityFoot: '2024 FNCS GLOBAL CHAMPION · KNOWN PRO',
+        keyableLabel: 'Tracked landing tendency',
+        keyableMain: 'Sinister Strip',
+        keyableScore: '10 / 10',
+        keyableMeta: 'TEN TRACKED TOURNAMENT GAMES · SAME DROP EVERY GAME',
+        pointsLabel: 'Tracked form · real replay history',
+        stat1Value: '#1',
+        stat1Label: 'Best finish',
+        stat2Value: '13',
+        stat2Label: 'Elims',
+        stat3Value: '20.2K',
+        stat3Label: 'Damage dealt',
+        call: 'Threat read · +8,179 damage trade',
+        leaderboardTitle: 'Points brain · live leaderboard',
+        leaderboardText: 'Your points · rank · games left · qualify gap · placement or push call — no replay delay',
+        stageLabel: 'Replay boundary',
+        stageText: 'official server replay, usually ~5 min behind',
+        replayClock: 'Fortnite · Epic replay + leaderboard',
+      },
+      valorant: {
+        headline: 'Read the round.',
+        lede: 'Rank, recent matches, live lobby context, and a round report — read-only and local.',
+        timingValue: '10 MATCHES',
+        timingLabel: 'Latest completed reports · Riot context read-only',
+        scopeTop: 'Riot Client context · read-only link',
+        scopeBottom: 'Match report read · no session token in renderer',
+        lifeSign: 'Session confirmed · read-only client path',
+        identityLabel: 'Match report surface',
+        identityMain: 'Full lobby report',
+        identityMeta: 'K/D/A · SCORE · HS%',
+        identityFoot: 'AGENTS · ROUND SPINE · LATEST 10',
+        keyableLabel: 'Riot Client context',
+        keyableMain: 'Lobby + phase',
+        keyableScore: 'READ-ONLY',
+        keyableMeta: 'FRIENDS · STORE · WEAPON SKINS',
+        pointsLabel: 'Session form · recent reports',
+        stat1Value: '10',
+        stat1Label: 'Recent matches',
+        stat2Value: 'RR',
+        stat2Label: 'Rank rating',
+        stat3Value: 'HS%',
+        stat3Label: 'Headshot rate',
+        call: 'Report read · K/D/A + round spine',
+        leaderboardTitle: 'Match brain · round reports',
+        leaderboardText: 'Rank · RR · recent matches · live lobby phase · read-only Riot context · local crosshairs',
+        stageLabel: 'Riot boundary',
+        stageText: 'read-only client context, no login automation',
+        replayClock: 'Valorant · HenrikDev + Riot Client',
+      },
+    } as const;
+
+    const desk = hero.nextElementSibling as HTMLElement | null;
+    const deskCopy = {
+      fortnite: {
+        deskIntro: 'Tournament standing first. Then the official replay turns a lobby into a plan.',
+        deskModeLabel: 'FORTNITE / TOURNAMENT DESK',
+        deskStatus: 'CURRENT APP SURFACES',
+        deskKicker: 'CURRENT APP SURFACES',
+        deskHeadline: 'Keep the race honest.',
+        deskBody: 'The live Epic standing is the first read. Scout the official replay when it lands, then turn the lobby into your next decision.',
+        deskChip1: 'STANDING / POINTS + CUTOFF',
+        deskChip2: 'SCOUT / LOBBY + DROPS',
+        deskChip3: 'STRATEGY LAB / ROUTES + DECISIONS',
+        deskChip4: 'VOICE COACH / NEXT MOVE',
+        deskBoundary: 'Epic standing is live; official replay data is commonly about five minutes behind.',
+        deskMetric1Value: 'LIVE',
+        deskMetric1Label: 'Epic standing',
+        deskMetric2Value: '~5M',
+        deskMetric2Label: 'Replay freshness',
+        deskMetric3Value: 'SCOUT',
+        deskMetric3Label: 'Lobby intelligence',
+        deskProofLabel: 'REAL APP CAPTURES / FORTNITE',
+        deskProofNote: 'The desk below is built from the surfaces the app actually uses.',
+      },
+      valorant: {
+        deskIntro: 'Rank, recent reports, and read-only Riot Client context meet in one session desk.',
+        deskModeLabel: 'VALORANT / SESSION INTELLIGENCE',
+        deskStatus: 'CURRENT APP SURFACES',
+        deskKicker: 'CURRENT APP SURFACES',
+        deskHeadline: 'See the match. Own the next round.',
+        deskBody: 'Read rank, RR, peak, completed-match history, full-lobby reports, teammate intel, skins, friends, store, alerts, crosshairs, and watchlists.',
+        deskChip1: 'REPORTS / FULL LOBBY + K/D/A',
+        deskChip2: 'RIOT CLIENT / PHASE + AGENT SELECT',
+        deskChip3: 'TOOLKIT / CROSSHAIRS + ALERTS',
+        deskChip4: 'LINK / SAME PC OR GAMING PC',
+        deskBoundary: 'Read-only Riot Client context; HenrikDev history stays in encrypted local storage and never becomes a renderer session token.',
+        deskMetric1Value: 'RR',
+        deskMetric1Label: 'Rank surface',
+        deskMetric2Value: '10',
+        deskMetric2Label: 'Latest matches',
+        deskMetric3Value: 'LOCAL',
+        deskMetric3Label: 'Crosshairs + alerts',
+        deskProofLabel: 'CURRENT APP VIEW / VALORANT',
+        deskProofNote: 'Real current-app captures show the live session desk and the full-lobby report as they appear in the Windows app.',
+      },
+    } as const;
+
+    const setMode = (mode: Mode, animate = true) => {
+      hero.dataset.mode = mode;
+      hero.querySelectorAll<HTMLButtonElement>('[data-mode-target]').forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.modeTarget === mode));
+      });
+      hero.querySelectorAll<HTMLElement>('[data-mode-copy]').forEach((element) => {
+        const key = element.dataset.modeCopy as keyof typeof modeCopy.fortnite;
+        const value = modeCopy[mode][key];
+        if (value !== undefined) element.textContent = value;
+      });
+      if (desk) {
+        desk.dataset.mode = mode;
+        desk.querySelectorAll<HTMLElement>('[data-desk-copy]').forEach((element) => {
+          const key = element.dataset.deskCopy as keyof typeof deskCopy.fortnite;
+          const value = deskCopy[mode][key];
+          if (value !== undefined) element.textContent = value;
+        });
+        desk.querySelectorAll<HTMLElement>('[data-desk-mode]').forEach((element) => {
+          element.hidden = element.dataset.deskMode !== mode;
+        });
+      }
+      if (animate) {
+        hero.classList.remove('snx-mode-changing');
+        void hero.offsetWidth;
+        hero.classList.add('snx-mode-changing');
+        window.setTimeout(() => hero.classList.remove('snx-mode-changing'), 360);
+      }
+    };
+
+    hero.querySelectorAll<HTMLButtonElement>('[data-mode-target]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.modeTarget;
+        if (target === 'fortnite' || target === 'valorant') setMode(target);
+      });
+    });
+
+    setMode('fortnite', false);
+
     const red = Math.random() < 0.5;
     hero.style.setProperty('--scene', `url("${red ? '/screenshots/snipemaxxer/hero-red-tiger-v1.webp' : '/screenshots/snipemaxxer/hero-blue-tiger-v1.webp'}")`);
     hero.dataset.camo = red ? 'red' : 'blue';

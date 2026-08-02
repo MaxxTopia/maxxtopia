@@ -6,6 +6,7 @@ type DemoVariant = {
   src720?: string;
   /** Poster frame shown until the video starts playing. */
   poster: string;
+  hasAudio?: boolean;
 };
 type Props = {
   src: string;
@@ -26,6 +27,7 @@ const variants: DemoVariant[] = video ? (Array.isArray(video) ? video : [video])
 const initialVideo: DemoVariant | undefined = variants[0];
 const variantsJson = variants.length > 1 ? JSON.stringify(variants) : '';
 const isGrid = all.length > 1 && !initialVideo;
+const hasAudio = initialVideo?.hasAudio !== false;
 ---
 
 <figure
@@ -46,6 +48,8 @@ const isGrid = all.length > 1 && !initialVideo;
         preload="metadata"
         aria-label={alt}
         data-variants={variantsJson}
+        data-has-audio={String(hasAudio)}
+        data-play-armed="false"
       >
         {initialVideo.src720 && <source src={initialVideo.src720} type="video/mp4" media="(max-width: 768px)" />}
         <source src={initialVideo.src} type="video/mp4" />
@@ -80,14 +84,14 @@ const isGrid = all.length > 1 && !initialVideo;
     )}
     <div class="product-screenshot__shimmer" aria-hidden="true"></div>
     {initialVideo && (
-      <button type="button" class="product-screenshot__playcta" aria-label={`Play ${alt} with sound`}>
+      <button type="button" class="product-screenshot__playcta" aria-label={hasAudio ? `Play ${alt} with sound` : `Play ${alt}`}>
         <span class="product-screenshot__playcta-ring">
           <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
         </span>
-        <span class="product-screenshot__playcta-label">Play with sound</span>
+        <span class="product-screenshot__playcta-label">{hasAudio ? 'Play with sound' : 'Play product tour'}</span>
       </button>
     )}
-    {initialVideo && (
+    {initialVideo && hasAudio && (
       <div class="product-screenshot__sound-wrap">
         <input
           type="range"
@@ -180,7 +184,7 @@ const isGrid = all.length > 1 && !initialVideo;
         (entries) => {
           for (const e of entries) {
             const el = e.target as HTMLVideoElement;
-            if (e.isIntersecting && !el.muted) el.play().catch(() => {});
+            if (e.isIntersecting && el.dataset.playArmed === 'true' && (el.dataset.hasAudio !== 'true' || !el.muted)) el.play().catch(() => {});
             else el.pause();
           }
         },
@@ -209,6 +213,7 @@ const isGrid = all.length > 1 && !initialVideo;
         const target = Math.min(UNMUTE_CAP, lastVolume > 0 ? lastVolume : DEFAULT_VOL);
         v.muted = false;
         v.volume = target;
+        v.dataset.playArmed = 'true';
         btn.dataset.state = 'on';
         slider.value = String(Math.round(target * 100));
         paint(Number(slider.value));
@@ -221,6 +226,7 @@ const isGrid = all.length > 1 && !initialVideo;
       slider.addEventListener('input', () => {
         const pct = Number(slider.value);
         v.volume = pct / 100;
+        v.dataset.playArmed = 'true';
         if (pct > 0) {
           if (v.muted) v.muted = false;
           btn.dataset.state = 'on';
@@ -273,6 +279,18 @@ const isGrid = all.length > 1 && !initialVideo;
         fsBtn?.addEventListener('click', toggleFs);
         v.addEventListener('dblclick', toggleFs);
       }
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('.product-screenshot__playcta').forEach((overlay) => {
+      const frame = overlay.closest('.product-screenshot__frame');
+      const v = frame?.querySelector<HTMLVideoElement>('.product-screenshot__video');
+      if (!v || v.dataset.hasAudio === 'true') return;
+      overlay.addEventListener('click', () => {
+        v.dataset.playArmed = 'true';
+        v.muted = true;
+        v.play().catch(() => {});
+        overlay.classList.add('is-hidden');
+      });
     });
   </script>
 )}
