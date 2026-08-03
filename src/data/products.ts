@@ -699,7 +699,7 @@ export const products: Product[] = [
       { label: 'Account', value: 'None' },
     ],
     primaryCta: { label: 'Get it free — Discord #free-stuff', href: 'https://discord.gg/S78eecbWdx', external: true },
-    secondaryCta: { label: 'Launch PC Web App', href: 'https://dtman-gif.github.io/viewmaxxing/', external: true },
+    secondaryCta: { label: 'Launch PC Web App', href: 'https://maxxtopia.com/viewmaxxing/', external: false },
     glyph: '◐',
     logo: '/logos/viewmaxxing.png',
     icon: '/logos/viewmaxxing-icon.png',
