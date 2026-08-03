@@ -24,6 +24,19 @@
     "body": "Maintenance release — under-the-hood fixes and improvements."
   },
   {
+    "date": "2026-08-02",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.6",
+    "title": "YouTube Reclaim gets a wide-screen mode.",
+    "body": "The custom Reclaim player now has a Theatre mode beside fullscreen, so videos can fill most of the page without taking over the whole browser.",
+    "items": [
+      "Adds a Theatre mode button beside fullscreen.",
+      "Widens the player without entering browser fullscreen.",
+      "Uses YouTube's native cinema layout and toggles back cleanly."
+    ]
+  },
+  {
     "date": "2026-08-01",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
