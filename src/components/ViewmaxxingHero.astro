@@ -91,6 +91,12 @@ const shots = [
             {primary.label}
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
+          {product.secondaryCta && (
+            <a class="vm-btn vm-btn-sec" href={product.secondaryCta.href} target={product.secondaryCta.external ? '_blank' : undefined} rel={product.secondaryCta.external ? 'noopener' : undefined}>
+              {product.secondaryCta.label}
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          )}
         </div>
         {stat.length > 0 && (
           <div class="vm-specs">
@@ -210,6 +216,9 @@ const shots = [
     box-shadow:0 8px 30px color-mix(in oklab,var(--em) 40%,transparent); transition:transform .18s, box-shadow .3s; border:none; }
   .viewmaxxing-tv .vm-btn:hover{ transform:translateY(-2px); box-shadow:0 12px 40px color-mix(in oklab,var(--em) 55%,transparent); }
   .viewmaxxing-tv .vm-btn svg{ width:14px; height:14px; fill:none; stroke:#04140d; stroke-width:2.5; }
+  .viewmaxxing-tv .vm-btn-sec{ background:rgba(255,255,255,0.08); color:#eefaf3; border:1px solid rgba(226,91,255,0.4); box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+  .viewmaxxing-tv .vm-btn-sec:hover{ background:rgba(226,91,255,0.2); border-color:rgba(226,91,255,0.7); box-shadow:0 8px 30px rgba(226,91,255,0.3); }
+  .viewmaxxing-tv .vm-btn-sec svg{ stroke:#eefaf3; }
   .viewmaxxing-tv .vm-specs{ margin-top:26px; display:flex; gap:22px; flex-wrap:wrap; }
   .viewmaxxing-tv .vm-spec .sv{ font-family:var(--font-mono); font-size:24px; font-weight:800; line-height:1; }
   .viewmaxxing-tv .vm-spec .sk{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--vm-muted); margin-top:3px; }
