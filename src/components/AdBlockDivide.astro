@@ -310,24 +310,16 @@ const shield = product.logo ?? '/logos/adblockmaxxer.png';
     .adblock-divide .abx-shield__cap { display:none; }
     .adblock-divide .abx-back { top:70px; }
   }
-  @media (prefers-reduced-motion:reduce) {
-    .adblock-divide .abx-ring,
-    .adblock-divide .abx-calm::before,
-    .adblock-divide .abx-feed__bar i { animation:none !important; }
-    .adblock-divide .abx-feed__bar i { width:64%; }
-  }
 </style>
 
 <script>
   /* THE DIVIDE — ads float toward the shield seam and disintegrate into shards.
-     Nothing crosses to the calm side. Pure DOM, no libraries. On the live site
-     we DO honor prefers-reduced-motion: a strong static frame (ads frozen
-     mid-approach) instead of freezing to an empty field. */
+     Nothing crosses to the calm side. Pure DOM, no libraries. Showcase animation
+     plays regardless of OS reduced-motion (gamers commonly disable OS animations for perf). */
   (function () {
     var root = document.querySelector('.adblock-divide');
     var chaos = document.getElementById('abx-chaos');
     if (!root || !chaos) return;
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     var THEMES = [
       { b:'DRAFTQUEENS',           h:'Same-game parlay boost',       p:'$5 &rarr; $2,500', cls:'t-sb',    col:'#53d337', tag:'Ad' },
@@ -404,8 +396,6 @@ const shield = product.logo ?? '/logos/adblockmaxxer.png';
     }
 
     for (var k = 0; k < 7; k++) spawn(true, k);
-
-    if (reduced) return; // static frame: ads frozen mid-approach, shield lit
 
     var running = true, last = 0;
     function loop(ts) {

@@ -815,13 +815,13 @@
 
 /* Reduce motion respect — EXCEPT the bespoke hero showcases (viewmaxxing /
    optimizationmaxxing / discordmaxxer / snipemaxxer / playlistmaxxing /
-   streammaxxing / aimmaxxer), whose animation IS the content and which
+   streammaxxing / aimmaxxer / adblockmaxxer), whose animation IS the content and which
    auto-play by design. Without this exemption the global killer crushes their
    muzzle-flashes / scans / slides to 0.01ms (invisible) for animations-off users. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.viewmaxxing-tv, .om-diagnostic, .discord-exhibit, .snx-hero, .pls--hero, .streammaxxing-broadcast, .aim-diagnostic, .viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *, .pls--hero *, .streammaxxing-broadcast *, .aim-diagnostic *),
-  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *, .pls--hero *, .streammaxxing-broadcast *, .aim-diagnostic *)::before,
-  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *, .pls--hero *, .streammaxxing-broadcast *, .aim-diagnostic *)::after {
+  *:not(.viewmaxxing-tv, .om-diagnostic, .discord-exhibit, .snx-hero, .pls--hero, .streammaxxing-broadcast, .aim-diagnostic, .adblock-divide, .viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *, .pls--hero *, .streammaxxing-broadcast *, .aim-diagnostic *, .adblock-divide *),
+  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *, .pls--hero *, .streammaxxing-broadcast *, .aim-diagnostic *, .adblock-divide *)::before,
+  *:not(.viewmaxxing-tv *, .om-diagnostic *, .discord-exhibit *, .snx-hero *, .pls--hero *, .streammaxxing-broadcast *, .aim-diagnostic *, .adblock-divide *)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
