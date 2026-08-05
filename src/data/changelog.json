@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-08-04",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.7",
+    "title": "YouTube Reclaim recovers stale streams instead of leaving a black player.",
+    "body": "If a cached stream URL expires or is rejected, Reclaim now fetches a fresh stream once and retries at the same timestamp. If that still fails, it returns to YouTube's native player instead of trapping the page behind a black overlay.",
+    "items": [
+      "Refreshes stale progressive URLs automatically.",
+      "Retries without losing the current timestamp.",
+      "Falls back to native playback when recovery is unavailable."
+    ]
+  },
+  {
     "date": "2026-08-03",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
