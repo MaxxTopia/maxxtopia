@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-const updated = 'July 28, 2026';
+const updated = 'August 8, 2026';
 ---
 
 <Layout
@@ -40,7 +40,9 @@ const updated = 'July 28, 2026';
         <li><strong class="text-white">Live-chat messages and their public author details</strong>, so messages can appear in the local Streammaxxing chat and OBS overlay.</li>
       </ul>
       <p>Streammaxxing does <strong class="text-white">not</strong> request your Google password or email address, and it cannot upload, edit, or delete videos; manage playlists or subscriptions; or post as you.</p>
-      <p>Google access tokens are used in memory. The refresh token, connected channel ID, and channel name are encrypted with Windows user-scoped DPAPI and stored only in Streammaxxing's app-data folder on your PC. Live-chat messages are processed locally and are not retained by Maxxtopia or sent to Maxxtopia servers. If you add the chat overlay to OBS, you intentionally choose to display those messages on your broadcast.</p>
+      <h3 class="text-white text-lg font-semibold pt-2">Security and protection of Google user data</h3>
+      <p>We use encryption and other technical safeguards to protect the Google user data handled by Streammaxxing. Google OAuth and YouTube API requests use HTTPS. Access tokens are held in memory while the app uses them. Before the refresh token, connected channel ID, and channel name are written to disk, Streammaxxing encrypts them with the Windows Data Protection API (DPAPI), scoped to the signed-in Windows user. The encrypted data is stored only in Streammaxxing's local Windows app-data folder, and Google OAuth tokens are not sent to Maxxtopia servers.</p>
+      <p>Streammaxxing validates the OAuth callback state before accepting a Google authorization. Live-chat messages are processed locally and are not retained by Maxxtopia or sent to Maxxtopia servers. If you add the chat overlay to OBS, you intentionally choose to display those messages on your broadcast. The <strong class="text-white">Forget Google link</strong> revokes the saved authorization and deletes the encrypted local credential file.</p>
       <p>We do not sell, share, advertise against, profile from, or use Google user data to train generalized AI or machine-learning models. Our use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including its Limited Use requirements.</p>
       <p>You can stop YouTube access in Streammaxxing with <strong class="text-white">Forget Google link</strong>, which revokes the saved Google authorization and removes the local encrypted token files. You can also revoke access from your <a href="https://myaccount.google.com/connections">Google Account connections</a>. Uninstalling Streammaxxing stops access; use Forget Google link or Google Account connections first if you also want the saved authorization revoked.</p>
       <p>Google and YouTube process data under their own <a href="https://policies.google.com/privacy">Privacy Policy</a> and <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>. Questions about Streammaxxing's YouTube integration: <a href="mailto:streammaxxing-support@googlegroups.com">streammaxxing-support@googlegroups.com</a>.</p>
