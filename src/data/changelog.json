@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-08-09",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.8",
+    "title": "YouTube Reclaim recovers first-click black screens faster.",
+    "body": "If audio starts before the first video frame, Reclaim now switches to its fallback stream after three seconds instead of leaving the custom player black until a refresh. Later stream failures still recover at the same timestamp.",
+    "items": [
+      "Recovers audio-first startup races automatically.",
+      "Keeps the current timestamp during recovery.",
+      "Retains stale-stream and native-playback safeguards."
+    ]
+  },
+  {
     "date": "2026-08-04",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
