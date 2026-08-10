@@ -3,6 +3,19 @@
     "date": "2026-08-09",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.10",
+    "title": "YouTube Reclaim retries failed streams without losing your place.",
+    "body": "When a Reclaim stream freezes, the custom player now restarts at the exact same timestamp, tries fresh stream data up to three times, and uses native YouTube only as the final escape hatch at that same position.",
+    "items": [
+      "Keeps recovery inside the custom Reclaim player first.",
+      "Restarts at the current timestamp instead of interrupting playback.",
+      "Uses native YouTube only after the Reclaim retry budget is exhausted."
+    ]
+  },
+  {
+    "date": "2026-08-09",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.9",
     "title": "YouTube Reclaim recovers when a fallback stream freezes.",
     "body": "Reclaim now keeps watching its fallback stream after startup. If it freezes or ends early, it retries once with a fresh stream at the same timestamp and returns to YouTube's native player if recovery is unavailable.",
