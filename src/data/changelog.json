@@ -3,6 +3,19 @@
     "date": "2026-08-09",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.9",
+    "title": "YouTube Reclaim recovers when a fallback stream freezes.",
+    "body": "Reclaim now keeps watching its fallback stream after startup. If it freezes or ends early, it retries once with a fresh stream at the same timestamp and returns to YouTube's native player if recovery is unavailable.",
+    "items": [
+      "Recovers silent progressive-stream freezes after startup.",
+      "Retries once without losing the current timestamp.",
+      "Backs off cleanly to native YouTube instead of trapping a stuck player."
+    ]
+  },
+  {
+    "date": "2026-08-09",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.8",
     "title": "YouTube Reclaim recovers first-click black screens faster.",
     "body": "If audio starts before the first video frame, Reclaim now switches to its fallback stream after three seconds instead of leaving the custom player black until a refresh. Later stream failures still recover at the same timestamp.",
