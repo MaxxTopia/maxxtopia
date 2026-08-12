@@ -1,5 +1,24 @@
 # Maxxtopia continuity addendum
 
+## Betmaxxing live-mode UI publish — 2026-08-12
+
+- Replaced the public `public/betmaxxing/` entrypoint and hashed assets with
+  the validated Betmaxxing `0.2.0` live-mode client build.
+- Public route: `https://maxxtopia.com/betmaxxing/`.
+- The published client is fail-closed: it no longer shows replay/paper mode or
+  synthetic odds, and it will show a provider configuration/error state until
+  `VITE_LIVE_API_BASE_URL` points at a deployed gateway with permitted provider
+  credentials. This static Pages route does not contain provider secrets.
+- Source checks passed before publish: live gateway and provider fixture tests,
+  math tests, TypeScript, lint, production build, and desktop/mobile browser
+  verification.
+- Only `public/betmaxxing/index.html`, its two current hashed assets, and this
+  continuity note are in scope. Existing unrelated Maxxtopia worktree changes
+  remain untouched.
+- Next production gate: deploy the separate live gateway, configure its secret
+  provider keys and CORS, rebuild with its public base URL, then publish the
+  client again and verify a real provider-backed deep link.
+
 ## Betmaxxing deployment — 2026-08-12
 
 - Added isolated static route: `public/betmaxxing/`.
