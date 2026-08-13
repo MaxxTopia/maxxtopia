@@ -1,5 +1,21 @@
 # Maxxtopia continuity addendum
 
+## Betmaxxing provider guardrails and visual publish - 2026-08-12
+
+- Rebuilt the source client after adding free-tier-safe provider cadence,
+  stale-line rejection, and the Maxxtopia cosmic purple/cyan/lime visual
+  refresh.
+- The new static client is ready for publication at
+  `https://maxxtopia.com/betmaxxing/`.
+- The client remains fail-closed until a separate server-side gateway is
+  deployed and configured with newly generated provider keys. No provider key
+  is included in this Pages build.
+- Only `public/betmaxxing/` and this continuity note are in scope for this
+  release; unrelated Maxxtopia working-tree changes remain untouched.
+- Next live-data gate: deploy the gateway, add regenerated secrets there,
+  rebuild with its public API origin, then verify real provider-backed markets
+  and verified sportsbook links.
+
 ## Betmaxxing live-mode UI publish — 2026-08-12
 
 - Replaced the public `public/betmaxxing/` entrypoint and hashed assets with
