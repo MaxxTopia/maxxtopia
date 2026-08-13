@@ -46,4 +46,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=maxxtopia --branch=main
+          # Omitting --branch promotes the build to the Pages production
+          # deployment. A branch-specific deploy creates a healthy preview
+          # URL but leaves the custom domain on the previous deployment.
+          command: pages deploy dist --project-name=maxxtopia
