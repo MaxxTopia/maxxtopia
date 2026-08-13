@@ -1,5 +1,29 @@
 # Maxxtopia continuity addendum
 
+## Betmaxxing live provider gateway and production client - 2026-08-13
+
+- Added the provider-backed live adapter path in the source workspace at
+  `C:\Users\Diggy\Documents\Codex\2026-08-10\you-are-an-elite-quantitative-sports\outputs\Betmaxxing`.
+- Normalization now covers moneylines, spreads/run lines, totals, alternate
+  lines, player props, team props, game props, period markets, and futures;
+  provider market labels are preserved so new market variants do not collapse
+  into the wrong comparison group.
+- Deployed the server-side Cloudflare Worker gateway at
+  `https://betmaxxing-api.maxxtopia.workers.dev`.
+- Provider keys are stored as Worker secrets only. They are not present in the
+  public Pages build or the repository.
+- The production client is built with the gateway origin and uses bounded
+  polling plus the Worker edge cache for reliable phone/secondary-monitor
+  refreshes.
+- Local provider smoke: all three configured adapters returned normalized
+  markets. Local gateway showed 733 opportunities before the final publish
+  check. The live public check must still be recorded after the Pages workflow
+  completes; provider health may be partial when free-tier quotas or provider
+  access rules intervene.
+- This release remains advisory and fail-closed: no automatic wagering, no
+  guessed sportsbook links, no synthetic production feed, and no guaranteed
+  win-rate claim.
+
 ## Betmaxxing provider guardrails and visual publish - 2026-08-12
 
 - Rebuilt the source client after adding free-tier-safe provider cadence,
