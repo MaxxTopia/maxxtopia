@@ -16,10 +16,21 @@
   polling plus the Worker edge cache for reliable phone/secondary-monitor
   refreshes.
 - Local provider smoke: all three configured adapters returned normalized
-  markets. Local gateway showed 733 opportunities before the final publish
-  check. The live public check must still be recorded after the Pages workflow
-  completes; provider health may be partial when free-tier quotas or provider
-  access rules intervene.
+  markets. Local gateway showed 733 opportunities before publication.
+- Public Pages deployment was verified through the production route after
+  workflow `31694577545`: the browser loaded real odds, the expanded market
+  filter, 68 live lines, 13 displayed opportunities, and 7 actionable rows.
+- Public provider health is intentionally partial at this moment: Odds-API.io
+  is connected; The Odds API is rate-limited (HTTP 429) and OddsPapi is
+  returning Forbidden from the Worker runtime. The client exposes those
+  states instead of hiding them or manufacturing data. The keys remain wired
+  and will recover when the upstream quota/access boundary clears.
+- Added the Worker origin to the site CSP `connect-src`; without that header
+  fix the API was healthy but the browser correctly blocked the request.
+- Removed the branch-only Pages deploy flag so future pushes promote the
+  production custom domain rather than leaving it on the prior deployment.
+- Latest live gateway deployment: Worker version
+  `8f090171-aa30-42fa-83ea-0cdf0eb6e357`.
 - This release remains advisory and fail-closed: no automatic wagering, no
   guessed sportsbook links, no synthetic production feed, and no guaranteed
   win-rate claim.
