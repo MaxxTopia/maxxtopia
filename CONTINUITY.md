@@ -47,17 +47,21 @@
 - Added a Worker KV operator kill switch at `config:live-enabled`, fixed cold
   health checks to refresh real provider state, and made context review force
   `WATCH` while confirmed high-risk context forces `PASS`.
-- Published Worker version `5bfd3679-0ba9-4e69-ade3-55a2c70981f0` at
+- Published Worker version `3f8cdb2e-e710-4cff-b931-88624076cab6` at
   `https://betmaxxing-api.maxxtopia.workers.dev`. Public verification returned
   HTTP 200 for health, markets, and SSE; PropLine and Odds-API.io were
   connected, context was connected, and the surfaced lines were review-only.
 - Rebuilt the client against the Worker origin and refreshed only
   `public/betmaxxing/index.html` plus its generated hashed JS/CSS assets. The
-  phone check had no horizontal overflow; the visible board filter and Track
-  buttons now meet the 44px touch-target minimum.
+  targeted publish is Maxxtopia commit `7baf253`, GitHub Actions deploy run
+  `31758869891`, and the post-deploy phone check showed live data, no
+  horizontal overflow, a 44px Filters control, and 44px+ Track/Bet controls.
+- Parallelized the free-provider cold path after a fresh browser request
+  exposed a response delay. The public API now returned HTTP 200 in 6.08s on
+  the first health request and 0.10s or less from the warmed cache; the mobile
+  page reached LIVE DATA with no browser warnings.
 - Full Betmaxxing checks passed: live/provider/context fixtures, math, ledger,
-  lint, TypeScript, and production build. The Maxxtopia Pages publish remains
-  pending the targeted commit/push from this working tree.
+  lint, TypeScript, and production build.
 
 The key supplied in chat was used only as a server-side Worker secret and is
 not present in the client or repository. Because it appeared in chat, rotate
