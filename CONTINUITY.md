@@ -47,7 +47,7 @@
 - Added a Worker KV operator kill switch at `config:live-enabled`, fixed cold
   health checks to refresh real provider state, and made context review force
   `WATCH` while confirmed high-risk context forces `PASS`.
-- Published Worker version `3f8cdb2e-e710-4cff-b931-88624076cab6` at
+- Published Worker version `d676739c-190a-4e28-bd51-281f6abeac19` at
   `https://betmaxxing-api.maxxtopia.workers.dev`. Public verification returned
   HTTP 200 for health, markets, and SSE; PropLine and Odds-API.io were
   connected, context was connected, and the surfaced lines were review-only.
@@ -60,6 +60,9 @@
   exposed a response delay. The public API now returned HTTP 200 in 6.08s on
   the first health request and 0.10s or less from the warmed cache; the mobile
   page reached LIVE DATA with no browser warnings.
+- Added a 15-second Worker refresh deadline and a 20-second browser request
+  deadline with automatic polling recovery. A stalled upstream now yields a
+  partial no-play state instead of an indefinitely loading board.
 - Full Betmaxxing checks passed: live/provider/context fixtures, math, ledger,
   lint, TypeScript, and production build.
 
