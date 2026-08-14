@@ -35,6 +35,34 @@
   guessed sportsbook links, no synthetic production feed, and no guaranteed
   win-rate claim.
 
+## Betmaxxing free-provider and mobile hardening publish - 2026-08-13
+
+- Corrected the PropLine sport catalog mapping to its documented live keys:
+  `football_nfl`, `basketball_nba`, `baseball_mlb`, `hockey_nhl`, `mma_ufc`,
+  and `boxing`. The local live smoke returned normalized markets for NFL, NBA,
+  MLB, NHL, UFC, and boxing with no provider warnings.
+- Narrowed the free Odds-API.io fallback to its known-good basketball and
+  baseball routes so unsupported hockey/MMA requests cannot make the public
+  health state look degraded.
+- Added a Worker KV operator kill switch at `config:live-enabled`, fixed cold
+  health checks to refresh real provider state, and made context review force
+  `WATCH` while confirmed high-risk context forces `PASS`.
+- Published Worker version `5bfd3679-0ba9-4e69-ade3-55a2c70981f0` at
+  `https://betmaxxing-api.maxxtopia.workers.dev`. Public verification returned
+  HTTP 200 for health, markets, and SSE; PropLine and Odds-API.io were
+  connected, context was connected, and the surfaced lines were review-only.
+- Rebuilt the client against the Worker origin and refreshed only
+  `public/betmaxxing/index.html` plus its generated hashed JS/CSS assets. The
+  phone check had no horizontal overflow; the visible board filter and Track
+  buttons now meet the 44px touch-target minimum.
+- Full Betmaxxing checks passed: live/provider/context fixtures, math, ledger,
+  lint, TypeScript, and production build. The Maxxtopia Pages publish remains
+  pending the targeted commit/push from this working tree.
+
+The key supplied in chat was used only as a server-side Worker secret and is
+not present in the client or repository. Because it appeared in chat, rotate
+it in the provider dashboard before treating the deployment as credential-safe.
+
 ## Betmaxxing provider guardrails and visual publish - 2026-08-12
 
 - Rebuilt the source client after adding free-tier-safe provider cadence,
