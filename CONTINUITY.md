@@ -1,5 +1,27 @@
 # Maxxtopia continuity addendum
 
+## Betmaxxing player-prop explainer and finance-style mobile release - 2026-08-13
+
+- Refreshed the production Betmaxxing client from the source release at
+  `C:\Users\Diggy\Documents\Codex\2026-08-10\you-are-an-elite-quantitative-sports\outputs\Betmaxxing`.
+- Added plain-language player-prop explanations for supported MLB hits props,
+  including how many plate appearances allow a miss when a user selects a
+  multi-hit line. The calculation is transparent and derived from the listed
+  market probability; it is not presented as a guarantee or a player-history
+  model.
+- Reworked the narrow layout into a single-column mobile surface with a search
+  field, compact sport/filter controls, full-width actions, and a fixed bottom
+  navigation bar. Desktop rail and inspector behavior remain available at
+  wider widths.
+- Local release gates passed: player-prop/math smoke tests, provider contract
+  smoke, lint, and production build. The publish checkout was scoped to the
+  `public\\betmaxxing` route and this continuity note; unrelated dirty suite
+  work was preserved.
+- Publication and public browser verification are recorded in the release
+  handoff after the authorized push. Live market availability remains
+  provider-dependent and fail-closed; this UI release does not guarantee a
+  winning bet or an upstream provider response.
+
 ## Betmaxxing button audit release - 2026-08-13
 
 - Fixed the previously inert Betmaxxing `Open settings` control and shipped a
