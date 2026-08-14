@@ -1,5 +1,20 @@
 # Maxxtopia continuity addendum
 
+## Betmaxxing button audit release - 2026-08-13
+
+- Fixed the previously inert Betmaxxing `Open settings` control and shipped a
+  working control center with close, refresh, clear-filter, and alert-view
+  actions.
+- Published through commit `a484156`; GitHub Actions deploy run
+  `31762717657` completed successfully.
+- The live route and new hashed assets returned HTTP 200. The mobile browser
+  check at 390x844 showed `LIVE DATA`, no horizontal overflow, a hidden desktop
+  control rail, 44px controls, no browser warnings, working settings actions,
+  alert expansion, and Track-to-account handoff.
+- The client bundle contains the public Worker origin but no provider/news
+  secrets or replay labels. The public market surface remains advisory and
+  fail-closed; current `WATCH` rows must not be described as guaranteed bets.
+
 ## Betmaxxing live provider gateway and production client - 2026-08-13
 
 - Added the provider-backed live adapter path in the source workspace at
