@@ -181,3 +181,21 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - Published commit: `2571e0c` (`feat: refresh betmaxxing mobile surface`); deploy run `31584891539` completed successfully.
 - Public verification after deployment: route and new hashed assets returned HTTP 200; desktop and 390x844 browser checks rendered the updated surface with no horizontal overflow or console warnings.
 - Only `public/betmaxxing/` and this continuity note are in scope for this release. Existing unrelated Maxxtopia working-tree changes remain untouched.
+
+## Betmaxxing edge-first release - 2026-08-14
+
+- Published the generated client from the Betmaxxing source workspace into
+  `public/betmaxxing/` with commit `75c73c1`.
+- GitHub Actions Pages deploy run `31865822465` completed successfully.
+- The live route is `https://maxxtopia.com/betmaxxing/`; its entrypoint and
+  hashed client asset returned HTTP 200 after deployment.
+- The release keeps the public board fail-closed: only fresh,
+  sharp-referenced positive edges reach the opportunity surface, while the
+  broader game catalog remains available for lookup. Empty data shows the
+  edge-scan state rather than dead rows.
+- Desktop and 390x844 public browser checks passed with no horizontal overflow,
+  hidden desktop rail/inspector on mobile, working Settings contract toggle,
+  and no replay/paper language. The separate Worker is live at
+  `https://betmaxxing-api.maxxtopia.workers.dev`.
+- Only the three Betmaxxing route files were staged. Existing unrelated dirty
+  and untracked Maxxtopia work remains preserved.
