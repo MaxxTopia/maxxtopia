@@ -1,5 +1,26 @@
 # Maxxtopia continuity addendum
 
+## Betmaxxing focused game answer and 1102 guard - 2026-08-15
+
+- Published the matching client bundle from
+  `C:\Users\Diggy\Documents\Codex\2026-08-10\you-are-an-elite-quantitative-sports\outputs\Betmaxxing`.
+- The Worker is now version `ab42f36a-9550-4b03-84e6-f0acc51ed09d` at
+  `https://betmaxxing-api.maxxtopia.workers.dev`. The focused
+  `Royals Angels` route returned HTTP 200 with one matched game, 350 bounded
+  lines, a `GAME ANSWER` summary, six player-prop rows, and connected PropLine
+  and Odds-API.io sources. The normal health route recovered to both providers
+  connected after its background refresh.
+- The focused path now avoids the Cloudflare 1102 boundary by limiting each
+  provider to one matching event/detail, reusing official-data context during
+  the focused request, coalescing identical lookups, and using edge cache key
+  version `v7`. The summary keeps “most likely” separate from “best price” and
+  remains market-derived rather than claiming a guaranteed result.
+- Static release artifacts are the hashed Betmaxxing assets referenced by
+  `public\betmaxxing\index.html`; build and public API checks passed before
+  publication. The remaining human gate is an actual iPhone Safari portrait
+  check, because desktop browser emulation cannot prove the physical device
+  experience.
+
 ## Betmaxxing game-first browse and phone layout release - 2026-08-15
 
 - Published the updated Betmaxxing client from
