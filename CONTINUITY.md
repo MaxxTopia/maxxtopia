@@ -1,5 +1,26 @@
 # Maxxtopia continuity addendum
 
+## Betmaxxing game-first browse and phone layout release - 2026-08-15
+
+- Published the updated Betmaxxing client from
+  `C:\Users\Diggy\Documents\Codex\2026-08-10\you-are-an-elite-quantitative-sports\outputs\Betmaxxing`.
+- The targeted Maxxtopia commit is `6b74e4e` and GitHub Actions Pages run
+  `31921635072` completed successfully. The production route is
+  `https://maxxtopia.com/betmaxxing/`; its entrypoint and new hashed bundle
+  returned HTTP 200.
+- The separate live gateway was deployed as Worker version
+  `71c8e069-2626-4b03-96c9-eca72a30a513`. A public focused
+  `Brewers Dodgers` request returned live data with 420 bounded market lines
+  and 31 contract-discovery rows; no strict better-price recommendation was
+  fabricated because the reference/price gate did not pass.
+- Browser verification at 390x844 showed no horizontal overflow, a hidden
+  desktop rail and inspector, 44px-or-larger phone controls, populated MLB
+  and team filters, 431 focused game lines including player markets, and a
+  working YES/NO ticket selection. The browser recorded no warnings or
+  errors. The static page remains advisory and does not place orders.
+- Unrelated dirty and untracked suite work remains preserved. A real iPhone
+  Safari portrait check is still the human device gate.
+
 ## Betmaxxing player-prop explainer and finance-style mobile release - 2026-08-13
 
 - Refreshed the production Betmaxxing client from the source release at
