@@ -20,6 +20,10 @@
   publication. The remaining human gate is an actual iPhone Safari portrait
   check, because desktop browser emulation cannot prove the physical device
   experience.
+- A client-only follow-up now makes the top status pill follow the focused
+  game's live/degraded state instead of inheriting the background slate label.
+  The new client asset is `index-o7x1WNwj.js`; it passed the client type check,
+  lint, and production build and is included in the same release route.
 
 ## Betmaxxing game-first browse and phone layout release - 2026-08-15
 
