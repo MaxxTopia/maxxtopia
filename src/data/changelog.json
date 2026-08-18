@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-08-18",
+    "product": "Maxxtopia",
+    "title": "The suite shell feels faster under the pointer.",
+    "body": "Navigation and hover interactions now do less work per frame while the branded cursor lands immediately and keeps its motion.",
+    "items": [
+      "Cursor dot follows the pointer immediately.",
+      "Tighter ring easing keeps the signature cursor effect.",
+      "Magnetic buttons cache layout instead of measuring every move.",
+      "In-page links no longer stack a page-wide scroll animation."
+    ]
+  },
+  {
+    "date": "2026-08-18",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "v0.4.102",
+    "title": "Viewmaxxing keeps the episode path alive when a mirror fails.",
+    "body": "The TV app now retries route-specific VidNest failures, preserves fallback sources, and keeps unfinished episodes playable.",
+    "items": [
+      "Retries route-specific VidNest failures with bounded cache-busting.",
+      "Keeps the English-Dub server picker after fallback failure.",
+      "Preserves unfinished zero-position episodes as Play Ep N.",
+      "Keeps D-pad Prev/Next controls available during recovery."
+    ]
+  },
+  {
+    "date": "2026-08-18",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
     "version": "v1.6.11",
@@ -20,6 +46,45 @@
     "version": "v0.7.61",
     "title": "Discordmaxxer v0.7.61",
     "body": "Maintenance release — under-the-hood fixes and improvements."
+  },
+  {
+    "date": "2026-08-10",
+    "product": "Snipemaxxer",
+    "productSlug": "snipemaxxer",
+    "version": "v0.2.9",
+    "title": "Snipemaxxer keeps Valorant context from going stale.",
+    "body": "The Valorant side now keeps live lobby, presence, and cosmetics surfaces independent while the updater sits in a clear top row.",
+    "items": [
+      "Merges direct and relay lobby data without losing readiness.",
+      "Matches Riot names by stable PUUID identity.",
+      "Keeps store and friends unavailable when Riot returns 404.",
+      "Moves the updater into a dedicated accessible status row."
+    ]
+  },
+  {
+    "date": "2026-08-08",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.57",
+    "title": "Streammaxxing documents its YouTube connection.",
+    "body": "The app and Maxxtopia privacy policy now explain Google OAuth and YouTube data use before you connect.",
+    "items": [
+      "Adds Google OAuth data-protection disclosures.",
+      "Adds an in-app YouTube privacy notice.",
+      "Keeps the updater on signed v0.1.57 artifacts."
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "title": "Discover keeps going when one preview fails.",
+    "body": "A failed preview now stays isolated to that song instead of breaking the rest of the Discover board.",
+    "items": [
+      "Retries a preview once with fresh source data.",
+      "Marks only the unavailable song instead of the whole board.",
+      "Lets you retry or dismiss the failed preview."
+    ]
   },
   {
     "date": "2026-08-09",

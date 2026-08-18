@@ -1,5 +1,28 @@
 # Maxxtopia continuity addendum
 
+## Updates-page reconciliation - 2026-08-18
+
+- Compared the existing `src/data/changelog.json` against the recent public
+  suite work. Added five curated entries for the Maxxtopia pointer pass,
+  Viewmaxxing v0.4.102, Snipemaxxer v0.2.9, Streammaxxing v0.1.57, and
+  Playlistmaxxing preview recovery. Private Aimmaxxer and Betmaxxing work is
+  intentionally excluded. Existing AdBlock-Maxxer v1.6.11 and Discordmaxxer
+  v0.7.61 entries were already present and were not duplicated.
+- Public checks confirmed the Snipemaxxer updater reports 0.2.9, the
+  Streammaxxing signed manifest reports 0.1.57, and the Viewmaxxing v0.4.102
+  release is published. Copy stays bounded to verified behavior; no
+  physical-device playback or real-game FPS claim was added.
+- Local `npm run build`, JSON parsing, `git diff --check`, and the desktop
+  browser check passed. The Updates page rendered 102 newest-first entries,
+  had no console logs, and had no desktop horizontal overflow. The 390x844
+  check exposed a pre-existing shared-header issue: desktop-only product
+  buttons still render at mobile width and extend the header to 442px. It is
+  outside this changelog pass and remains unchanged because the header is an
+  integral shell surface.
+- Current release state: the changelog/continuity edits are ready for the
+  public Updates deployment. The shared mobile header overflow remains a
+  separate, unapproved shell fix.
+
 ## Shared interaction responsiveness pass - 2026-08-18
 
 - Diagnosed the shared shell interaction path after a live and local browser
@@ -19,15 +42,15 @@
   lazy metadata videos with no horizontal overflow or console warnings.
 - Local verification passed: `npm run build` generated all 26 pages, `git diff
   --check` passed, desktop cursor and CTA checks passed, and local product
-  route checks were clean. Live state is unchanged: no commit, push, or deploy
-  was performed. Live homepage/product HTTP checks returned 200; the live
-  browser still has the pre-patch interaction behavior until publication is
-  explicitly approved.
+  route checks were clean. The scoped changes were committed as `6edfe41` and
+  pushed to `main`. GitHub Actions deployment `32113816372` succeeded; live
+  homepage and product-route HTTP checks returned 200, and the live browser
+  showed the immediate cursor dot, tighter ring settling, and no console logs.
+  The Optimizationmaxxing hero remained unchanged.
 - Diggy-owned gate: review the cursor feel on a real mouse and choose whether
-  to keep the tighter ring plus immediate anchor jumps. Approval is required
-  before staging or publishing these three files. If the hero animation itself
-  still feels heavy after this pass, that is a separate approval-gated change
-  because it is integral product presentation.
+  to keep the tighter ring plus immediate anchor jumps. If the hero animation
+  itself still feels heavy, that is a separate approval-gated change because
+  it is integral product presentation.
 
 ## Betmaxxing focused game answer and 1102 guard - 2026-08-15
 
