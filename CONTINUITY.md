@@ -13,15 +13,17 @@
   release is published. Copy stays bounded to verified behavior; no
   physical-device playback or real-game FPS claim was added.
 - Local `npm run build`, JSON parsing, `git diff --check`, and the desktop
-  browser check passed. The Updates page rendered 102 newest-first entries,
+  browser check passed. The Updates page rendered 100 newest-first entries,
   had no console logs, and had no desktop horizontal overflow. The 390x844
   check exposed a pre-existing shared-header issue: desktop-only product
   buttons still render at mobile width and extend the header to 442px. It is
   outside this changelog pass and remains unchanged because the header is an
   integral shell surface.
-- Current release state: the changelog/continuity edits are ready for the
-  public Updates deployment. The shared mobile header overflow remains a
-  separate, unapproved shell fix.
+- Current release state: commit `17e289d` is pushed and GitHub Actions run
+  `32116488738` deployed the public Updates page successfully. The live
+  `/updates/` route returned HTTP 200 and the desktop browser check showed all
+  five public additions with zero Aimmaxxer or Betmaxxing entry cards. The
+  shared mobile header overflow remains a separate, unapproved shell fix.
 
 ## Shared interaction responsiveness pass - 2026-08-18
 
