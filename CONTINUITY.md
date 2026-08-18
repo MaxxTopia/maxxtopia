@@ -1,5 +1,41 @@
 # Maxxtopia continuity addendum
 
+## Dropmaxxer Drop Window hero - 2026-08-18
+
+- Replaced the generic product hero on `/dropmaxxer/` with a bespoke 3D
+  "Drop Window" presentation in `src/components/DropmaxxerHero.astro`.
+- The hero uses the real Dropmaxxer flight-plan capture as a tilted map board,
+  adds an extruded 3D frame, moving bus/glider markers, jump/cut/target labels,
+  and separate Fastest versus Safe route readouts. The route switch is
+  keyboard-accessible and changes the visible emphasis without leaving the
+  page. Pointer movement adds a bounded board tilt; the core animation remains
+  present for Windows users who report reduced motion because it communicates
+  the product decision.
+- `src/pages/[slug].astro` now renders the bespoke hero and keeps the real
+  `dropmaxxer.pages.dev` click-to-load embed directly beneath it. The existing
+  feature zones and walkthrough remain unchanged. `src/data/products.ts` gives
+  Dropmaxxer the secondary amber accent `#ffb454`; `src/styles/global.css`
+  exempts the new hero from the shared animation kill switch.
+- Local verification passed: `npm run build` generated all 26 pages twice,
+  `git diff --check` passed, the local desktop route had one hero and one live
+  embed with no horizontal overflow, the route switch changed `aria-pressed`
+  and `data-route`, pointer tilt changed the 3D CSS variables, and the browser
+  recorded no warnings or errors.
+- Responsive note: the Dropmaxxer hero itself fits at 390x844, but the shared
+  site header still reports the known pre-existing 442px document width at a
+  390px viewport. That shell issue was not changed in this focused page pass.
+- Release state: commit `f613fa2` is pushed to `main`; GitHub Actions run
+  `32133022435` deployed it to Cloudflare Pages successfully. The live
+  homepage and `/dropmaxxer/` route returned HTTP 200, and the flight-plan
+  hero asset returned HTTP 200. Live desktop and 390x844 browser checks
+  showed the new hero, a clean console, working Fastest/Safe route switching,
+  and responsive hero bounds. Pointer movement changed the 3D tilt variables.
+- The known shared mobile header issue still reports a 442px document width at
+  a 390px viewport; it is outside this focused hero release and remains
+  unchanged. Unrelated tracked and untracked work in this repository remains
+  preserved. Best next action: treat any mobile shell correction as a
+  separate, approval-gated pass.
+
 ## Updates-page reconciliation - 2026-08-18
 
 - Compared the existing `src/data/changelog.json` against the recent public
