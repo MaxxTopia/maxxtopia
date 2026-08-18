@@ -55,9 +55,13 @@
   102 newest-first cards at desktop and 390x844 with no browser warnings or
   errors. The existing shared mobile header remains the only 442px document
   width issue; the new update cards themselves fit within the phone frame.
-- Current release state: local only, with publication explicitly authorized by
-  Diggy and pending the final build, commit, push, and Pages verification.
-  Unrelated tracked and untracked work remains preserved.
+- Release state: commit `e280511` is pushed to `main`; GitHub Actions run
+  `32134686098` deployed the final feed to Cloudflare Pages successfully. The
+  live `/updates/` route returned HTTP 200 and the live browser rendered 102
+  cards with Playlistmaxxing and the vague Aimmaxxer note present, no
+  Betmaxxing or Dropmaxxer cards, and no console warnings or errors. The
+  existing shared mobile header remains the only 442px document width issue.
+- Unrelated tracked and untracked work remains preserved.
 
 ## Updates-page reconciliation - 2026-08-18
 
