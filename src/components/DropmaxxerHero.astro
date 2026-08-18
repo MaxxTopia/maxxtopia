@@ -1,0 +1,449 @@
+---
+/**
+ * DropmaxxerHero - the "Drop Window".
+ *
+ * Dropmaxxer is not a loot map. It answers a timing decision: when to leave
+ * the bus, where to cut, and whether the fast line is worth the risk. The
+ * hero makes that decision visible as a small 3D flight-planning table.
+ */
+import type { Product } from '../data/products';
+import StatusPill from './StatusPill.astro';
+
+type Props = { product: Product };
+const { product } = Astro.props;
+const primary = product.primaryCta;
+const icon = product.icon ?? product.logo;
+const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fastest + safe' };
+---
+
+<section
+  class="dropmaxxer-drop"
+  data-route="fast"
+  aria-labelledby="dropmaxxer-hero-title"
+  style={`--dmx-accent: ${product.accentHex}; --dmx-accent2: ${product.accent2Hex ?? '#ffb454'};`}
+>
+  <div class="dmx-atmosphere" aria-hidden="true">
+    <span class="dmx-atmosphere__orb dmx-atmosphere__orb--one"></span>
+    <span class="dmx-atmosphere__orb dmx-atmosphere__orb--two"></span>
+    <span class="dmx-atmosphere__horizon"></span>
+  </div>
+
+  <div class="dmx-wrap">
+    <a class="dmx-back" href="/#apps">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+      All products
+    </a>
+
+    <div class="dmx-grid">
+      <div class="dmx-stage" data-dmx-tilt>
+        <div class="dmx-stage__eyebrow">
+          <span class="dmx-signal" aria-hidden="true"></span>
+          <span>DROP WINDOW</span>
+          <i></i>
+          <span>LIVE MAP LOGIC</span>
+        </div>
+
+        <div class="dmx-radar" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+
+        <div class="dmx-map-rig">
+          <div class="dmx-board-tilt">
+            <div class="dmx-board-float">
+              <div class="dmx-board">
+                <div class="dmx-board__backplate" aria-hidden="true"></div>
+                <div class="dmx-map-surface">
+                  <img
+                    src="/screenshots/dropmaxxer/hero-flightplan.webp"
+                    alt="Dropmaxxer flight plan example with a bus route, jump window, cut point, and target"
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <div class="dmx-map-surface__shade" aria-hidden="true"></div>
+                  <div class="dmx-map-surface__scan" aria-hidden="true"></div>
+
+                  <svg class="dmx-flight" viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <filter id="dmx-route-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="0.7" result="blur" />
+                        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                      </filter>
+                      <marker id="dmx-arrow-fast" markerWidth="4" markerHeight="4" refX="3.5" refY="2" orient="auto">
+                        <path d="M0 0 L4 2 L0 4 Z" fill="#ffb454" />
+                      </marker>
+                      <marker id="dmx-arrow-safe" markerWidth="4" markerHeight="4" refX="3.5" refY="2" orient="auto">
+                        <path d="M0 0 L4 2 L0 4 Z" fill="#76e5ff" />
+                      </marker>
+                    </defs>
+                    <path class="dmx-route dmx-route--bus" d="M5 10 C25 15 46 28 94 61" />
+                    <path class="dmx-route dmx-route--safe" d="M43 32 C53 17 72 18 79 54" marker-end="url(#dmx-arrow-safe)" />
+                    <path class="dmx-route dmx-route--fast" d="M43 32 C48 42 62 49 79 54" marker-end="url(#dmx-arrow-fast)" />
+                    <path class="dmx-route dmx-route--connector" d="M43 32 L43 22" />
+                    <circle class="dmx-map-point dmx-map-point--jump" cx="43" cy="32" r="1.7" />
+                    <circle class="dmx-map-point dmx-map-point--target" cx="79" cy="54" r="2.2" />
+                  </svg>
+
+                  <div class="dmx-bus" aria-hidden="true">
+                    <span class="dmx-bus__body"></span>
+                    <span class="dmx-bus__wake"></span>
+                  </div>
+                  <div class="dmx-traveller dmx-traveller--fast" aria-hidden="true"><span></span></div>
+                  <div class="dmx-traveller dmx-traveller--safe" aria-hidden="true"><span></span></div>
+
+                  <div class="dmx-label dmx-label--jump">
+                    <b>JUMP WINDOW</b>
+                    <span>leave the bus</span>
+                  </div>
+                  <div class="dmx-label dmx-label--cut">
+                    <b>CUT 100m</b>
+                    <span>fast line</span>
+                  </div>
+                  <div class="dmx-label dmx-label--target">
+                    <b>YOUR TARGET</b>
+                    <span>land here</span>
+                  </div>
+                </div>
+
+                <div class="dmx-board__rail dmx-board__rail--front" aria-hidden="true"></div>
+                <div class="dmx-board__rail dmx-board__rail--side" aria-hidden="true"></div>
+              </div>
+
+              <div class="dmx-hud dmx-hud--fast">
+                <span class="dmx-hud__dot"></span>
+                <span class="dmx-hud__label">FASTEST</span>
+                <strong>37.1<span>s</span></strong>
+                <small>cut + free-fall</small>
+              </div>
+              <div class="dmx-hud dmx-hud--safe">
+                <span class="dmx-hud__dot"></span>
+                <span class="dmx-hud__label">SAFE</span>
+                <strong>44.6<span>s</span></strong>
+                <small>full glide</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dmx-stage__caption">
+          <span class="dmx-caption__status"><i></i> EXAMPLE ROUTE / CURRENT-SEASON MAP</span>
+          <span class="dmx-caption__hint">Move across the scene</span>
+        </div>
+
+        <div class="dmx-route-switch" role="group" aria-label="Choose the route shown on the flight plan">
+          <button type="button" class="dmx-route-button is-active" data-dmx-route="fast" aria-pressed="true">
+            <span class="dmx-route-button__dot dmx-route-button__dot--fast"></span>
+            <span><b>FASTEST</b><small>cut + dive</small></span>
+            <strong>37.1s</strong>
+          </button>
+          <button type="button" class="dmx-route-button" data-dmx-route="safe" aria-pressed="false">
+            <span class="dmx-route-button__dot dmx-route-button__dot--safe"></span>
+            <span><b>SAFE</b><small>full glide</small></span>
+            <strong>44.6s</strong>
+          </button>
+        </div>
+      </div>
+
+      <div class="dmx-copy">
+        <div class="dmx-product-line">
+          <span class="dmx-mark" aria-hidden="true">
+            {icon ? <img src={icon} alt="" width="34" height="34" /> : <span>{product.glyph}</span>}
+          </span>
+          <div>
+            <p class="dmx-category">{product.category}</p>
+            <p class="dmx-product-name">{product.name}</p>
+          </div>
+          <div class="dmx-product-status">
+            <StatusPill status={product.status} />
+            {product.version && <span class="dmx-version">v{product.version}</span>}
+          </div>
+        </div>
+
+        <div class="dmx-stat">
+          <b>{heroStat.value}</b>
+          <span>{heroStat.label}</span>
+        </div>
+
+        <p class="dmx-route-claim"><span>FASTEST</span><i>vs</i><span>SAFE</span></p>
+        <h1 id="dropmaxxer-hero-title" class="dmx-title"><span>Stop guessing</span><em>your drop.</em></h1>
+        <p class="dmx-lede">
+          Dropmaxxer turns the battle-bus line into a clear jump window, cut point, and landing route - then puts the risky fast line beside the safe glide.
+        </p>
+
+        <div class="dmx-actions">
+          <a class="dmx-button dmx-button--primary" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>
+            {primary.label}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+          </a>
+          {product.secondaryCta && (
+            <a class="dmx-button dmx-button--secondary" href={product.secondaryCta.href} target={product.secondaryCta.external ? '_blank' : undefined} rel={product.secondaryCta.external ? 'noopener' : undefined}>
+              {product.secondaryCta.label}
+            </a>
+          )}
+        </div>
+
+        <div class="dmx-facts" role="list" aria-label="Dropmaxxer facts">
+          <div role="listitem"><strong>FASTEST</strong><span>cut + free-fall</span></div>
+          <div role="listitem"><strong>SAFE</strong><span>full-glide backup</span></div>
+          <div role="listitem"><strong>NOW</strong><span>current-season POIs</span></div>
+        </div>
+
+        <p class="dmx-proof"><span></span> No install <i></i> Cited physics <i></i> Solver state labeled</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .dropmaxxer-drop {
+    --dmx-bg: #070816;
+    --dmx-panel: #0d1020;
+    --dmx-panel-2: #12152a;
+    --dmx-text: #f8f8ff;
+    --dmx-mid: #bcc0d6;
+    --dmx-muted: #7e849e;
+    --dmx-route-fast: #ffb454;
+    --dmx-route-safe: #76e5ff;
+    --dmx-tilt-x: 54deg;
+    --dmx-tilt-y: -8deg;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border-bottom: 1px solid rgba(118, 229, 255, 0.12);
+    color: var(--dmx-text);
+    background:
+      radial-gradient(70% 100% at 18% 40%, color-mix(in srgb, var(--dmx-accent) 13%, transparent), transparent 68%),
+      radial-gradient(55% 75% at 93% 16%, color-mix(in srgb, var(--dmx-accent2) 9%, transparent), transparent 70%),
+      linear-gradient(135deg, #08091a 0%, var(--dmx-bg) 52%, #090c18 100%);
+  }
+  .dropmaxxer-drop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.23;
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(90deg, #000 0%, transparent 78%);
+    z-index: -1;
+  }
+  .dropmaxxer-drop .dmx-atmosphere { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .dropmaxxer-drop .dmx-atmosphere__orb { position: absolute; display: block; border-radius: 50%; filter: blur(42px); opacity: 0.55; will-change: transform; }
+  .dropmaxxer-drop .dmx-atmosphere__orb--one { width: 38vw; height: 38vw; min-width: 340px; min-height: 340px; left: -18vw; top: 18%; background: color-mix(in srgb, var(--dmx-accent) 44%, transparent); animation: dmx-atmosphere-drift 12s ease-in-out infinite; }
+  .dropmaxxer-drop .dmx-atmosphere__orb--two { width: 28vw; height: 28vw; min-width: 260px; min-height: 260px; right: -10vw; top: -11%; background: color-mix(in srgb, var(--dmx-accent2) 28%, transparent); animation: dmx-atmosphere-drift 15s ease-in-out infinite reverse; }
+  .dropmaxxer-drop .dmx-atmosphere__horizon { position: absolute; left: 6%; right: 4%; bottom: 2%; height: 15%; background: radial-gradient(ellipse at center, color-mix(in srgb, var(--dmx-route-safe) 10%, transparent), transparent 68%); filter: blur(26px); animation: dmx-horizon-breathe 7s ease-in-out infinite; }
+  @keyframes dmx-atmosphere-drift { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(5vw,-3vh,0) scale(1.08); } }
+  @keyframes dmx-horizon-breathe { 0%,100% { opacity: 0.45; } 50% { opacity: 0.9; } }
+
+  .dropmaxxer-drop .dmx-wrap { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: clamp(72px, 9vh, 112px) clamp(20px, 4vw, 52px) clamp(54px, 7vh, 84px); }
+  .dropmaxxer-drop .dmx-back { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 22px; color: var(--dmx-muted); font: 500 12px/1 var(--font-mono), monospace; text-decoration: none; transition: color 180ms ease, transform 180ms ease; }
+  .dropmaxxer-drop .dmx-back:hover { color: var(--dmx-text); transform: translateX(-2px); }
+  .dropmaxxer-drop .dmx-back:focus-visible { outline: 2px solid var(--dmx-route-safe); outline-offset: 5px; border-radius: 3px; }
+  .dropmaxxer-drop .dmx-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(330px, 0.88fr); align-items: center; gap: clamp(30px, 5vw, 82px); }
+
+  /* --- The 3D flight-planning table --- */
+  .dropmaxxer-drop .dmx-stage { position: relative; min-height: 650px; display: flex; align-items: center; justify-content: center; perspective: 1400px; perspective-origin: 50% 46%; }
+  .dropmaxxer-drop .dmx-stage::before { content: ''; position: absolute; width: 78%; height: 56%; left: 10%; top: 21%; border-radius: 50%; background: color-mix(in srgb, var(--dmx-accent) 15%, transparent); filter: blur(56px); opacity: 0.75; }
+  .dropmaxxer-drop .dmx-stage__eyebrow { position: absolute; left: 1%; top: 2%; z-index: 8; display: flex; align-items: center; gap: 9px; color: rgba(236,241,255,0.56); font: 10px/1 var(--font-mono), monospace; letter-spacing: 0.16em; }
+  .dropmaxxer-drop .dmx-stage__eyebrow i { width: 18px; height: 1px; background: rgba(236,241,255,0.22); }
+  .dropmaxxer-drop .dmx-signal { width: 7px; height: 7px; border-radius: 50%; background: var(--dmx-route-safe); box-shadow: 0 0 0 4px color-mix(in srgb, var(--dmx-route-safe) 12%, transparent), 0 0 15px var(--dmx-route-safe); animation: dmx-signal-pulse 2.4s ease-in-out infinite; }
+  @keyframes dmx-signal-pulse { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+  .dropmaxxer-drop .dmx-radar { position: absolute; left: 5%; bottom: 18%; width: 124px; height: 124px; border: 1px solid rgba(118,229,255,0.18); border-radius: 50%; opacity: 0.45; transform: rotateX(64deg) rotateZ(-14deg); }
+  .dropmaxxer-drop .dmx-radar::before, .dropmaxxer-drop .dmx-radar::after { content: ''; position: absolute; inset: 16px; border: 1px solid rgba(118,229,255,0.15); border-radius: 50%; }
+  .dropmaxxer-drop .dmx-radar::after { inset: 0; border: none; border-left: 1px solid rgba(118,229,255,0.16); transform: rotate(42deg); }
+  .dropmaxxer-drop .dmx-radar span { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: var(--dmx-route-safe); box-shadow: 0 0 10px var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-radar span:nth-child(1) { left: 23%; top: 35%; }
+  .dropmaxxer-drop .dmx-radar span:nth-child(2) { left: 67%; top: 24%; animation: dmx-radar-blip 3.8s ease-in-out infinite 0.4s; }
+  .dropmaxxer-drop .dmx-radar span:nth-child(3) { left: 74%; top: 68%; animation: dmx-radar-blip 3.8s ease-in-out infinite 1.7s; }
+  @keyframes dmx-radar-blip { 0%,100% { opacity: 0.18; transform: scale(0.6); } 40% { opacity: 1; transform: scale(1.35); } }
+
+  .dropmaxxer-drop .dmx-map-rig { position: relative; width: min(680px, 100%); height: 555px; }
+  .dropmaxxer-drop .dmx-board-tilt { position: absolute; inset: 6% 1% 12%; transform-style: preserve-3d; transform: rotateX(var(--dmx-tilt-x)) rotateY(var(--dmx-tilt-y)) rotateZ(-13deg); transform-origin: 50% 52%; transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .dropmaxxer-drop .dmx-board-float { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: dmx-board-float 7s ease-in-out infinite; }
+  @keyframes dmx-board-float { 0%,100% { transform: translateY(0) translateZ(0); } 50% { transform: translateY(-9px) translateZ(12px); } }
+  .dropmaxxer-drop .dmx-board { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; border-radius: 20px; }
+  .dropmaxxer-drop .dmx-board__backplate { position: absolute; inset: 0; border-radius: 20px; transform: translateZ(-30px); background: linear-gradient(145deg, #171a34, #0b0d1b 72%); border: 1px solid rgba(118,229,255,0.18); box-shadow: 0 28px 0 rgba(5,7,17,0.36), 0 54px 70px rgba(0,0,0,0.62); }
+  .dropmaxxer-drop .dmx-map-surface { position: absolute; inset: 0; z-index: 2; overflow: hidden; border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; background: #0a1730; box-shadow: 0 0 0 1px rgba(118,229,255,0.16) inset, 0 0 55px color-mix(in srgb, var(--dmx-accent) 22%, transparent); transform: translateZ(1px); }
+  .dropmaxxer-drop .dmx-map-surface > img { position: absolute; inset: 0 auto 0 0; width: 134%; max-width: none; height: 100%; object-fit: fill; filter: saturate(0.82) brightness(0.75) contrast(1.08); }
+  .dropmaxxer-drop .dmx-map-surface__shade { position: absolute; inset: 0; z-index: 1; background: linear-gradient(135deg, rgba(8,10,28,0.38), transparent 38%, rgba(255,173,84,0.06)), radial-gradient(ellipse at 49% 45%, transparent 15%, rgba(6,8,22,0.48) 100%); pointer-events: none; }
+  .dropmaxxer-drop .dmx-map-surface__scan { position: absolute; left: -10%; right: -10%; top: 0; height: 2px; z-index: 5; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--dmx-route-safe) 70%, white), transparent); box-shadow: 0 0 16px var(--dmx-route-safe); opacity: 0.64; animation: dmx-map-scan 5.8s linear infinite; pointer-events: none; }
+  @keyframes dmx-map-scan { from { transform: translateY(0); opacity: 0; } 14% { opacity: 0.62; } 86% { opacity: 0.62; } to { transform: translateY(550px); opacity: 0; } }
+  .dropmaxxer-drop .dmx-flight { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; overflow: visible; }
+  .dropmaxxer-drop .dmx-route { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; filter: url(#dmx-route-glow); transition: opacity 260ms ease, stroke-width 260ms ease; }
+  .dropmaxxer-drop .dmx-route--bus { stroke: rgba(238,235,255,0.62); stroke-width: 1.5; stroke-dasharray: 4 5; animation: dmx-bus-dash 2.4s linear infinite; }
+  .dropmaxxer-drop .dmx-route--safe { stroke: var(--dmx-route-safe); stroke-width: 2.3; stroke-dasharray: 3 2; opacity: 0.92; }
+  .dropmaxxer-drop .dmx-route--fast { stroke: var(--dmx-route-fast); stroke-width: 2.7; opacity: 1; }
+  .dropmaxxer-drop .dmx-route--connector { stroke: rgba(255,255,255,0.55); stroke-width: 1; stroke-dasharray: 2 2; }
+  @keyframes dmx-bus-dash { to { stroke-dashoffset: -18; } }
+  .dropmaxxer-drop .dmx-map-point { vector-effect: non-scaling-stroke; }
+  .dropmaxxer-drop .dmx-map-point--jump { fill: var(--dmx-route-safe); stroke: #fff; stroke-width: 1; filter: url(#dmx-route-glow); animation: dmx-point-breathe 2.8s ease-in-out infinite; }
+  .dropmaxxer-drop .dmx-map-point--target { fill: var(--dmx-route-fast); stroke: #fff; stroke-width: 1; filter: url(#dmx-route-glow); animation: dmx-target-pulse 2.2s ease-in-out infinite; }
+  @keyframes dmx-point-breathe { 0%,100% { opacity: 0.74; } 50% { opacity: 1; } }
+  @keyframes dmx-target-pulse { 0%,100% { r: 2.2; opacity: 0.82; } 50% { r: 3.6; opacity: 1; } }
+  .dropmaxxer-drop .dmx-bus { position: absolute; z-index: 6; left: 4%; top: 7%; width: 34px; height: 17px; transform: translate(-50%, -50%) rotate(-27deg); animation: dmx-bus-run 8.2s linear infinite; pointer-events: none; }
+  .dropmaxxer-drop .dmx-bus__body { position: absolute; inset: 2px 1px; display: block; border-radius: 5px 8px 8px 5px; background: linear-gradient(135deg, #ffffff, var(--dmx-route-safe) 50%, #4c51f7); box-shadow: 0 0 10px var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-bus__body::after { content: ''; position: absolute; right: 4px; top: 4px; width: 5px; height: 5px; border-radius: 1px; background: #071021; box-shadow: -7px 0 #071021; }
+  .dropmaxxer-drop .dmx-bus__wake { position: absolute; width: 22px; height: 1px; left: -20px; top: 8px; background: linear-gradient(90deg, transparent, var(--dmx-route-safe)); opacity: 0.75; }
+  @keyframes dmx-bus-run { 0% { left: 4%; top: 7%; opacity: 0; } 8% { opacity: 1; } 48% { left: 48%; top: 31%; } 92% { left: 93%; top: 60%; opacity: 1; } 100% { left: 98%; top: 64%; opacity: 0; } }
+  .dropmaxxer-drop .dmx-traveller { position: absolute; z-index: 7; width: 14px; height: 14px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+  .dropmaxxer-drop .dmx-traveller span { display: block; width: 100%; height: 100%; border-radius: 35% 65% 65% 35%; transform: rotate(45deg); border: 1px solid #fff; }
+  .dropmaxxer-drop .dmx-traveller--fast { left: 43%; top: 32%; animation: dmx-fast-route 5.8s cubic-bezier(0.26,0.7,0.25,1) infinite; }
+  .dropmaxxer-drop .dmx-traveller--fast span { background: var(--dmx-route-fast); box-shadow: 0 0 13px var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-traveller--safe { left: 43%; top: 32%; animation: dmx-safe-route 6.6s cubic-bezier(0.25,0.62,0.3,1) infinite 0.75s; }
+  .dropmaxxer-drop .dmx-traveller--safe span { background: var(--dmx-route-safe); box-shadow: 0 0 13px var(--dmx-route-safe); }
+  @keyframes dmx-fast-route { 0%, 18% { left: 43%; top: 32%; opacity: 0; } 25% { opacity: 1; } 50% { left: 52%; top: 40%; } 72% { left: 66%; top: 48%; } 100% { left: 79%; top: 54%; opacity: 0.1; } }
+  @keyframes dmx-safe-route { 0%, 16% { left: 43%; top: 32%; opacity: 0; } 23% { opacity: 1; } 47% { left: 53%; top: 22%; } 72% { left: 68%; top: 27%; } 100% { left: 79%; top: 54%; opacity: 0.1; } }
+  .dropmaxxer-drop .dmx-label { position: absolute; z-index: 8; display: grid; gap: 2px; min-width: max-content; padding: 6px 8px 6px 9px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; background: rgba(6,8,23,0.78); box-shadow: 0 6px 16px rgba(0,0,0,0.36); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transform: translateZ(14px); font-family: var(--font-mono), monospace; }
+  .dropmaxxer-drop .dmx-label b { font-size: 9px; letter-spacing: 0.08em; color: #fff; }
+  .dropmaxxer-drop .dmx-label span { font-size: 8px; letter-spacing: 0.04em; color: rgba(224,230,255,0.58); }
+  .dropmaxxer-drop .dmx-label--jump { left: 39%; top: 20%; border-color: color-mix(in srgb, var(--dmx-route-safe) 48%, transparent); }
+  .dropmaxxer-drop .dmx-label--jump b { color: var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-label--cut { left: 58%; top: 53%; border-color: color-mix(in srgb, var(--dmx-route-fast) 55%, transparent); }
+  .dropmaxxer-drop .dmx-label--cut b { color: var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-label--target { left: 74%; top: 60%; border-color: rgba(255,255,255,0.4); }
+  .dropmaxxer-drop .dmx-label--target b { color: #fff; }
+  .dropmaxxer-drop .dmx-board__rail { position: absolute; z-index: 3; pointer-events: none; background: linear-gradient(90deg, color-mix(in srgb, var(--dmx-accent) 45%, #0b0d1e), #202443); border: 1px solid rgba(118,229,255,0.12); box-shadow: 0 0 16px rgba(0,0,0,0.25); }
+  .dropmaxxer-drop .dmx-board__rail--front { left: 1%; right: 1%; bottom: -10px; height: 13px; border-radius: 0 0 8px 8px; transform: translateZ(-3px); }
+  .dropmaxxer-drop .dmx-board__rail--side { right: -10px; top: 3%; bottom: 3%; width: 12px; border-radius: 0 8px 8px 0; transform: translateZ(-3px); }
+  .dropmaxxer-drop .dmx-hud { position: absolute; z-index: 12; display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 7px; row-gap: 2px; min-width: 134px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 11px; background: rgba(7,9,24,0.82); box-shadow: 0 14px 30px rgba(0,0,0,0.42), 0 0 22px rgba(0,0,0,0.3); backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); transform: translateZ(92px); transition: opacity 280ms ease, transform 280ms ease, border-color 280ms ease; }
+  .dropmaxxer-drop .dmx-hud--fast { left: 1%; bottom: 7%; border-color: color-mix(in srgb, var(--dmx-route-fast) 48%, transparent); }
+  .dropmaxxer-drop .dmx-hud--safe { right: 0%; top: 7%; border-color: color-mix(in srgb, var(--dmx-route-safe) 42%, transparent); }
+  .dropmaxxer-drop .dmx-hud__dot { width: 6px; height: 6px; grid-row: span 2; border-radius: 50%; background: var(--dmx-route-fast); box-shadow: 0 0 10px var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-hud--safe .dmx-hud__dot { background: var(--dmx-route-safe); box-shadow: 0 0 10px var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-hud__label { color: rgba(244,246,255,0.6); font: 9px/1 var(--font-mono), monospace; letter-spacing: 0.12em; }
+  .dropmaxxer-drop .dmx-hud strong { color: #fff; font: 800 20px/1 var(--font-display), Impact, sans-serif; letter-spacing: 0.02em; }
+  .dropmaxxer-drop .dmx-hud strong span { font: 500 10px/1 var(--font-mono), monospace; color: rgba(255,255,255,0.52); margin-left: 2px; }
+  .dropmaxxer-drop .dmx-hud small { grid-column: 2 / 4; color: rgba(224,230,255,0.56); font: 9px/1.2 var(--font-mono), monospace; letter-spacing: 0.03em; }
+
+  .dropmaxxer-drop .dmx-stage__caption { position: absolute; left: 4%; right: 2%; bottom: 7%; z-index: 9; display: flex; justify-content: space-between; align-items: center; gap: 12px; pointer-events: none; }
+  .dropmaxxer-drop .dmx-caption__status, .dropmaxxer-drop .dmx-caption__hint { color: rgba(224,230,255,0.5); font: 9px/1 var(--font-mono), monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+  .dropmaxxer-drop .dmx-caption__status { display: inline-flex; align-items: center; gap: 7px; }
+  .dropmaxxer-drop .dmx-caption__status i { width: 5px; height: 5px; border-radius: 50%; background: var(--dmx-route-fast); box-shadow: 0 0 8px var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-caption__hint { color: rgba(224,230,255,0.3); text-transform: none; letter-spacing: 0.02em; }
+  .dropmaxxer-drop .dmx-route-switch { position: absolute; left: 4%; right: 2%; bottom: -2%; z-index: 10; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 7px; border: 1px solid rgba(255,255,255,0.12); border-radius: 13px; background: rgba(6,8,20,0.7); box-shadow: 0 14px 30px rgba(0,0,0,0.28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .dropmaxxer-drop .dmx-route-button { appearance: none; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; min-height: 44px; padding: 8px 11px; border: 1px solid transparent; border-radius: 9px; color: var(--dmx-muted); background: transparent; cursor: pointer; text-align: left; transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease; }
+  .dropmaxxer-drop .dmx-route-button:hover { color: var(--dmx-text); background: rgba(255,255,255,0.06); transform: translateY(-1px); }
+  .dropmaxxer-drop .dmx-route-button:focus-visible { outline: 2px solid var(--dmx-route-safe); outline-offset: 2px; }
+  .dropmaxxer-drop .dmx-route-button.is-active { color: var(--dmx-text); background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.14); }
+  .dropmaxxer-drop .dmx-route-button__dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dropmaxxer-drop .dmx-route-button__dot--fast { background: var(--dmx-route-fast); box-shadow: 0 0 8px var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-route-button__dot--safe { background: var(--dmx-route-safe); box-shadow: 0 0 8px var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-route-button span:nth-child(2) { display: grid; gap: 2px; }
+  .dropmaxxer-drop .dmx-route-button b { font: 600 10px/1 var(--font-mono), monospace; letter-spacing: 0.09em; }
+  .dropmaxxer-drop .dmx-route-button small { color: rgba(224,230,255,0.48); font: 9px/1 var(--font-mono), monospace; }
+  .dropmaxxer-drop .dmx-route-button strong { color: currentColor; font: 700 13px/1 var(--font-mono), monospace; }
+  .dropmaxxer-drop[data-route="safe"] .dmx-route--fast, .dropmaxxer-drop[data-route="safe"] .dmx-traveller--fast, .dropmaxxer-drop[data-route="safe"] .dmx-hud--fast, .dropmaxxer-drop[data-route="safe"] .dmx-label--cut { opacity: 0.18; }
+  .dropmaxxer-drop[data-route="safe"] .dmx-route--safe, .dropmaxxer-drop[data-route="safe"] .dmx-traveller--safe, .dropmaxxer-drop[data-route="safe"] .dmx-hud--safe { opacity: 1; }
+  .dropmaxxer-drop[data-route="fast"] .dmx-route--safe, .dropmaxxer-drop[data-route="fast"] .dmx-traveller--safe, .dropmaxxer-drop[data-route="fast"] .dmx-hud--safe { opacity: 0.42; }
+  .dropmaxxer-drop[data-route="fast"] .dmx-route-button[data-dmx-route="fast"], .dropmaxxer-drop[data-route="safe"] .dmx-route-button[data-dmx-route="safe"] { border-color: currentColor; }
+  .dropmaxxer-drop[data-route="fast"] .dmx-route-button[data-dmx-route="fast"] { color: var(--dmx-route-fast); }
+  .dropmaxxer-drop[data-route="safe"] .dmx-route-button[data-dmx-route="safe"] { color: var(--dmx-route-safe); }
+
+  /* --- Copy --- */
+  .dropmaxxer-drop .dmx-copy { position: relative; z-index: 2; padding-bottom: 18px; }
+  .dropmaxxer-drop .dmx-product-line { display: flex; align-items: center; gap: 11px; min-height: 44px; }
+  .dropmaxxer-drop .dmx-mark { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; padding: 6px; border: 1px solid color-mix(in srgb, var(--dmx-accent) 45%, transparent); border-radius: 14px; background: rgba(15,17,38,0.72); box-shadow: 0 0 24px color-mix(in srgb, var(--dmx-accent) 18%, transparent), 0 1px 0 rgba(255,255,255,0.1) inset; }
+  .dropmaxxer-drop .dmx-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .dropmaxxer-drop .dmx-mark > span { color: var(--dmx-accent2); font-size: 22px; }
+  .dropmaxxer-drop .dmx-category { margin: 0 0 3px; color: var(--dmx-muted); font: 10px/1 var(--font-mono), monospace; letter-spacing: 0.13em; text-transform: uppercase; }
+  .dropmaxxer-drop .dmx-product-name { margin: 0; color: var(--dmx-text); font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+  .dropmaxxer-drop .dmx-product-status { display: flex; align-items: center; gap: 7px; margin-left: auto; }
+  .dropmaxxer-drop .dmx-version { color: var(--dmx-muted); font: 10px/1 var(--font-mono), monospace; }
+  .dropmaxxer-drop .dmx-stat { display: flex; align-items: baseline; gap: 14px; margin-top: clamp(44px, 7vh, 74px); }
+  .dropmaxxer-drop .dmx-stat b { color: var(--dmx-route-fast); font: 400 clamp(102px, 13vw, 176px)/0.76 var(--font-display), Impact, sans-serif; letter-spacing: 0.01em; text-shadow: 0 0 36px color-mix(in srgb, var(--dmx-route-fast) 30%, transparent); }
+  .dropmaxxer-drop .dmx-stat span { max-width: 120px; color: var(--dmx-muted); font: 10px/1.45 var(--font-mono), monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+  .dropmaxxer-drop .dmx-route-claim { display: inline-flex; align-items: center; gap: 8px; margin: 12px 0 12px; color: var(--dmx-muted); font: 10px/1 var(--font-mono), monospace; letter-spacing: 0.14em; }
+  .dropmaxxer-drop .dmx-route-claim span:first-child { color: var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-route-claim span:last-child { color: var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-route-claim i { width: 18px; height: 1px; background: rgba(255,255,255,0.24); font-style: normal; }
+  .dropmaxxer-drop .dmx-title { max-width: 12.2ch; margin: 0; font-size: clamp(46px, 5vw, 72px); font-weight: 800; letter-spacing: -0.055em; line-height: 0.94; }
+  .dropmaxxer-drop .dmx-title span { display: block; color: var(--dmx-text); }
+  .dropmaxxer-drop .dmx-title em { display: block; color: transparent; font-style: normal; background: linear-gradient(115deg, var(--dmx-route-fast), #ffe0a9 42%, var(--dmx-route-safe)); -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 5px 22px color-mix(in srgb, var(--dmx-route-fast) 24%, transparent)); }
+  .dropmaxxer-drop .dmx-lede { max-width: 36em; margin: 22px 0 0; color: var(--dmx-mid); font-size: 16px; line-height: 1.58; }
+  .dropmaxxer-drop .dmx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 11px; margin-top: 28px; }
+  .dropmaxxer-drop .dmx-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 13px 18px; border-radius: 11px; font: 600 13px/1 var(--font-mono), monospace; text-decoration: none; transition: transform 180ms ease, box-shadow 220ms ease, background 220ms ease, border-color 220ms ease; }
+  .dropmaxxer-drop .dmx-button--primary { color: #101120; background: linear-gradient(120deg, #ffd18a, var(--dmx-route-fast) 52%, #ff8b67); box-shadow: 0 10px 30px color-mix(in srgb, var(--dmx-route-fast) 28%, transparent); }
+  .dropmaxxer-drop .dmx-button--primary:hover { transform: translateY(-2px); box-shadow: 0 14px 38px color-mix(in srgb, var(--dmx-route-fast) 42%, transparent); }
+  .dropmaxxer-drop .dmx-button--secondary { color: var(--dmx-text); border: 1px solid rgba(118,229,255,0.3); background: rgba(118,229,255,0.06); }
+  .dropmaxxer-drop .dmx-button--secondary:hover { transform: translateY(-2px); border-color: rgba(118,229,255,0.64); background: rgba(118,229,255,0.12); }
+  .dropmaxxer-drop .dmx-button:focus-visible { outline: 2px solid var(--dmx-route-safe); outline-offset: 3px; }
+  .dropmaxxer-drop .dmx-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; max-width: 520px; margin-top: 44px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.12); }
+  .dropmaxxer-drop .dmx-facts div { display: grid; gap: 5px; }
+  .dropmaxxer-drop .dmx-facts strong { color: var(--dmx-text); font: 600 10px/1 var(--font-mono), monospace; letter-spacing: 0.1em; }
+  .dropmaxxer-drop .dmx-facts div:first-child strong { color: var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-facts div:nth-child(2) strong { color: var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-facts span { color: var(--dmx-muted); font: 10px/1.3 var(--font-mono), monospace; }
+  .dropmaxxer-drop .dmx-proof { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; color: rgba(224,230,255,0.46); font: 10px/1.4 var(--font-mono), monospace; letter-spacing: 0.03em; }
+  .dropmaxxer-drop .dmx-proof > span { width: 5px; height: 5px; border-radius: 50%; background: var(--dmx-route-safe); box-shadow: 0 0 8px var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-proof i { width: 3px; height: 3px; border-radius: 50%; background: rgba(224,230,255,0.28); font-style: normal; }
+
+  @media (max-width: 980px) {
+    .dropmaxxer-drop .dmx-grid { grid-template-columns: 1fr; gap: 18px; }
+    .dropmaxxer-drop .dmx-stage { order: 1; min-height: 610px; }
+    .dropmaxxer-drop .dmx-copy { order: 2; max-width: 680px; margin: 0 auto; }
+    .dropmaxxer-drop .dmx-stat { margin-top: 20px; }
+  }
+  @media (max-width: 620px) {
+    .dropmaxxer-drop .dmx-wrap { padding-top: 60px; padding-bottom: 48px; }
+    .dropmaxxer-drop .dmx-stage { min-height: 480px; margin-inline: -10px; }
+    .dropmaxxer-drop .dmx-map-rig { width: 108%; height: 395px; }
+    .dropmaxxer-drop .dmx-board-tilt { inset: 6% 0 14%; }
+    .dropmaxxer-drop .dmx-hud { min-width: 108px; padding: 8px 9px; }
+    .dropmaxxer-drop .dmx-hud strong { font-size: 16px; }
+    .dropmaxxer-drop .dmx-hud small { font-size: 8px; }
+    .dropmaxxer-drop .dmx-hud--fast { left: -2%; bottom: 9%; }
+    .dropmaxxer-drop .dmx-hud--safe { right: -1%; top: 7%; }
+    .dropmaxxer-drop .dmx-label { padding: 5px 6px; }
+    .dropmaxxer-drop .dmx-label b { font-size: 7px; }
+    .dropmaxxer-drop .dmx-label span { font-size: 7px; }
+    .dropmaxxer-drop .dmx-stage__eyebrow { left: 2%; font-size: 8px; gap: 6px; letter-spacing: 0.11em; }
+    .dropmaxxer-drop .dmx-stage__eyebrow span:last-child, .dropmaxxer-drop .dmx-stage__eyebrow i { display: none; }
+    .dropmaxxer-drop .dmx-stage__caption { left: 3%; right: 3%; bottom: 10%; }
+    .dropmaxxer-drop .dmx-caption__hint { display: none; }
+    .dropmaxxer-drop .dmx-route-switch { left: 3%; right: 3%; bottom: 0; }
+    .dropmaxxer-drop .dmx-route-button { padding: 7px 8px; gap: 6px; }
+    .dropmaxxer-drop .dmx-route-button strong { font-size: 11px; }
+    .dropmaxxer-drop .dmx-route-button small { font-size: 8px; }
+    .dropmaxxer-drop .dmx-product-status { gap: 5px; }
+    .dropmaxxer-drop .dmx-version { display: none; }
+    .dropmaxxer-drop .dmx-title { max-width: 9.2ch; font-size: clamp(44px, 13vw, 64px); }
+    .dropmaxxer-drop .dmx-lede { font-size: 15px; }
+    .dropmaxxer-drop .dmx-facts { margin-top: 34px; }
+    .dropmaxxer-drop .dmx-facts span { font-size: 9px; }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.querySelector<HTMLElement>('.dropmaxxer-drop');
+    const stage = root?.querySelector<HTMLElement>('[data-dmx-tilt]');
+    if (!root || !stage) return;
+
+    const resetTilt = () => {
+      root.style.setProperty('--dmx-tilt-x', '54deg');
+      root.style.setProperty('--dmx-tilt-y', '-8deg');
+    };
+
+    stage.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch') return;
+      const rect = stage.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      root.style.setProperty('--dmx-tilt-x', `${54 - y * 5}deg`);
+      root.style.setProperty('--dmx-tilt-y', `${-8 + x * 7}deg`);
+    });
+    stage.addEventListener('pointerleave', resetTilt);
+    resetTilt();
+
+    root.querySelectorAll<HTMLButtonElement>('[data-dmx-route]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const route = button.dataset.dmxRoute;
+        if (route !== 'fast' && route !== 'safe') return;
+        root.dataset.route = route;
+        root.querySelectorAll<HTMLButtonElement>('[data-dmx-route]').forEach((candidate) => {
+          candidate.classList.toggle('is-active', candidate === button);
+          candidate.setAttribute('aria-pressed', String(candidate === button));
+        });
+      });
+    });
+  })();
+</script>

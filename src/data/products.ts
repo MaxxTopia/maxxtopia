@@ -530,6 +530,7 @@ export const products: Product[] = [
     logo: '/logos/dropmaxxer.png',
     icon: '/logos/dropmaxxer-icon.svg',
     accentHex: '#4c51f7',
+    accent2Hex: '#ffb454',
     screenshots: ['/screenshots/dropmaxxer/hero-flightplan.webp'],
     heroStat: { value: '2', label: 'routes per drop · fastest + safe' },
     zones: [

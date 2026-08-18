@@ -24,6 +24,7 @@ import ViewmaxxingHero from '../components/ViewmaxxingHero.astro';
 import SnipeMaxxerHero from '../components/SnipeMaxxerHero.astro';
 import StreammaxxingBroadcastHero from '../components/StreammaxxingBroadcastHero.astro';
 import AimDiagnosticHero from '../components/AimDiagnosticHero.astro';
+import DropmaxxerHero from '../components/DropmaxxerHero.astro';
 import dmReleaseMeta from '../data/discordmaxxer-release.json';
 import omReleaseMeta from '../data/optimizationmaxxing-release.json';
 import { products } from '../data/products';
@@ -538,6 +539,7 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   )}
   {isStream && <StreammaxxingBroadcastHero product={product} />}
   {isAim && <AimDiagnosticHero product={product} />}
+  {isDrop && <DropmaxxerHero product={product} />}
   {isPlaylist && (
     <PlaylistShowcase
       accentHex={product.accentHex}
@@ -546,7 +548,7 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
       appUrl={product.primaryCta.href}
     />
   )}
-  {!isExt && !isDM && !isOM && !isView && !isSnipe && !isPlaylist && !isStream && !isAim && (
+  {!isExt && !isDM && !isOM && !isView && !isSnipe && !isPlaylist && !isStream && !isAim && !isDrop && (
   <section class="relative overflow-hidden">
     <Aurora intensity="med" />
     <div class="absolute inset-0 bg-grid opacity-50"></div>
@@ -827,6 +829,28 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
       )}
     </div>
   </section>
+  )}
+
+  {/* Dropmaxxer keeps the real app below its bespoke flight-planning hero. */}
+  {isDrop && (
+    <section class="relative overflow-hidden">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8 pb-8">
+        <div class="reveal-on-scroll mb-5 flex items-end justify-between gap-6">
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.12em] font-mono" style={`color: ${product.accentHex}`}>Try the real calculator</p>
+            <h2 class="mt-3 text-[30px] sm:text-[42px] font-semibold tracking-[-0.04em] leading-[1.02]">Plan it here. <span class="serif-accent gradient-suite">Then launch.</span></h2>
+          </div>
+          <p class="hidden max-w-xs text-right text-[12px] leading-5 text-[var(--color-subtle)] sm:block">The scene above explains the decision. This window is the actual beta build.</p>
+        </div>
+        <LiveEmbed
+          url={product.primaryCta.href}
+          title={product.name}
+          poster={screenshotMain}
+          accentHex={product.accentHex}
+          host="dropmaxxer.pages.dev"
+        />
+      </div>
+    </section>
   )}
 
   {/* Bespoke-hero products (AdBlock / Discord) replace the standard hero, so the
