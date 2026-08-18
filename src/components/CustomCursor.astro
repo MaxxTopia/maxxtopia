@@ -46,8 +46,10 @@
     // handler below, so it can never lag behind a busy frame the way a rAF-driven
     // dot does on a page carrying dozens of animations.
     const tick = () => {
-      rx += (mx - rx) * 0.22;
-      ry += (my - ry) * 0.22;
+      // Keep a little trail for character, but settle in roughly half the time
+      // of the old lerp so the ring never reads as a delayed pointer.
+      rx += (mx - rx) * 0.36;
+      ry += (my - ry) * 0.36;
       ring.style.translate = `${rx}px ${ry}px`;
 
       // Stop once the ring has caught up — restart on next move
@@ -64,22 +66,30 @@
       start();
     }, { passive: true });
 
-    // Hover state
-    const isInteractive = (el) =>
-      el && (el.tagName === 'A' || el.tagName === 'BUTTON' ||
-             el.closest('a, button, [role="button"], .card, [data-cursor="hover"]'));
+    // Hover state. Pointerover/out bubble through labels, SVGs, and spans inside
+    // a control; compare the closest interactive ancestor so those child hops
+    // cannot flicker the cursor scale while the pointer remains on one control.
+    const interactiveSelector = 'a, button, [role="button"], .card, [data-cursor="hover"]';
+    const interactiveFrom = (node) =>
+      node instanceof Element ? node.closest(interactiveSelector) : null;
+    let activeInteractive = null;
+    const setInteractive = (next) => {
+      if (next === activeInteractive) return;
+      activeInteractive = next;
+      cursor.classList.toggle('is-over-link', Boolean(next));
+    };
 
-    document.addEventListener('mouseover', (e) => {
-      if (isInteractive(e.target)) cursor.classList.add('is-over-link');
-    });
-    document.addEventListener('mouseout', (e) => {
-      if (isInteractive(e.target)) cursor.classList.remove('is-over-link');
-    });
+    document.addEventListener('pointerover', (e) => {
+      setInteractive(interactiveFrom(e.target));
+    }, { passive: true });
+    document.addEventListener('pointerout', (e) => {
+      setInteractive(interactiveFrom(e.relatedTarget));
+    }, { passive: true });
 
     // Hide on blur / when mouse leaves window
-    window.addEventListener('blur', () => cursor.style.opacity = '0');
+    window.addEventListener('blur', () => { cursor.style.opacity = '0'; setInteractive(null); });
     window.addEventListener('focus', () => cursor.style.opacity = '1');
-    document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+    document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; setInteractive(null); });
     document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
   })();
 </script>

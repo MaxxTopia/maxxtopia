@@ -93,7 +93,9 @@
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss01';
     text-rendering: optimizeLegibility;
-    scroll-behavior: smooth;
+/* Keep in-page navigation immediate instead of stacking a page-wide
+   scroll animation on anchor clicks. */
+scroll-behavior: auto;
   }
 
   body {
@@ -415,8 +417,9 @@
     0 0 0 1px rgba(226, 91, 255, 0.4),
     0 8px 32px rgba(226, 91, 255, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  will-change: transform;
 }
+.btn-primary.is-magnetic-active,
+[data-magnetic].is-magnetic-active { will-change: transform; }
 .btn-primary::before {
   content: '';
   position: absolute;
@@ -502,6 +505,7 @@
   transform-style: preserve-3d;
   box-shadow: var(--shadow-card);
 }
+.card.is-tilting { transition-property: border-color, background; will-change: transform; }
 .card::before {
   content: '';
   position: absolute;
@@ -762,17 +766,27 @@
 /* Spotlight cursor effect for sections (via CSS variables --mx --my set in JS) */
 .spotlight {
   position: relative;
+  overflow: clip;
 }
 .spotlight::before {
   content: '';
   position: absolute;
-  inset: 0;
+  width: 1200px;
+  height: 1200px;
+  left: 0;
+  top: 0;
   pointer-events: none;
   background: radial-gradient(
-    600px circle at var(--mx, 50%) var(--my, 50%),
+    circle at center,
     rgba(226, 91, 255, 0.06),
     transparent 50%
   );
+  transform: translate3d(
+    calc(var(--mx, 50%) - 600px),
+    calc(var(--my, 50%) - 600px),
+    0
+  );
+  will-change: transform;
   opacity: 0;
   transition: opacity 400ms ease;
   z-index: 0;

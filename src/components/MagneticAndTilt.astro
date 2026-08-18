@@ -1,8 +1,8 @@
 ---
 // Magnetic primary CTAs + 3D tilt cards + spotlight tracking.
-// All mousemove handlers are rAF-coalesced (one update per frame, max).
-// Tilt only attaches mousemove on enter, detaches on leave — no work for cards
-// the user isn't interacting with.
+// All mousemove handlers are rAF-coalesced (one update per frame, max), cache
+// their starting rect, and temporarily disable transform transitions while a
+// pointer is actively steering an element.
 ---
 
 <script is:inline>
@@ -18,6 +18,7 @@
       const strength = 0.22;
       let frame = 0;
       let pendingX = 0, pendingY = 0;
+      let rect = null;
 
       const apply = () => {
         frame = 0;
@@ -25,10 +26,12 @@
       };
 
       el.addEventListener('mouseenter', () => {
+        rect = el.getBoundingClientRect();
+        el.classList.add('is-magnetic-active');
         const onMove = (e) => {
-          const r = el.getBoundingClientRect();
-          pendingX = (e.clientX - (r.left + r.width / 2)) * strength;
-          pendingY = (e.clientY - (r.top + r.height / 2)) * strength;
+          if (!rect) return;
+          pendingX = (e.clientX - (rect.left + rect.width / 2)) * strength;
+          pendingY = (e.clientY - (rect.top + rect.height / 2)) * strength;
           if (!frame) frame = requestAnimationFrame(apply);
         };
         const onLeave = () => {
@@ -36,6 +39,8 @@
           el.removeEventListener('mouseleave', onLeave);
           if (frame) { cancelAnimationFrame(frame); frame = 0; }
           el.style.transform = '';
+          el.classList.remove('is-magnetic-active');
+          rect = null;
         };
         el.addEventListener('mousemove', onMove, { passive: true });
         el.addEventListener('mouseleave', onLeave);
@@ -50,6 +55,7 @@
       const max = 5; // tilt degrees
       let frame = 0;
       let px = 0.5, py = 0.5;
+      let rect = null;
 
       const apply = () => {
         frame = 0;
@@ -61,10 +67,12 @@
       };
 
       card.addEventListener('mouseenter', () => {
+        rect = card.getBoundingClientRect();
+        card.classList.add('is-tilting');
         const onMove = (e) => {
-          const r = card.getBoundingClientRect();
-          px = (e.clientX - r.left) / r.width;
-          py = (e.clientY - r.top) / r.height;
+          if (!rect) return;
+          px = (e.clientX - rect.left) / rect.width;
+          py = (e.clientY - rect.top) / rect.height;
           if (!frame) frame = requestAnimationFrame(apply);
         };
         const onLeave = () => {
@@ -72,6 +80,8 @@
           card.removeEventListener('mouseleave', onLeave);
           if (frame) { cancelAnimationFrame(frame); frame = 0; }
           card.style.transform = '';
+          card.classList.remove('is-tilting');
+          rect = null;
         };
         card.addEventListener('mousemove', onMove, { passive: true });
         card.addEventListener('mouseleave', onLeave);
@@ -83,17 +93,25 @@
     spotlights.forEach((s) => {
       let frame = 0;
       let cx = 0, cy = 0;
+      let rect = null;
       const apply = () => {
         frame = 0;
         s.style.setProperty('--mx', `${cx}px`);
         s.style.setProperty('--my', `${cy}px`);
       };
+      s.addEventListener('mouseenter', () => {
+        rect = s.getBoundingClientRect();
+      });
       s.addEventListener('mousemove', (e) => {
-        const r = s.getBoundingClientRect();
-        cx = e.clientX - r.left;
-        cy = e.clientY - r.top;
+        if (!rect) return;
+        cx = e.clientX - rect.left;
+        cy = e.clientY - rect.top;
         if (!frame) frame = requestAnimationFrame(apply);
       }, { passive: true });
+      s.addEventListener('mouseleave', () => {
+        if (frame) { cancelAnimationFrame(frame); frame = 0; }
+        rect = null;
+      });
     });
   })();
 </script>

@@ -1,5 +1,34 @@
 # Maxxtopia continuity addendum
 
+## Shared interaction responsiveness pass - 2026-08-18
+
+- Diagnosed the shared shell interaction path after a live and local browser
+  check. The static homepage and product route returned HTTP 200 with no
+  browser warnings; direct route CTA navigation completed locally in about
+  138 ms. The sluggish feel was concentrated in cosmetic pointer effects and
+  in-page anchor motion, not the static route or the product hero content.
+- Updated only `src/components/CustomCursor.astro`,
+  `src/components/MagneticAndTilt.astro`, and `src/styles/global.css`:
+  tightened the cursor ring lerp from 0.22 to 0.36, stabilized hover state
+  across nested SVG/text nodes, cached pointer target rectangles, removed
+  transform-transition chasing during active magnetic/tilt input, moved the
+  apps spotlight as a bounded compositor layer, and changed in-page anchor
+  scrolling to immediate behavior.
+- The integral bespoke hero canvas/video presentation was not changed. The
+  Optimizationmaxxing route still rendered its animated canvas and six paused
+  lazy metadata videos with no horizontal overflow or console warnings.
+- Local verification passed: `npm run build` generated all 26 pages, `git diff
+  --check` passed, desktop cursor and CTA checks passed, and local product
+  route checks were clean. Live state is unchanged: no commit, push, or deploy
+  was performed. Live homepage/product HTTP checks returned 200; the live
+  browser still has the pre-patch interaction behavior until publication is
+  explicitly approved.
+- Diggy-owned gate: review the cursor feel on a real mouse and choose whether
+  to keep the tighter ring plus immediate anchor jumps. Approval is required
+  before staging or publishing these three files. If the hero animation itself
+  still feels heavy after this pass, that is a separate approval-gated change
+  because it is integral product presentation.
+
 ## Betmaxxing focused game answer and 1102 guard - 2026-08-15
 
 - Published the matching client bundle from
