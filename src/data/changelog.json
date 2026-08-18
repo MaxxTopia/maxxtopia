@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-08-18",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.11",
+    "title": "YouTube Reclaim recovers after a tab goes to sleep.",
+    "body": "Reclaim now detects suspended-tab playback failures, retries fresh stream data without losing the current timestamp, and remembers your position across refreshes.",
+    "items": [
+      "Recovers Reclaim after a background tab is suspended or restored.",
+      "Retries timed-out stream resolves before using native YouTube.",
+      "Resumes at the same timestamp during bounded recovery.",
+      "Remembers playback position for the next refresh or return visit."
+    ]
+  },
+  {
     "date": "2026-08-09",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
