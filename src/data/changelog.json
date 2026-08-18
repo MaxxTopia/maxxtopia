@@ -13,6 +13,26 @@
   },
   {
     "date": "2026-08-18",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "title": "Playlistmaxxing stops silent YouTube stalls from spinning forever.",
+    "body": "The player now watches real playback progress and gives a stuck track a bounded recovery path instead of leaving the queue waiting.",
+    "items": [
+      "Allows a short startup buffer before calling a track stalled.",
+      "Recovers a track when playback says it is running but time stops moving.",
+      "Resets handoff state when you skip away and back.",
+      "Adds player-state and no-progress diagnostics."
+    ]
+  },
+  {
+    "date": "2026-08-18",
+    "product": "Aimmaxxer",
+    "productSlug": "aimmaxxer",
+    "title": "Aimmaxxer is still getting sharper in the lab.",
+    "body": "Private testing continues behind the scenes. We’ll share the next public step when it’s ready."
+  },
+  {
+    "date": "2026-08-18",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
     "version": "v0.4.102",

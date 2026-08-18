@@ -36,6 +36,29 @@
   preserved. Best next action: treat any mobile shell correction as a
   separate, approval-gated pass.
 
+## Suite-wide Updates feed audit - 2026-08-18
+
+- Compared `src/data/changelog.json` against the public Maxxtopia routes and
+  the newest verified release notes. Added two same-day entries for
+  Playlistmaxxing's bounded YouTube-stall recovery and a deliberately vague
+  Aimmaxxer lab note with no version or private implementation details.
+- Existing current entries already covered the latest public Viewmaxxing,
+  AdBlock-Maxxer, Discordmaxxer, Snipemaxxer, Streammaxxing, and Maxxtopia
+  releases. Unreleased Clipmaxxer work, non-site projects, and private
+  Aimmaxxer specifics were excluded from concrete product copy.
+- Evidence used for the additions: Playlistmaxxing commit `d8372ed` with live
+  `music.maxxtopia.com` markers. The Aimmaxxer entry is intentionally not
+  versioned and does not describe its local/private build. Concrete
+  Betmaxxing and Dropmaxxer entries were intentionally left out per scope.
+- Local verification passed: `src/data/changelog.json` parsed cleanly,
+  `npm run build` generated all 26 pages, and the local Updates route rendered
+  102 newest-first cards at desktop and 390x844 with no browser warnings or
+  errors. The existing shared mobile header remains the only 442px document
+  width issue; the new update cards themselves fit within the phone frame.
+- Current release state: local only, with publication explicitly authorized by
+  Diggy and pending the final build, commit, push, and Pages verification.
+  Unrelated tracked and untracked work remains preserved.
+
 ## Updates-page reconciliation - 2026-08-18
 
 - Compared the existing `src/data/changelog.json` against the recent public
