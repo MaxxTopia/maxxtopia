@@ -1,5 +1,18 @@
 # Maxxtopia continuity addendum
 
+## Viewmaxxing popup-free playback update - 2026-08-19
+
+- Added one public Viewmaxxing Updates card describing the native, popup-free
+  playback path, English-Dub-first anime behavior, retry handling, and CAM-only
+  labeling. The copy intentionally avoids promising permanent upstream health.
+- `npm run build`, changelog JSON parsing, and `git diff --check` passed before
+  release. The live `/updates/` page returned HTTP 200 and rendered the new
+  card first with no captured warning or error logs.
+- Published commit `2c2e260` through GitHub Actions run `32213352694`; the
+  normal `main` to Cloudflare Pages deployment completed successfully.
+- Only `src/data/changelog.json` was staged and committed. Existing unrelated
+  dirty and untracked work in this repository remains preserved.
+
 ## Dropmaxxer Drop Window hero - 2026-08-18
 
 - Replaced the generic product hero on `/dropmaxxer/` with a bespoke 3D
