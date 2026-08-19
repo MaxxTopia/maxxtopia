@@ -1,5 +1,34 @@
 # Maxxtopia continuity addendum
 
+## Viewmaxxing mobile catalog and movie expansion - 2026-08-19
+
+- Added a public Updates card for the Viewmaxxing phone navigation and movie
+  expansion. The copy stays bounded to verified behavior and does not promise
+  permanent third-party provider health.
+- The Viewmaxxing release is deployment `438f4447.viewmaxxing.pages.dev`, live
+  behind `https://view.maxxtopia.com/`. The local app and public domain both
+  show four phone-sized section controls: All Library, Movies, TV Shows, and
+  Anime. The live phone check confirmed each control changes the selected
+  section and catalog heading.
+- The catalog adds Obsession, Backrooms, Sinners, One Battle After Another,
+  and A Minecraft Movie, plus adjacent Venom and Teenage Mutant Ninja Turtles
+  film entries. The TMNT Out of the Shadows poster and backdrop were corrected
+  after a release-time HTTP image check found the earlier paths invalid.
+- Local native playback checks reached an advancing video for Obsession,
+  Backrooms, Venom (2018), Teenage Mutant Ninja Turtles (2014), One Battle
+  After Another's Prime English-original fallback, and Venom: The Last Dance.
+  The live public check explicitly clicked Play for Obsession; the player
+  stayed on the custom domain, rendered no iframe, opened no second tab, and
+  changed frames over time. Captions remained off by default for English or
+  English-original playback.
+- `npm run build` and `git diff --check` passed in the Viewmaxxing workspace.
+  Provider routes remain a release-window check: upstream URLs, quality, and
+  availability can drift, so the app keeps the native resolver fail-closed and
+  does not label non-English, CAM, or popup-bearing routes as healthy.
+- Unrelated Maxxtopia tracked and untracked work remains preserved. Best next
+  action: verify the public `/updates/` card after the normal GitHub Actions
+  deployment and leave provider health monitoring separate from catalog copy.
+
 ## Viewmaxxing popup-free playback update - 2026-08-19
 
 - Added one public Viewmaxxing Updates card describing the native, popup-free

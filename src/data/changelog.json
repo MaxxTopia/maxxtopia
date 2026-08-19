@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-08-19",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "title": "Viewmaxxing makes the catalog easier to browse on phones.",
+    "body": "Mobile section switching is now always in reach, and the movie shelf grows with recent picks and checked franchise staples.",
+    "items": [
+      "Switch between All Library, Movies, TV Shows, and Anime from the phone header.",
+      "Adds Obsession, Backrooms, Sinners, One Battle After Another, and A Minecraft Movie.",
+      "Adds adjacent Venom and Teenage Mutant Ninja Turtles entries with corrected artwork.",
+      "Keeps playback English-first and fails closed on popup, CAM, or non-English routes."
+    ]
+  },
+  {
     "date": "2026-08-18",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
