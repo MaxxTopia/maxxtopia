@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-08-18",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "title": "Viewmaxxing tightens its web playback routes.",
+    "body": "The catalog now matches searches to real titles, keeps only checked playback routes, and adds a few requested Netflix favorites.",
+    "items": [
+      "Punctuation-friendly search resolves Dune: Part Two without inventing a result.",
+      "English-Dub anime routes lead, with Japanese subtitles last when available.",
+      "Adds Weak Hero, Bloodhounds, and If Wishes Could Kill (Girigo).",
+      "Hide titles you do not want in your local catalog."
+    ]
+  },
+  {
+    "date": "2026-08-18",
     "product": "Maxxtopia",
     "title": "The suite shell feels faster under the pointer.",
     "body": "Navigation and hover interactions now do less work per frame while the branded cursor lands immediately and keeps its motion.",
