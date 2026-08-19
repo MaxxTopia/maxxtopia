@@ -3,6 +3,19 @@
     "date": "2026-08-18",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
+    "title": "Viewmaxxing keeps playback in one tab.",
+    "body": "The web player now resolves supported movie, TV, and anime routes inside its native player instead of loading popup-prone provider pages.",
+    "items": [
+      "Blocks provider-page ad tabs and redirect-driven playback.",
+      "Keeps English-Dub anime first with captions off until you enable them.",
+      "Retries transient provider failures without leaving the player.",
+      "Marks CAM-only titles instead of presenting watermarked playback."
+    ]
+  },
+  {
+    "date": "2026-08-18",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
     "title": "Viewmaxxing tightens its web playback routes.",
     "body": "The catalog now matches searches to real titles, keeps only checked playback routes, and adds a few requested Netflix favorites.",
     "items": [
