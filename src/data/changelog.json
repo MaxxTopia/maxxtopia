@@ -1,4 +1,18 @@
-[
+[{
+    "date": "2026-08-20",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.58",
+    "title": "Streammaxxing gives its maker banner a polished finish.",
+    "body": "The stream dashboard now keeps a readable Made by Diggy banner at the rail footer, with the version and Guide hierarchy above it and the same small menu cue used across Maxxtopia.",
+    "items": [
+      "Keeps the readable Made by Diggy banner at the bottom of the rail.",
+      "Places Guide first and the version directly above the maker banner.",
+      "Adds a restrained reflective sparkle sweep to the banner.",
+      "Plays the Maxxtopia Banish cue on hover and keyboard focus.",
+      "Lets browser scene previews unlock picked music after a click or keypress."
+    ]
+  },
   {
     "date": "2026-08-19",
     "product": "AdBlock-Maxxer",
