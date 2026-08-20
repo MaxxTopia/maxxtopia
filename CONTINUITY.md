@@ -591,5 +591,7 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   overflow on narrow screens.
 - Local browser QA passed with the reduced-motion override enabled: the rail's
   animation is `none`, the bead animation is active, and the local build still
-  generates all 26 pages. This scoped Updates-page release is authorized for
-  publication through the normal `main` push workflow.
+  generates all 26 pages. The scoped Updates-page release shipped in commit
+  `5c0a72f`; GitHub Actions deploy run `32367136290` completed successfully,
+  and the public `/updates/` route was verified with the new styles and no
+  browser errors.
