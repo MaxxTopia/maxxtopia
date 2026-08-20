@@ -721,3 +721,13 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   every superseded replacement was absent, and the browser reported no
   console errors. This change is local only; no commit, push, or production
   deployment was performed.
+
+## Updates version-pill drip correction — 2026-08-20
+
+- Adjusted the current-entry version-pill drip layer in
+  `src/pages/updates.astro`: it now starts 3px below the pill, and the tail
+  drop is anchored to the pill's right underside instead of lining up with a
+  version digit such as `0`.
+- Local motion-preview verification confirmed the 2px separation and no
+  browser console errors. Production publication is authorized for this fix
+  and remains pending until the build and live route check complete.

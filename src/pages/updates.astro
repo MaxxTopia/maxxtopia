@@ -53,7 +53,18 @@ const newestEntry = changelog[0];
               )}
               <div class="upd__meta">
                 <time class="upd__date">{entry.date}</time>
-                {entry.version && <span class="upd__ver">{entry.version}</span>}
+                {entry.version && (
+                  <span class="upd__ver">
+                    {entry.version}
+                    {isCurrent && (
+                      <span class="upd__ver-drips" aria-hidden="true">
+                        <span class="upd__ver-drip upd__ver-drip--short"></span>
+                        <span class="upd__ver-drip upd__ver-drip--main"></span>
+                        <span class="upd__ver-drip upd__ver-drip--tail"></span>
+                      </span>
+                    )}
+                  </span>
+                )}
               </div>
 
               <div class="upd__content">
@@ -88,8 +99,33 @@ const newestEntry = changelog[0];
 </Layout>
 
 <script is:inline>
-  if (new URLSearchParams(window.location.search).get('motion') === 'on') {
+  const motionPreview = new URLSearchParams(window.location.search).get('motion') === 'on';
+  if (motionPreview) {
     document.querySelector('[data-motion-preview]')?.setAttribute('data-motion-preview', 'on');
+  }
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (motionPreview || !reducedMotion) {
+    const dripGroups = [...document.querySelectorAll('.upd__ver-drips')];
+    const dripCycleMs = 4600;
+    const randomizeDripGroup = (group) => {
+      const drops = [...group.querySelectorAll('.upd__ver-drip')];
+      const order = drops.map((_, index) => index);
+      for (let index = order.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [order[index], order[swapIndex]] = [order[swapIndex], order[index]];
+      }
+
+      const activeDrops = new Set([order[0]]);
+      drops.forEach((drop, index) => {
+        drop.dataset.dropActive = String(activeDrops.has(index));
+      });
+    };
+
+    dripGroups.forEach(randomizeDripGroup);
+    if (dripGroups.length > 0) {
+      window.setInterval(() => dripGroups.forEach(randomizeDripGroup), dripCycleMs);
+    }
   }
 </script>
 
@@ -149,23 +185,56 @@ const newestEntry = changelog[0];
     width: 3px;
     pointer-events: none;
   }
+  .upd__drip::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    left: -8px;
+    width: 19px;
+    border-radius: 999px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--upd-accent) 16%, transparent) 18%,
+      color-mix(in srgb, var(--upd-accent) 22%, transparent) 58%,
+      transparent 100%
+    );
+    filter: blur(7px);
+    opacity: 0.62;
+    pointer-events: none;
+  }
   .upd__drip::before {
     content: "";
     position: absolute;
-    inset: 0 auto 0 0;
-    width: 3px;
-    background: var(--upd-accent);
-    border-radius: 999px;
+    z-index: 2;
+    left: -10px;
+    top: 0;
+    width: 23px;
+    height: 46px;
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, white 38%, var(--upd-accent)) 0%,
+      color-mix(in srgb, var(--upd-accent) 62%, transparent) 34%,
+      transparent 74%
+    );
+    filter: blur(8px);
     opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    animation: upd-rail-aura 8.4s linear infinite;
+    will-change: top, transform, opacity, filter;
   }
   .upd__drip-bead {
     content: "";
     position: absolute;
     z-index: 3;
     left: -4px;
-    top: -14px;
+    top: 0;
     width: 10px;
-    height: 15px;
+    height: 16px;
     clip-path: polygon(50% 0%, 78% 34%, 94% 60%, 88% 82%, 68% 96%, 50% 100%, 32% 96%, 12% 82%, 6% 60%, 22% 34%);
     background: linear-gradient(
       135deg,
@@ -173,12 +242,15 @@ const newestEntry = changelog[0];
       var(--upd-accent) 48%,
       color-mix(in srgb, var(--upd-accent) 68%, black)
     );
-    box-shadow: 0 0 14px color-mix(in srgb, var(--upd-accent) 58%, transparent);
+    box-shadow:
+      0 0 10px color-mix(in srgb, var(--upd-accent) 68%, transparent),
+      0 0 25px color-mix(in srgb, var(--upd-accent) 42%, transparent);
     opacity: 0;
     transform: translateY(0) scale(0.2);
     transform-origin: 50% 0;
     filter: blur(1.5px);
-    animation: upd-rail-bead 7.2s cubic-bezier(0.7, 0.05, 0.3, 1) infinite;
+    animation: upd-rail-bead 8.4s linear infinite;
+    will-change: top, transform, opacity, filter;
   }
   .upd__drip-bead::before {
     content: "";
@@ -241,49 +313,61 @@ const newestEntry = changelog[0];
     isolation: isolate;
     overflow: visible;
   }
-  .upd--current .upd__ver::before {
-    content: "";
+  .upd__ver-drips {
     position: absolute;
-    z-index: 0;
-    top: auto;
-    bottom: -5px;
-    left: 25%;
-    width: 4px;
-    height: 10px;
-    border-radius: 0 0 60% 60%;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--upd-accent) 38%, white),
-      var(--upd-accent) 44%,
-      color-mix(in srgb, var(--upd-accent) 72%, black)
-    );
-    box-shadow: 0 0 8px color-mix(in srgb, var(--upd-accent) 42%, transparent);
+    z-index: 2;
+    left: 5px;
+    right: 5px;
+    top: calc(100% + 3px);
+    bottom: auto;
+    height: 20px;
     pointer-events: none;
-    transform: scaleY(0.35);
-    transform-origin: 50% 0;
-    animation: upd-chip-blood-stem 6.6s ease-in-out infinite;
   }
-  .upd--current .upd__ver::after {
+  .upd__ver-drip {
     content: "";
     position: absolute;
-    z-index: 0;
-    left: calc(25% - 2px);
-    bottom: -14px;
-    width: 8px;
-    height: 11px;
-    clip-path: polygon(50% 0%, 78% 30%, 94% 58%, 86% 82%, 66% 96%, 50% 100%, 34% 96%, 14% 82%, 6% 58%, 22% 30%);
+    z-index: 2;
+    top: 0;
+    width: 6px;
+    height: 10px;
+    clip-path: polygon(50% 0%, 78% 34%, 94% 60%, 88% 82%, 68% 96%, 50% 100%, 32% 96%, 12% 82%, 6% 60%, 22% 34%);
     background: linear-gradient(
       135deg,
-      color-mix(in srgb, var(--upd-accent) 40%, white),
-      var(--upd-accent) 46%,
-      color-mix(in srgb, var(--upd-accent) 76%, black)
+      color-mix(in srgb, var(--upd-accent) 52%, white),
+      var(--upd-accent) 48%,
+      color-mix(in srgb, var(--upd-accent) 68%, black)
     );
-    box-shadow: 0 0 10px color-mix(in srgb, var(--upd-accent) 48%, transparent);
+    box-shadow:
+      0 0 8px color-mix(in srgb, var(--upd-accent) 58%, transparent),
+      0 0 14px color-mix(in srgb, var(--upd-accent) 30%, transparent);
     opacity: 0;
-    transform: translateY(-2px) scale(0.22, 0.35);
+    transform: translate3d(0, -1px, 0) scale(0.16, 0.18);
     transform-origin: 50% 0;
     pointer-events: none;
-    animation: upd-chip-blood-drop 6.6s cubic-bezier(0.7, 0.05, 0.3, 1) infinite -2.2s;
+    animation: upd-chip-drip 4.6s cubic-bezier(0.2, 0.8, 0.24, 1) infinite var(--drip-delay, 0s);
+    will-change: transform, opacity, filter;
+  }
+  .upd__ver-drip[data-drop-active="false"] {
+    opacity: 0 !important;
+  }
+  .upd__ver-drip--short {
+    --drip-delay: 0s;
+    left: 12%;
+    width: 5px;
+    height: 8px;
+  }
+  .upd__ver-drip--main {
+    --drip-delay: -0.22s;
+    left: 47%;
+    width: 7px;
+    height: 11px;
+  }
+  .upd__ver-drip--tail {
+    --drip-delay: -0.44s;
+    left: auto;
+    right: 0;
+    width: 5px;
+    height: 8px;
   }
 
   .upd__product {
@@ -345,29 +429,39 @@ const newestEntry = changelog[0];
   }
 
   @keyframes upd-rail-bead {
-    0% { top: -14px; opacity: 0; transform: scale(0.2); filter: blur(1.5px); }
-    10% { top: -10px; opacity: 0.42; transform: scale(0.28); filter: blur(1px); }
-    24% { top: 8%; opacity: 0.82; transform: scale(0.46); filter: blur(0.45px); }
-    48% { top: 38%; opacity: 0.96; transform: scale(0.72); filter: blur(0); }
-    70% { top: 70%; opacity: 1; transform: scale(1); filter: blur(0); }
-    83% { top: calc(100% - 10px); opacity: 1; transform: scale(1.34, 1.48); filter: blur(0); }
-    89% { top: calc(100% + 5px); opacity: 0.92; transform: scale(1.42, 1.62); filter: blur(0.15px); }
-    95%, 100% { top: calc(100% + 38px); opacity: 0; transform: scale(0.3, 0.44); filter: blur(4px); }
+    0%, 6% { top: 0; opacity: 0; transform: scale(0.16, 0.22); filter: blur(1.5px); }
+    12% { top: 0; opacity: 0.62; transform: scale(0.27, 0.36); filter: blur(0.9px); }
+    28% { top: 16%; opacity: 0.84; transform: scale(0.43, 0.56); filter: blur(0.35px); }
+    48% { top: 43%; opacity: 0.96; transform: scale(0.65, 0.82); filter: blur(0); }
+    68% { top: 69%; opacity: 1; transform: scale(0.9, 1.1); filter: blur(0); }
+    84% { top: calc(100% - 10px); opacity: 1; transform: scale(1.02, 1.2); filter: blur(0); }
+    90% { top: calc(100% + 1px); opacity: 0.93; transform: scale(1.12, 1.34); filter: blur(0.15px); }
+    96%, 100% { top: calc(100% + 31px); opacity: 0; transform: scale(0.2, 0.32); filter: blur(4px); }
   }
 
-  @keyframes upd-chip-blood-stem {
-    0%, 42% { opacity: 0.18; transform: scaleY(0.28); }
-    56% { opacity: 0.98; transform: scaleY(1); }
-    72% { opacity: 0.8; transform: scaleY(0.78); }
-    100% { opacity: 0.18; transform: scaleY(0.32); }
+  @keyframes upd-rail-aura {
+    0%, 6% { top: -8px; opacity: 0; transform: scale(0.26, 0.34); filter: blur(9px); }
+    12% { top: -5px; opacity: 0.16; transform: scale(0.42, 0.52); filter: blur(8px); }
+    28% { top: 10%; opacity: 0.29; transform: scale(0.62, 0.72); filter: blur(7px); }
+    48% { top: 36%; opacity: 0.4; transform: scale(0.82, 0.9); filter: blur(7px); }
+    68% { top: 62%; opacity: 0.48; transform: scale(1, 1.06); filter: blur(7px); }
+    84% { top: calc(100% - 42px); opacity: 0.58; transform: scale(1.1, 1.16); filter: blur(7px); }
+    90% { top: calc(100% - 24px); opacity: 0.46; transform: scale(1.16, 1.22); filter: blur(7px); }
+    96%, 100% { top: calc(100% + 18px); opacity: 0; transform: scale(0.34, 0.5); filter: blur(10px); }
   }
 
-  @keyframes upd-chip-blood-drop {
-    0%, 46% { opacity: 0; transform: translateY(-2px) scale(0.22, 0.35); filter: blur(1px); }
-    56% { opacity: 0.96; transform: translateY(0) scale(0.74, 0.92); filter: blur(0); }
-    65% { opacity: 1; transform: translateY(2px) scale(1, 1.16); filter: blur(0); }
-    78% { opacity: 0.78; transform: translateY(9px) scale(0.82, 0.92); filter: blur(0.35px); }
-    92%, 100% { opacity: 0; transform: translateY(18px) scale(0.3, 0.48); filter: blur(2px); }
+  @keyframes upd-chip-drip {
+    0%, 10% { opacity: 0; transform: translate3d(0, -1px, 0) scale(0.16, 0.16); filter: blur(1px); }
+    15% { opacity: 0.16; transform: translate3d(0, 0, 0) scale(0.27, 0.26); filter: blur(0.65px); }
+    21% { opacity: 0.48; transform: translate3d(0, 0.15px, 0) scale(0.44, 0.42); filter: blur(0.3px); }
+    28% { opacity: 0.78; transform: translate3d(0, 0.55px, 0) scale(0.64, 0.62); filter: blur(0.1px); }
+    35% { opacity: 0.97; transform: translate3d(0, 1.2px, 0) scale(0.84, 0.82); filter: blur(0); }
+    42% { opacity: 1; transform: translate3d(0, 2.4px, 0) scale(0.99, 1.02); filter: blur(0); }
+    51% { opacity: 0.96; transform: translate3d(0, 5.6px, 0) scale(1, 1.12); filter: blur(0.08px); }
+    62% { opacity: 0.82; transform: translate3d(0, 9.9px, 0) scale(0.9, 1.06); filter: blur(0.24px); }
+    75% { opacity: 0.58; transform: translate3d(0, 14.8px, 0) scale(0.72, 0.9); filter: blur(0.5px); }
+    89% { opacity: 0.22; transform: translate3d(0, 20.8px, 0) scale(0.42, 0.66); filter: blur(1.1px); }
+    100% { opacity: 0; transform: translate3d(0, 26px, 0) scale(0.18, 0.36); filter: blur(2.1px); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -379,9 +473,15 @@ const newestEntry = changelog[0];
     .upd--featured::before {
       animation: none;
     }
-    .upd__drip::before,
     .upd__drip-bead {
       animation: none;
+    }
+    .upd__drip::before {
+      animation: none;
+      top: calc(100% - 46px);
+      opacity: 0.46;
+      transform: scale(1, 1.06);
+      filter: blur(7px);
     }
     .upd__drip-bead {
       top: calc(100% - 10px);
@@ -389,17 +489,12 @@ const newestEntry = changelog[0];
       transform: scale(0.92);
       filter: none;
     }
-    .upd--current .upd__ver::before,
-    .upd--current .upd__ver::after {
+    .upd__ver-drip {
       animation: none;
     }
-    .upd--current .upd__ver::before {
+    .upd__ver-drip {
       opacity: 0.82;
-      transform: scaleY(0.86);
-    }
-    .upd--current .upd__ver::after {
-      opacity: 0.9;
-      transform: translateY(0) scale(0.78, 0.92);
+      transform: translate3d(0, 0, 0) scale(0.8, 0.9);
     }
   }
 
@@ -410,13 +505,13 @@ const newestEntry = changelog[0];
       animation: upd-ooze 9s ease-in-out infinite alternate !important;
     }
     [data-motion-preview="on"] .upd__drip-bead {
-      animation: upd-rail-bead 7.2s cubic-bezier(0.7, 0.05, 0.3, 1) infinite !important;
+      animation: upd-rail-bead 8.4s linear infinite !important;
     }
-    [data-motion-preview="on"] .upd--current .upd__ver::before {
-      animation: upd-chip-blood-stem 6.6s ease-in-out infinite !important;
+    [data-motion-preview="on"] .upd__drip::before {
+      animation: upd-rail-aura 8.4s linear infinite !important;
     }
-    [data-motion-preview="on"] .upd--current .upd__ver::after {
-      animation: upd-chip-blood-drop 6.6s cubic-bezier(0.7, 0.05, 0.3, 1) infinite -2.2s !important;
+    [data-motion-preview="on"] .upd__ver-drip {
+      animation: upd-chip-drip 4.6s cubic-bezier(0.2, 0.8, 0.24, 1) infinite var(--drip-delay, 0s) !important;
     }
   }
 
