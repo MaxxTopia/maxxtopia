@@ -1,5 +1,28 @@
 # Maxxtopia continuity addendum
 
+## Viewmaxxing provider reliability update and accent separation - 2026-08-20
+
+- Published a significant Viewmaxxing web update for bounded provider failure
+  handling: the native player keeps Lamda/Prime fallback inside the app,
+  converts 502/403/429/timeouts into a finite retry state, and the beta card
+  gives viewers a clear title/episode reporting path. The update intentionally
+  has no invented version because the web release metadata is unversioned.
+- Added the rotating Viewmaxxing TV canary and deployed it with the existing
+  suite-monitor change-only Maxx bot alert path. The current live canary is
+  down because both approved upstream probes return HTTP 502; the monitor
+  reports that specific check while the rest of the suite checks pass.
+- Viewmaxxing update cards now use scarlet `#dc2626`, while Streammaxxing stays
+  mint `#22d3a0` and AdBlock-Maxxer stays blue `#5b9fd8`; the build guard and a
+  live browser computed-style check confirm the accents are distinct.
+- Release state: Viewmaxxing deployment `20e26cf7.viewmaxxing.pages.dev` is
+  live behind `https://view.maxxtopia.com/`; suite-monitor version
+  `248d5d81-8e51-47ed-9200-8c5b9cbe5e67` is live; Maxxtopia commits `cc76994`
+  and `d404634` were pushed, with Pages workflow `32422600991` succeeding.
+- The physical VSeeBox/Android TV playback test remains Diggy-owned. Provider
+  health can recover or drift independently, so this release proves bounded
+  failure and monitoring rather than permanent third-party availability.
+- Unrelated tracked and untracked Maxxtopia work remains preserved.
+
 ## Viewmaxxing mobile catalog and movie expansion - 2026-08-19
 
 - Added a public Updates card for the Viewmaxxing phone navigation and movie
