@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-08-19",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.12",
+    "title": "YouTube Reclaim stops failed stream retries from looping.",
+    "body": "Reclaim now waits for a real video frame before considering recovery successful, bounds repeated failures, and preserves the same timestamp before native YouTube is used as a last resort.",
+    "items": [
+      "Keeps failed fresh resolves inside a bounded Reclaim recovery budget.",
+      "Resets retries only after a real video frame appears.",
+      "Cancels stale retries and preserves position before native fallback."
+    ]
+  },
+  {
+    "date": "2026-08-19",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
     "title": "Viewmaxxing makes the catalog easier to browse on phones.",
