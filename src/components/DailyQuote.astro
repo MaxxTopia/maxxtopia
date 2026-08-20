@@ -10,12 +10,40 @@
  * days running. Deterministic per-cycle, so all visitors see the same
  * quote on the same day. See the script block for details.
  *
- * Curated from the user's list: Ayanokoji, anime/anonymous lines, Diggy
- * originals, Luke Belmar, Greg Plitt, Bill Beswick, Tate,
- * Saint (Snowfall), Mudano (Tougen Anki).
+ * Curated from the user's list: Kakashi-inspired originals, Itachi,
+ * Ayanokoji-inspired originals,
+ * anime/anonymous lines, Diggy originals, Luke Belmar, Greg Plitt,
+ * Bill Beswick, Tate, Saint (Snowfall), Mudano (Tougen Anki), and
+ * Naofumi-inspired originals (The Rising of the Shield Hero), and
+ * other source-checked/original lines. Inspired entries are labeled as
+ * original writing in the data below rather than presented as canon quotes.
  */
 
 const quotes = [
+  // ── Kakashi-inspired originals (user-selected) ────────────
+  {
+    text: "You can carry the past without letting it choose your next move.",
+    author: 'Kakashi-inspired',
+    source: 'Original writing',
+  },
+  {
+    text: "Being late is forgivable. Arriving without a plan is not.",
+    author: 'Kakashi-inspired',
+    source: 'Original writing',
+  },
+
+  // ── Itachi Uchiha (Naruto) ────────────────────────────────
+  {
+    text: "True shinobi do not seek glory. They protect from the shadows.",
+    author: 'Itachi Uchiha',
+    source: 'Naruto',
+  },
+  {
+    text: "You do not need forgiveness to finish what you started.",
+    author: 'Itachi-inspired',
+    source: 'Original writing',
+  },
+
   // ── Ayanokoji ──────────────────────────────────────────────
   {
     text: "The greater the ability, the humbler the person. The lower it is, the more arrogant he is.",
@@ -32,12 +60,39 @@ const quotes = [
     author: 'Ayanokoji Kiyotaka',
     source: 'Classroom of the Elite',
   },
+  {
+    text: "Winning is useful. Understanding why you won is better.",
+    author: 'Ayanokoji-inspired',
+    source: 'Original writing',
+  },
+  {
+    text: "Are human beings truly equal?",
+    author: 'Ayanokoji Kiyotaka',
+    source: 'Classroom of the Elite',
+  },
 
   // ── Mudano (Tougen Anki) ──────────────────────────────────
   {
     text: "Do not die for your goal. Live through it for your goal.",
     author: 'Mudano',
     source: 'Tougen Anki',
+  },
+  {
+    text: "You are not allowed to call it fate before you test your strength.",
+    author: 'Mudano-inspired',
+    source: 'Original writing',
+  },
+
+  // ── Naofumi-inspired originals (user-selected) ────────────
+  {
+    text: "They can doubt me. The work still has to get done.",
+    author: 'Naofumi-inspired',
+    source: 'Original writing',
+  },
+  {
+    text: "I stopped waiting for fairness and started building leverage.",
+    author: 'Naofumi-inspired',
+    source: 'Original writing',
   },
 
   // ── Diggy originals ───────────────────────────────────────
@@ -111,8 +166,18 @@ const quotes = [
     author: 'Bill Beswick',
   },
   {
+    text: "Your thoughts set the direction. Your habits decide the distance.",
+    author: 'Bill Beswick-inspired',
+    source: 'Original writing',
+  },
+  {
     text: "Control the controllables. Let go of the rest.",
     author: 'Bill Beswick',
+  },
+  {
+    text: "You cannot command the result, but you can command the next action.",
+    author: 'Bill Beswick-inspired',
+    source: 'Original writing',
   },
   {
     text: "It's about maximizing yourself.",
@@ -123,6 +188,26 @@ const quotes = [
   {
     text: "Stress is the gym for the mind.",
     author: 'Tate',
+  },
+  {
+    text: "Comfort asks you to wait. Ambition asks you to decide.",
+    author: 'Tate-inspired',
+    source: 'Original writing',
+  },
+  {
+    text: "If you need everyone to approve the plan, you are not leading it.",
+    author: 'Tate-inspired',
+    source: 'Original writing',
+  },
+  {
+    text: "Strength is choosing the hard thing without needing applause.",
+    author: 'Tate-inspired',
+    source: 'Original writing',
+  },
+  {
+    text: "Pressure does not create your character. It removes the excuses covering it.",
+    author: 'Tate-inspired',
+    source: 'Original writing',
   },
   {
     text: "My unmatched perspicacity, coupled with sheer indefatigability, makes me a feared opponent in every realm of human endeavor.",
@@ -139,6 +224,11 @@ const quotes = [
     text: "I built this shit. Brick by brick.",
     author: 'Saint',
     source: 'Snowfall',
+  },
+  {
+    text: "You do not inherit leverage. You build it.",
+    author: 'Saint-inspired',
+    source: 'Original writing',
   },
   {
     text: "Y'all go out on your own? Fine. But don't for one second fuck around with what I gotta do to get mine — cause I promise you, there's nothing I'm not prepared to do.",
@@ -304,13 +394,12 @@ const quotes = [
       sessionStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
     };
 
-    // Default to the collapsed pill on phones (no stored preference yet) so
-    // the wide card never covers a CTA or trust note on small screens. Desktop
-    // still opens expanded. A stored choice always wins.
+    // Phones keep their existing collapse/expand behavior. Desktop opens the
+    // card on every visit so the quote is visible without requiring a click;
+    // the mobile preference remains session-persistent.
     const storedCollapsed = sessionStorage.getItem(STORAGE_KEY);
-    const startCollapsed = storedCollapsed === null
-      ? window.matchMedia('(max-width: 768px)').matches
-      : storedCollapsed === '1';
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const startCollapsed = isMobile && storedCollapsed === '1';
     setCollapsed(startCollapsed);
 
     close.addEventListener('click', () => setCollapsed(true));

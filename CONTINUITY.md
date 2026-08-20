@@ -595,3 +595,129 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   `5c0a72f`; GitHub Actions deploy run `32367136290` completed successfully,
   and the public `/updates/` route was verified with the new styles and no
   browser errors.
+
+## Updates liquid animation refinement — 2026-08-20
+
+- The rail bead now starts exactly at the top edge of the existing accent line,
+  gathers there briefly, then travels continuously down the line while growing
+  instead of moving through visibly stepped sections.
+- The bottom phase stretches the bead into a fuller drop, lets it fall below
+  the card, and dissolves it with opacity and blur.
+- Current version pills now use a small underside pool with three staggered,
+  accent-matched drips. Older version pills remain plain and unchanged.
+- Local verification passed: 107 cards, 10 current cards, static rail,
+  three current-pill drips, no horizontal overflow, no browser warnings or
+  errors, and `npm run build` generated 26 pages. This revision is local only
+  and is waiting for Diggy's visual review before publication.
+
+## Updates aura and underside drip correction — 2026-08-20
+
+- Kept the accent rail as one straight, unmoving line and added two restrained
+  aura layers: a soft stationary halo plus a blurred glimmer that follows the
+  growing bead. The aura now builds with the droplet without making the line
+  itself wave or shift.
+- Reduced the rail bead's bottom scale so the falling drop is smaller and more
+  believable before it fades below the card.
+- Removed the version-pill pool line entirely. The three staggered accent drops
+  now begin directly under the pill's lower edge, with no line above or behind
+  the version text, and fall like a small underside ooze.
+- Local browser QA passed at
+  `http://127.0.0.1:4321/updates/?preview=fluid-drip&motion=on`: the rail line
+  remains static, the aura animation is active, current-pill drops are anchored
+  below the pill, older pills have no pseudo-element effects, there is no
+  horizontal overflow, and the browser reported no warnings or errors.
+- `npm run build` passed and generated all 26 pages. This refinement remains
+  local only; no commit, push, or production deployment was performed. Diggy's
+  next gate is visual review of the local preview.
+
+## Updates version-pill drip motion pass — 2026-08-20
+
+- Shortened the current version-pill drip cycle from 7.8 seconds to 5.8
+  seconds and retuned the stagger so the three accent drops feel more active
+  without arriving as a cluster.
+- Added intermediate growth states: each drip begins as a soft, blurred bead
+  directly under the pill, eases into a rounded hanging shape, stretches as it
+  falls, then thins and dissolves instead of jumping between a few large
+  poses.
+- Preserved the plain older version pills and the reduced-motion fallback;
+  only the local `?motion=on` preview forces the animation when the browser
+  accessibility setting suppresses motion.
+- Local browser QA passed at
+  `http://127.0.0.1:4321/updates/?preview=fluid-drip&motion=on`: the shorter
+  animation and staggered delays are present, no horizontal overflow or
+  browser warnings/errors appeared, and `npm run build` generated all 26
+  pages. This remains local only and is awaiting Diggy's visual review.
+
+## Updates pill-drop silhouette and fluidity pass — 2026-08-20
+
+- Matched the current version-pill drops to the rail bead's rounded teardrop
+  silhouette, accent gradient, and highlight direction. Each pill drop is now
+  a fuller miniature rather than a narrow vertical sliver.
+- Reduced the extreme vertical stretching during the fall and added smoother
+  intermediate scale, translation, opacity, and blur states so the drop grows,
+  hangs, releases, and fades as one continuous liquid motion.
+- Local browser QA passed with three current-pill drops, the matching clip path,
+  no horizontal overflow, and no browser warnings/errors. `npm run build`
+  generated all 26 pages. This remains local only; no commit, push, or
+  production deployment was performed.
+
+## Updates randomized pill-drop bursts — 2026-08-20
+
+- Current version pills now choose a random burst count for each 5.8-second
+  cycle: one, two, or all three drops can release. The active drop positions
+  are shuffled too, so the effect is not locked to the same left-to-right
+  order.
+- Each current card randomizes independently while keeping the fuller
+  miniature teardrop shape and close cascade offsets. Older pills remain
+  untouched, and reduced-motion users still receive the static fallback.
+- Local browser QA observed one-, two-, and three-drop patterns across current
+  cards and across cycles, with no horizontal overflow or browser warnings/
+  errors. `npm run build` remains clean with all 26 pages generated. This is
+  local only; no commit, push, or production deployment was performed.
+
+## Updates single-random-pill-drop pass — 2026-08-20
+
+- Returned the version pill to one visible drop per cycle. The script now
+  randomly selects only the short, main, or tail position, so the location
+  changes without multiple drops appearing together.
+- Shortened the pill animation from 5.8 seconds to 4.6 seconds, moved the
+  full-size state earlier, and reduced the early blur so the drop forms and
+  releases more quickly while keeping the continuous teardrop motion.
+- Local browser QA confirmed every current pill has exactly one active drop,
+  the selected position changes between cycles, the animation reports 4.6s,
+  and there is no overflow or browser warning/error. `npm run build` generated
+  all 26 pages. This remains local only; no commit, push, or production
+  deployment was performed.
+
+## QOTD source-checked expansion — 2026-08-20
+
+- Expanded `src/components/DailyQuote.astro` from 27 to 42 rendered quote
+  entries. Added the selected Kakashi, Itachi, Ayanokoji, Mudano, Naofumi,
+  Bill Beswick, and Tate entries, and normalized the existing Saint line to a
+  source-matched excerpt instead of adding a duplicate.
+- The earlier character-inspired placeholders were not treated as canon.
+  Anime lines were checked against official/episode subtitle references where
+  available; the Mudano and some public-speaker lines use the identified
+  English transcript or translation wording, which can vary by release.
+- Local verification passed: `npm run build` generated all 26 pages;
+  `http://127.0.0.1:4321/updates/?preview=fluid-drip&motion=on` rendered 42
+  source-list entries, all 16 new/normalized lines were present, and the
+  browser reported no console errors.
+- Release state: local only. No commit, push, or production deployment was
+  performed. This entry records the prior source-checked replacement pass;
+  the selected-wording correction below is the current QOTD state.
+
+## QOTD selected wording restored — 2026-08-20
+
+- Restored the original wording Diggy selected for K-3, K-5, I-5, N-1, N-3,
+  T-2, B-2, B-4, A-3, AT-1 through AT-4, and S-2 instead of retaining the
+  later source-traced replacements. I-I1 and NEW-A1 remain in the pool.
+- Restored Saint's existing line to `I built this shit. Brick by brick.` and
+  added the selected S-2 line separately. Inspired entries are labeled
+  `*-inspired` / `Original writing`; they must not be presented as canon
+  dialogue or direct speaker quotations.
+- Local verification passed: `npm run build` generated all 26 pages; the
+  preview rendered 43 source-list entries, every restored line was present,
+  every superseded replacement was absent, and the browser reported no
+  console errors. This change is local only; no commit, push, or production
+  deployment was performed.
