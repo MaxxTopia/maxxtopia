@@ -708,6 +708,7 @@ export const products: Product[] = [
     logo: '/logos/viewmaxxing.png',
     icon: '/logos/viewmaxxing-icon.png',
     accentHex: '#10b981',
+    updateAccentHex: '#38bdf8',
     heroStat: { value: '5', label: 'apps in one · $0 forever' },
     screenshots: ['/screenshots/viewmaxxing/home-hero.webp'],
     zones: [

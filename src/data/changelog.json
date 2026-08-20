@@ -1,4 +1,17 @@
-[{
+[
+  {
+    "date": "2026-08-20",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "title": "Viewmaxxing turns provider failures into a clear retry, not an endless spinner.",
+    "body": "The web player now bounds provider failures, tries the approved alternate route inside the native player, and reports degraded provider health without opening popup-prone provider pages.",
+    "items": [
+      "Lamda/Prime fallback stays inside the native player and never opens provider pages.",
+      "Timeouts and cooldowns turn 502/403/429 stalls into a clear retry state.",
+      "Rotating TV canaries feed Maxx bot alerts when a provider degrades.",
+      "A beta support card tells viewers exactly how to report a broken episode."
+    ]
+  }, {
     "date": "2026-08-20",
     "product": "Streammaxxing",
     "productSlug": "streammaxxing",
