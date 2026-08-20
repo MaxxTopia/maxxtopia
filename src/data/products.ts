@@ -84,6 +84,9 @@ export type Product = {
    *  instead of mixing toward the suite cyan — which is how a product stops looking
    *  like the suite and starts looking like itself. */
   accent2Hex?: string;
+  /** Optional accent used by the Updates feed when the primary product color is
+   *  too close to another product's color at small sizes. */
+  updateAccentHex?: string;
   /** Hero shot images under /screenshots/<slug>/. */
   screenshots?: string[];
   /** Optional demo video that replaces the static hero shot.
@@ -669,7 +672,7 @@ export const products: Product[] = [
     name: 'Viewmaxxing',
     category: 'TV Streaming',
     status: 'beta',
-    version: vmRelease.version ?? '0.4.38',
+    version: vmRelease.version ?? '0.4.102',
     tagline: 'One app. Every mood. Zero bills.',
     description:
       "Scrapped and rebuilt. The old streamer toolkit is gone — Viewmaxxing is now the one free app for your TV box: YouTube (native, ad-free), movies, shows, anime and Twitch on one D-pad home. No account, no subscription.",
@@ -1162,7 +1165,7 @@ export const products: Product[] = [
     name: 'Snipemaxxer',
     category: 'Fortnite + Valorant',
     status: 'beta',
-    version: '0.2.7',
+    version: '0.2.9',
     tagline: 'Read the lobby. Review the round.',
     description:
       'A local two-game match-intelligence desk for Fortnite tournaments and Valorant sessions — live standing context, official replay scouting, full-lobby reports, Riot Client context, crosshairs, alerts, and a voice coach in one Windows app.',
@@ -1264,11 +1267,12 @@ export const products: Product[] = [
       { label: 'Riot path', value: 'Read-only' },
       { label: 'Freshness', value: 'Labeled' },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.2.7.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.2.9.exe', external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
     accentHex: '#ffb547',
+    updateAccentHex: '#ff3f69',
     accent2Hex: '#ff6472',
     screenshots: ['/screenshots/snipemaxxer/valorant-home-live.webp', '/screenshots/snipemaxxer/fortnite-home.webp'],
     demoVideo: {

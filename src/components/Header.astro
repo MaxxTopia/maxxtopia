@@ -74,6 +74,14 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       0 0 50px rgba(0, 212, 255, 0.18);
   }
 
+  /* The product shortcuts are desktop-only; keep the component display rule
+     from overriding the responsive hidden utility on narrow screens. */
+  @media (max-width: 767px) {
+    .header-product-btn {
+      display: none;
+    }
+  }
+
   /* CTA button — neutral the bottom margin so the OM icon sits flush. */
   .header-cta {
     margin-right: 2px;

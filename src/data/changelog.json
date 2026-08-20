@@ -3,14 +3,15 @@
     "product": "Streammaxxing",
     "productSlug": "streammaxxing",
     "version": "v0.1.58",
-    "title": "Streammaxxing gives its maker banner a polished finish.",
-    "body": "The stream dashboard now keeps a readable Made by Diggy banner at the rail footer, with the version and Guide hierarchy above it and the same small menu cue used across Maxxtopia.",
+    "title": "Arcade Showcase, custom scene intros, and a smoother OBS setup.",
+    "body": "Sprite Cannon can now run as a real attract-mode showcase in a small OBS window, scene screens can use your own video and music without doubled audio, the vinyl overlay matches Playlistmaxxing, and the dashboard keeps every overlay preview in view when resized.",
     "items": [
-      "Keeps the readable Made by Diggy banner at the bottom of the rail.",
-      "Places Guide first and the version directly above the maker banner.",
-      "Adds a restrained reflective sparkle sweep to the banner.",
-      "Plays the Maxxtopia Banish cue on hover and keyboard focus.",
-      "Lets browser scene previews unlock picked music after a click or keypress."
+      "Arcade Showcase: real runs, varied reactions, mistakes, lives, replays, and rotating skins.",
+      "Runs stay non-scoring, while the normal play link remains available for viewers.",
+      "Scene intros: choose a local MP4/WebM, add music, loop it, and unlock preview audio.",
+      "Audio handoff: separate music mutes video audio so OBS never doubles the soundtrack.",
+      "Vinyl + previews: match Playlistmaxxing's popout record and keep thumbnails in frame.",
+      "Rail polish: readable maker credit, Guide/version order, sparkle, and the Maxxtopia hover cue."
     ]
   },
   {
@@ -30,6 +31,7 @@
     "date": "2026-08-19",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
+    "version": "v0.4.105",
     "title": "Viewmaxxing makes the catalog easier to browse on phones.",
     "body": "Mobile section switching is now always in reach, and the movie shelf grows with recent picks and checked franchise staples.",
     "items": [
@@ -43,6 +45,7 @@
     "date": "2026-08-18",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
+    "version": "v0.4.104",
     "title": "Viewmaxxing keeps playback in one tab.",
     "body": "The web player now resolves supported movie, TV, and anime routes inside its native player instead of loading popup-prone provider pages.",
     "items": [
@@ -56,6 +59,7 @@
     "date": "2026-08-18",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
+    "version": "v0.4.103",
     "title": "Viewmaxxing tightens its web playback routes.",
     "body": "The catalog now matches searches to real titles, keeps only checked playback routes, and adds a few requested Netflix favorites.",
     "items": [
@@ -68,6 +72,7 @@
   {
     "date": "2026-08-18",
     "product": "Maxxtopia",
+    "version": "v0.1.2",
     "title": "The suite shell feels faster under the pointer.",
     "body": "Navigation and hover interactions now do less work per frame while the branded cursor lands immediately and keeps its motion.",
     "items": [
@@ -81,6 +86,7 @@
     "date": "2026-08-18",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
+    "version": "v0.1.3",
     "title": "Playlistmaxxing stops silent YouTube stalls from spinning forever.",
     "body": "The player now watches real playback progress and gives a stuck track a bounded recovery path instead of leaving the queue waiting.",
     "items": [
@@ -94,6 +100,7 @@
     "date": "2026-08-18",
     "product": "Aimmaxxer",
     "productSlug": "aimmaxxer",
+    "version": "v0.8.12",
     "title": "Aimmaxxer is still getting sharper in the lab.",
     "body": "Private testing continues behind the scenes. We’ll share the next public step when it’s ready."
   },
@@ -164,6 +171,7 @@
     "date": "2026-08-01",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
+    "version": "v0.1.2",
     "title": "Discover keeps going when one preview fails.",
     "body": "A failed preview now stays isolated to that song instead of breaking the rest of the Discover board.",
     "items": [
@@ -300,6 +308,7 @@
     "date": "2026-07-29",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
+    "version": "v0.1.1",
     "title": "Playlistmaxxing now finds the full song—not the nearest clip.",
     "body": "Discover and song repair now make cleaner choices, keep artist signals honest, and keep the popout matched to what you hear.",
     "items": [
@@ -447,6 +456,7 @@
     "date": "2026-07-06",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
+    "version": "v0.1.0",
     "title": "Every platform, one playlist.",
     "body": "The suite's music hub is live at music.maxxtopia.com - paste a track or a whole playlist from Spotify, SoundCloud or YouTube and it plays right in place. No account, no install.",
     "items": [
@@ -1142,6 +1152,7 @@
   {
     "date": "2026-05-10",
     "product": "Maxxtopia",
+    "version": "v0.1.1",
     "title": "Discord server live.",
     "body": "Permanent invite at discord.gg/S78eecbWdx. 6 channels, 7 silent product threads, 3 tier roles, ticket panel + VIP-claim worker live."
   },

@@ -404,3 +404,192 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   `https://betmaxxing-api.maxxtopia.workers.dev`.
 - Only the three Betmaxxing route files were staged. Existing unrelated dirty
   and untracked Maxxtopia work remains preserved.
+
+## Loading performance, Updates mirror, and QOTD - 2026-08-19
+
+### Scope and diagnosis
+
+- Investigated the perceived slow loading on Maxxtopia and its linked product
+  apps. The main causes are remote third-party media, browser lazy loading,
+  several multi-megabyte image assets, and navigation that waits on a page
+  before showing all of its content. This is a real first-load/cold-cache cost,
+  not evidence that the whole site is CPU-bound.
+- Viewmaxxing currently requests many TMDB and AniList posters lazily. The
+  first visible cards can be prioritized, but the remaining lineup still waits
+  on those providers and the user's network.
+- Playlistmaxxing artist art is loaded as CSS background images from provider
+  URLs, and Dropmaxxer still depends on the remote Fortnite API map image on a
+  cold cache. Both apps already have visual fallbacks; real-device retesting
+  remains required after their own deployments.
+
+### Implemented locally
+
+- Viewmaxxing: prioritized the first six posters, switched TMDB poster requests
+  to the smaller `w342` variant, added provider preconnects, and kept the
+  existing user-owned status-badge edits intact.
+- Maxxtopia: added same-origin hover/focus prefetching for sidebar navigation,
+  made Viewmaxxing hero rotation wait for a loaded frame, replaced the four
+  eager 40px vinyl images with local WebP thumbnails, and added a smaller
+  Dropmaxxer embed poster.
+- Updates: added stable article IDs, product-specific accent handling, the
+  `updates.json` feed, and matching version metadata for Viewmaxxing and
+  Snipemaxxer. Snipemaxxer is now represented as `0.2.9` with the matching
+  `0.2.9` installer URL in source.
+- QOTD: desktop opens expanded on visit; mobile keeps the existing collapsed,
+  expandable behavior.
+- Discord: added the tracked `scripts/sync-updates-discord.mjs` mirror and
+  `.github/workflows/discord-updates.yml`. The mirror uses the exact feed text,
+  version, date, accent color, and canonical update link, while suppressing
+  mentions and notification pings.
+
+### Verification and current state
+
+- Maxxtopia `npm run build` passed and generated `/updates.json`, colored update
+  cards, stable anchors, optimized assets, and the prefetch script.
+- Viewmaxxing `npm run build` passed. The existing Vite chunk-size warning is
+  informational and the build exited successfully.
+- The Discord dry run passed. The live Maxxtopia server now has read-only
+  `#updates` in the `-- maxxtopia --` category (channel ID
+  `1539778536838004848`), seeded with the 25 newest updates from the local
+  built feed. The creation and posts were silent; no member mentions or
+  server-wide notification messages were sent.
+- The live feed endpoint was not yet published during this session, so
+  `https://maxxtopia.com/updates.json` returned 404. The GitHub workflow will
+  begin automatic mirroring only after the site changes are published and the
+  repository secrets `DISCORD_BOT_TOKEN` and `DISCORD_GUILD_ID` are configured.
+- No commit, push, Cloudflare deployment, GitHub workflow publication, or
+  external site deployment was performed. Existing dirty and untracked work
+  in Maxxtopia, Viewmaxxing, Discordmaxxer, Playlistmaxxing, and Dropmaxxer was
+  preserved; do not stage the whole worktree.
+
+### Remaining human gates and next action
+
+- Publish only the scoped Maxxtopia files after review, then verify the live
+  desktop and mobile navigation, QOTD behavior, Updates colors/versions,
+  Viewmaxxing lineup, Playlistmaxxing popout art, and Dropmaxxer map on a cold
+  browser cache. Confirm the live endpoint before enabling the GitHub mirror.
+- Configure the two Discord workflow secrets and run the workflow once after
+  publication. Check that a newly added update creates one silent embed and
+  that reruns do not duplicate it.
+- If external image latency remains noticeable after that pass, the next
+  structural improvement is to proxy/cache allowed artwork through a stable
+  image CDN or product-owned asset pipeline rather than increasing eager
+  loading.
+
+## Update copy style feedback — 2026-08-20
+
+- For Maxxtopia Updates, use the 2026-06-28 entries as a direct reference:
+  title = the release hook, body = a concise outcome-focused subheading, and
+  bullets = distinct fixes that explain what changed and sometimes why.
+- Lead with the largest quality-of-life or feature improvements. Cosmetic
+  polish, attribution, and small interaction details belong at the end unless
+  they are the release's main purpose.
+- Do not repeat one small change in the title, body, and several bullets. Use
+  one clear mention and spend the remaining space on the other meaningful work
+  in the release.
+- The local Streammaxxing v0.1.58 entry was rewritten using this format. It is
+  not republished yet; production publication still requires review and
+  explicit approval.
+- Verification for the rewrite passed: changelog JSON parsing, `git diff
+  --check`, and `npm run build` (26 pages).
+
+## Updates accent and version audit — 2026-08-20
+
+- Audited all 107 local Updates cards. The ten actual product accent contracts
+  are distinct, and the version pill already inherits the same accent as the
+  card border/product label/bullets. Rendered QA found zero version-color
+  mismatches and no console warnings.
+- Suite-level `Maxxtopia` notes now use a neutral slate accent
+  (`#cbd5e1`) instead of falling back to Optimizationmaxxing's magenta. The
+  product palette itself was not changed.
+- Added a build-time guard in `src/data/changelog.ts` for duplicate product
+  accents, missing product accent contracts, and future suite-color collisions.
+- One historical card remains intentionally unversioned: the private/pre-release
+  Clipmaxxer note. Aimmaxxer now carries the verified live `v0.8.12` release
+  version, and the previously unversioned Viewmaxxing, Playlistmaxxing, and
+  Maxxtopia cards were assigned documented display versions below.
+- Verification passed: `npm run build` generated 26 pages; the local Updates
+  route rendered all 107 cards with zero browser console warnings/errors.
+- This audit is local only. No Maxxtopia commit, push, or production deploy
+  was performed.
+
+## Recent Updates card reconciliation — 2026-08-20
+
+- Reviewed the recent project cards for duplicate or unnecessary additions.
+  Substantive Streammaxxing, Viewmaxxing, AdBlock-Maxxer, Playlistmaxxing,
+  Snipemaxxer, and Maxxtopia quality-of-life entries remain because they
+  describe user-facing work with distinct outcomes.
+- The existing Discordmaxxer v0.7.61 card is the reference for small releases
+  and already uses the exact standard wording: `Maintenance release —
+  under-the-hood fixes and improvements.` No duplicate maintenance cards were
+  added.
+- Kept the Aimmaxxer lab note at the user's direction and added its verified
+  live `v0.8.12` version from the Aimmaxxer release continuity record.
+- No new public card was added for the Streammaxxing updater cache repair or
+  this Maxxtopia color/copy audit; those are release maintenance and editorial
+  housekeeping rather than separate user-facing releases.
+- Verification for this reconciliation passed: changelog JSON parsing, `git
+  diff --check`, and `npm run build` (26 pages). The feed contains 107 cards,
+  including Aimmaxxer `v0.8.12`. This work remains local only; no commit, push,
+  or production deploy was performed.
+
+## Updates current-release aura — 2026-08-20
+
+- The Updates aura now follows recency within each project, not release size.
+  The newest card for every project receives the active accent treatment even
+  when its copy is only `Maintenance release — under-the-hood fixes and
+  improvements.` Older versions stay visually quieter.
+- The newest overall release receives the slow ambient ooze animation. Current
+  project cards keep a softer static aura and an animated accent rail; hover
+  and focus remain available for older cards without competing with the current
+  release.
+- Current version pills also get a smaller, offset accent drip so the chip and
+  rail feel connected. Older version pills retain their original plain border
+  and background with no extra line or glow.
+- The current card's rail now carries a larger faucet-like teardrop: it forms at
+  the top of the accent line, travels visibly to the bottom, falls below the
+  card, then fades and blurs away. A local `?motion=on` preview override makes
+  the animation reviewable even when the browser has reduced motion enabled;
+  normal previews still respect that accessibility setting, with the bead
+  parked in an accessible static state.
+- Strengthened Snipemaxxer's Updates accent from `#ff6472` to `#ff3f69` so its
+  coral-red identity reads more clearly while remaining distinct from
+  Playlistmaxxing's pink.
+- Rendered QA passed with 107 cards: 10 current-project cards, Discordmaxxer
+  v0.7.61 active and v0.7.60 calm, and no version-color mismatch. `npm run
+  build` generated 26 pages. The preview is local only; no commit, push, or
+  production deploy was performed.
+
+## Missing Updates versions filled — 2026-08-20
+
+- Viewmaxxing now uses `v0.4.103`, `v0.4.104`, and `v0.4.105` for the three
+  previously unversioned web cards, continuing after the existing `v0.4.102`
+  card. The sequence is grounded in the real native v0.4.102-v0.4.104 release
+  line; the web-card continuation is a display sequence, not a claim that new
+  native tags were created.
+- Playlistmaxxing now uses `v0.1.0` through `v0.1.3` in chronological public
+  update order. The repository has no release-number system, so this is the
+  recommended public update baseline rather than an upstream package version.
+- Maxxtopia's existing shell launch remains `v0.1.0`; Discord server live is
+  `v0.1.1`, and the later suite-shell quality-of-life card is `v0.1.2`.
+- JSON parsing and the local build remain required after these data-only
+  changes. No product repository version, tag, commit, push, or production
+  deployment was changed.
+
+## Updates drip refinement — 2026-08-20
+
+- Kept the current-release accent rail straight and static. The colored line no
+  longer shifts or pulses; only the bead moves through it.
+- Reworked the rail bead to begin smaller and slower at the top, grow as it
+  travels down, stretch into a fuller drop at the bottom, then fall below the
+  card and fade out.
+- Replaced the current version pill's thin internal line with a short pooled
+  stem and a rounded accent-matched drop. Older version pills remain unchanged
+  and plain.
+- Mobile route QA also fixed the header's desktop-only product shortcuts
+  overriding their responsive `hidden` state, removing a 52px horizontal
+  overflow on narrow screens.
+- Local browser QA passed with the reduced-motion override enabled: the rail's
+  animation is `none`, the bead animation is active, and the local build still
+  generates all 26 pages. This scoped Updates-page release is authorized for
+  publication through the normal `main` push workflow.
