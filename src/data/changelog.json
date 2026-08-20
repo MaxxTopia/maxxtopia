@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-08-20",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.13",
+    "title": "YouTube Reclaim recovers inside the ad-free player.",
+    "body": "Reclaim now turns HD range failures into a seekable ad-free fallback, keeps the exact playhead through recovery, and prevents tab-restore checks from racing active playback.",
+    "items": [
+      "HD range failures fall back inside Reclaim instead of native YouTube.",
+      "Recovery keeps the exact timestamp instead of jumping to the beginning.",
+      "Tab-restore probes no longer interrupt an active Reclaim retry."
+    ]
+  },
+  {
+    "date": "2026-08-20",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
     "title": "Viewmaxxing turns provider failures into a clear retry, not an endless spinner.",
