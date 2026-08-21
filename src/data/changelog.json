@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-08-21",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.62",
+    "title": "Discordmaxxer v0.7.62",
+    "body": "Maintenance release — under-the-hood fixes and improvements."
+  },
+  {
+    "date": "2026-08-21",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
     "title": "Viewmaxxing keeps the stream alive when a provider edge goes dark.",
@@ -38,7 +46,8 @@
       "Rotating TV canaries feed Maxx bot alerts when a provider degrades.",
       "A beta support card tells viewers exactly how to report a broken episode."
     ]
-  }, {
+  },
+  {
     "date": "2026-08-20",
     "product": "Streammaxxing",
     "productSlug": "streammaxxing",
