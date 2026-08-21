@@ -4,8 +4,15 @@
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.62",
-    "title": "Discordmaxxer v0.7.62",
-    "body": "Maintenance release — under-the-hood fixes and improvements."
+    "title": "Discordmaxxer puts your profile widget one click closer.",
+    "body": "DMWidget is easier to find, easier to refresh, and easier to make your own — whether you play Valorant, Fortnite, or something else.",
+    "items": [
+      "Open Create / edit profile widget straight from the Discordmaxxer Hub.",
+      "Refresh live Valorant RR and Fortnite stats with honest success or failure feedback.",
+      "Start Valorant cards with Neon, Jett, Reyna, Raze, or Sage cutouts.",
+      "Start Fortnite cards with a Catwoman cutout, or use any direct image URL.",
+      "Use Custom card for any game with your own title, image, and six stats."
+    ]
   },
   {
     "date": "2026-08-21",
