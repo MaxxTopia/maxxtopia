@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-08-21",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "title": "Viewmaxxing keeps the stream alive when a provider edge goes dark.",
+    "body": "The web player now checks the actual media route before committing to playback, then moves to an approved native fallback when a provider returns a dead file. The catalog also stays fresh without letting unreviewed titles sneak into playback.",
+    "items": [
+      "Adds live English-only rows for trending and popular titles.",
+      "Skips provider files that the production media edge cannot actually serve.",
+      "Adds native HLS fallbacks with same-origin segment relaying.",
+      "Learns which approved routes recover reliably without opening popups.",
+      "Keeps unknown-language, CAM, watermark, and popup routes fail-closed."
+    ]
+  },
+  {
     "date": "2026-08-20",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
