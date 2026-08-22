@@ -4,20 +4,12 @@
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
     "version": "v0.4.1",
-    "title": "Optimizationmaxxing v0.4.1",
+    "title": "Optimizationmaxxing adds a chance at a rare ticket.",
+    "body": "Your first Tune Now now has a chance to reveal a one-time VIP discount, and the Sonic theme gets a moving Fastboi launch in the dashboard.",
     "items": [
-      "A chance at a rare ticket can appear after a first Tune Now.",
-      "Fastboi now launches inside the Sonic theme."
-    ]
-  },
-  {
-    "date": "2026-08-22",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.4.0",
-    "title": "A rare ticket might be waiting.",
-    "items": [
-      "Your first Tune Now can now reveal a limited VIP ticket."
+      "A first Tune Now can reveal a rare VIP ticket.",
+      "The ticket shows its rarity and discount.",
+      "Fastboi now launches through the Sonic theme."
     ]
   },
   {
