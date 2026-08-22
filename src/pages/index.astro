@@ -80,7 +80,7 @@ const liveSorted = [...liveProducts].sort(
   <!-- Arcade strip: palette-correct, placed AFTER the apps grid so it reinforces the suite instead of intercepting the product funnel -->
   <section class="relative">
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
-      <a href="/play" class="scb group" aria-label="Play Sprite Cannon — the free Maxxtopia Arcade game">
+      <a href="/play" class="scb scb--sonic group" aria-label="Play Sprite Cannon — launch Fastboi in the Maxxtopia Arcade">
         <!-- seamless rotating aurora behind the cannon -->
         <span class="scb__aurora" aria-hidden="true"></span>
         <span class="scb__stars" aria-hidden="true"></span>
@@ -88,15 +88,17 @@ const liveSorted = [...liveProducts].sort(
 
         <!-- copy -->
         <div class="scb__copy">
-          <p class="scb__eyebrow font-mono">&#9670; Maxxtopia Arcade</p>
-          <h2 class="scb__head"><span class="gradient-text">We build serious tools.</span> <span class="serif-accent gradient-suite">And one ridiculous game.</span></h2>
-          <p class="scb__sub">Sprite Cannon — free, in your browser, no signup. 50+ skins, a global leaderboard, zero reason not to.</p>
+          <p class="scb__eyebrow font-mono">&#9670; Sonic theme // Maxxtopia Arcade</p>
+          <h2 class="scb__head"><span class="gradient-text">Fastboi is loaded.</span> <span class="serif-accent gradient-suite">Now fire the legend.</span></h2>
+          <p class="scb__sub">The real Fastboi from Sprite Cannon, shot from the same cannon that launches him in-game. Free in your browser, no signup, 50+ skins to chase.</p>
           <span class="scb__cta">&#9654;&#65038; Play Sprite Cannon</span>
         </div>
 
         <!-- the launch: a cannon fires the sprite in a seamless arc -->
         <div class="scb__scene" aria-hidden="true">
-          <span class="scb__shot"><img src="/play/spritecannon/imported/spritecannon/skins/fastboi.png" alt="" width="84" height="84" loading="lazy" decoding="async" /></span>
+          <span class="scb__ring scb__ring--one"></span>
+          <span class="scb__ring scb__ring--two"></span>
+          <span class="scb__shot"><img src="/play/spritecannon/imported/spritecannon/skins/fastboi__super.png" alt="" width="84" height="84" loading="lazy" decoding="async" /></span>
           <span class="scb__flash"></span>
           <span class="scb__cannon">
             <span class="scb__barrel"></span>
@@ -125,6 +127,15 @@ const liveSorted = [...liveProducts].sort(
       box-shadow: 0 14px 46px -24px rgba(226,91,255,0.4);
       transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
     }
+    .scb--sonic {
+      background:
+        radial-gradient(120% 170% at 86% 120%, rgba(0,212,255,0.24), transparent 55%),
+        radial-gradient(90% 140% at 0% -20%, rgba(76,81,247,0.22), transparent 60%),
+        var(--color-bg-card);
+      box-shadow: 0 14px 46px -24px rgba(0,212,255,0.55);
+    }
+    .scb--sonic:hover { border-color: var(--color-cyan); box-shadow: 0 18px 56px -20px rgba(0,212,255,0.66); }
+    .scb--sonic .scb__eyebrow { color: #7fe7ff; }
     .scb:hover { border-color: var(--color-magenta); transform: translateY(-2px); box-shadow: 0 18px 56px -20px rgba(226,91,255,0.55); }
 
     /* seamless rotating aurora (0deg == 360deg, matching end stops) */
@@ -188,6 +199,13 @@ const liveSorted = [...liveProducts].sort(
       background: radial-gradient(circle, #fff 0%, var(--color-warm) 28%, var(--color-magenta) 55%, transparent 72%);
       animation: scbFlash 4.4s ease-out infinite;
     }
+    .scb__ring {
+      position: absolute; right: 93px; bottom: 64px; width: 72px; height: 72px;
+      border: 2px solid rgba(127,231,255,0.78); border-radius: 50%; opacity: 0;
+      box-shadow: 0 0 18px rgba(0,212,255,0.32), inset 0 0 12px rgba(0,212,255,0.16);
+      animation: scbRing 4.4s ease-out infinite; pointer-events: none;
+    }
+    .scb__ring--two { animation-delay: .18s; }
     .scb__shot {
       position: absolute; right: 100px; bottom: 74px; width: 84px; height: 84px; opacity: 0;
       animation: scbFly 4.4s cubic-bezier(.33,0,.4,1) infinite; will-change: transform, opacity;
@@ -197,11 +215,12 @@ const liveSorted = [...liveProducts].sort(
       background: linear-gradient(90deg, transparent, rgba(0,212,255,0) 10%, rgba(0,212,255,0.55) 78%, rgba(255,255,255,0.85));
       border-radius: 999px; filter: blur(2px);
     }
-    .scb__shot img { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,212,255,0.55)) drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    .scb__shot img { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(127,231,255,0.78)) drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
 
     @keyframes scbSpin { to { transform: rotate(360deg); } }
     @keyframes scbDrift { to { transform: translateX(-200px); } }
     @keyframes scbFlash { 0% { opacity: 0; transform: scale(.3); } 3% { opacity: 1; transform: scale(1.05); } 9% { opacity: 0; transform: scale(1.4); } 100% { opacity: 0; transform: scale(.3); } }
+    @keyframes scbRing { 0%, 4% { opacity: 0; transform: scale(.35); } 8% { opacity: .84; } 44% { opacity: .14; transform: scale(1.6); } 78%, 100% { opacity: 0; transform: scale(2.25); } }
     /* invisible at 0% AND 100% so the wrap back to the muzzle can never be seen */
     @keyframes scbFly {
       0%   { opacity: 0; transform: translate(0,0) scale(.5) rotate(0deg); }
@@ -217,9 +236,10 @@ const liveSorted = [...liveProducts].sort(
     @media (max-width: 700px) { .scb__copy { max-width: 100%; } .scb__scene { display: none; } }
 
     @media (prefers-reduced-motion: reduce) {
-      .scb__aurora, .scb__stars, .scb__flash, .scb__shot { animation: none; }
+      .scb__aurora, .scb__stars, .scb__flash, .scb__shot, .scb__ring { animation: none; }
       .scb__shot { opacity: 1; transform: translate(-118px,-54px) scale(1.05) rotate(-22deg); }
       .scb__flash { opacity: .8; transform: scale(1); }
+      .scb__ring { opacity: .42; transform: scale(1.35); }
       .scb:hover { transform: none; }
     }
   </style>
@@ -233,7 +253,7 @@ const liveSorted = [...liveProducts].sort(
       const img = shot && shot.querySelector('img');
       if (!shot || !img) return;
       const base = '/play/spritecannon/imported/spritecannon/skins/';
-      const skins = ['fastboi', 'greedy', 'bananna']; // Fastboi · Queen · Peely
+      const skins = ['fastboi__super', 'fastboi']; // Sonic-theme Fastboi, then his normal Sprite Cannon form
       skins.forEach((s) => { const p = new Image(); p.src = base + s + '.png'; });
       let i = 0;
       shot.addEventListener('animationiteration', () => {

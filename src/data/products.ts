@@ -114,21 +114,21 @@ export const products: Product[] = [
     version: omRelease.version,
     tagline: 'One hundred tweaks. Zero placebos.',
     description:
-      'The only Windows tuner that shows its work. Every tweak traced to a Microsoft Learn doc or a vendor whitepaper. One UAC prompt applies the whole preset. Snapshot-backed revert, any tweak, any time.',
+      'A Windows tuner that shows its work. Each tweak carries a source, evidence tier, risk, and recovery path. One UAC prompt applies a selected preset; snapshot-backed actions can be reverted from the app.',
     longDescription:
-      "100 sourced tweaks. 3.6 MB. One UAC prompt to apply the whole preset. Snapshot revert at any time, any tweak.",
+      "100 cataloged tweaks. 3.6 MB. One UAC prompt for a selected batch. Measure first, then keep only the changes your rig proves useful.",
     features: [
       {
         title: 'Sourced or it doesn\'t ship.',
         body: 'Every tweak cites a Microsoft Learn doc or vendor whitepaper. The other tuners don\'t print sources because they don\'t have any.',
       },
       {
-        title: '10 presets. Or roll your own.',
-        body: 'Esports, BR, Streamer, Frame Pacing, Tournament FPS — plus five more. Custom builder for the rest.',
+        title: '6 curated presets. Or roll your own.',
+        body: 'Esports, BR, Streamer, Frame Pacing, Network, and Asta — plus importable community packs. Experimental lanes are labeled instead of hidden.',
       },
       {
-        title: 'One prompt. Full undo.',
-        body: 'Whole preset behind one UAC. Snapshot-backed. Roll any tweak back, anytime. Undo isn\'t a paid tier.',
+        title: 'One prompt. Recovery in view.',
+        body: 'Whole batches sit behind one UAC. Snapshot-backed actions show their pre-state and recovery path; script actions refuse guessed restores. Undo isn\'t a paid tier.',
       },
       {
         title: 'Measure, then tune.',
@@ -145,7 +145,7 @@ export const products: Product[] = [
     ],
     stats: [
       { label: 'Audited tweaks', value: '100' },
-      { label: 'Curated presets', value: '10' },
+      { label: 'Curated presets', value: '6' },
       { label: 'Installer', value: '3.6 MB' },
       { label: 'Idle RAM', value: '~30 MB' },
     ],
@@ -205,8 +205,8 @@ export const products: Product[] = [
       },
       {
         eyebrow: '03 · The Undo',
-        headline: "One UAC. Full revert.",
-        body: 'Whole preset applies behind a single elevation prompt. Every tweak snapshots its pre-state. Roll any change back at any time — undo isn\'t a paid tier.',
+        headline: "One UAC. Recovery in view.",
+        body: 'Whole batches apply behind a single elevation prompt. Snapshot-backed actions preserve their pre-state; script actions show the exact recovery path and refuse a guessed restore.',
         visual: {
           kind: 'video',
           src: '/screenshots/optimizationmaxxing/_v1_clips/14_f9_realgains.mp4',
@@ -216,8 +216,8 @@ export const products: Product[] = [
       },
       {
         eyebrow: '04 · The Presets',
-        headline: "10 presets. Or roll your own.",
-        body: 'Esports · BR · Streamer · Frame Pacing · Tournament FPS · five more. Each one a curated bundle. Each tweak still toggleable. Build a custom preset in the same panel.',
+        headline: "6 curated presets. Or roll your own.",
+        body: 'Esports · BR · Streamer · Frame Pacing · Network · Asta, plus community packs. Each bundle is inspectable before apply, and experimental entries are called out before you opt in.',
         visual: {
           kind: 'video',
           src: '/screenshots/optimizationmaxxing/_v1_clips/11_f7_proconfigs.mp4',
@@ -265,8 +265,8 @@ export const products: Product[] = [
           alt: 'Tweak catalog with risk badges and source citations',
         },
         {
-          title: 'One-click revert, any tweak, any time',
-          body: "Everything you apply is snapshotted to a local ledger. \"Your Tune\" lists every change with its live status — still in place, or quietly reverted by a Windows update — and puts each one back with a single click. Undo is never a paid tier.",
+          title: 'Recovery you can see',
+          body: "Your Tune lists every applied change with its live status. Snapshot-backed entries can restore their saved pre-state; script-based entries show their recovery path instead of pretending every inverse is universal. Undo is never a paid tier.",
           img: '/screenshots/optimizationmaxxing/howto/your-tune.webp',
           alt: 'Your Tune view listing applied tweaks with per-change revert status',
         },
