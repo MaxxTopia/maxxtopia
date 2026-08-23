@@ -1,6 +1,18 @@
 [
   {
     "date": "2026-08-23",
+    "product": "Maxxtopia",
+    "title": "Maxxtopia makes the suite easier to choose.",
+    "body": "The homepage now tells you which tool fits the way you play, while the guides move from what each product is to how to use it.",
+    "items": [
+      "Discordmaxxer explains the lighter client without the old browser-app framing.",
+      "Viewmaxxing calls out VSeeBox, SuperBox, compatible Android TV boxes, and the new PC web beta.",
+      "Snipemaxxer separates the Fortnite tournament desk from the Valorant session toolkit, while Aimmaxxer and Optimizationmaxxing say what to expect.",
+      "The guide refresh adds real install and first-use steps for AdBlock-Maxxer, Discordmaxxer, Viewmaxxing, Optimizationmaxxing, and Dropmaxxer."
+    ]
+  },
+  {
+    "date": "2026-08-23",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
     "title": "Playlistmaxxing keeps Spotify imports moving.",

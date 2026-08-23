@@ -114,7 +114,7 @@ export const products: Product[] = [
     version: omRelease.version,
     tagline: 'One hundred tweaks. Zero placebos.',
     description:
-      'A free Windows app for making your gaming PC feel smoother without mystery settings. Choose a ready-made preset or change things one at a time, see what each change does, and roll back supported changes when you want.',
+      'A free Windows PC tuner for smoother games and more responsive play — with guided presets, plain-English explanations, before-and-after measurements, and a safe way back when a tweak is not right for your rig.',
     longDescription:
       "100 cataloged tweaks. 3.6 MB. One UAC prompt for a selected batch. Measure first, then keep only the changes your rig proves useful.",
     features: [

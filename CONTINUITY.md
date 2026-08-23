@@ -800,3 +800,23 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   and was not included in the commit. No Diggy-owed field test is required for
   this content-only release. Best next action: leave this release stable and
   handle any remaining unrelated WIP in a separate scoped task.
+
+## Optimizationmaxxing copy and suite Updates follow-up — 2026-08-23
+
+- Reworked the homepage Optimizationmaxxing description in
+  `src/data/products.ts` to use the same confident, user-first voice as the
+  other suite products: smoother games, more responsive play, guided presets,
+  plain-English explanations, before-and-after measurements, and a safe way
+  back.
+- Added a new unversioned Maxxtopia entry at the top of
+  `src/data/changelog.json`: `Maxxtopia makes the suite easier to choose.` It
+  covers the refreshed product positioning and the practical install/first-use
+  guide updates without inventing a product release number.
+- Local verification passed: JSON parsing, `git diff --check`, `npm run build`
+  with all 26 pages, desktop and 390x844 homepage/Updates rendering, no
+  horizontal overflow, and zero browser console errors.
+- Current state: pending publication approval. Only `src/data/products.ts`,
+  `src/data/changelog.json`, and this continuity note are changed for this
+  follow-up; unrelated dirty and untracked work remains preserved. Best next
+  action: commit and publish these three files only if Diggy asks to push this
+  follow-up live.
