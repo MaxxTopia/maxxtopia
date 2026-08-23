@@ -1166,7 +1166,7 @@ export const products: Product[] = [
     name: 'Snipemaxxer',
     category: 'Fortnite + Valorant',
     status: 'beta',
-    version: '0.2.9',
+    version: '0.3.0',
     tagline: 'Read the lobby. Review the round.',
     description:
       'A local two-game match-intelligence desk for Fortnite tournaments and Valorant sessions — live standing context, official replay scouting, full-lobby reports, Riot Client context, crosshairs, alerts, and a voice coach in one Windows app.',
@@ -1268,7 +1268,7 @@ export const products: Product[] = [
       { label: 'Riot path', value: 'Read-only' },
       { label: 'Freshness', value: 'Labeled' },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.2.9.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.3.0.exe', external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
