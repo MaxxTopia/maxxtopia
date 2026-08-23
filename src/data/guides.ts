@@ -20,66 +20,72 @@ export const guides: Guide[] = [
     slug: 'viewmaxxing-on-pc',
     title: 'How to Run Viewmaxxing on PC Without a TV Box (2026)',
     description:
-      "No SuperBox or Fire Stick? Run viewmaxxing on Windows with a free Android emulator. Install BlueStacks, sideload the APK, drive it with your arrow keys.",
+      'Use Viewmaxxing on a VSeeBox, SuperBox, compatible Android TV box, or Windows PC. The new web beta is browser-ready; the APK route uses BlueStacks and keyboard controls.',
     date: '2026-07-11',
+    updated: '2026-08-23',
     product: 'viewmaxxing',
     excerpt:
-      "Don't own an Android TV box? Get the whole app on your PC with a free emulator — install, sideload, and the keyboard drives it.",
+      'Viewmaxxing is built for VSeeBox, SuperBox, and compatible Android TV boxes — with a new PC web beta and an APK route for Windows.',
     readMins: 6,
   },
   {
     slug: 'reduce-discord-ram-usage',
     title: "How to Reduce Discord's RAM Usage on Windows (2026)",
     description:
-      "Discord can eat over 1 GB of RAM on Windows. Here's why it happens and seven concrete ways to cut it down — from built-in settings to a lighter client.",
+      'Seven practical ways to cut Discord memory on Windows, including installing Discordmaxxer and turning on Tournament Mode for game sessions.',
     date: '2026-06-17',
+    updated: '2026-08-23',
     product: 'discordmaxxer',
     excerpt:
-      "Why Discord eats 1 GB+ of memory while you game, and seven concrete ways to bring it back down.",
+      'Start with quick settings, then install Discordmaxxer and turn on Tournament Mode when you need Discord lighter while you play.',
     readMins: 5,
   },
   {
     slug: 'do-windows-gaming-tweaks-boost-fps',
     title: 'Do Windows Gaming Tweaks Actually Boost FPS? (2026)',
     description:
-      'Which Windows performance tweaks have real, sourced evidence behind them — and which are placebo. A no-nonsense breakdown for competitive players.',
+      'A practical Windows tuning guide: measure first, use Optimizationmaxxing safely, and skip registry folklore that does not move your FPS.',
     date: '2026-06-17',
+    updated: '2026-08-23',
     product: 'optimizationmaxxing',
     excerpt:
-      'Which tweaks have sourced evidence behind them, which are placebo, and how to tell the difference.',
+      'A practical route from measuring your PC to using Optimizationmaxxing, with the placebo tweaks worth skipping.',
     readMins: 6,
   },
   {
     slug: 'block-youtube-ads-free',
     title: 'How to Block YouTube Ads for Free (2026)',
     description:
-      'The honest, free ways to block YouTube ads on desktop in 2026 — what still works, what got patched, and the trade-offs of each. No sketchy installers.',
+      'Install AdBlock-Maxxer on Chrome, Brave, or Edge, turn it on, and block YouTube ads for free — plus what to do when YouTube shows an ad-wall.',
     date: '2026-06-17',
+    updated: '2026-08-23',
     product: 'adblockmaxxer',
     excerpt:
-      'What actually still blocks YouTube ads for free in 2026 on desktop — and the trade-offs of each route.',
+      'Download AdBlock-Maxxer, load it into your browser, turn on the right toggles, and handle server-side YouTube ad-walls honestly.',
     readMins: 5,
   },
   {
     slug: 'best-fortnite-landing-spots',
     title: 'Best Fortnite Landing Spots: How to Win the Drop (2026)',
     description:
-      'How to choose a landing spot and actually get there first — loot density, rotations, and the glider-cut math that decides who lands first.',
+      'How to pick a Fortnite drop, set your bus line in Dropmaxxer, compare Fastest vs Safe, and land with a rotation plan.',
     date: '2026-06-17',
+    updated: '2026-08-23',
     product: 'dropmaxxer',
     excerpt:
-      'Picking a drop is half the fight — landing there first is the other half. Loot, rotations, and the glider-cut math.',
+      'Use Dropmaxxer to set your bus path, choose a POI, compare Fastest vs Safe, and overlay Pro Drops before the match.',
     readMins: 6,
   },
   {
     slug: 'reduce-input-lag-pc-gaming',
     title: 'How to Reduce Input Lag on PC for Competitive Gaming (2026)',
     description:
-      'Input lag is a chain, not one setting. The real fixes — Reflex, refresh rate, V-Sync, polling — ranked by how much they actually matter.',
+      'A practical input-lag checklist, then an honest Optimizationmaxxing walkthrough: Reflex, V-Sync, refresh rate, FPS caps, and measurement.',
     date: '2026-06-17',
+    updated: '2026-08-23',
     product: 'optimizationmaxxing',
     excerpt:
-      'Input lag is a chain from your mouse to your monitor. The fixes that matter, ranked by real impact.',
+      'Fix the big three first, then use Optimizationmaxxing to measure and roll back the last few milliseconds safely.',
     readMins: 6,
   },
 ];

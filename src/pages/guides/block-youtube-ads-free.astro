@@ -7,9 +7,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <div class="gx-hero">
       <p class="gx-hero__kicker">Still free in 2026</p>
       <p class="gx-hero__line">
-        You can still block YouTube ads for <strong>free</strong>. Easiest: a blocking browser like
-        <strong>Brave</strong>. Most reliable on desktop: a real filter-list extension. On the phone app,
-        just watch in a browser.
+        The practical desktop route is <strong>AdBlock-Maxxer</strong>: download it, load the extracted
+        folder into your browser's extensions page, turn it on, and refresh YouTube. Easiest alternative:
+        a blocking browser like <strong>Brave</strong>.
       </p>
       <div class="gx-glance">
         <span class="gx-chip"><span class="gx-chip__i">🆓</span> $0</span>
@@ -19,12 +19,13 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     </div>
 
     <p class="gx-intro">
-      YouTube's ad load keeps climbing and the "anti-adblock" pop-ups keep getting pushier. Good news:
-      blocking YouTube ads on desktop is still free and still works in 2026. You just need the right tool
-      and realistic expectations — here are the honest options, ranked.
+      AdBlock-Maxxer is a free, unpacked extension for Chrome, Brave, and Edge. It uses maintained filter
+      lists for normal ad blocking. The optional <strong>YouTube Reclaim</strong>
+      companion is only for accounts that hit server-side ad walls. Here is the actual setup, plus the honest
+      limits on phones.
     </p>
 
-    <h2>🥇 The two routes that work</h2>
+    <h2>🥇 The two free routes that work</h2>
     <div class="gx-steps">
       <div class="gx-step">
         <div class="gx-step__num">1</div>
@@ -38,20 +39,27 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
       <div class="gx-step">
         <div class="gx-step__num">2</div>
         <div class="gx-step__body">
-          <h3>A real content-blocker extension (most reliable)</h3>
-          <p>On Chrome, Brave, Edge, or Firefox, a proper blocker is the most reliable desktop route — it
-            strips the ad slots before they play and hides the "ad break" UI entirely. That's exactly why we
-            built <strong>AdBlock-Maxxer</strong>: EasyList compiled to native rules, YouTube ads stripped,
-            Spotify ads muted. No account, no telemetry, no paid allowlist.</p>
+          <h3>Install AdBlock-Maxxer (most control)</h3>
+          <p>Open the <a href="/adblockmaxxer/">AdBlock-Maxxer page</a>, download the current browser ZIP,
+            and <strong>unzip it somewhere permanent</strong>. Do not delete or move that folder after you
+            install it — the browser loads the extension from there.</p>
+          <p>Open <code>chrome://extensions</code>, <code>brave://extensions</code>, or
+            <code>edge://extensions</code>. Turn on <strong>Developer mode</strong>, click
+            <strong>Load unpacked</strong>, and choose the extracted folder that contains <code>manifest.json</code>.</p>
+          <p>Click the puzzle-piece menu and pin the AdBlock-Maxxer shield. Click the shield, make sure the
+            YouTube blocking toggle is on, then <strong>refresh any YouTube tab that was already open</strong>.
+            Normal YouTube, Spotify, Twitch, and wider-web blocking now work without the companion.</p>
+          <p class="gx-note">🔄 Updating: replace the extracted files with the newest ZIP, then click the browser's refresh icon on the extension card.</p>
         </div>
       </div>
     </div>
 
     <div class="gx-callout">
-      <p class="gx-callout__tag">🎯 Two things that matter when you pick one</p>
+      <p class="gx-callout__tag">🎯 Check the install before judging it</p>
       <ul class="gx-mini">
-        <li><strong>It should use filter lists (EasyList)</strong> — not a tiny hand-made list that goes stale.</li>
-        <li><strong>It shouldn't sell an "acceptable ads" allowlist.</strong> If a blocker takes money to let some ads through, you're not the customer — you're the product.</li>
+        <li><strong>It should be enabled for the current site</strong> — click the shield and confirm YouTube blocking is on.</li>
+        <li><strong>Refresh after installing or updating</strong> — a tab that was open before the extension loaded will not be retroactively changed.</li>
+        <li><strong>Keep the folder intact</strong> — this is an unpacked install, so deleting or moving it disables the extension.</li>
       </ul>
     </div>
 
@@ -68,13 +76,25 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <h2>🛡 What about "anti-adblock" warnings?</h2>
     <p>
       When YouTube flashes "ad blockers aren't allowed," it's <em>detecting</em> your blocker — not beating
-      it. A maintained filter list updates to hide that prompt within days. If yours doesn't, it's not being
-      maintained — switch.
+      it. First refresh the page and make sure the extension is enabled. If the video still black-screens or
+      shows an <strong>"allow ads" wall</strong> on your account, that is server-side enforcement and a normal
+      extension cannot remove it by itself.
     </p>
 
+    <div class="gx-callout gx-callout--cyan">
+      <p class="gx-callout__tag">🛠 Server-side ad wall? Add YouTube Reclaim</p>
+      <p>
+        Download the optional companion from the <a href="/adblockmaxxer/">AdBlock-Maxxer page</a>,
+        unzip it, and double-click <code>abm-companion.exe</code> once. Keep its folder together, leave the
+        extension's <strong>YouTube Reclaim</strong> toggle on, and retry the video. The companion runs locally;
+        you do not need Python, and you do not need it for normal YouTube, Twitch, or Spotify blocking.
+      </p>
+    </div>
+
     <p class="gx-outro">
-      <strong>Rule of thumb:</strong> free is fine, but never install a YouTube "ad blocker" that won't tell
-      you its filter lists and how it makes money. That's how people end up with adware.
+      <strong>Rule of thumb:</strong> start with the extension, turn it on, and refresh the page. Add the
+      companion only for a server-side ad wall, and only download it from the official Maxxtopia page. That
+      keeps the setup free, understandable, and reversible.
     </p>
   </div>
 </GuideLayout>

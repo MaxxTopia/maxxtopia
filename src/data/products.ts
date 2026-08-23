@@ -114,7 +114,7 @@ export const products: Product[] = [
     version: omRelease.version,
     tagline: 'One hundred tweaks. Zero placebos.',
     description:
-      'A Windows tuner that shows its work. Each tweak carries a source, evidence tier, risk, and recovery path. One UAC prompt applies a selected preset; snapshot-backed actions can be reverted from the app.',
+      'A free Windows app for making your gaming PC feel smoother without mystery settings. Choose a ready-made preset or change things one at a time, see what each change does, and roll back supported changes when you want.',
     longDescription:
       "100 cataloged tweaks. 3.6 MB. One UAC prompt for a selected batch. Measure first, then keep only the changes your rig proves useful.",
     features: [
@@ -287,9 +287,9 @@ export const products: Product[] = [
     version: dmRelease.version,
     tagline: 'Discord. Minus 753 MB.',
     description:
-      "Stock Discord uses 1,041 MB on this machine. Ours uses 288. Same servers, same friends, same pings — we just stripped the part where it pretended to be a browser running a chat app.",
+      'Stock Discord uses 1,041 MB on this machine. Ours uses 288. Same servers, same friends, same pings — we just stripped the extra work that wastes RAM and can add lag while you play.',
     longDescription:
-      "Stock: 1,041 MB. Ours: 288. Same servers, same pings — minus the bloat.",
+      'Stock: 1,041 MB. Ours: 288. Same servers, same friends, same pings — minus the background work that makes stock Discord so heavy.',
     features: [
       {
         title: 'Tournament Mode v3.',
@@ -330,7 +330,7 @@ export const products: Product[] = [
       {
         eyebrow: '01 · The Cut',
         headline: "Stock Discord weighs 1,041 MB.",
-        body: 'We strip the part where Discord pretends to be a browser running a chat app. Same servers, same friends, same pings — 753 MB lighter on the resident set.',
+        body: 'We strip the extra rendering overhead and background work that makes the stock client so heavy. Same servers, same friends, same pings — 753 MB lighter on the resident set.',
         visual: {
           kind: 'bars',
           bars: [
@@ -612,9 +612,9 @@ export const products: Product[] = [
     version: amRelease.version ?? undefined,
     tagline: 'Warm up right. Per game.',
     description:
-      "The community's best aim routines to warm up for your game. - Aimmaxxer V2 The Real Deal, is in the lab.",
+      'Best aim-routine warmups for now — plus mouse-skate guidance and the setup details that shape your feel. The real-deal Aimmaxxer V2 is currently in the works.',
     longDescription:
-      "Ten minutes in KovaaK's before you queue, with the right scenarios for the aim your game actually demands. Plus the gear that moves your aim more than a new mouse. The real trainer is coming.",
+      "Start with a focused ten-minute warmup in KovaaK's for the game you actually play, then learn which mouse skates and setup choices change your feel. Aimmaxxer V2 — the full trainer — is currently in the works.",
     features: [
       {
         title: '4 metrics. 4 drills.',
@@ -675,9 +675,9 @@ export const products: Product[] = [
     version: vmRelease.version ?? '0.4.102',
     tagline: 'One app. Every mood. Zero bills.',
     description:
-      "Scrapped and rebuilt. The old streamer toolkit is gone — Viewmaxxing is now the one free app for your TV box: YouTube (native, ad-free), movies, shows, anime and Twitch on one D-pad home. No account, no subscription.",
+      'The free Android TV app for VSeeBox V3, SuperBox V3, and other compatible boxes: ad-free YouTube, movies, TV, anime, and Twitch in one D-pad-first home, with search, Continue Watching, For You, captions, sub/dub, and automatic best-server selection. A new PC web version is in beta at view.maxxtopia.com — no subscription required.',
     longDescription:
-      "We scrapped the old streamer toolkit and rebuilt it into the one app you open when you get home — YouTube (native, ad-free), movies, shows, anime and Twitch, all on one remote-first home that runs local on your box and learns what you watch. Free. No login. Grab it in the Discord.",
+      'Viewmaxxing is the free, remote-first Android TV app for VSeeBox V3, SuperBox V3, and other compatible boxes. It puts ad-free YouTube, movies, TV, anime, and Twitch on one home screen, with search, Continue Watching, For You, captions, sub/dub, and automatic best-server selection. The new PC web version is in beta at view.maxxtopia.com; no subscription is required, and the box app needs no account.',
     features: [
       {
         title: 'Five surfaces. One app.',
@@ -1169,9 +1169,9 @@ export const products: Product[] = [
     version: '0.3.0',
     tagline: 'Read the lobby. Review the round.',
     description:
-      'A local two-game match-intelligence desk for Fortnite tournaments and Valorant sessions — live standing context, official replay scouting, full-lobby reports, Riot Client context, crosshairs, alerts, and a voice coach in one Windows app.',
+      'Pick the game you play: Fortnite gets a tournament desk for live standing, replay scouting, Strategy Lab, and coaching; Valorant gets read-only Riot context, match reports, teammate intel, crosshairs, and alerts. One focused Windows app, two different toolkits.',
     longDescription:
-      'Fortnite is the tournament desk: Epic standing, qualify math, replay-backed Scout, full-map Strategy Lab review, Reports, and a voice coach. Valorant is the session desk: rank, RR, peak, completed-match history, live phase and full lobby, teammate intel and skins, friends, personal offers, watchlists, alerts, and a local crosshair vault. Both modes keep reports in the same window and label live, delayed, cached, and unavailable data honestly.',
+      'Use the mode for the game you play. Fortnite is the tournament desk: Epic standing, qualify math, replay-backed Scout, full-map Strategy Lab review, Reports, and a voice coach. Valorant is the session desk: rank, RR, peak, completed-match history, live phase and full lobby, teammate intel and skins, friends, personal offers, watchlists, alerts, and a local crosshair vault. Both modes keep reports in the same window and label live, delayed, cached, and unavailable data honestly.',
     features: [
       {
         title: 'Fortnite tournament desk.',

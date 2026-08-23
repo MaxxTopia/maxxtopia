@@ -56,8 +56,8 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <h2>🪂 Getting there first: the part nobody calculates</h2>
     <p>
       Whoever lands first wins the fight before it starts. In the current glider-cut meta, that comes down
-      to exactly where you jump and where you cut the glider — not holding forward and hoping. The physics
-      are fixed:
+      to exactly where you jump and where you cut the glider — not holding forward and hoping. The solver
+      uses the published movement constants for the current route:
     </p>
     <div class="gx-specs">
       <div class="gx-spec"><div class="gx-spec__v">~75 m/s</div><div class="gx-spec__l">Bus speed</div></div>
@@ -73,14 +73,18 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <div class="gx-callout">
       <p class="gx-callout__tag">🧮 That's the whole reason we built Dropmaxxer</p>
       <p>
-        Pick any POI and it hands you the fastest cut-and-dive line, the safe glide line, both ETAs, and the
-        exact spot to cut — from cited physics, not vibes.
+        Open <a href="https://dropmaxxer.pages.dev" target="_blank" rel="noopener">Dropmaxxer</a> and click
+        <strong>Let's Drop</strong>. Use <strong>Set Bus</strong> to trace your battle-bus path, then
+        <strong>Set Target</strong> and choose your POI. The Flight Plan gives you the fastest cut-and-dive
+        line, the safe glide line, both ETAs, the exact spot to cut, and roll-land guidance. Turn on
+        <strong>Pro Drops</strong> when you want to see where competitive players are landing this season.
       </p>
     </div>
 
     <p class="gx-outro">
-      <strong>The play:</strong> pick a spot you can rotate out of, land the high ground inside it, and cut
-      your glider at the right point so you're the one holding a gun when the fight starts.
+      <strong>The play:</strong> pick a spot you can rotate out of, use Dropmaxxer to plan the line, land the
+      high ground inside it, and cut your glider at the calculated point so you're the one holding a gun when
+      the fight starts.
     </p>
   </div>
 </GuideLayout>

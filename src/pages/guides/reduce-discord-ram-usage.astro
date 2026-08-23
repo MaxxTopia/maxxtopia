@@ -7,8 +7,8 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <div class="gx-hero">
       <p class="gx-hero__kicker">Discord is eating your RAM</p>
       <p class="gx-hero__line">
-        Discord is built on a whole web browser — so it can burn <strong>1 GB+ of RAM</strong> just to
-        show chat. Here's how to claw it back, from 2-second wins to the big one.
+        Discord's normal Windows client can burn <strong>1 GB+ of RAM</strong> before you even start a
+        match. Here's how to claw it back, from 2-second wins to the big one.
       </p>
       <div class="gx-glance">
         <span class="gx-chip"><span class="gx-chip__i">🧠</span> 1 GB+ used</span>
@@ -26,9 +26,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 
     <h2>🔍 Why Discord eats so much RAM</h2>
     <p>
-      Discord runs on Electron — basically a full copy of Chrome bundled into the app. Before you've
-      read a single message it's already running several Chromium processes, each with its own chunk of
-      memory. Then these pile on:
+      The normal client carries a large rendering stack and keeps extra processes alive for features you
+      may not need while you play. Memory climbs further when it has to keep decoding, animating, and
+      syncing a busy Discord session. Then these pile on:
     </p>
     <ul class="gx-nope">
       <li><strong>Hardware acceleration</strong> spins up a GPU process that can leak memory over a long session.</li>
@@ -91,11 +91,13 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
       <div class="gx-step">
         <div class="gx-step__num">7</div>
         <div class="gx-step__body">
-          <h3>Run a lighter client — the big one</h3>
-          <p>The fixes above help, but you're still running a full browser just to read text. The biggest
-            single win is swapping the client itself — a trimmed build strips the browser-like parts
-            (telemetry, crash beacons, ad-tech, growth experiments) and idles far lower. Same servers,
-            same friends, same pings.</p>
+          <h3>Install a lighter client for game sessions</h3>
+          <p>For the biggest change, open <a href="/discordmaxxer/">Discordmaxxer</a>, download the Windows
+            installer, install it, and sign in with your normal Discord account. It keeps your servers,
+            friends, and pings while trimming background work. In a match, press
+            <strong>Ctrl + Alt + T</strong> to turn on Tournament Mode; press it again when you want normal
+            behavior.</p>
+          <p class="gx-note">🧪 Start with a normal message and call before relying on any alternate client in a tournament. This guide covers memory and background load, not every Discord feature.</p>
         </div>
       </div>
     </div>
@@ -108,8 +110,8 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 
     <p class="gx-outro">
       <strong>Bottom line:</strong> quit instead of minimize, clear the cache, leave dead servers for the
-      quick wins. The bigger win is a client that wasn't built to spy on you — same Discord, hundreds of
-      MB lighter.
+      quick wins. The bigger win is a lighter client: install Discordmaxxer, sign in normally, and use
+      Tournament Mode when the game is open. Same Discord, hundreds of MB lighter on the measured setup.
     </p>
   </div>
 </GuideLayout>

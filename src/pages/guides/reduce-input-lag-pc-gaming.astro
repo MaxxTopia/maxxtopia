@@ -9,7 +9,7 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
       <p class="gx-hero__line">
         Fix the <strong>big three</strong> first: <strong>Reflex on</strong>, <strong>V-Sync off</strong>
         with FPS capped just under your refresh, and Windows actually running your monitor at its
-        <strong>real refresh rate</strong>. That's ~90% of the lag, handled.
+        <strong>real refresh rate</strong>. Those are the first checks that usually matter most.
       </p>
       <div class="gx-glance">
         <span class="gx-chip"><span class="gx-chip__i">🎯</span> Reflex on</span>
@@ -39,9 +39,10 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
         <div class="gx-step__num">2</div>
         <div class="gx-step__body">
           <h3>V-Sync off, cap FPS just under your refresh</h3>
-          <p>V-Sync adds a full frame (or more) of latency — turn it off. To avoid tearing without it, cap
-            your framerate a few FPS below your refresh (e.g. <strong>141 on a 144 Hz</strong> panel) so the
-            GPU never fully maxes out. Reflex on + V-Sync off + capped FPS is the competitive standard.</p>
+          <p>For a competitive low-latency baseline, start with V-Sync off and cap your framerate a few FPS
+            below your refresh (e.g. <strong>141 on a 144 Hz</strong> panel) if your display tears. If you
+            use VRR, follow the sync mode recommended for your monitor and GPU instead of copying a blanket
+            setting.</p>
         </div>
       </div>
       <div class="gx-step">
@@ -71,10 +72,20 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     </ul>
     <p>If a fix can't tell you <em>which</em> millisecond it removes, be skeptical.</p>
 
+    <div class="gx-callout gx-callout--cyan">
+      <p class="gx-callout__tag">🧭 Use Optimizationmaxxing for the last mile</p>
+      <p>
+        Open <a href="/optimizationmaxxing/">Optimizationmaxxing</a>, run <strong>Diagnostics</strong> first,
+        and keep the before numbers. Browse <strong>Tweaks</strong> one at a time, read the source and recovery
+        path, apply only what matches your hardware, then check <strong>Your Tune</strong> after a real game.
+        Snapshot-backed changes can be rolled back from the app when the result is not worth keeping.
+      </p>
+    </div>
+
     <p class="gx-outro">
-      <strong>The 90% rule:</strong> Reflex on, V-Sync off, FPS capped under your real refresh rate — get
-      those three right and you've fixed most input lag before touching anything advanced. The fiddly
-      last 10% (DPC latency, frame pacing, power-plan behavior) is what Optimizationmaxxing is for: it probes
+      <strong>The practical rule:</strong> start with Reflex, your sync mode, and your real refresh rate —
+      get those right before touching anything advanced. The fiddly
+      remaining edge cases (DPC latency, frame pacing, power-plan behavior) are what Optimizationmaxxing is for: it probes
       your actual latency, applies only documented changes, and snapshots each so you can roll back.
     </p>
   </div>
