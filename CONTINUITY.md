@@ -754,3 +754,19 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - Local motion-preview verification confirmed the 2px separation and no
   browser console errors. Production publication is authorized for this fix
   and remains pending until the build and live route check complete.
+
+## Playlistmaxxing public update — 2026-08-23
+
+- Added the newest-first `Playlistmaxxing` entry to
+  `src/data/changelog.json`. It describes the no-preview Spotify handoff,
+  visible Transfer issues/manual-link recovery, shared-engine music-video dock,
+  and paused-start retry ladder in the locked sharp, outcome-focused voice.
+- `npm run build` passed and generated all 26 static pages. The public deploy
+  workflow run for commit `6880837` completed successfully.
+- Rendered production verification passed at
+  `https://maxxtopia.com/updates/?v=6880837`: the new entry is first, its four
+  bullets are present, and the browser reported no errors or warnings.
+- Only `src/data/changelog.json` was committed for the public update in
+  `6880837`. The repository's unrelated dirty and untracked work remains
+  untouched. Playlistmaxxing itself was published separately in commit
+  `71c9306` and verified at `https://music.maxxtopia.com/?v=71c9306`.
