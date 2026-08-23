@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-08-23",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "title": "Playlistmaxxing keeps Spotify imports moving.",
+    "body": "Spotify links now become playable music without handing free listeners a preview-only dead end. The app finds the full-song YouTube version first, then keeps missing rows visible until you paste the exact upload.",
+    "items": [
+      "Stop losing tracks on import: every unmatched Spotify row stays in Transfer issues with its original link and search text.",
+      "Search YouTube or SoundCloud from the row, paste one exact track link, and add it without rebuilding the playlist.",
+      "Open music videos from the top row in a moveable, resizable dock that shares the same player engine.",
+      "Paused starts get a bounded retry ladder based on real playback progress before Playlistmaxxing skips."
+    ]
+  },
+  {
+    "date": "2026-08-23",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
     "version": "v0.4.2",
