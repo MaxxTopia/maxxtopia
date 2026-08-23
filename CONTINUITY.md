@@ -815,8 +815,14 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - Local verification passed: JSON parsing, `git diff --check`, `npm run build`
   with all 26 pages, desktop and 390x844 homepage/Updates rendering, no
   horizontal overflow, and zero browser console errors.
-- Current state: pending publication approval. Only `src/data/products.ts`,
-  `src/data/changelog.json`, and this continuity note are changed for this
-  follow-up; unrelated dirty and untracked work remains preserved. Best next
-  action: commit and publish these three files only if Diggy asks to push this
-  follow-up live.
+- Published in commit `33d7f94` through GitHub Actions deploy run
+  `32630563618`; the CI install, 26-page build, and Cloudflare Pages deploy
+  succeeded. Live homepage, Optimizationmaxxing, and Updates routes returned
+  HTTP 200 with the expected security headers. The homepage description and
+  new suite entry were present at desktop and 390x844 mobile sizes with no
+  horizontal overflow or console errors.
+- Current state: `main` matches `origin/main`; no unpushed commits remain.
+  Existing unrelated dirty and untracked work remains preserved. The
+  Optimizationmaxxing long product-page description is intentionally separate
+  from the revised short homepage card copy. Best next action: leave this
+  content release stable and handle further copy changes as a new scoped pass.
