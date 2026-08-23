@@ -808,10 +808,10 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   other suite products: smoother games, more responsive play, guided presets,
   plain-English explanations, before-and-after measurements, and a safe way
   back.
-- Added a new unversioned Maxxtopia entry at the top of
-  `src/data/changelog.json`: `Maxxtopia makes the suite easier to choose.` It
-  covers the refreshed product positioning and the practical install/first-use
-  guide updates without inventing a product release number.
+- Added a Maxxtopia entry at the top of `src/data/changelog.json`:
+  `Maxxtopia makes the suite easier to choose.` It uses display version
+  `v0.1.3`, continuing the suite's existing public sequence, and covers the
+  refreshed product positioning and practical install/first-use guide updates.
 - Local verification passed: JSON parsing, `git diff --check`, `npm run build`
   with all 26 pages, desktop and 390x844 homepage/Updates rendering, no
   horizontal overflow, and zero browser console errors.
@@ -826,3 +826,17 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   Optimizationmaxxing long product-page description is intentionally separate
   from the revised short homepage card copy. Best next action: leave this
   content release stable and handle further copy changes as a new scoped pass.
+
+## Updates version-pill rule correction — 2026-08-23
+
+- Every new public Updates entry must include a visible `version` field so its
+  card has the same version pill as the rest of the feed. If an upstream app
+  has no release metadata, use the established honest display sequence rather
+  than omitting the pill or inventing a native tag.
+- Corrected the recent gaps: Maxxtopia `v0.1.3`, Playlistmaxxing `v0.1.4`,
+  Viewmaxxing `v0.4.106` for the 2026-08-20 provider update, and Viewmaxxing
+  `v0.4.107` for the 2026-08-21 provider-edge update.
+- The old Clipmaxxer card remains a grandfathered historical exception because
+  it is a private/pre-release note with no public release metadata. Do not add
+  another unversioned public entry; revisit that old card only if a real public
+  Clipmaxxer version is established.

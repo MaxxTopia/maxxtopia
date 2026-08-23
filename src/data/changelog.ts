@@ -37,10 +37,11 @@ export const getChangelogAccentHex = (entry: ChangelogEntry) => {
   return product?.updateAccentHex ?? product?.accentHex ?? null;
 };
 
-// Fail the build if two public products would share an Updates accent or if a
-// changelog entry points at a product that does not have a color contract.
-// Editorial suite notes and private/pre-release notes without productSlug stay
-// intentionally unversioned and use the suite fallback styling.
+// Fail the build if two public products would share an Updates accent, if a
+// changelog entry points at a product that does not have a color contract, or
+// if a new public entry forgets its version pill. The old Clipmaxxer beta note
+// is the only grandfathered unversioned entry because it has no public release
+// metadata.
 const updateAccentOwners = new Map<string, string[]>();
 for (const product of products) {
   const accent = (product.updateAccentHex ?? product.accentHex).toLowerCase();
@@ -62,6 +63,17 @@ const missingUpdateAccentSlugs = (data as ChangelogEntry[])
   .filter((slug, index, all) => slug && all.indexOf(slug) === index);
 if (missingUpdateAccentSlugs.length > 0) {
   throw new Error(`Updates entries reference products without an accent: ${missingUpdateAccentSlugs.join(', ')}`);
+}
+
+const historicalUnversionedEntries = new Set([
+  '2026-05-02|clipmaxxer|Premise-first reset.',
+]);
+const missingUpdateVersions = (data as ChangelogEntry[])
+  .filter((entry) => !entry.version)
+  .filter((entry) => !historicalUnversionedEntries.has(`${entry.date}|${entry.productSlug ?? entry.product}|${entry.title}`))
+  .map((entry) => `${entry.date} ${entry.product}: ${entry.title}`);
+if (missingUpdateVersions.length > 0) {
+  throw new Error(`Updates entries must include a version pill: ${missingUpdateVersions.join('; ')}`);
 }
 
 // Always render newest-first, regardless of insertion order. Stable for equal

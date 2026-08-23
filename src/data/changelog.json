@@ -2,6 +2,7 @@
   {
     "date": "2026-08-23",
     "product": "Maxxtopia",
+    "version": "v0.1.3",
     "title": "Maxxtopia makes the suite easier to choose.",
     "body": "The homepage now tells you which tool fits the way you play, while the guides move from what each product is to how to use it.",
     "items": [
@@ -15,6 +16,7 @@
     "date": "2026-08-23",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
+    "version": "v0.1.4",
     "title": "Playlistmaxxing keeps Spotify imports moving.",
     "body": "Spotify links now become playable music without handing free listeners a preview-only dead end. The app finds the full-song YouTube version first, then keeps missing rows visible until you paste the exact upload.",
     "items": [
@@ -70,6 +72,7 @@
     "date": "2026-08-21",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
+    "version": "v0.4.107",
     "title": "Viewmaxxing keeps the stream alive when a provider edge goes dark.",
     "body": "The web player now checks the actual media route before committing to playback, then moves to an approved native fallback when a provider returns a dead file. The catalog also stays fresh without letting unreviewed titles sneak into playback.",
     "items": [
@@ -97,6 +100,7 @@
     "date": "2026-08-20",
     "product": "Viewmaxxing",
     "productSlug": "viewmaxxing",
+    "version": "v0.4.106",
     "title": "Viewmaxxing turns provider failures into a clear retry, not an endless spinner.",
     "body": "The web player now bounds provider failures, tries the approved alternate route inside the native player, and reports degraded provider health without opening popup-prone provider pages.",
     "items": [
