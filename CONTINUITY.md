@@ -840,3 +840,28 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   it is a private/pre-release note with no public release metadata. Do not add
   another unversioned public entry; revisit that old card only if a real public
   Clipmaxxer version is established.
+
+## Public Updates version labels — 2026-08-23
+
+- The Updates page now uses a reader-friendly public sequence per project:
+  `v1`, `v1.1`, `v1.2`, and so on. It does not use one suite-wide counter, and
+  it does not force a major jump just because a project reaches ten updates.
+  A future genuine major release can provide an explicit `publicVersion`
+  override such as `v2`.
+- `src/data/changelog.ts` assigns labels chronologically per normalized project
+  key. Same-day entries are ordered by their exact technical version so the
+  visible cards decrease cleanly from newest to oldest. The native `version`
+  remains unchanged for app compatibility and appears in the pill tooltip.
+- `src/pages/updates.astro` renders the public label for every card, including
+  the historic Clipmaxxer note that has no native release metadata. The pill is
+  still honest because its `v1` is a Maxxtopia Updates display sequence, not a
+  fabricated app release tag.
+- Local `npm run build` passed with all 26 pages. Desktop and 390x844 checks
+  passed with no horizontal overflow. The public label release was pushed in
+  `5a230e8`, the same-day ordering correction in `fdf3dee`, and the final
+  Cloudflare deploy run `32631794576` succeeded. Live `/updates/?v=fdf3dee`
+  shows every project sequence and all cards have pills; homepage and
+  Snipemaxxer return HTTP 200 with the expected security headers.
+- Existing unrelated tracked and untracked work remains preserved. No Diggy-
+  owed field test is required. Best next action: use an explicit
+  `publicVersion` only when a real product milestone warrants `v2` or later.
