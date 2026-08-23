@@ -1,14 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
-import { changelog, changelogEntryId, getChangelogAccentHex, getChangelogDisplayVersion } from '../data/changelog';
+import { changelog, changelogEntryId, getChangelogAccentHex, getChangelogDisplayVersion, getChangelogProjectKey } from '../data/changelog';
 
 // The first entry for each project is its current release because changelog.ts
 // sorts the feed newest-first. Current releases get the active aura, even when
 // their note is intentionally just a maintenance release.
 const latestEntryByProject = new Map();
 for (const entry of changelog) {
-  const projectKey = entry.productSlug ?? entry.product;
+  const projectKey = getChangelogProjectKey(entry);
   if (!latestEntryByProject.has(projectKey)) latestEntryByProject.set(projectKey, entry);
 }
 const newestEntry = changelog[0];
@@ -37,7 +37,7 @@ const newestEntry = changelog[0];
         {changelog.map((entry) => {
           const accent = getChangelogAccentHex(entry);
           const displayVersion = getChangelogDisplayVersion(entry);
-          const isCurrent = latestEntryByProject.get(entry.productSlug ?? entry.product) === entry;
+          const isCurrent = latestEntryByProject.get(getChangelogProjectKey(entry)) === entry;
           const isFeatured = entry === newestEntry;
           const updateClasses = [
             'upd',

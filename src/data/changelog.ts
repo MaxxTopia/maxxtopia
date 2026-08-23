@@ -21,6 +21,9 @@ export type ChangelogEntry = {
   items?: string[];
 };
 
+export const getChangelogProjectKey = (entry: ChangelogEntry) =>
+  (entry.productSlug ?? entry.product).toLowerCase();
+
 const slugify = (value: string) =>
   value
     .toLowerCase()
@@ -38,12 +41,23 @@ export const changelogEntryId = (entry: ChangelogEntry) =>
  */
 const publicVersionByEntry = new Map<ChangelogEntry, string>();
 const entriesByProject = new Map<string, ChangelogEntry[]>();
+const sourceOrder = new Map<ChangelogEntry, number>();
 for (const entry of data as ChangelogEntry[]) {
-  const projectKey = entry.productSlug ?? entry.product;
+  sourceOrder.set(entry, sourceOrder.size);
+  const projectKey = getChangelogProjectKey(entry);
   entriesByProject.set(projectKey, [...(entriesByProject.get(projectKey) ?? []), entry]);
 }
 for (const entries of entriesByProject.values()) {
-  const chronologicalEntries = entries.slice().sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  const chronologicalEntries = entries.slice().sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    const aVersion = (a.version ?? '').replace(/^v/i, '').split('.').map(Number);
+    const bVersion = (b.version ?? '').replace(/^v/i, '').split('.').map(Number);
+    for (let index = 0; index < Math.max(aVersion.length, bVersion.length); index += 1) {
+      const difference = (aVersion[index] ?? -1) - (bVersion[index] ?? -1);
+      if (difference !== 0) return difference;
+    }
+    return (sourceOrder.get(a) ?? 0) - (sourceOrder.get(b) ?? 0);
+  });
   chronologicalEntries.forEach((entry, index) => {
     publicVersionByEntry.set(entry, index === 0 ? 'v1' : `v1.${index}`);
   });
