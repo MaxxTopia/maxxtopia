@@ -25,6 +25,7 @@ export const GET: APIRoute = () => {
     // Sub-pages that live outside the products[] map but are real, indexable routes.
     { loc: `${SITE}/discordmaxxer/vip/`, priority: '0.7', changefreq: 'monthly' },
     { loc: `${SITE}/clipmaxxer/apply/`,  priority: '0.6', changefreq: 'monthly' },
+    { loc: `${SITE}/montagemaxxer/`,      priority: '0.7', changefreq: 'monthly' },
     { loc: `${SITE}/guides/`, priority: '0.7', changefreq: 'weekly' },
     ...guides.map((g) => ({
       loc: `${SITE}/guides/${g.slug}/`,
