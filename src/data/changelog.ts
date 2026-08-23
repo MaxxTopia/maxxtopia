@@ -10,6 +10,8 @@ export type ChangelogEntry = {
   product: string;
   productSlug?: string;
   version?: string;
+  /** Optional public label override for a genuine major release. */
+  publicVersion?: string;
   title: string;
   /** One-line summary. Optional when `items` carries the detail. */
   body?: string;
@@ -28,6 +30,27 @@ const slugify = (value: string) =>
 /** Stable DOM/Discord identity for one public update entry. */
 export const changelogEntryId = (entry: ChangelogEntry) =>
   `update-${slugify(entry.date)}-${slugify(entry.productSlug ?? entry.product)}-${slugify(entry.version ?? 'release')}-${slugify(entry.title)}`;
+
+/**
+ * Public labels are intentionally simpler than native app SemVer. Each
+ * product gets its own readable sequence: v1, v1.1, v1.2, ... The exact app
+ * version stays in `version` for release traceability and updater compatibility.
+ */
+const publicVersionByEntry = new Map<ChangelogEntry, string>();
+const entriesByProject = new Map<string, ChangelogEntry[]>();
+for (const entry of data as ChangelogEntry[]) {
+  const projectKey = entry.productSlug ?? entry.product;
+  entriesByProject.set(projectKey, [...(entriesByProject.get(projectKey) ?? []), entry]);
+}
+for (const entries of entriesByProject.values()) {
+  const chronologicalEntries = entries.slice().sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  chronologicalEntries.forEach((entry, index) => {
+    publicVersionByEntry.set(entry, index === 0 ? 'v1' : `v1.${index}`);
+  });
+}
+
+export const getChangelogDisplayVersion = (entry: ChangelogEntry) =>
+  entry.publicVersion ?? publicVersionByEntry.get(entry) ?? null;
 
 /** One color contract shared by the Updates page and every downstream mirror. */
 const SUITE_UPDATE_ACCENT_HEX = '#cbd5e1';

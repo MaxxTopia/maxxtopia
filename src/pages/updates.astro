@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
-import { changelog, changelogEntryId, getChangelogAccentHex } from '../data/changelog';
+import { changelog, changelogEntryId, getChangelogAccentHex, getChangelogDisplayVersion } from '../data/changelog';
 
 // The first entry for each project is its current release because changelog.ts
 // sorts the feed newest-first. Current releases get the active aura, even when
@@ -36,6 +36,7 @@ const newestEntry = changelog[0];
       <div class="upd-list">
         {changelog.map((entry) => {
           const accent = getChangelogAccentHex(entry);
+          const displayVersion = getChangelogDisplayVersion(entry);
           const isCurrent = latestEntryByProject.get(entry.productSlug ?? entry.product) === entry;
           const isFeatured = entry === newestEntry;
           const updateClasses = [
@@ -53,9 +54,13 @@ const newestEntry = changelog[0];
               )}
               <div class="upd__meta">
                 <time class="upd__date">{entry.date}</time>
-                {entry.version && (
-                  <span class="upd__ver">
-                    {entry.version}
+                {displayVersion && (
+                  <span
+                    class="upd__ver"
+                    title={entry.version ? `Technical version ${entry.version}` : undefined}
+                    aria-label={entry.version ? `${displayVersion}, technical version ${entry.version}` : displayVersion}
+                  >
+                    {displayVersion}
                     {isCurrent && (
                       <span class="upd__ver-drips" aria-hidden="true">
                         <span class="upd__ver-drip upd__ver-drip--short"></span>
