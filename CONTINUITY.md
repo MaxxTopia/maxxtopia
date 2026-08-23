@@ -770,3 +770,33 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   `6880837`. The repository's unrelated dirty and untracked work remains
   untouched. Playlistmaxxing itself was published separately in commit
   `71c9306` and verified at `https://music.maxxtopia.com/?v=71c9306`.
+
+## Homepage copy and guides release — 2026-08-23
+
+- Updated only the requested Maxxtopia content: `src/data/products.ts`,
+  `src/data/guides.ts`, and the six files under `src/pages/guides/`. Homepage
+  copy now explains Discordmaxxer without browser-client framing, Viewmaxxing
+  for VSeeBox/SuperBox and compatible boxes plus its PC web beta, separate
+  Fortnite and Valorant Snipemaxxer workflows, Aimmaxxer warmups and V2 status,
+  and Optimizationmaxxing in user-first language.
+- Refreshed all six guides without changing their established visual system.
+  The YouTube guide now gives the real AdBlock-Maxxer unpacked-extension flow
+  and optional companion setup; the other guides now give concrete
+  Viewmaxxing, Discordmaxxer, Optimizationmaxxing, input-lag, and Dropmaxxer
+  usage steps.
+- Local release gates passed: `npm run build` generated all 26 pages,
+  `git diff --check` passed, intended files contain no authorship trailers,
+  and no shipped script files were part of this release. Local desktop/mobile
+  route checks rendered every changed route with no overflow or console errors.
+- Published in commit `35cddf7` through GitHub Actions deploy run
+  `32630019662`; CI install, build, and Cloudflare Pages deployment all
+  succeeded. The homepage, five product routes, guides index, and six guide
+  routes returned HTTP 200 on the live domain with the new copy present.
+  Live desktop (1280x720) and mobile (390x844) visual checks passed with no
+  horizontal overflow or console errors. The expected security headers remain
+  present.
+- Current state: `main` matches `origin/main`; no unpushed commits remain.
+  Existing unrelated tracked and untracked Maxxtopia work remains preserved
+  and was not included in the commit. No Diggy-owed field test is required for
+  this content-only release. Best next action: leave this release stable and
+  handle any remaining unrelated WIP in a separate scoped task.
