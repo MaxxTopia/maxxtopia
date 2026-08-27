@@ -6,12 +6,15 @@ type Props = {
   lockWord?: string;
   /** ms between word swaps during the rotation. */
   interval?: number;
+  /** This word treatment is the hero's content, so it plays on the home hero even with reduced motion set. */
+  motionRequired?: boolean;
 };
 
 const {
   rotation = ['peak', 'cook', 'lock in', 'elevate', 'prosper', 'arise'],
   lockWord = 'maxx',
   interval = 900,
+  motionRequired = false,
 } = Astro.props;
 
 // Per-word visual treatment slug — drives the CSS class applied to the
@@ -28,6 +31,7 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
   data-rotation={JSON.stringify(rotation)}
   data-lock={lockWord}
   data-interval={interval}
+  data-motion-required={motionRequired ? 'true' : undefined}
   aria-label={`go to ${lockWord}`}
 >
   <!-- Width-locking ghost (visibility:hidden, position:absolute, takes up width but invisible) -->
@@ -463,18 +467,18 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-word__current,
-    .hero-word__current.is-leaving,
-    .hero-word__current.is-entering,
-    .hero-word__current.is-locked {
+    .hero-word:not([data-motion-required="true"]) .hero-word__current,
+    .hero-word:not([data-motion-required="true"]) .hero-word__current.is-leaving,
+    .hero-word:not([data-motion-required="true"]) .hero-word__current.is-entering,
+    .hero-word:not([data-motion-required="true"]) .hero-word__current.is-locked {
       animation: none !important;
       transform: none !important;
       filter: none !important;
       opacity: 1 !important;
     }
-    .hero-word__pulse,
-    .hero-word__sl-particles,
-    .hero-word__bolts { display: none; }
+    .hero-word:not([data-motion-required="true"]) .hero-word__pulse,
+    .hero-word:not([data-motion-required="true"]) .hero-word__sl-particles,
+    .hero-word:not([data-motion-required="true"]) .hero-word__bolts { display: none; }
   }
 </style>
 
@@ -490,7 +494,9 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
     const pulse = root.querySelector('.hero-word__pulse');
     if (!current || !pulse) return;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const motionRequired = root.getAttribute('data-motion-required') === 'true';
+    const reduced = prefersReduced && !motionRequired;
     const STORAGE_KEY = 'maxxtopia_hero_played';
     const sessionPlayed = sessionStorage.getItem(STORAGE_KEY) === '1';
 
@@ -503,7 +509,7 @@ const longest = allWords.reduce((a, b) => (b.length > a.length ? b : a), '');
     window.addEventListener('touchstart', armAudio, { once: true, passive: true });
 
     const playLockTone = () => {
-      if (reduced) return;
+      if (prefersReduced) return;
       if (!userInteracted) return;
       if (sessionPlayed) return;
       try {

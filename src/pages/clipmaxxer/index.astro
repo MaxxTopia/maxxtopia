@@ -72,7 +72,7 @@ const reels = [
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
-  <div class="clipx">
+  <div class="clipx maxxtopia-motion-required" data-motion-required="true">
     <!-- ══════════════════════ HERO ══════════════════════ -->
     <section class="cx-hero">
       <div class="cx-hero__glow" aria-hidden="true"></div>
@@ -599,30 +599,35 @@ const reels = [
     @keyframes cx-snap { to { transform: translateY(0) skewY(0); opacity: 1; } }
     @keyframes cx-fade-up { to { opacity: 1; transform: none; } }
 
-    /* ═══ REDUCED MOTION — kill flashes + auto-motion, show final state ═══ */
+    /* ═══ REDUCED MOTION — keep the safe fallback unless this page opts in ═══ */
     @media (prefers-reduced-motion: reduce) {
-      .clipx *, .clipx *::before, .clipx *::after {
+      .clipx:not([data-motion-required="true"]) *,
+      .clipx:not([data-motion-required="true"]) *::before,
+      .clipx:not([data-motion-required="true"]) *::after {
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
       }
-      .cx-line > span { transform: none !important; opacity: 1 !important; }
-      .cx-readout { opacity: 1 !important; transform: none !important; }
-      .cx-reveal { opacity: 1 !important; transform: none !important; }
-      .cx-row { opacity: 1 !important; transform: none !important; }
-      .cx-row--dim { opacity: 0.5 !important; }
-      .cx-meter__track > i { width: var(--w) !important; transition: none !important; }
-      .cx-caret, .cx-dot { animation: none !important; }
-      .cx-caret { opacity: 1; }
-      .cx-wipe { display: none !important; }
-      .cx-scroll > span { animation: none !important; opacity: 0.7; }
+      .clipx:not([data-motion-required="true"]) .cx-line > span { transform: none !important; opacity: 1 !important; }
+      .clipx:not([data-motion-required="true"]) .cx-readout { opacity: 1 !important; transform: none !important; }
+      .clipx:not([data-motion-required="true"]) .cx-reveal { opacity: 1 !important; transform: none !important; }
+      .clipx:not([data-motion-required="true"]) .cx-row { opacity: 1 !important; transform: none !important; }
+      .clipx:not([data-motion-required="true"]) .cx-row--dim { opacity: 0.5 !important; }
+      .clipx:not([data-motion-required="true"]) .cx-meter__track > i { width: var(--w) !important; transition: none !important; }
+      .clipx:not([data-motion-required="true"]) .cx-caret,
+      .clipx:not([data-motion-required="true"]) .cx-dot { animation: none !important; }
+      .clipx:not([data-motion-required="true"]) .cx-caret { opacity: 1; }
+      .clipx:not([data-motion-required="true"]) .cx-wipe { display: none !important; }
+      .clipx:not([data-motion-required="true"]) .cx-scroll > span { animation: none !important; opacity: 0.7; }
     }
   </style>
 
   <script>
     // ── Scroll reveal + panel flash-cut trigger (IntersectionObserver) ──
     (() => {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const motionRequired = document.querySelector('.clipx[data-motion-required="true"]') !== null;
+      const reduce = prefersReduced && !motionRequired;
       const panels = document.querySelectorAll<HTMLElement>('.cx-panel, .cx-final');
       const reveals = document.querySelectorAll<HTMLElement>('.cx-reveal');
 

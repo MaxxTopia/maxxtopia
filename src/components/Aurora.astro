@@ -6,8 +6,12 @@
  * dot whose box-shadow clones it across the viewport, animated with a long
  * transform drift (GPU-only, no per-frame JS, no repaint). Positions are
  * generated at build time with a tiny seeded PRNG so the field is stable. */
-type Props = { intensity?: 'high' | 'med' | 'low' };
-const { intensity = 'med' } = Astro.props;
+type Props = {
+  intensity?: 'high' | 'med' | 'low';
+  /** Keep this visual treatment alive when the containing surface is intentional motion content. */
+  motionRequired?: boolean;
+};
+const { intensity = 'med', motionRequired = false } = Astro.props;
 const opacity = intensity === 'high' ? 0.95 : intensity === 'low' ? 0.45 : 0.7;
 
 // Deterministic PRNG so the star layout is identical every build (stable SSR).
@@ -62,7 +66,12 @@ function sparkles(count: number, seed: number, tints: string[]) {
 const sparkleStars = sparkles(16, 13579, [WHITE_HI, MAGENTA, CYAN, WHITE_HI]);
 ---
 
-<div class="starfield" style={`--sf-opacity:${opacity}`} aria-hidden="true">
+<div
+  class:list={['starfield', motionRequired && 'maxxtopia-motion-required']}
+  data-motion-required={motionRequired ? 'true' : undefined}
+  style={`--sf-opacity:${opacity}`}
+  aria-hidden="true"
+>
   <div class="sf-layer sf-small" style={`box-shadow:${smallStars}`}></div>
   <div class="sf-layer sf-mid"   style={`box-shadow:${midStars}`}></div>
   <div class="sf-layer sf-big"   style={`box-shadow:${bigStars}`}></div>
@@ -174,9 +183,11 @@ const sparkleStars = sparkles(16, 13579, [WHITE_HI, MAGENTA, CYAN, WHITE_HI]);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sf-layer,
-    .sf-sparkle,
-    .sf-sparkle::before,
-    .sf-sparkle::after { animation: none !important; }
+    .starfield:not([data-motion-required="true"]) .sf-layer,
+    .starfield:not([data-motion-required="true"]) .sf-sparkle,
+    .starfield:not([data-motion-required="true"]) .sf-sparkle::before,
+    .starfield:not([data-motion-required="true"]) .sf-sparkle::after {
+      animation: none !important;
+    }
   }
 </style>

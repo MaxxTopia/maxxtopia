@@ -15,8 +15,8 @@ const newestEntry = changelog[0];
 ---
 
 <Layout title="Updates — Maxxtopia" description="What we've shipped across the maxxer apps — releases, features, and the little quality-of-life fixes.">
-  <article class="relative" data-motion-preview>
-    <Aurora intensity="low" />
+  <article class="maxxtopia-motion-required relative" data-motion-preview data-motion-required="true">
+    <Aurora intensity="low" motionRequired />
     <div class="absolute inset-0 bg-grid opacity-30"></div>
 
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 pt-20 pb-12">
@@ -109,8 +109,9 @@ const newestEntry = changelog[0];
     document.querySelector('[data-motion-preview]')?.setAttribute('data-motion-preview', 'on');
   }
 
+  const motionRequired = document.querySelector('[data-motion-required="true"]') !== null;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (motionPreview || !reducedMotion) {
+  if (motionPreview || motionRequired || !reducedMotion) {
     const dripGroups = [...document.querySelectorAll('.upd__ver-drips')];
     const dripCycleMs = 4600;
     const randomizeDripGroup = (group) => {
@@ -503,18 +504,27 @@ const newestEntry = changelog[0];
     }
   }
 
-  /* The local preview can explicitly request motion so the effect is reviewable
-   * even when the desktop/browser accessibility setting reduces motion. */
+  /* These update visuals are the page's content treatment, so the page opts in
+   * explicitly even when the desktop/browser accessibility setting reduces motion. */
   @media (prefers-reduced-motion: reduce) {
+    [data-motion-required="true"] .upd,
+    [data-motion-required="true"] .upd__ver,
+    [data-motion-required="true"] .upd::before {
+      transition: border-color 200ms ease, background 200ms ease, opacity 240ms ease !important;
+    }
+    [data-motion-required="true"] .upd--featured::before,
     [data-motion-preview="on"] .upd--featured::before {
       animation: upd-ooze 9s ease-in-out infinite alternate !important;
     }
+    [data-motion-required="true"] .upd__drip-bead,
     [data-motion-preview="on"] .upd__drip-bead {
       animation: upd-rail-bead 8.4s linear infinite !important;
     }
+    [data-motion-required="true"] .upd__drip::before,
     [data-motion-preview="on"] .upd__drip::before {
       animation: upd-rail-aura 8.4s linear infinite !important;
     }
+    [data-motion-required="true"] .upd__ver-drip,
     [data-motion-preview="on"] .upd__ver-drip {
       animation: upd-chip-drip 4.6s cubic-bezier(0.2, 0.8, 0.24, 1) infinite var(--drip-delay, 0s) !important;
     }
