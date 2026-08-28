@@ -3,6 +3,19 @@
     "date": "2026-08-27",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.15",
+    "title": "AdBlock-Maxxer keeps Brave's enforcement handoff intact.",
+    "body": "The YouTube anti-nag path now leaves server-side enforcement visible long enough for Reclaim or native playback to take over, avoiding a black player on refresh.",
+    "items": [
+      "Hands the enforcement wall to Reclaim or native fallback instead of deleting it during startup.",
+      "Keeps the native ad path available when Reclaim cannot start.",
+      "Preserves automatic ad skipping once a valid YouTube stream is already playing."
+    ]
+  },
+  {
+    "date": "2026-08-27",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.14",
     "title": "AdBlock-Maxxer handles Brave's YouTube enforcement handoff.",
     "body": "The YouTube path now recognizes browser-side enforcement failures and moves into Reclaim or native playback instead of leaving the player black.",
