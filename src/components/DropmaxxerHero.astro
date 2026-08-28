@@ -3,7 +3,7 @@
  * DropmaxxerHero - the "Drop Window".
  *
  * Dropmaxxer is not a loot map. It answers a timing decision: when to leave
- * the bus, where to cut, and whether the fast line is worth the risk. The
+ * the bus, where to cut, and whether the fast line fits the drop. The
  * hero makes that decision visible as a small 3D flight-planning table.
  */
 import type { Product } from '../data/products';
@@ -14,13 +14,62 @@ const { product } = Astro.props;
 const primary = product.primaryCta;
 const icon = product.icon ?? product.logo;
 const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fastest + safe' };
+
+// This is a deliberately static hero example, but its points are copied from
+// the current calculator's route model: map-pois.json (map 42.00), the search
+// bar's 1200px bus extension, and pro-fit jump/deploy/glider-cut output.
+type MapPoint = { x: number; y: number };
+const MAP_SIZE = 2048;
+const toFlightPoint = (point: MapPoint) => ({
+  x: +(point.x / MAP_SIZE * 100).toFixed(2),
+  y: +((MAP_SIZE - point.y) / MAP_SIZE * 100).toFixed(2),
+});
+const line = (from: ReturnType<typeof toFlightPoint>, to: ReturnType<typeof toFlightPoint>) =>
+  `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+const heroMapVersion = '42.00';
+const heroMapAsset = '/screenshots/dropmaxxer/season42-override-map.webp';
+const heroMap = {
+  // Chopped Shop -> Latte Landing, with the search bar's clipped bus extension.
+  busStart: { x: 0, y: 1037.945514 },
+  busEnd: { x: 2048, y: 1849.254486 },
+  jump: { x: 1082.703509, y: 1466.855217 },
+  deploy: { x: 1132.101282, y: 1526.390683 },
+  cut: { x: 1143.090641, y: 1539.635342 },
+  target: { x: 1154.08, y: 1552.88 },
+};
+const heroFlight = {
+  busStart: toFlightPoint(heroMap.busStart),
+  busEnd: toFlightPoint(heroMap.busEnd),
+  jump: toFlightPoint(heroMap.jump),
+  deploy: toFlightPoint(heroMap.deploy),
+  cut: toFlightPoint(heroMap.cut),
+  target: toFlightPoint(heroMap.target),
+};
+const heroTimings = { fastest: '43.9', safe: '45.9' };
 ---
 
 <section
   class="dropmaxxer-drop"
   data-route="fast"
+  data-map-version={heroMapVersion}
   aria-labelledby="dropmaxxer-hero-title"
-  style={`--dmx-accent: ${product.accentHex}; --dmx-accent2: ${product.accent2Hex ?? '#ffb454'};`}
+  style={`
+    --dmx-accent: ${product.accentHex};
+    --dmx-accent2: ${product.accent2Hex ?? '#ffb454'};
+    --dmx-bus-start-x: ${heroFlight.busStart.x}%;
+    --dmx-bus-start-y: ${heroFlight.busStart.y}%;
+    --dmx-bus-end-x: ${heroFlight.busEnd.x}%;
+    --dmx-bus-end-y: ${heroFlight.busEnd.y}%;
+    --dmx-jump-x: ${heroFlight.jump.x}%;
+    --dmx-jump-y: ${heroFlight.jump.y}%;
+    --dmx-deploy-x: ${heroFlight.deploy.x}%;
+    --dmx-deploy-y: ${heroFlight.deploy.y}%;
+    --dmx-cut-x: ${heroFlight.cut.x}%;
+    --dmx-cut-y: ${heroFlight.cut.y}%;
+    --dmx-target-x: ${heroFlight.target.x}%;
+    --dmx-target-y: ${heroFlight.target.y}%;
+    --dmx-bus-angle: -21.6deg;
+  `}
 >
   <div class="dmx-atmosphere" aria-hidden="true">
     <span class="dmx-atmosphere__orb dmx-atmosphere__orb--one"></span>
@@ -54,15 +103,15 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
                 <div class="dmx-board__backplate" aria-hidden="true"></div>
                 <div class="dmx-map-surface">
                   <img
-                    src="/screenshots/dropmaxxer/hero-flightplan.webp"
-                    alt="Dropmaxxer flight plan example with a bus route, jump window, cut point, and target"
+                    src={heroMapAsset}
+                    alt="Current Fortnite Chapter 7 Season 4 Override map with a Chopped Shop to Latte Landing flight plan"
                     loading="eager"
                     decoding="async"
                   />
                   <div class="dmx-map-surface__shade" aria-hidden="true"></div>
                   <div class="dmx-map-surface__scan" aria-hidden="true"></div>
 
-                  <svg class="dmx-flight" viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true">
+                  <svg class="dmx-flight" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <filter id="dmx-route-glow" x="-50%" y="-50%" width="200%" height="200%">
                         <feGaussianBlur stdDeviation="0.7" result="blur" />
@@ -75,12 +124,14 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
                         <path d="M0 0 L4 2 L0 4 Z" fill="#76e5ff" />
                       </marker>
                     </defs>
-                    <path class="dmx-route dmx-route--bus" d="M5 10 C25 15 46 28 94 61" />
-                    <path class="dmx-route dmx-route--safe" d="M43 32 C53 17 72 18 79 54" marker-end="url(#dmx-arrow-safe)" />
-                    <path class="dmx-route dmx-route--fast" d="M43 32 C48 42 62 49 79 54" marker-end="url(#dmx-arrow-fast)" />
-                    <path class="dmx-route dmx-route--connector" d="M43 32 L43 22" />
-                    <circle class="dmx-map-point dmx-map-point--jump" cx="43" cy="32" r="1.7" />
-                    <circle class="dmx-map-point dmx-map-point--target" cx="79" cy="54" r="2.2" />
+                    <path class="dmx-route dmx-route--bus" d={line(heroFlight.busStart, heroFlight.busEnd)} />
+                    <path class="dmx-route dmx-route--safe-dive" d={line(heroFlight.jump, heroFlight.deploy)} />
+                    <path class="dmx-route dmx-route--safe-glide" d={line(heroFlight.deploy, heroFlight.target)} marker-end="url(#dmx-arrow-safe)" />
+                    <path class="dmx-route dmx-route--fast" d={line(heroFlight.jump, heroFlight.cut)} marker-end="url(#dmx-arrow-fast)" />
+                    <circle class="dmx-map-point dmx-map-point--jump" cx={heroFlight.jump.x} cy={heroFlight.jump.y} r="1.7" />
+                    <circle class="dmx-map-point dmx-map-point--deploy" cx={heroFlight.deploy.x} cy={heroFlight.deploy.y} r="1.35" />
+                    <circle class="dmx-map-point dmx-map-point--cut" cx={heroFlight.cut.x} cy={heroFlight.cut.y} r="1.35" />
+                    <circle class="dmx-map-point dmx-map-point--target" cx={heroFlight.target.x} cy={heroFlight.target.y} r="2.2" />
                   </svg>
 
                   <div class="dmx-bus" aria-hidden="true">
@@ -91,16 +142,20 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
                   <div class="dmx-traveller dmx-traveller--safe" aria-hidden="true"><span></span></div>
 
                   <div class="dmx-label dmx-label--jump">
-                    <b>JUMP WINDOW</b>
+                    <b>JUMP HERE</b>
                     <span>leave the bus</span>
                   </div>
+                  <div class="dmx-label dmx-label--deploy">
+                    <b>AUTO-OPEN · 100m</b>
+                    <span>safe full glide</span>
+                  </div>
                   <div class="dmx-label dmx-label--cut">
-                    <b>CUT 100m</b>
-                    <span>fast line</span>
+                    <b>CUT · 100m AGL</b>
+                    <span>re-pull + slide in</span>
                   </div>
                   <div class="dmx-label dmx-label--target">
-                    <b>YOUR TARGET</b>
-                    <span>land here</span>
+                    <b>LATTE LANDING</b>
+                    <span>exact target</span>
                   </div>
                 </div>
 
@@ -110,14 +165,14 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
 
               <div class="dmx-hud dmx-hud--fast">
                 <span class="dmx-hud__dot"></span>
-                <span class="dmx-hud__label">FASTEST</span>
-                <strong>37.1<span>s</span></strong>
-                <small>cut + free-fall</small>
+                <span class="dmx-hud__label">FASTEST · EST.</span>
+                <strong>{heroTimings.fastest}<span>s</span></strong>
+                <small>cut + re-pull</small>
               </div>
               <div class="dmx-hud dmx-hud--safe">
                 <span class="dmx-hud__dot"></span>
-                <span class="dmx-hud__label">SAFE</span>
-                <strong>44.6<span>s</span></strong>
+                <span class="dmx-hud__label">SAFE · EST.</span>
+                <strong>{heroTimings.safe}<span>s</span></strong>
                 <small>full glide</small>
               </div>
             </div>
@@ -125,20 +180,21 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
         </div>
 
         <div class="dmx-stage__caption">
-          <span class="dmx-caption__status"><i></i> EXAMPLE ROUTE / CURRENT-SEASON MAP</span>
+          <span class="dmx-caption__status"><i></i> MAP {heroMapVersion} / CURRENT POIS</span>
+          <span class="dmx-caption__route">CHOPPED SHOP → LATTE LANDING</span>
           <span class="dmx-caption__hint">Move across the scene</span>
         </div>
 
         <div class="dmx-route-switch" role="group" aria-label="Choose the route shown on the flight plan">
           <button type="button" class="dmx-route-button is-active" data-dmx-route="fast" aria-pressed="true">
             <span class="dmx-route-button__dot dmx-route-button__dot--fast"></span>
-            <span><b>FASTEST</b><small>cut + dive</small></span>
-            <strong>37.1s</strong>
+            <span><b>FASTEST</b><small>cut + re-pull</small></span>
+            <strong>{heroTimings.fastest}s</strong>
           </button>
           <button type="button" class="dmx-route-button" data-dmx-route="safe" aria-pressed="false">
             <span class="dmx-route-button__dot dmx-route-button__dot--safe"></span>
             <span><b>SAFE</b><small>full glide</small></span>
-            <strong>44.6s</strong>
+            <strong>{heroTimings.safe}s</strong>
           </button>
         </div>
       </div>
@@ -166,7 +222,7 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
         <p class="dmx-route-claim"><span>FASTEST</span><i>vs</i><span>SAFE</span></p>
         <h1 id="dropmaxxer-hero-title" class="dmx-title"><span>Stop guessing</span><em>your drop.</em></h1>
         <p class="dmx-lede">
-          Dropmaxxer turns the battle-bus line into a clear jump window, cut point, and landing route - then puts the risky fast line beside the safe glide.
+          Dropmaxxer turns the battle-bus line into the exact jump, cut, and target points - then puts the faster cut + re-pull line beside the no-timing full glide.
         </p>
 
         <div class="dmx-actions">
@@ -182,9 +238,9 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
         </div>
 
         <div class="dmx-facts" role="list" aria-label="Dropmaxxer facts">
-          <div role="listitem"><strong>FASTEST</strong><span>cut + free-fall</span></div>
-          <div role="listitem"><strong>SAFE</strong><span>full-glide backup</span></div>
-          <div role="listitem"><strong>NOW</strong><span>current-season POIs</span></div>
+          <div role="listitem"><strong>FASTEST</strong><span>cut + re-pull</span></div>
+          <div role="listitem"><strong>SAFE</strong><span>full glide</span></div>
+          <div role="listitem"><strong>NOW</strong><span>map {heroMapVersion} POIs</span></div>
         </div>
 
         <p class="dmx-proof"><span></span> No install <i></i> Cited physics <i></i> Solver state labeled</p>
@@ -263,43 +319,48 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
   .dropmaxxer-drop .dmx-board { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; border-radius: 20px; }
   .dropmaxxer-drop .dmx-board__backplate { position: absolute; inset: 0; border-radius: 20px; transform: translateZ(-30px); background: linear-gradient(145deg, #171a34, #0b0d1b 72%); border: 1px solid rgba(118,229,255,0.18); box-shadow: 0 28px 0 rgba(5,7,17,0.36), 0 54px 70px rgba(0,0,0,0.62); }
   .dropmaxxer-drop .dmx-map-surface { position: absolute; inset: 0; z-index: 2; overflow: hidden; border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; background: #0a1730; box-shadow: 0 0 0 1px rgba(118,229,255,0.16) inset, 0 0 55px color-mix(in srgb, var(--dmx-accent) 22%, transparent); transform: translateZ(1px); }
-  .dropmaxxer-drop .dmx-map-surface > img { position: absolute; inset: 0 auto 0 0; width: 134%; max-width: none; height: 100%; object-fit: fill; filter: saturate(0.82) brightness(0.75) contrast(1.08); }
+  .dropmaxxer-drop .dmx-map-surface > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; filter: saturate(0.82) brightness(0.75) contrast(1.08); }
   .dropmaxxer-drop .dmx-map-surface__shade { position: absolute; inset: 0; z-index: 1; background: linear-gradient(135deg, rgba(8,10,28,0.38), transparent 38%, rgba(255,173,84,0.06)), radial-gradient(ellipse at 49% 45%, transparent 15%, rgba(6,8,22,0.48) 100%); pointer-events: none; }
-  .dropmaxxer-drop .dmx-map-surface__scan { position: absolute; left: -10%; right: -10%; top: 0; height: 2px; z-index: 5; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--dmx-route-safe) 70%, white), transparent); box-shadow: 0 0 16px var(--dmx-route-safe); opacity: 0.64; animation: dmx-map-scan 5.8s linear infinite; pointer-events: none; }
-  @keyframes dmx-map-scan { from { transform: translateY(0); opacity: 0; } 14% { opacity: 0.62; } 86% { opacity: 0.62; } to { transform: translateY(550px); opacity: 0; } }
+  .dropmaxxer-drop .dmx-map-surface__scan { position: absolute; left: -10%; right: -10%; top: -2px; height: 2px; z-index: 5; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--dmx-route-safe) 70%, white), transparent); box-shadow: 0 0 16px var(--dmx-route-safe); opacity: 0.64; animation: dmx-map-scan 5.8s linear infinite; pointer-events: none; }
+  @keyframes dmx-map-scan { from { top: -2px; opacity: 0; } 14% { opacity: 0.62; } 86% { opacity: 0.62; } to { top: calc(100% + 2px); opacity: 0; } }
   .dropmaxxer-drop .dmx-flight { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; overflow: visible; }
   .dropmaxxer-drop .dmx-route { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; filter: url(#dmx-route-glow); transition: opacity 260ms ease, stroke-width 260ms ease; }
-  .dropmaxxer-drop .dmx-route--bus { stroke: rgba(238,235,255,0.62); stroke-width: 1.5; stroke-dasharray: 4 5; animation: dmx-bus-dash 2.4s linear infinite; }
-  .dropmaxxer-drop .dmx-route--safe { stroke: var(--dmx-route-safe); stroke-width: 2.3; stroke-dasharray: 3 2; opacity: 0.92; }
-  .dropmaxxer-drop .dmx-route--fast { stroke: var(--dmx-route-fast); stroke-width: 2.7; opacity: 1; }
-  .dropmaxxer-drop .dmx-route--connector { stroke: rgba(255,255,255,0.55); stroke-width: 1; stroke-dasharray: 2 2; }
+  .dropmaxxer-drop .dmx-route--bus { stroke: rgba(238,235,255,0.7); stroke-width: 1.5; stroke-dasharray: 4 5; animation: dmx-bus-dash 2.4s linear infinite; }
+  .dropmaxxer-drop .dmx-route--safe-dive { stroke: var(--dmx-route-safe); stroke-width: 1.8; stroke-dasharray: 3 2; opacity: 0.46; }
+  .dropmaxxer-drop .dmx-route--safe-glide { stroke: var(--dmx-route-safe); stroke-width: 2.8; stroke-dasharray: 1 2; opacity: 0.98; animation: dmx-glide-dash 1.8s linear infinite; }
+  .dropmaxxer-drop .dmx-route--fast { stroke: var(--dmx-route-fast); stroke-width: 2.8; opacity: 1; }
   @keyframes dmx-bus-dash { to { stroke-dashoffset: -18; } }
-  .dropmaxxer-drop .dmx-map-point { vector-effect: non-scaling-stroke; }
+  @keyframes dmx-glide-dash { to { stroke-dashoffset: -9; } }
+  .dropmaxxer-drop .dmx-map-point { vector-effect: non-scaling-stroke; transition: opacity 260ms ease; }
   .dropmaxxer-drop .dmx-map-point--jump { fill: var(--dmx-route-safe); stroke: #fff; stroke-width: 1; filter: url(#dmx-route-glow); animation: dmx-point-breathe 2.8s ease-in-out infinite; }
+  .dropmaxxer-drop .dmx-map-point--deploy { fill: var(--dmx-route-safe); stroke: #fff; stroke-width: 0.8; filter: url(#dmx-route-glow); }
+  .dropmaxxer-drop .dmx-map-point--cut { fill: var(--dmx-route-fast); stroke: #fff; stroke-width: 0.8; filter: url(#dmx-route-glow); }
   .dropmaxxer-drop .dmx-map-point--target { fill: var(--dmx-route-fast); stroke: #fff; stroke-width: 1; filter: url(#dmx-route-glow); animation: dmx-target-pulse 2.2s ease-in-out infinite; }
   @keyframes dmx-point-breathe { 0%,100% { opacity: 0.74; } 50% { opacity: 1; } }
   @keyframes dmx-target-pulse { 0%,100% { r: 2.2; opacity: 0.82; } 50% { r: 3.6; opacity: 1; } }
-  .dropmaxxer-drop .dmx-bus { position: absolute; z-index: 6; left: 4%; top: 7%; width: 34px; height: 17px; transform: translate(-50%, -50%) rotate(-27deg); animation: dmx-bus-run 8.2s linear infinite; pointer-events: none; }
+  .dropmaxxer-drop .dmx-bus { position: absolute; z-index: 6; left: var(--dmx-bus-start-x); top: var(--dmx-bus-start-y); width: 34px; height: 17px; transform: translate(-50%, -50%) rotate(var(--dmx-bus-angle)); animation: dmx-bus-run 8.2s linear infinite; pointer-events: none; }
   .dropmaxxer-drop .dmx-bus__body { position: absolute; inset: 2px 1px; display: block; border-radius: 5px 8px 8px 5px; background: linear-gradient(135deg, #ffffff, var(--dmx-route-safe) 50%, #4c51f7); box-shadow: 0 0 10px var(--dmx-route-safe); }
   .dropmaxxer-drop .dmx-bus__body::after { content: ''; position: absolute; right: 4px; top: 4px; width: 5px; height: 5px; border-radius: 1px; background: #071021; box-shadow: -7px 0 #071021; }
   .dropmaxxer-drop .dmx-bus__wake { position: absolute; width: 22px; height: 1px; left: -20px; top: 8px; background: linear-gradient(90deg, transparent, var(--dmx-route-safe)); opacity: 0.75; }
-  @keyframes dmx-bus-run { 0% { left: 4%; top: 7%; opacity: 0; } 8% { opacity: 1; } 48% { left: 48%; top: 31%; } 92% { left: 93%; top: 60%; opacity: 1; } 100% { left: 98%; top: 64%; opacity: 0; } }
+  @keyframes dmx-bus-run { 0% { left: var(--dmx-bus-start-x); top: var(--dmx-bus-start-y); opacity: 0; } 8% { opacity: 1; } 92% { left: var(--dmx-bus-end-x); top: var(--dmx-bus-end-y); opacity: 1; } 100% { left: var(--dmx-bus-end-x); top: var(--dmx-bus-end-y); opacity: 0; } }
   .dropmaxxer-drop .dmx-traveller { position: absolute; z-index: 7; width: 14px; height: 14px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
   .dropmaxxer-drop .dmx-traveller span { display: block; width: 100%; height: 100%; border-radius: 35% 65% 65% 35%; transform: rotate(45deg); border: 1px solid #fff; }
-  .dropmaxxer-drop .dmx-traveller--fast { left: 43%; top: 32%; animation: dmx-fast-route 5.8s cubic-bezier(0.26,0.7,0.25,1) infinite; }
+  .dropmaxxer-drop .dmx-traveller--fast { left: var(--dmx-jump-x); top: var(--dmx-jump-y); animation: dmx-fast-route 5.8s cubic-bezier(0.26,0.7,0.25,1) infinite; }
   .dropmaxxer-drop .dmx-traveller--fast span { background: var(--dmx-route-fast); box-shadow: 0 0 13px var(--dmx-route-fast); }
-  .dropmaxxer-drop .dmx-traveller--safe { left: 43%; top: 32%; animation: dmx-safe-route 6.6s cubic-bezier(0.25,0.62,0.3,1) infinite 0.75s; }
+  .dropmaxxer-drop .dmx-traveller--safe { left: var(--dmx-jump-x); top: var(--dmx-jump-y); animation: dmx-safe-route 6.6s cubic-bezier(0.25,0.62,0.3,1) infinite 0.75s; }
   .dropmaxxer-drop .dmx-traveller--safe span { background: var(--dmx-route-safe); box-shadow: 0 0 13px var(--dmx-route-safe); }
-  @keyframes dmx-fast-route { 0%, 18% { left: 43%; top: 32%; opacity: 0; } 25% { opacity: 1; } 50% { left: 52%; top: 40%; } 72% { left: 66%; top: 48%; } 100% { left: 79%; top: 54%; opacity: 0.1; } }
-  @keyframes dmx-safe-route { 0%, 16% { left: 43%; top: 32%; opacity: 0; } 23% { opacity: 1; } 47% { left: 53%; top: 22%; } 72% { left: 68%; top: 27%; } 100% { left: 79%; top: 54%; opacity: 0.1; } }
+  @keyframes dmx-fast-route { 0%, 18% { left: var(--dmx-jump-x); top: var(--dmx-jump-y); opacity: 0; } 25% { opacity: 1; } 82% { left: var(--dmx-cut-x); top: var(--dmx-cut-y); } 92% { left: var(--dmx-cut-x); top: var(--dmx-cut-y); opacity: 1; } 100% { left: var(--dmx-target-x); top: var(--dmx-target-y); opacity: 0.1; } }
+  @keyframes dmx-safe-route { 0%, 16% { left: var(--dmx-jump-x); top: var(--dmx-jump-y); opacity: 0; } 23% { opacity: 1; } 70% { left: var(--dmx-deploy-x); top: var(--dmx-deploy-y); } 86% { left: var(--dmx-deploy-x); top: var(--dmx-deploy-y); opacity: 1; } 100% { left: var(--dmx-target-x); top: var(--dmx-target-y); opacity: 0.1; } }
   .dropmaxxer-drop .dmx-label { position: absolute; z-index: 8; display: grid; gap: 2px; min-width: max-content; padding: 6px 8px 6px 9px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; background: rgba(6,8,23,0.78); box-shadow: 0 6px 16px rgba(0,0,0,0.36); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transform: translateZ(14px); font-family: var(--font-mono), monospace; }
   .dropmaxxer-drop .dmx-label b { font-size: 9px; letter-spacing: 0.08em; color: #fff; }
   .dropmaxxer-drop .dmx-label span { font-size: 8px; letter-spacing: 0.04em; color: rgba(224,230,255,0.58); }
-  .dropmaxxer-drop .dmx-label--jump { left: 39%; top: 20%; border-color: color-mix(in srgb, var(--dmx-route-safe) 48%, transparent); }
+  .dropmaxxer-drop .dmx-label--jump { left: calc(var(--dmx-jump-x) - 11%); top: calc(var(--dmx-jump-y) - 14%); border-color: color-mix(in srgb, var(--dmx-route-safe) 48%, transparent); }
   .dropmaxxer-drop .dmx-label--jump b { color: var(--dmx-route-safe); }
-  .dropmaxxer-drop .dmx-label--cut { left: 58%; top: 53%; border-color: color-mix(in srgb, var(--dmx-route-fast) 55%, transparent); }
+  .dropmaxxer-drop .dmx-label--deploy { left: calc(var(--dmx-deploy-x) - 9%); top: calc(var(--dmx-deploy-y) - 17%); border-color: color-mix(in srgb, var(--dmx-route-safe) 55%, transparent); }
+  .dropmaxxer-drop .dmx-label--deploy b { color: var(--dmx-route-safe); }
+  .dropmaxxer-drop .dmx-label--cut { left: calc(var(--dmx-cut-x) + 1%); top: calc(var(--dmx-cut-y) + 5%); border-color: color-mix(in srgb, var(--dmx-route-fast) 55%, transparent); }
   .dropmaxxer-drop .dmx-label--cut b { color: var(--dmx-route-fast); }
-  .dropmaxxer-drop .dmx-label--target { left: 74%; top: 60%; border-color: rgba(255,255,255,0.4); }
+  .dropmaxxer-drop .dmx-label--target { left: calc(var(--dmx-target-x) + 3%); top: calc(var(--dmx-target-y) + 3%); border-color: rgba(255,255,255,0.4); }
   .dropmaxxer-drop .dmx-label--target b { color: #fff; }
   .dropmaxxer-drop .dmx-board__rail { position: absolute; z-index: 3; pointer-events: none; background: linear-gradient(90deg, color-mix(in srgb, var(--dmx-accent) 45%, #0b0d1e), #202443); border: 1px solid rgba(118,229,255,0.12); box-shadow: 0 0 16px rgba(0,0,0,0.25); }
   .dropmaxxer-drop .dmx-board__rail--front { left: 1%; right: 1%; bottom: -10px; height: 13px; border-radius: 0 0 8px 8px; transform: translateZ(-3px); }
@@ -315,9 +376,10 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
   .dropmaxxer-drop .dmx-hud small { grid-column: 2 / 4; color: rgba(224,230,255,0.56); font: 9px/1.2 var(--font-mono), monospace; letter-spacing: 0.03em; }
 
   .dropmaxxer-drop .dmx-stage__caption { position: absolute; left: 4%; right: 2%; bottom: 7%; z-index: 9; display: flex; justify-content: space-between; align-items: center; gap: 12px; pointer-events: none; }
-  .dropmaxxer-drop .dmx-caption__status, .dropmaxxer-drop .dmx-caption__hint { color: rgba(224,230,255,0.5); font: 9px/1 var(--font-mono), monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+  .dropmaxxer-drop .dmx-caption__status, .dropmaxxer-drop .dmx-caption__route, .dropmaxxer-drop .dmx-caption__hint { color: rgba(224,230,255,0.5); font: 9px/1 var(--font-mono), monospace; letter-spacing: 0.08em; text-transform: uppercase; }
   .dropmaxxer-drop .dmx-caption__status { display: inline-flex; align-items: center; gap: 7px; }
   .dropmaxxer-drop .dmx-caption__status i { width: 5px; height: 5px; border-radius: 50%; background: var(--dmx-route-fast); box-shadow: 0 0 8px var(--dmx-route-fast); }
+  .dropmaxxer-drop .dmx-caption__route { color: rgba(224,230,255,0.68); letter-spacing: 0.06em; }
   .dropmaxxer-drop .dmx-caption__hint { color: rgba(224,230,255,0.3); text-transform: none; letter-spacing: 0.02em; }
   .dropmaxxer-drop .dmx-route-switch { position: absolute; left: 4%; right: 2%; bottom: -2%; z-index: 10; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 7px; border: 1px solid rgba(255,255,255,0.12); border-radius: 13px; background: rgba(6,8,20,0.7); box-shadow: 0 14px 30px rgba(0,0,0,0.28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
   .dropmaxxer-drop .dmx-route-button { appearance: none; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; min-height: 44px; padding: 8px 11px; border: 1px solid transparent; border-radius: 9px; color: var(--dmx-muted); background: transparent; cursor: pointer; text-align: left; transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease; }
@@ -331,9 +393,9 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
   .dropmaxxer-drop .dmx-route-button b { font: 600 10px/1 var(--font-mono), monospace; letter-spacing: 0.09em; }
   .dropmaxxer-drop .dmx-route-button small { color: rgba(224,230,255,0.48); font: 9px/1 var(--font-mono), monospace; }
   .dropmaxxer-drop .dmx-route-button strong { color: currentColor; font: 700 13px/1 var(--font-mono), monospace; }
-  .dropmaxxer-drop[data-route="safe"] .dmx-route--fast, .dropmaxxer-drop[data-route="safe"] .dmx-traveller--fast, .dropmaxxer-drop[data-route="safe"] .dmx-hud--fast, .dropmaxxer-drop[data-route="safe"] .dmx-label--cut { opacity: 0.18; }
-  .dropmaxxer-drop[data-route="safe"] .dmx-route--safe, .dropmaxxer-drop[data-route="safe"] .dmx-traveller--safe, .dropmaxxer-drop[data-route="safe"] .dmx-hud--safe { opacity: 1; }
-  .dropmaxxer-drop[data-route="fast"] .dmx-route--safe, .dropmaxxer-drop[data-route="fast"] .dmx-traveller--safe, .dropmaxxer-drop[data-route="fast"] .dmx-hud--safe { opacity: 0.42; }
+  .dropmaxxer-drop[data-route="safe"] .dmx-route--fast, .dropmaxxer-drop[data-route="safe"] .dmx-traveller--fast, .dropmaxxer-drop[data-route="safe"] .dmx-hud--fast, .dropmaxxer-drop[data-route="safe"] .dmx-label--cut, .dropmaxxer-drop[data-route="safe"] .dmx-map-point--cut { opacity: 0.18; }
+  .dropmaxxer-drop[data-route="safe"] .dmx-route--safe-dive, .dropmaxxer-drop[data-route="safe"] .dmx-route--safe-glide, .dropmaxxer-drop[data-route="safe"] .dmx-traveller--safe, .dropmaxxer-drop[data-route="safe"] .dmx-hud--safe, .dropmaxxer-drop[data-route="safe"] .dmx-label--deploy, .dropmaxxer-drop[data-route="safe"] .dmx-map-point--deploy { opacity: 1; }
+  .dropmaxxer-drop[data-route="fast"] .dmx-route--safe-dive, .dropmaxxer-drop[data-route="fast"] .dmx-route--safe-glide, .dropmaxxer-drop[data-route="fast"] .dmx-traveller--safe, .dropmaxxer-drop[data-route="fast"] .dmx-hud--safe, .dropmaxxer-drop[data-route="fast"] .dmx-label--deploy, .dropmaxxer-drop[data-route="fast"] .dmx-map-point--deploy { opacity: 0.42; }
   .dropmaxxer-drop[data-route="fast"] .dmx-route-button[data-dmx-route="fast"], .dropmaxxer-drop[data-route="safe"] .dmx-route-button[data-dmx-route="safe"] { border-color: currentColor; }
   .dropmaxxer-drop[data-route="fast"] .dmx-route-button[data-dmx-route="fast"] { color: var(--dmx-route-fast); }
   .dropmaxxer-drop[data-route="safe"] .dmx-route-button[data-dmx-route="safe"] { color: var(--dmx-route-safe); }
@@ -409,6 +471,24 @@ const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fa
     .dropmaxxer-drop .dmx-lede { font-size: 15px; }
     .dropmaxxer-drop .dmx-facts { margin-top: 34px; }
     .dropmaxxer-drop .dmx-facts span { font-size: 9px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dropmaxxer-drop .dmx-atmosphere__orb,
+    .dropmaxxer-drop .dmx-atmosphere__horizon,
+    .dropmaxxer-drop .dmx-board-float,
+    .dropmaxxer-drop .dmx-radar span,
+    .dropmaxxer-drop .dmx-signal,
+    .dropmaxxer-drop .dmx-map-surface__scan,
+    .dropmaxxer-drop .dmx-route--bus,
+    .dropmaxxer-drop .dmx-route--safe-glide,
+    .dropmaxxer-drop .dmx-map-point--jump,
+    .dropmaxxer-drop .dmx-map-point--target,
+    .dropmaxxer-drop .dmx-traveller { animation: none !important; }
+    .dropmaxxer-drop .dmx-map-surface__scan { display: none; }
+    .dropmaxxer-drop .dmx-bus { animation: none !important; left: var(--dmx-bus-start-x); top: var(--dmx-bus-start-y); opacity: 0.9; }
+    .dropmaxxer-drop .dmx-traveller--fast { left: var(--dmx-cut-x); top: var(--dmx-cut-y); opacity: 1; }
+    .dropmaxxer-drop .dmx-traveller--safe { left: var(--dmx-target-x); top: var(--dmx-target-y); opacity: 0.42; }
+    .dropmaxxer-drop .dmx-route-button, .dropmaxxer-drop .dmx-hud, .dropmaxxer-drop .dmx-label, .dropmaxxer-drop .dmx-route { transition: none; }
   }
 </style>
 

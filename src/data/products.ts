@@ -500,17 +500,17 @@ export const products: Product[] = [
     version: dpRelease.version ?? undefined,
     tagline: 'Stop guessing your drop.',
     description:
-      "Two routes for every POI: cut-and-free-fall fast, or glide in safe. Built for the glider-cut meta. Current-season POIs.",
+      "Two routes for every POI: cut, free-fall, and re-pull fast, or glide in safe. Built for the glider-cut meta. Current-season POIs.",
     longDescription:
-      "Built for the new glider-cut mechanic: get the fastest cut-and-free-fall line and the safe glide line for any POI — both ETAs, the exact cut point, and the highest-ground spot to land first. Community-data lookup when your path matches the corpus; calibrated physics simulator when it doesn't. Current-season POIs, refreshed every season.",
+      "Built for the new glider-cut mechanic: get the fastest cut-and-re-pull line and the safe full-glide line for any POI — both ETAs, the exact jump and cut or auto-open points, and the route breakdown to reach the target. The pro-fit route model handles any bus and target while the calibrated physics simulator supplies timing and terrain checks. Current-season POIs, refreshed every season.",
     features: [
       {
         title: 'Fastest vs Safe.',
-        body: 'Cut the glider and free-fall for the quickest landing, or glide in safe. Both ETAs, the exact spot to cut, and roll-land guidance to keep full HP.',
+        body: 'Cut the glider, free-fall, and re-pull for the quickest landing, or keep the glider open for a full glide. Both ETAs, the exact cut or auto-open point, and roll-land guidance to keep full HP.',
       },
       {
-        title: 'Two solvers. One answer.',
-        body: 'Community-data lookup when your path matches the corpus. Physics simulator on novel paths.',
+        title: 'Pro-fit route. Physics timing.',
+        body: 'The pro-fit model places your jump and deploy for any straight bus + target. The physics simulator supplies altitude, timing, and terrain checks; saved custom drops can override the model.',
       },
       {
         title: 'Current-season POIs.',
@@ -518,7 +518,7 @@ export const products: Product[] = [
       },
       {
         title: 'Cited constants.',
-        body: 'Bus 75 m/s at 832 m. Auto-deploy 100 m. Glide and nosedive published, not hidden.',
+        body: 'Bus 75 m/s at 798.5 m. Auto-deploy 100 m. Glide 18 m/s and nosedive 56.5 m/s — published, not hidden.',
       },
     ],
     // Dropmaxxer is a browser app (no installer) — launch it directly.
@@ -534,7 +534,7 @@ export const products: Product[] = [
     icon: '/logos/dropmaxxer-icon.svg',
     accentHex: '#4c51f7',
     accent2Hex: '#ffb454',
-    screenshots: ['/screenshots/dropmaxxer/hero-flightplan.webp'],
+    screenshots: ['/screenshots/dropmaxxer/season42-override-map.webp'],
     heroStat: { value: '2', label: 'routes per drop · fastest + safe' },
     zones: [
       {
@@ -545,8 +545,8 @@ export const products: Product[] = [
           kind: 'bars',
           bars: [
             { label: 'Bus speed', value: '~75 m/s', ratio: 1.0, emphasize: true },
-            { label: 'Nosedive (terminal)', value: '~60 m/s', ratio: 0.8 },
-            { label: 'Glide (horizontal)', value: '~17 m/s', ratio: 0.23 },
+            { label: 'Nosedive (terminal)', value: '~56.5 m/s', ratio: 0.8 },
+            { label: 'Glide (horizontal)', value: '~18 m/s', ratio: 0.23 },
             { label: 'Auto-deploy altitude', value: '100 m', ratio: 0.35 },
           ],
           caption: 'Constants published with the build · cross-referenced against community research',
@@ -554,8 +554,8 @@ export const products: Product[] = [
       },
       {
         eyebrow: '02 · The Algorithm',
-        headline: "Community data first. Physics solver second.",
-        body: "Two solvers, one decision. If your drop matches our corpus of pro and community data, you get the tested answer — flagged “pro-rooted,” with the real win-rate at that spot. If it doesn't, the calibrated physics simulator runs the math. Either way you get both lines, Fastest and Safe, plus the exact point to cut your glider.",
+        headline: 'Pro-fit route. Physics timing.',
+        body: 'One route model, two readable outcomes. The pro-fit model places the jump and deploy for your exact bus and target; the calibrated simulator supplies the altitude profile, timing, and terrain checks. Either way you get both lines, Fastest and Safe, plus the exact point to cut or auto-open your glider.',
         visual: {
           kind: 'image',
           src: '/screenshots/dropmaxxer/flight-plan.webp',
@@ -565,11 +565,11 @@ export const products: Product[] = [
       {
         eyebrow: '03 · The Map',
         headline: "Current season only.",
-        body: "Reality Falls is not suggested because Reality Falls is not a thing. POIs are sourced from the live game catalog and refresh the day a season ships. No legacy names. No arrows pointing at last-chapter rubble.",
+        body: 'POIs are sourced from the current same-origin season bundle and refreshed with the map build. No legacy names. No arrows pointing at last-chapter rubble.',
         visual: {
           kind: 'image',
-          src: '/screenshots/dropmaxxer/preview.png',
-          alt: 'Dropmaxxer drop-path preview with current-season POIs',
+          src: '/screenshots/dropmaxxer/season42-override-map.webp',
+          alt: 'Current Fortnite Chapter 7 Season 4 Override map with labeled POIs',
         },
       },
     ],
@@ -585,21 +585,21 @@ export const products: Product[] = [
         },
         {
           title: 'Set the bus line, drop your target',
-          body: 'Click "Set Bus" and trace the battle-bus path across the map, then "Set Target" and tap the POI you\'re dropping. That\'s the only input it needs — your bus line and where you\'re going.',
+          body: 'Click "Set Bus" and place the straight battle-bus path across the map, then "Set Target" and tap the POI you\'re dropping. That\'s the only input it needs — your bus line and where you\'re going.',
           img: '/screenshots/dropmaxxer/howto/step-2.webp',
           alt: 'Setting the bus path and target POI on the Dropmaxxer map',
         },
         {
           title: 'Read your drop: Fastest vs Safe',
-          body: 'The Flight Plan panel hands you both lines — the fastest cut-and-nosedive (37.1s here) and the safe glide (44.6s) — with the exact point to cut your glider and how much time the cut saves. Land with a gun before the fight starts.',
+          body: 'The Flight Plan panel hands you both lines — Fastest (cut, free-fall, and re-pull) and Safe (full glide) — with the exact jump, cut or auto-open point, and estimated time. Land with a gun before the fight starts.',
           img: '/screenshots/dropmaxxer/howto/step-3.webp',
           alt: 'Dropmaxxer Flight Plan showing Fastest vs Safe ETAs and the glider cut point',
         },
         {
-          title: 'See where the pros land',
-          body: 'Flip on "Pro Drops" to overlay the spots competitive players actually take this season — so you can copy a proven landing or deliberately avoid a contested one.',
+          title: 'Customize or record it',
+          body: 'Use Customize to change the bus skin, marker, or pose. When you want to calibrate a real route, record the drop and compare it with the solver.',
           img: '/screenshots/dropmaxxer/howto/step-4.webp',
-          alt: 'Pro Drops overlay marking competitive landing spots across the map',
+          alt: 'Dropmaxxer customize panel and real-drop recorder',
         },
       ],
     },
