@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-08-27",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.14",
+    "title": "AdBlock-Maxxer handles Brave's YouTube enforcement handoff.",
+    "body": "The YouTube path now recognizes browser-side enforcement failures and moves into Reclaim or native playback instead of leaving the player black.",
+    "items": [
+      "Detects YouTube's enforcement message when Brave hides the underlying media failure.",
+      "Recovers from native media errors and no-frame starts before the player stays black.",
+      "Keeps Reclaim available for ad-free playback while preserving a native fallback."
+    ]
+  },
+  {
+    "date": "2026-08-27",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
     "version": "v0.4.4",
