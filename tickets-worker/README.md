@@ -16,6 +16,55 @@ Mirror layout of `vip-worker/` and `telemetry-worker/`. Same Cloudflare account.
 
 When the buyer clicks **🔒 Close ticket**: bot mirrors the transcript to `#ticket-archive` (if configured), then archives + locks the thread.
 
+## Public Fortnite utility commands
+
+These commands are private Discord responses. They can be used wherever Maxx
+Bot's slash commands are available; they do not require a special channel,
+and they do not post a public message or notify the server.
+
+### `/storm`
+
+Required inputs are the current zone, `waiting` or `closing`, seconds left in
+that phase, and cumulative storm damage already taken. `Battle Royale` is the
+default timing reference; choose `Reload` when appropriate. A DPS override is
+available when the in-game tick differs from the reference table.
+
+The read uses the standard baseline of 500 cumulative damage for the warning,
+600 for Storm Sickness, and 3x damage after sickness. It deliberately stops at
+the practical **leave now** rule instead of presenting a hard-stop damage
+number. White heals are described as a bridge while rotating, not a plan for
+tanking the zone after sickness.
+
+Reload timing is a reference only. Current Reload playlists are not one fixed
+timing track, and the current Mini-Venture variant is faster; use the in-game
+countdown or the DPS override when the reference does not match.
+
+### `/points`
+
+Choose one of two modes:
+
+```text
+/points mode:Manual formula games:11 current:0 target:300
+/points mode:Live Epic lookup games:3 ign:ExactEpicName region:EU tournament:CrashBandicootCup
+```
+
+Manual mode is arithmetic: enter the current cumulative points and the cutoff
+you want to chase. Live mode requires an exact Epic display name and current
+region. It first selects one exact live tournament window, then reads that
+player's score from the same exact `eventId` and `windowId`. If there is more
+than one live window, the tournament filter is required; if the feed, player,
+or cutoff cannot be verified, the command says so instead of guessing from an
+older region or a previous tournament.
+
+The live qualifying line can move while the board fills, so rerun it after
+each game. The command reports the player's current Epic score, rank when
+available, games recorded, exact target source, and the average points needed
+over the games remaining. It does not invent placement/elimination examples
+without a verified scoring profile.
+
+Both commands are ephemeral and use `allowed_mentions: { parse: [] }` so an
+answer cannot fan out notifications.
+
 ## Deploy
 
 ### 1. Create the rate-limit KV namespace

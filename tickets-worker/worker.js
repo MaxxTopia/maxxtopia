@@ -27,6 +27,10 @@
  * quota.
  */
 
+import { calculatePointsForecast, formatPointsDiscord, formatPointsEmbed } from './points-calculator.js'
+import { loadLivePoints } from './points-live.js'
+import { calculateStormForecast, formatStormDiscord, formatStormEmbed } from './storm-calculator.js'
+
 const DISCORD_API = 'https://discord.com/api/v10'
 
 // Interaction types (https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type)
@@ -36,6 +40,7 @@ const INTERACTION_MESSAGE_COMPONENT = 3
 
 // Response types
 const RESP_PONG = 1
+const RESP_CHANNEL_MESSAGE = 4
 const RESP_DEFERRED_CHANNEL_MESSAGE = 5
 
 // Channel types
@@ -102,13 +107,66 @@ export default {
       }
     }
 
-    // Slash commands. /gen, /om, /33, /founderstatus registered via
-    // scripts/register-slash-commands.mjs against the guild. Every
-    // handler enforces Diggy-only auth (user.id === DIGGY_USER_ID) so
-    // even if a mod somehow gets the command unlocked, they can't gen
-    // keys.
+    // Slash commands. /storm and /points are public utility commands;
+    // /gen, /om, /33, /founderstatus, and /sccoins are registered via
+    // scripts/register-slash-commands.mjs against the guild.
+    // The public utility commands stay ephemeral and do not require a
+    // Diggy-only gate. Administrative commands enforce their own gate
+    // inside their handlers so a picker/role mistake cannot mint keys.
     if (interaction.type === INTERACTION_APPLICATION_COMMAND) {
       const name = interaction.data?.name ?? ''
+      if (name === 'storm') {
+        const result = calculateStormForecast({
+          mode: getOption(interaction, 'mode') || 'battleRoyale',
+          zone: getOption(interaction, 'zone'),
+          phase: getOption(interaction, 'phase'),
+          timeLeftSeconds: getOption(interaction, 'time'),
+          damageTaken: getOption(interaction, 'damage'),
+          dpsOverride: getOption(interaction, 'dps'),
+        })
+        return jsonResponse({
+          type: RESP_CHANNEL_MESSAGE,
+          data: {
+            ...(result.ok ? { embeds: [formatStormEmbed(result)] } : { content: formatStormDiscord(result) }),
+            flags: MSG_FLAG_EPHEMERAL,
+            allowed_mentions: { parse: [] },
+          },
+        })
+      }
+      if (name === 'points') {
+        const mode = getOption(interaction, 'mode') || 'manual'
+        if (mode === 'live') {
+          // The live path does two bounded upstream reads. Defer so Discord
+          // gets its acknowledgement immediately, then edit the private
+          // response when the exact event/window lookup finishes.
+          ctx.waitUntil(handleLivePoints(interaction))
+          return jsonResponse({
+            type: RESP_DEFERRED_CHANNEL_MESSAGE,
+            data: { flags: MSG_FLAG_EPHEMERAL },
+          })
+        }
+        if (mode !== 'manual') {
+          const result = { ok: false, error: 'Choose manual formula or live Epic lookup.' }
+          return jsonResponse({
+            type: RESP_CHANNEL_MESSAGE,
+            data: { content: formatPointsDiscord(result), flags: MSG_FLAG_EPHEMERAL, allowed_mentions: { parse: [] } },
+          })
+        }
+        const result = calculatePointsForecast({
+          current: getOption(interaction, 'current'),
+          target: getOption(interaction, 'target'),
+          games: getOption(interaction, 'games'),
+          buffer: getOption(interaction, 'buffer'),
+        })
+        return jsonResponse({
+          type: RESP_CHANNEL_MESSAGE,
+          data: {
+            ...(result.ok ? { embeds: [formatPointsEmbed(result)] } : { content: formatPointsDiscord(result) }),
+            flags: MSG_FLAG_EPHEMERAL,
+            allowed_mentions: { parse: [] },
+          },
+        })
+      }
       if (name === 'gen' || name === 'om') {
         ctx.waitUntil(handleGen(env, interaction, name))
         return jsonResponse({
@@ -357,6 +415,26 @@ async function handleGrantVip(env, interaction, customId) {
 }
 
 // ─── Slash command handlers ─────────────────────────────────────────────
+
+async function handleLivePoints(interaction) {
+  let result
+  try {
+    result = await loadLivePoints({
+      ign: getOption(interaction, 'ign'),
+      region: getOption(interaction, 'region'),
+      tournament: getOption(interaction, 'tournament'),
+      games: getOption(interaction, 'games'),
+      buffer: getOption(interaction, 'buffer'),
+    })
+  } catch {
+    result = { ok: false, error: 'Live points are unavailable right now. Try again in a moment.' }
+  }
+  await editFollowup(interaction.application_id, interaction.token, {
+    ...(result.ok ? { embeds: [formatPointsEmbed(result)] } : { content: formatPointsDiscord(result) }),
+    flags: MSG_FLAG_EPHEMERAL,
+    allowed_mentions: { parse: [] },
+  })
+}
 
 /**
  * Diggy-only gate. Strict — user.id must match env.DIGGY_USER_ID. No

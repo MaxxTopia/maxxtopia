@@ -7,6 +7,8 @@
  * we send. Re-running adds/removes/edits cleanly with no stale commands.
  *
  * Currently registers:
+ *   /storm zone phase time damage — private Storm Sickness timing read
+ *   /points mode games ...      — private tournament pace read
  *   /gen tier user            — mint a tier-encoded code on demand + DM to user
  *   /om user                  — alias for /gen tier:MAXXER++ (OM lifetime context)
  *   /33 user                  — pull one of the 33 pre-minted FOUND* codes
@@ -71,13 +73,152 @@ if (DRY) console.log('[register] DRY RUN — no changes. Pass --execute to commi
 const OPT_STRING = 3;
 const OPT_INTEGER = 4;
 const OPT_USER = 6;
+const OPT_NUMBER = 10;
 
-// default_member_permissions = "0" hides the command from non-admins in
-// the slash-command picker. Mods unlock it via role overrides, but the
-// worker's mod check (SUPPORT_ROLE_ID) is what actually gates execution.
+// Administrative commands use default_member_permissions = "0" to hide them
+// from non-admins in the slash-command picker. Mods unlock them via role
+// overrides, but the worker's mod check (SUPPORT_ROLE_ID) is what actually
+// gates execution. Public utility commands intentionally omit this field.
 const DEFAULT_MOD_ONLY = '0';
 
 const COMMANDS = [
+    {
+        name: 'storm',
+        description: 'Calculate your Storm Sickness rotate window.',
+        dm_permission: true,
+        options: [
+            {
+                type: OPT_INTEGER,
+                name: 'zone',
+                description: 'Current storm zone number (1-12).',
+                required: true,
+                min_value: 1,
+                max_value: 12,
+            },
+            {
+                type: OPT_STRING,
+                name: 'phase',
+                description: 'Is this zone waiting or closing?',
+                required: true,
+                choices: [
+                    { name: 'Waiting', value: 'waiting' },
+                    { name: 'Closing', value: 'closing' },
+                ],
+            },
+            {
+                type: OPT_INTEGER,
+                name: 'time',
+                description: 'Seconds left in the current phase.',
+                required: true,
+                min_value: 0,
+                max_value: 3600,
+            },
+            {
+                type: OPT_INTEGER,
+                name: 'damage',
+                description: 'Cumulative storm damage already taken.',
+                required: true,
+                min_value: 0,
+                max_value: 1000000,
+            },
+            {
+                type: OPT_STRING,
+                name: 'mode',
+                description: 'Choose the timing reference for your playlist.',
+                required: false,
+                choices: [
+                    { name: 'Battle Royale', value: 'battleRoyale' },
+                    { name: 'Reload', value: 'reload' },
+                ],
+            },
+            {
+                type: OPT_NUMBER,
+                name: 'dps',
+                description: 'Optional current DPS override from the game.',
+                required: false,
+                min_value: 0,
+                max_value: 100,
+            },
+        ],
+    },
+    {
+        name: 'points',
+        description: 'Calculate your Fortnite tournament pace.',
+        dm_permission: true,
+        options: [
+            {
+                type: OPT_STRING,
+                name: 'mode',
+                description: 'Use your cutoff or read the live Epic leaderboard.',
+                required: true,
+                choices: [
+                    { name: 'Manual formula', value: 'manual' },
+                    { name: 'Live Epic lookup', value: 'live' },
+                ],
+            },
+            {
+                type: OPT_INTEGER,
+                name: 'games',
+                description: 'Games remaining in this tournament snapshot.',
+                required: true,
+                min_value: 0,
+                max_value: 100,
+            },
+            {
+                type: OPT_STRING,
+                name: 'ign',
+                description: 'Exact Epic display name for live lookup.',
+                required: false,
+                max_length: 100,
+            },
+            {
+                type: OPT_STRING,
+                name: 'region',
+                description: 'Region for the live leaderboard lookup.',
+                required: false,
+                choices: [
+                    { name: 'NAC', value: 'NAC' },
+                    { name: 'EU', value: 'EU' },
+                    { name: 'NAW', value: 'NAW' },
+                    { name: 'BR', value: 'BR' },
+                    { name: 'ASIA', value: 'ASIA' },
+                    { name: 'OCE', value: 'OCE' },
+                    { name: 'ME', value: 'ME' },
+                ],
+            },
+            {
+                type: OPT_STRING,
+                name: 'tournament',
+                description: 'Exact live tournament name when more than one is live.',
+                required: false,
+                max_length: 100,
+            },
+            {
+                type: OPT_INTEGER,
+                name: 'current',
+                description: 'Current cumulative points for manual mode.',
+                required: false,
+                min_value: 0,
+                max_value: 1000000,
+            },
+            {
+                type: OPT_INTEGER,
+                name: 'target',
+                description: 'Qualifying cutoff points for manual mode.',
+                required: false,
+                min_value: 0,
+                max_value: 1000000,
+            },
+            {
+                type: OPT_INTEGER,
+                name: 'buffer',
+                description: 'Optional safety cushion above the cutoff.',
+                required: false,
+                min_value: 0,
+                max_value: 1000000,
+            },
+        ],
+    },
     {
         name: 'gen',
         description: 'Mint a tier-encoded Maxxer VIP code and DM it to a user (Diggy-only).',
