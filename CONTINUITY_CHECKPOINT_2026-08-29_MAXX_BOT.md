@@ -69,14 +69,23 @@ race, the console account-ID fallback, supported regions, `/storm`, and the
 private command-only use case. It has five fields, no components, no mentions,
 and message flag `4096` (`SUPPRESS_NOTIFICATIONS`).
 
-The channel remains read-only for ordinary member messages. This is
-intentional: members can enter `/points live` and receive the existing
-ephemeral result, while ordinary text cannot become a notification stream.
-The `@everyone` overwrite remains allow `1024` / deny `377957124160`, and the
-slash-command permission is not denied. The deployed interaction Worker is not
-a Discord Gateway listener, so an instant-delete-after-send design is not
-implemented; deletion after delivery would not guarantee that other members
-were never notified.
+The channel now exposes the composer to ordinary members while retaining the
+command-only behavior. The `@everyone` overwrite is allow `3072` / deny
+`377957122112`, which adds `SEND_MESSAGES` and removes only that bit from the
+previous deny mask; the slash-command permission remains allowed. AutoMod rule
+`1543354527045132308` (`free-stuff | commands only`) is enabled with a silent
+block action for any ordinary non-empty member message. It exempts the other
+27 currently message-capable channels/active thread and does not exempt
+`#free-stuff`, so regular users can type `/` and choose `/points` or `/storm`
+without turning the channel into a public chat stream. The installed app's
+interaction is not treated as an ordinary member message.
+
+This exemption list is a live-server safeguard with a maintenance edge: any
+new message-capable channel or thread must be added to the rule's exemptions,
+or the catch-all rule could block ordinary messages there. The deployed
+interaction Worker is not a Discord Gateway listener, so an instant-delete-
+after-send design is not implemented; deletion after delivery would not
+guarantee that other members were never notified.
 
 ## Verification evidence
 
@@ -95,8 +104,12 @@ Passed in the bot release tree:
 The live Discord channel metadata was re-read after the channel-surface
 update: the channel is `#free-stuff`, the old caption message is absent, the
 original Viewmaxxing preview post remains unchanged, and the new instruction
-embed is present with flag `4096`. The ordinary-member read-only overwrite is
-unchanged.
+embed is present with flag `4096`. The live permission read-back confirms
+`SEND_MESSAGES` is allowed and not denied. The live AutoMod read-back confirms
+the command-only rule is enabled, targets the channel (the target is not
+exempt), and has no missing or unexpected exemptions against the current
+channel/thread inventory. The live guild command read-back includes `/points`
+and `/storm`.
 
 Latest read-only live source check returned HTTP 200 for EU Finals window
 `FNCSDivisionalCup Division1`, event
@@ -162,15 +175,19 @@ not publicly inspectable.
 - Pushed: no.
 - Registered: yes, silently; the schema was unchanged by the abuse guard.
 - Deployed: source and bot yes; Maxxtopia site no new deployment.
-- Verified live: source data, bot rejection paths, and the silent
-  `#free-stuff` channel surface yes; a real user-issued `/points live` card
-  inside Discord is not yet verified.
+- Verified live: source data, bot rejection paths, the silent `#free-stuff`
+  channel surface, the regular-member composer permission, the enabled
+  command-only AutoMod rule, and the registered `/points`/`/storm` commands
+  yes; a real regular-user-issued `/points live` card and a real plain-message
+  block inside Discord are not yet verified.
 
 ## Diggy-owed tests and next action
 
 Run `/points live` in the target Discord server for one active open/qualifier
 and one active Finals event, visually inspect the private card, and test a
-console alias by supplying the Epic account ID if the display name fails. If
+console alias by supplying the Epic account ID if the display name fails. In
+`#free-stuff`, also send one harmless ordinary test phrase: it should remain
+invisible to the channel while `/points` remains selectable and private. If
 you want a true Kinch channel-by-channel comparison, provide authenticated
 channel screenshots/export or explicitly approve a live Discord login/join
 flow at the moment it is requested.
