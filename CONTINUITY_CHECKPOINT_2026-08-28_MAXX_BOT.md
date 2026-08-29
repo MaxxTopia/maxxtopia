@@ -52,19 +52,52 @@ Passed in the saved tree:
 - `heartzkaitt` did not resolve under that exact display name. This needs an exact Epic display name/account identity and the correct event/region before it can be a valid open-tournament test.
 - Recommended finals behavior: keep qualification and finals as separate result types. Qualifiers show the moving rank/points cut; finals show current rank, points, games, and a clearly labeled projected prize tier from the verified payout ladder, with no invented point cutoff. If the payout ladder is unavailable, say that placement is being tracked but prize information is unverified.
 
+## Finals prize-race continuation (2026-08-29)
+
+The requested Finals behavior is now implemented locally across two deliberately
+separate worktrees:
+
+- Source-of-truth Worker worktree:
+  `C:\Users\Diggy\Documents\Codex\2026-08-27\why-is-this-appearing-on-every\work\snipemaxxer-finals-prize-release`
+  on branch `codex-finals-prize`, local commit `7cb863d`.
+- Maxx Bot release worktree:
+  `C:\Users\Diggy\Documents\Codex\2026-08-27\why-is-this-appearing-on-every\work\maxxtopia-storm-points-release`
+  remains detached, local commit `d2d2deb`.
+
+The new source contract is `/windows?region=` for exact active qualification
+and Finals windows, and `/standing?ign=&accountId=&eventId=&windowId=&region=`
+for one exact player/event/window/region. Finals use Epic's published paid-rank
+ladder for prize bands and read the live points at each boundary from that same
+regional event window. The Bot calculates the current band, next better band,
+live points gap, and required points per remaining game. It never substitutes a
+different region, an older similar tournament, or an opaque payout id as a
+dollar amount. A 32-character Epic account ID is accepted when a console or
+platform alias does not resolve as an Epic display name. A partial `ALL` scan
+can use a clearly identified healthy region; a failed requested region remains
+unavailable.
+
+The deployed Worker is unchanged. At the checkpoint update,
+`https://snipemaxxer-brain.maxxtopia.workers.dev/windows?region=EU` still returns
+HTTP 404, while the old `/cutoffs` route remains live. No Discord registration,
+Worker deployment, site deployment, push, or external message was performed.
+
 ## Release state
 
-- Local source: present in this detached release tree, committed locally at `0fb99dd`.
+- Local source: Finals contract committed locally at `7cb863d` in the separate `snipemaxxer-finals-prize-release` worktree; Maxx Bot adapter committed locally at `d2d2deb` in this release tree.
 - Built: yes; the site build is local only.
-- Tested: yes for the focused fixtures and syntax/build checks above.
-- Committed: yes, local commit `0fb99dd`; not published.
+- Tested: yes. Focused fixtures, syntax checks, `git diff --check`, Astro build (27 pages), and both Worker packaging dry-runs passed after the Finals changes.
+- Committed: yes, local commits `7cb863d` and `d2d2deb`; not published.
 - Pushed: no.
 - Registered with Discord: no; the registration script was not executed.
 - Worker deployed: no.
 - Site deployed: no new site deployment for this feature.
-- Verified live: no Discord command or production worker verification has been performed.
+- Verified live: no; the read-only probe confirmed the new `/windows` route is not in the current deployment. No real Finals player result has been claimed.
 
-Git status still displays status-only modification flags for several LF/CRLF-sensitive tracked files (`astro.config.mjs`, `package-lock.json`, `package.json`, `tsconfig.json`) even where the textual diff is empty. Do not restore or reset them broadly; re-check the worktree before any staging decision. The intended textual diff is limited to the three tracked feature files above plus the new modules, fixtures, and this checkpoint.
+The Maxxtopia release tree still displays status-only modification flags for
+several LF/CRLF-sensitive tracked files (`astro.config.mjs`, `package-lock.json`,
+`package.json`, `tsconfig.json`) even where the textual diff is empty. They were
+not staged. The source worktree is clean after its scoped commit. Do not restore
+or reset these files broadly.
 
 ## Remaining gates and risks
 
@@ -72,12 +105,14 @@ Git status still displays status-only modification flags for several LF/CRLF-sen
 - A real Discord interaction test is still owed by Diggy after registration.
 - Any command registration, local commit, push, worker deploy, or production/live test requiring credentials must be explicitly approved before execution.
 - The live qualifying line can move; manual estimates are not a substitute for the current Epic feed.
-- Finals are not yet represented in the Maxx Bot live adapter; the upstream data contract needs to expose all active windows and verified prize tiers before a finals response can be truthful.
-- Region is currently required from the fixed enabled list; automatic all-region event detection would reduce wrong-region failures but must still require exact event/window evidence.
+- A real open-tournament and a real Finals test are still owed by Diggy. The open test needs the exact Epic identity or account ID, event/window, and region; the Finals test must occur while the exact Finals leaderboard has populated scores.
+- `heartzkaitt` did not resolve by exact display name in the prior probe; `Clix` resolved but had no score in the tested current windows. These are identity/window test blockers, not successful feature tests.
+- Boundary points are projections until the window closes. Ties, late score ingestion, missing payout fields, a board that is not live, and upstream schema changes remain explicit unavailable states.
 
 ## Single best next action
 
-Implement and fixture-test the separate finals/prize-ladder response path in
-the saved release tree, using the existing Snipemaxxer event/payout decoding
-as the source of truth. Do not push, register, deploy, or run credentialed
-production actions until Diggy explicitly approves them.
+Review the two local commits, then explicitly approve the release sequence if
+you want it made live: deploy the source Worker first, register the updated
+Discord command schema, deploy Maxx Bot, and run one real exact-identity test
+in an active qualifier and one in an active Finals window. Do not perform that
+sequence without Diggy's approval.
