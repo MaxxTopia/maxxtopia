@@ -355,21 +355,19 @@ review routing and silent POST/reaction; JavaScript syntax checks; Astro build
 legacy formatting inference because the old message contained no numeric
 rating or star reaction; the original wording was preserved exactly.
 
-The intended source files are currently local and uncommitted:
-`tickets-worker/worker.js`, `tickets-worker/wrangler.toml`,
-`tickets-worker/README.md`, `scripts/test-worker-interactions.mjs`, and
-`scripts/migrate-feedback-review-channel.mjs`. The pre-existing unrelated
-dirty files `astro.config.mjs`, `package-lock.json`, `package.json`, and
-`tsconfig.json` remain untouched and must not be staged. No push was performed.
+The intended source files were committed locally as `f8e1a21` (`feat: move
+review wall to text channel`). The pre-existing unrelated dirty files
+`astro.config.mjs`, `package-lock.json`, `package.json`, and `tsconfig.json`
+remain untouched and unstaged. No push was performed; the remote branch still
+points to the previous release commit.
 
 Diggy-owed gate: run `/review` once from an ordinary Discord account in the
 new `#reviews` channel, submit an honest review, and confirm the modal,
 rendered card, avatar, reaction, and absence of a notification on desktop or
 mobile. No bot-generated sample review should be added.
 
-Single best next action: commit only the five intended review migration files
-locally, leave the unrelated worktree changes and remote branch untouched, and
-then perform the one real member interaction test.
+Single best next action: perform the one real member interaction test, leaving
+the unrelated worktree changes and remote branch untouched.
 
 ## Maxx Bot utility UX hardening — interrupted-task recovery (2026-08-29)
 
