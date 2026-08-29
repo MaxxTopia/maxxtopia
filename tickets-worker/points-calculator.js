@@ -114,6 +114,141 @@ function calculatePointsForecast(input = {}) {
   }
 }
 
+const MAX_RANK = 1_000_000_000
+
+function parseOptionalRank(value) {
+  if (value == null || String(value).trim() === '') return { ok: true, value: null }
+  return parseWholeNumber(value, 'current rank', MAX_RANK)
+}
+
+function normalizedPrizeLadder(value) {
+  if (!Array.isArray(value)) return []
+  return value
+    .map(tier => ({
+      ...tier,
+      minRank: Number(tier?.minRank),
+      maxRank: Number(tier?.maxRank),
+    }))
+    .filter(tier => Number.isSafeInteger(tier.maxRank) && tier.maxRank > 0)
+    .sort((a, b) => a.maxRank - b.maxRank)
+}
+
+function prizeTierForRank(ladder, rank) {
+  if (rank == null) return null
+  return ladder.find(tier => rank <= tier.maxRank) || null
+}
+
+function nextPrizeTier(ladder, rank) {
+  if (!ladder.length) return null
+  if (rank == null) return null
+  const current = prizeTierForRank(ladder, rank)
+  if (!current) return ladder[ladder.length - 1]
+  const index = ladder.indexOf(current)
+  return index > 0 ? ladder[index - 1] : null
+}
+
+function prizeTierName(tier) {
+  if (!tier) return 'a paid prize band'
+  return tier.maxRank === 1 ? 'Top 1' : `Top ${formatPoints(tier.maxRank)}`
+}
+
+function prizeTierReward(tier) {
+  if (!tier) return 'No published paid tier'
+  return String(tier.rewardLabel || '').trim() || (tier.verified ? 'Prize details available' : 'Prize amount unavailable')
+}
+
+function prizeTierLine(tier) {
+  return tier ? `${prizeTierName(tier)} — ${prizeTierReward(tier)}` : 'Outside the published paid bands'
+}
+
+// Finals are a rank/prize race, not a qualification race. The function only
+// computes a points gap when the boundary score was read from this exact live
+// leaderboard; it never estimates a cross-region or historical cutoff.
+function calculatePrizeRace(input = {}) {
+  const current = parseWholeNumber(input.current ?? input.currentPoints, 'current points', MAX_POINTS)
+  if (!current.ok) return current
+  const games = parseWholeNumber(input.games ?? input.gamesLeft, 'games left', MAX_GAMES)
+  if (!games.ok) return games
+  const rank = parseOptionalRank(input.rank)
+  if (!rank.ok) return rank
+
+  const prizeLadder = normalizedPrizeLadder(input.prizeLadder)
+  const currentTier = prizeTierForRank(prizeLadder, rank.value)
+  const targetTier = nextPrizeTier(prizeLadder, rank.value)
+  const boundary = targetTier?.livePointsAtBoundary
+  const targetPoints = targetTier && boundary != null && Number.isSafeInteger(Number(boundary))
+    ? Number(targetTier.livePointsAtBoundary)
+    : null
+  const pointsToTarget = targetTier && targetPoints != null
+    ? Math.max(0, targetPoints - current.value)
+    : null
+  const requiredPerGame = pointsToTarget == null
+    ? null
+    : pointsToTarget > 0 && games.value > 0
+      ? pointsToTarget / games.value
+      : pointsToTarget > 0
+        ? null
+        : 0
+  const prizeLadderVerified = input.prizeLadderVerified === true || prizeLadder.some(tier => tier.verified === true)
+  const projection = targetPoints == null ? 'live-standing-only' : 'live-boundary'
+
+  let status = 'unavailable'
+  let statusLabel = 'PRIZE INFO UNAVAILABLE'
+  let guidance = 'Live points are available, but Epic did not expose enough prize metadata to identify a paid tier.'
+  if (!prizeLadder.length) {
+    status = 'unavailable'
+  } else if (rank.value == null) {
+    status = games.value === 0 ? 'noGames' : 'unavailable'
+    statusLabel = games.value === 0 ? 'RANK UNAVAILABLE · NO GAMES LEFT' : 'RANK UNAVAILABLE'
+    guidance = 'The live points total is available, but Epic did not return a rank for this snapshot; no prize band is claimed.'
+  } else if (games.value === 0) {
+    status = 'noGames'
+    statusLabel = currentTier ? 'CURRENT PRIZE BAND · NO GAMES LEFT' : 'NO GAMES LEFT'
+    guidance = currentTier
+      ? `Final snapshot: ${prizeTierName(currentTier)} is the current rank band, but the board can still settle on ties.`
+      : 'No remaining-game projection is available for this snapshot.'
+  } else if (currentTier) {
+    status = 'inPrize'
+    statusLabel = 'CURRENTLY IN A PRIZE BAND'
+    guidance = targetTier && targetPoints != null
+      ? `Current rank is in ${prizeTierName(currentTier)}. Need ${formatPoints(pointsToTarget)} more live points to match the ${prizeTierName(targetTier)} boundary.`
+      : targetTier
+        ? `Current rank is in ${prizeTierName(currentTier)}. The next ${prizeTierName(targetTier)} boundary is not available yet.`
+        : 'Current rank is in the top published prize band. The board can still move until the window closes.'
+  } else {
+    status = 'chase'
+    statusLabel = 'CHASE THE NEXT PRIZE BAND'
+    guidance = targetTier && targetPoints != null
+      ? `Need ${formatPoints(pointsToTarget)} more live points to match the ${prizeTierName(targetTier)} boundary.`
+      : targetTier
+        ? `The nearest target is ${prizeTierName(targetTier)}, but its live boundary score is not available yet.`
+        : 'No published paid rank target is available for this snapshot.'
+  }
+
+  return {
+    ok: true,
+    raceType: 'final',
+    currentPoints: current.value,
+    rank: rank.value,
+    gamesLeft: games.value,
+    currentTier,
+    targetTier,
+    targetPoints,
+    pointsToTarget,
+    requiredPerGame,
+    projectedAtPace: requiredPerGame == null ? null : current.value + requiredPerGame * games.value,
+    status,
+    statusLabel,
+    guidance,
+    prizeLadder,
+    prizeLadderVerified,
+    boundaryFetchedAt: input.boundaryFetchedAt || null,
+    projection,
+    pointsSourceNote: 'Live points and same-window prize boundaries only; no cross-region or historical estimate was substituted.',
+    targetSource: prizeLadderVerified ? 'Epic payout ladder + live regional leaderboard' : 'Epic live leaderboard; prize amount not verified',
+  }
+}
+
 function liveContextLine(result) {
   if (result.source !== 'live') return ''
   const tournament = result.tournamentName || 'Live tournament'
@@ -128,8 +263,37 @@ function liveTargetLine(result) {
   return `${label} · ${formatPoints(result.targetPoints)} pts`
 }
 
+function formatFinalPointsDiscord(result) {
+  const currentPrize = prizeTierLine(result.currentTier)
+  const nextPrize = result.targetTier
+    ? `${prizeTierLine(result.targetTier)}${result.targetPoints == null ? ' · live boundary unavailable' : ` · boundary ${formatPoints(result.targetPoints)} pts`}`
+    : 'No better published tier than the current top band'
+  const gap = result.pointsToTarget == null
+    ? 'unavailable until Epic publishes this live boundary'
+    : `${formatPoints(result.pointsToTarget)} more live points`
+  const pace = result.requiredPerGame == null
+    ? 'unavailable'
+    : `${formatAverage(result.requiredPerGame)} points/game`
+  const freshness = result.boundaryFetchedAt ? ` Boundary read: ${result.boundaryFetchedAt}.` : ''
+  return [
+    `Tournament Points Calculator - ${result.statusLabel}`,
+    `Live Finals: ${liveContextLine(result)}`,
+    `Current: ${formatPoints(result.currentPoints)} points | ${result.rank == null ? 'rank unavailable' : `rank #${formatPoints(result.rank)}`} | ${formatPoints(result.gamesPlayed ?? 0)} games recorded`,
+    `Current prize band: ${currentPrize}`,
+    `Next better tier: ${nextPrize}`,
+    `Gap to that tier: ${gap} | Required pace: ${pace}`,
+    `Games left: ${formatPoints(result.gamesLeft)}`,
+    result.prizeLadderVerified
+      ? 'Prize tiers come from Epic payout metadata; all point boundaries are live projections and can move before the window closes.'
+      : 'The live standing is real, but Epic prize amounts were not readable in this response. No dollar amount is being guessed.',
+    `${result.guidance}${freshness}`,
+    'Refresh after each game. Ties and late scores can move both rank and the boundary.',
+  ].filter(Boolean).join('\n')
+}
+
 function formatPointsDiscord(result) {
   if (!result || !result.ok) return `Points calculator: ${result?.error || 'check your inputs.'}`
+  if (result.raceType === 'final') return formatFinalPointsDiscord(result)
   const pace = result.toSafeLine === 0
     ? 'not needed'
     : result.requiredPerGame == null
@@ -157,6 +321,7 @@ function formatPointsDiscord(result) {
 
 function formatPointsEmbed(result) {
   if (!result || !result.ok) return null
+  if (result.raceType === 'final') return formatFinalsEmbed(result)
 
   const color = result.status === 'qualified'
     ? 0x30d158
@@ -250,4 +415,69 @@ function formatPointsEmbed(result) {
   }
 }
 
-export { calculatePointsForecast, formatPointsDiscord, formatPointsEmbed }
+function formatFinalsEmbed(result) {
+  const color = result.status === 'noGames' ? 0xff4d6d : result.status === 'inPrize' ? 0xffc857 : 0xffa62b
+  const currentPrize = prizeTierLine(result.currentTier)
+  const nextPrize = result.targetTier
+    ? `${prizeTierLine(result.targetTier)}\n${result.targetPoints == null ? 'Live boundary unavailable' : `Boundary: **${formatPoints(result.targetPoints)} pts**`}`
+    : 'No better published tier than the current top band.'
+  const gap = result.pointsToTarget == null ? 'Unavailable' : `${formatPoints(result.pointsToTarget)} live points`
+  const pace = result.requiredPerGame == null ? 'Unavailable' : `${formatAverage(result.requiredPerGame, 1)} PPG`
+  const freshness = result.boundaryFetchedAt ? `Boundary read: ${result.boundaryFetchedAt}` : 'Boundary timestamp unavailable'
+  const prizeNote = result.prizeLadderVerified
+    ? 'Amounts are from Epic payout metadata. Rank and boundary points are live projections.'
+    : 'Epic returned a live standing, but prize amounts were not readable; no amount is guessed.'
+
+  return {
+    author: { name: 'MAXX BOT  ·  FORTNITE TOOLS' },
+    title: '🏆 POINTS READ // FINALS PRIZE RACE',
+    description: [
+      `**${result.statusLabel}**`,
+      `> ${result.guidance}`,
+      '',
+      `**${formatPoints(result.currentPoints)}** points · ${result.rank == null ? 'rank unavailable' : `rank **#${formatPoints(result.rank)}**`}`,
+      `*Live Finals projection · ${result.region} · refresh after each game*`,
+    ].join('\n'),
+    color,
+    fields: [
+      {
+        name: 'TOURNAMENT SNAPSHOT',
+        value: `**${result.tournamentName || 'Finals'}**${result.roundType ? ` · ${result.roundType}` : ''}\n${result.region} · Epic leaderboard\n${result.ign || 'Epic account ID'}`,
+        inline: true,
+      },
+      {
+        name: 'PLAYER READ',
+        value: `**${formatPoints(result.currentPoints)}** current points\n${result.rank == null ? 'Rank unavailable' : `Rank **#${formatPoints(result.rank)}**`}\n${formatPoints(result.gamesPlayed ?? 0)} games recorded`,
+        inline: true,
+      },
+      {
+        name: 'CURRENT PRIZE BAND',
+        value: currentPrize,
+        inline: true,
+      },
+      {
+        name: 'NEXT BETTER TIER',
+        value: nextPrize,
+        inline: true,
+      },
+      {
+        name: 'PRIZE RACE',
+        value: `Gap: **${gap}**\nRequired pace: **${pace}**\nGames left: **${formatPoints(result.gamesLeft)}**`,
+        inline: true,
+      },
+      {
+        name: 'SOURCE & FRESHNESS',
+        value: `${prizeNote}\n${freshness}\nNo other region or prior tournament is substituted.`,
+        inline: true,
+      },
+      {
+        name: 'FIELD NOTE',
+        value: 'This is a live projection, not a final cutoff. Ties, late scores, and remaining games can move the rank and every boundary.',
+        inline: false,
+      },
+    ],
+    footer: { text: 'Live Epic Finals snapshot · private to you · update after every game' },
+  }
+}
+
+export { calculatePointsForecast, calculatePrizeRace, formatPointsDiscord, formatPointsEmbed }

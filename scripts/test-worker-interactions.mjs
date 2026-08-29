@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { webcrypto } from 'node:crypto'
 import worker from '../tickets-worker/worker.js'
-import { CUTOFF_API, SCORE_API } from '../tickets-worker/points-live.js'
+import { STANDING_API, WINDOWS_API } from '../tickets-worker/points-live.js'
 
 if (!globalThis.crypto) globalThis.crypto = webcrypto
 
@@ -70,7 +70,7 @@ const liveFetch = globalThis.fetch
 const liveCalls = []
 globalThis.fetch = async (url, options = {}) => {
   liveCalls.push({ url: String(url), options })
-  if (String(url).startsWith(CUTOFF_API)) {
+  if (String(url).startsWith(WINDOWS_API)) {
     return new Response(JSON.stringify({
       region: 'EU',
       windows: [{
@@ -79,11 +79,15 @@ globalThis.fetch = async (url, options = {}) => {
         roundType: 'Qualifiers',
         eventId: 'fixture-event-EU',
         windowId: 'fixture-window-EU',
+        format: 'qualification',
         threshold: { type: 'rank', label: 'Top 500 advance', cutoffPoints: 200 },
       }],
     }), { status: 200, headers: { 'content-type': 'application/json' } })
   }
-  if (String(url).startsWith(SCORE_API)) {
+  if (String(url).startsWith(STANDING_API)) {
+    assert(String(url).includes('eventId=fixture-event-EU'))
+    assert(String(url).includes('windowId=fixture-window-EU'))
+    assert(String(url).includes('region=EU'))
     return new Response(JSON.stringify({ found: true, points: 120, rank: 700, games: 4 }), {
       status: 200,
       headers: { 'content-type': 'application/json' },
@@ -109,7 +113,7 @@ try {
   assert.equal(live.pending.length, 1)
   await Promise.all(live.pending)
   assert.equal(liveCalls.length, 3)
-  assert(liveCalls[0].url.startsWith(CUTOFF_API))
+  assert(liveCalls[0].url.startsWith(WINDOWS_API))
   assert(liveCalls[1].url.includes('eventId=fixture-event-EU'))
   assert(liveCalls[1].url.includes('windowId=fixture-window-EU'))
   const followup = liveCalls[2]

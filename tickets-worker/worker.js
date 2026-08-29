@@ -421,6 +421,7 @@ async function handleLivePoints(interaction) {
   try {
     result = await loadLivePoints({
       ign: getOption(interaction, 'ign'),
+      accountId: getOption(interaction, 'account_id'),
       region: getOption(interaction, 'region'),
       tournament: getOption(interaction, 'tournament'),
       games: getOption(interaction, 'games'),

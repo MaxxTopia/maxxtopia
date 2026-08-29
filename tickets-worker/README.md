@@ -49,18 +49,37 @@ Choose one of two modes:
 ```
 
 Manual mode is arithmetic: enter the current cumulative points and the cutoff
-you want to chase. Live mode requires an exact Epic display name and current
-region. It first selects one exact live tournament window, then reads that
-player's score from the same exact `eventId` and `windowId`. If there is more
-than one live window, the tournament filter is required; if the feed, player,
-or cutoff cannot be verified, the command says so instead of guessing from an
-older region or a previous tournament.
+you want to chase. Live mode accepts either an exact Epic display name or a
+32-character Epic account ID. The account ID is the reliable fallback when a
+console/platform name does not resolve as an Epic display name. It first
+selects one exact live tournament window, then reads that player's standing
+from the same exact `eventId` and `windowId`. Choose a region, or `ALL` to scan
+all enabled regions; if the same tournament is live in more than one region,
+the tournament filter must identify the exact event/window.
+
+Qualification windows show the moving points line at the published advancement
+rank. Finals windows are a separate prize race: Epic's payout metadata provides
+the paid rank bands, and the worker reads the current points at each paid-rank
+boundary from that exact region/event/window leaderboard. The command reports
+the player's current band, the next better band, the live boundary score, and
+the points-per-game pace when that boundary is available. It does not invent a
+final cutoff, carry a threshold across regions, or substitute a prior similar
+tournament. If Epic has not published a boundary or the payout fields are
+opaque, that part is shown as unavailable rather than estimated.
+
+The standing request carries the selected region as well as the exact event and
+window, so a partial `ALL` scan cannot silently reuse another region's board.
 
 The live qualifying line can move while the board fills, so rerun it after
 each game. The command reports the player's current Epic score, rank when
 available, games recorded, exact target source, and the average points needed
 over the games remaining. It does not invent placement/elimination examples
 without a verified scoring profile.
+
+The `games` input is used as the fallback when Epic does not expose a match cap;
+when the live standing includes an authoritative `gamesLeft`, that value wins.
+Both region and identity remain visible in the result so a copied or stale
+lookup is easier to catch.
 
 Both commands are ephemeral and use `allowed_mentions: { parse: [] }` so an
 answer cannot fan out notifications.

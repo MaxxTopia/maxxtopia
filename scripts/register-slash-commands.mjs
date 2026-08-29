@@ -159,7 +159,7 @@ const COMMANDS = [
             {
                 type: OPT_INTEGER,
                 name: 'games',
-                description: 'Games remaining in this tournament snapshot.',
+                description: 'Games remaining; Epic match cap is used when available.',
                 required: true,
                 min_value: 0,
                 max_value: 100,
@@ -173,10 +173,19 @@ const COMMANDS = [
             },
             {
                 type: OPT_STRING,
+                name: 'account_id',
+                description: '32-character Epic account ID for console-only names.',
+                required: false,
+                min_length: 32,
+                max_length: 32,
+            },
+            {
+                type: OPT_STRING,
                 name: 'region',
-                description: 'Region for the live leaderboard lookup.',
+                description: 'Region for the live leaderboard lookup, or scan all regions.',
                 required: false,
                 choices: [
+                    { name: 'All regions', value: 'ALL' },
                     { name: 'NAC', value: 'NAC' },
                     { name: 'EU', value: 'EU' },
                     { name: 'NAW', value: 'NAW' },

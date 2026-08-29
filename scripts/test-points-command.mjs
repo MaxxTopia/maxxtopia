@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { calculatePointsForecast, formatPointsDiscord, formatPointsEmbed } from '../tickets-worker/points-calculator.js'
+import { calculatePointsForecast, calculatePrizeRace, formatPointsDiscord, formatPointsEmbed } from '../tickets-worker/points-calculator.js'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const read = file => fs.readFileSync(path.join(here, '..', file), 'utf8')
@@ -92,6 +92,94 @@ assert(liveEmbed.fields.some(field => field.name === 'TARGET SOURCE' && field.va
 assert(liveEmbed.fields.some(field => field.name === 'FIELD NOTE' && field.value.includes('Exact live lookup')))
 assert(formatPointsDiscord(live).includes('Refresh after each game'))
 
+const finals = calculatePrizeRace({
+  current: 220,
+  rank: 10,
+  games: 3,
+  prizeLadder: [
+    { minRank: 1, maxRank: 1, rewardLabel: 'USD 1,000', verified: true, livePointsAtBoundary: 300 },
+    { minRank: 2, maxRank: 5, rewardLabel: '$500', verified: true, livePointsAtBoundary: 260 },
+    { minRank: 6, maxRank: 25, rewardLabel: '$250', verified: true, livePointsAtBoundary: 180 },
+  ],
+  prizeLadderVerified: true,
+  boundaryFetchedAt: '2026-08-29T18:00:03.000Z',
+})
+assert.equal(finals.ok, true)
+assert.equal(finals.raceType, 'final')
+assert.equal(finals.currentTier.maxRank, 25)
+assert.equal(finals.targetTier.maxRank, 5)
+assert.equal(finals.targetPoints, 260)
+assert.equal(finals.pointsToTarget, 40)
+assert.equal(finals.requiredPerGame, 40 / 3)
+assert.equal(finals.status, 'inPrize')
+
+const finalLive = {
+  ...finals,
+  source: 'live',
+  region: 'EU',
+  tournamentName: 'CrashBandicootCup Finals',
+  roundType: 'Finals',
+  ign: 'Exact Epic Name',
+  gamesPlayed: 4,
+  eventId: 'epicgames_S42_CrashBandicootCup_Finals_EU',
+  windowId: 'S42_CrashBandicootCup_Finals_EU',
+  targetLabel: 'Finals - place for prizes (no qualification)',
+  targetType: 'final',
+}
+assert(formatPointsDiscord(finalLive).includes('Live Finals:'))
+assert(formatPointsDiscord(finalLive).includes('boundary 260 pts'))
+const finalsEmbed = formatPointsEmbed(finalLive)
+assert.equal(finalsEmbed.title, '🏆 POINTS READ // FINALS PRIZE RACE')
+assert(finalsEmbed.fields.some(field => field.name === 'CURRENT PRIZE BAND' && field.value.includes('Top 25')))
+assert(finalsEmbed.fields.some(field => field.name === 'NEXT BETTER TIER' && field.value.includes('Top 5')))
+assert(finalsEmbed.fields.some(field => field.name === 'PRIZE RACE' && field.value.includes('13.3 PPG')))
+assert(finalsEmbed.fields.some(field => field.name === 'SOURCE & FRESHNESS' && field.value.includes('No other region or prior tournament')))
+
+const opaqueFinals = calculatePrizeRace({
+  current: 220,
+  rank: 10,
+  games: 3,
+  prizeLadder: [
+    { minRank: 1, maxRank: 1, verified: false, livePointsAtBoundary: 300 },
+    { minRank: 2, maxRank: 5, verified: false, livePointsAtBoundary: 260 },
+    { minRank: 6, maxRank: 25, verified: false, livePointsAtBoundary: 180 },
+  ],
+})
+assert.equal(opaqueFinals.prizeLadderVerified, false)
+assert(formatPointsDiscord({
+  ...opaqueFinals,
+  source: 'live',
+  region: 'EU',
+  tournamentName: 'CrashBandicootCup Finals',
+  roundType: 'Finals',
+  ign: 'Exact Epic Name',
+  gamesPlayed: 4,
+}).includes('No dollar amount is being guessed'))
+
+const missingFinalBoundary = calculatePrizeRace({
+  current: 220,
+  rank: 10,
+  games: 3,
+  prizeLadder: [
+    { minRank: 1, maxRank: 1, verified: true, livePointsAtBoundary: 300 },
+    { minRank: 2, maxRank: 5, verified: true, livePointsAtBoundary: null },
+    { minRank: 6, maxRank: 25, verified: true, livePointsAtBoundary: 180 },
+  ],
+})
+assert.equal(missingFinalBoundary.targetTier.maxRank, 5)
+assert.equal(missingFinalBoundary.targetPoints, null)
+assert.equal(missingFinalBoundary.requiredPerGame, null)
+
+const missingFinalRank = calculatePrizeRace({
+  current: 220,
+  rank: null,
+  games: 3,
+  prizeLadder: [{ minRank: 1, maxRank: 5, verified: true, livePointsAtBoundary: 260 }],
+})
+assert.equal(missingFinalRank.currentTier, null)
+assert.equal(missingFinalRank.targetTier, null)
+assert.equal(missingFinalRank.targetPoints, null)
+
 const worker = read('tickets-worker/worker.js')
 const register = read('scripts/register-slash-commands.mjs')
 const readme = read('tickets-worker/README.md')
@@ -104,8 +192,13 @@ assert(register.includes("name: 'current'"))
 assert(register.includes("name: 'target'"))
 assert(register.includes("name: 'games'"))
 assert(register.includes("name: 'ign'"))
+assert(register.includes("name: 'account_id'"))
 assert(register.includes("name: 'region'"))
+assert(register.includes("value: 'ALL'"))
 assert(readme.includes('exact `eventId` and `windowId`'))
-assert(readme.includes('older region or a previous tournament'))
+assert(readme.includes('across regions'))
+assert(readme.includes('substitute a prior similar'))
+assert(readme.includes('Finals'))
+assert(readme.includes('account ID'))
 
 console.log('points command fixture: focused checks passed')
