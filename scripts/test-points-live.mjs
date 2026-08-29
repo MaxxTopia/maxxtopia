@@ -3,6 +3,7 @@ import {
   REGIONS,
   STANDING_API,
   WINDOWS_API,
+  loadLiveWindows,
   loadLivePoints,
   normalizeRegion,
   selectLiveWindow,
@@ -145,6 +146,17 @@ assert.throws(
   () => selectLiveWindow([qualificationWindow, finalsWindow], ''),
   error => error.code === 'ambiguousWindow',
 )
+const liveWindows = await loadLiveWindows('EU', { fetchImpl })
+assert.deepEqual(liveWindows.windows.map(window => window.windowId), [qualificationWindow.windowId, finalsWindow.windowId])
+assert.equal(liveWindows.fetched, '2026-08-29T18:00:00.000Z')
+const exactWindowOnly = await loadLivePoints({
+  ign: 'Exact Epic Name',
+  region: 'EU',
+  windowId: qualificationWindow.windowId,
+  games: 3,
+}, { fetchImpl })
+assert.equal(exactWindowOnly.ok, true, exactWindowOnly.error)
+assert.equal(exactWindowOnly.eventId, qualificationWindow.eventId)
 assert.equal(normalizeRegion('all'), 'ALL')
 assert.deepEqual(REGIONS, ['NAC', 'EU', 'NAW', 'BR', 'ASIA', 'OCE', 'ME'])
 

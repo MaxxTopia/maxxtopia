@@ -165,34 +165,71 @@ surface, one private lookup flow, explicit region/event/window provenance, and
 optional deeper analytics. No Kinch channel structure was copied because it was
 not publicly inspectable.
 
+## Local Kinch-style panel implementation (not live)
+
+The isolated bot release tree now contains a code-native version of the useful
+Kinch interaction pattern: a persistent read-only panel in `#free-stuff`,
+private button/select interactions, and modal forms whose results remain
+ephemeral. The panel has four controls: live tournament points, manual points
+pace, Storm BR, and Storm Reload. Live points intentionally uses region first,
+then a freshly fetched exact live-window menu, then a three-field modal for
+Epic identity, games left, and optional safety cushion. The submit re-fetches
+the selected `windowId`, derives its exact `eventId`, and queries the same
+region/window; it does not trust a stale label or substitute another region.
+Qualifiers and Finals are labelled differently in the menu, with Finals using
+the existing live prize-race result path.
+
+Changed files for this local milestone are `tickets-worker/panel.js`,
+`tickets-worker/points-live.js`, `tickets-worker/worker.js`,
+`scripts/post-free-stuff-panel.mjs`, and the focused interaction/live tests.
+The publisher is dry-run by default and targets only the known guide message;
+the original Viewmaxxing preview remains outside its search and edit scope.
+
+No live Discord permission, AutoMod, message, command registration, Worker
+deployment, push, or external message was changed for this panel milestone.
+The currently deployed Worker and channel still represent the prior
+slash-command plus temporary composer/AutoMod workaround until an explicit
+rollout is approved. The safe rollout order is Worker deploy, silent panel
+update, read-only permission restore, then AutoMod workaround removal, with a
+read-back after each boundary.
+
+The panel's live-window refresh is also guarded at five seconds per Discord
+user, independently of the final live-points cooldown and ticket/VIP KV
+limiter, so repeated select clicks cannot create an unbounded `/windows` proxy.
+
 ## Separate status claims
 
-- Local: yes, in both isolated release worktrees.
-- Built: yes, site build and Worker dry-run passed.
-- Tested: yes for focused fixtures, signed privacy behavior, source live data,
-  and unauthenticated endpoint rejection; real Discord rendering remains owed.
-- Committed: yes, source `c3eacca` plus docs `8625666`; bot `58cff5d`.
+- Local: yes; the new panel implementation is present only in the isolated bot
+  release tree, while the main Maxxtopia and Snipemaxxer checkouts remain
+  untouched and dirty.
+- Built: the prior site build and Worker dry-run passed; this panel milestone
+  still needs its post-edit build/dry-run evidence.
+- Tested: the prior focused fixtures passed, and the new panel fixtures still
+  need to be recorded here; real Discord rendering remains owed.
+- Committed: prior source `c3eacca` plus docs `8625666`; prior bot `58cff5d`.
+  The panel milestone is not committed until its final verification passes.
 - Pushed: no.
 - Registered: yes, silently; the schema was unchanged by the abuse guard.
-- Deployed: source and bot yes; Maxxtopia site no new deployment.
+- Deployed: source and prior bot yes; the panel milestone is not deployed;
+  Maxxtopia site has no new deployment.
 - Verified live: source data, bot rejection paths, the silent `#free-stuff`
   channel surface, the regular-member composer permission, the enabled
   command-only AutoMod rule, and the registered `/points`/`/storm` commands
-  yes; a real regular-user-issued `/points live` card and a real plain-message
-  block inside Discord are not yet verified.
+  yes; the new panel's real regular-user click/select/modal flow is not live
+  or verified, and a real plain-message block inside Discord is not yet
+  verified.
 
 ## Diggy-owed tests and next action
 
-Run `/points live` in the target Discord server for one active open/qualifier
-and one active Finals event, visually inspect the private card, and test a
-console alias by supplying the Epic account ID if the display name fails. In
-`#free-stuff`, also send one harmless ordinary test phrase: it should remain
-invisible to the channel while `/points` remains selectable and private. If
-you want a true Kinch channel-by-channel comparison, provide authenticated
-channel screenshots/export or explicitly approve a live Discord login/join
-flow at the moment it is requested.
+After a panel rollout is approved, click each panel control as a regular member,
+choose one active qualifier and one active Finals event, visually inspect the
+private results, and test a console alias by supplying the Epic account ID if
+the display name fails. Confirm ordinary members cannot send a normal message
+in `#free-stuff` while panel interactions still work. If you want a true Kinch
+channel-by-channel comparison, provide authenticated channel screenshots/export
+or explicitly approve a live Discord login/join flow at the moment it is
+requested.
 
-Single best next action: perform the real Discord visual test, including a VIP
-member and a console account-ID fallback, then decide whether the remaining
-distributed-abuse boundary warrants a separate Cloudflare WAF/rate-limit rule
-before any broader rollout.
+Single best next action: finish local verification and review the isolated diff;
+then, if the panel looks right, approve the four-step live migration rather
+than changing the live channel while the new Worker is unverified.

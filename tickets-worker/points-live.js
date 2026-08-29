@@ -44,10 +44,25 @@ function describeWindows(windows) {
   return windows.slice(0, 5).map(displayWindow).join(', ')
 }
 
-function selectLiveWindow(windows, tournament) {
+function selectLiveWindow(windows, tournament, exactEventId = '', exactWindowId = '') {
   const live = (Array.isArray(windows) ? windows : []).filter(window => window?.live === true)
   if (!live.length) {
     throw new LivePointsError('No live tournament window was found in that region. Use manual mode or check the region.', 'noLiveWindow')
+  }
+
+  const requestedEventId = String(exactEventId ?? '').trim()
+  const requestedWindowId = String(exactWindowId ?? '').trim()
+  if (requestedEventId || requestedWindowId) {
+    const exactMatches = live.filter(window => {
+      const eventMatches = !requestedEventId || String(window?.eventId || '').trim() === requestedEventId
+      const windowMatches = !requestedWindowId || String(window?.windowId || '').trim() === requestedWindowId
+      return eventMatches && windowMatches
+    })
+    if (exactMatches.length === 1) return exactMatches[0]
+    if (exactMatches.length > 1) {
+      throw new LivePointsError('The selected live window identity is ambiguous; no leaderboard was queried.', 'ambiguousWindow')
+    }
+    throw new LivePointsError('That live tournament window is no longer available. Choose it again from the fresh live list.', 'windowNotFound')
   }
 
   const filter = String(tournament ?? '').trim()
@@ -95,6 +110,11 @@ function selectLiveWindow(windows, tournament) {
   return matches[0]
 }
 
+function supportedWindowFormat(window) {
+  const format = String(window?.format || (window?.threshold?.type === 'final' ? 'final' : 'qualification')).trim()
+  return ['qualification', 'final'].includes(format) ? format : null
+}
+
 async function fetchJson(url, fetchImpl, label) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
@@ -119,6 +139,55 @@ async function fetchJson(url, fetchImpl, label) {
     throw new LivePointsError(`Could not reach ${label}. Try again in a moment.`, 'upstreamError')
   } finally {
     clearTimeout(timeout)
+  }
+}
+
+async function loadLiveWindows(regionInput, deps = {}) {
+  const region = normalizeRegion(regionInput)
+  if (!region) {
+    throw new LivePointsError(`Choose a current region or ALL: ${REGIONS.join(', ')}, ALL.`, 'invalidRegion')
+  }
+
+  const fetchImpl = deps.fetchImpl || globalThis.fetch
+  if (typeof fetchImpl !== 'function') throw new LivePointsError('Live tournament choices are unavailable in this environment.', 'noFetch')
+
+  const windowsData = await fetchJson(
+    `${WINDOWS_API}?region=${encodeURIComponent(region)}`,
+    fetchImpl,
+    'the live tournament feed',
+  )
+  if (windowsData.error) throw new LivePointsError(String(windowsData.error), 'upstreamError')
+
+  const failedRegions = Array.isArray(windowsData.regionsFailed)
+    ? windowsData.regionsFailed.map(value => String(value).trim().toUpperCase()).filter(Boolean)
+    : []
+  if (region !== 'ALL' && failedRegions.includes(region)) {
+    throw new LivePointsError('The live tournament feed is unavailable for that region. Try again in a moment.', 'upstreamError')
+  }
+  if (region === 'ALL' && failedRegions.length === REGIONS.length) {
+    throw new LivePointsError('The live tournament feed is unavailable for every region. Try again in a moment.', 'upstreamError')
+  }
+
+  const responseRegion = String(windowsData.region || '').trim().toUpperCase()
+  const windows = (Array.isArray(windowsData.windows) ? windowsData.windows : [])
+    .filter(window => window?.live === true)
+    .map(window => {
+      const windowRegion = String(window.region || (region === 'ALL' ? responseRegion : region)).trim().toUpperCase()
+      return { ...window, region: windowRegion }
+    })
+    .filter(window => REGIONS.includes(window.region))
+    .filter(window => region === 'ALL' || window.region === region)
+    .filter(window => String(window.eventId || '').trim() && String(window.windowId || '').trim())
+    .filter(window => supportedWindowFormat(window))
+
+  if (!windows.length) {
+    throw new LivePointsError('No supported live tournament window was found in that region. Use manual mode or try again later.', 'noLiveWindow')
+  }
+
+  return {
+    region,
+    windows,
+    fetched: windowsData.fetched || null,
   }
 }
 
@@ -173,7 +242,7 @@ async function loadLivePoints(input = {}, deps = {}) {
       throw new LivePointsError('The live tournament feed is unavailable for every region. Try again in a moment.', 'upstreamError')
     }
 
-    const window = selectLiveWindow(windowsData.windows, input.tournament)
+    const window = selectLiveWindow(windowsData.windows, input.tournament, input.eventId, input.windowId)
     const eventId = String(window.eventId || '').trim()
     const windowId = String(window.windowId || '').trim()
     if (!eventId || !windowId) throw new LivePointsError('The selected live tournament is missing its exact window identity.', 'invalidWindow')
@@ -275,4 +344,15 @@ async function loadLivePoints(input = {}, deps = {}) {
   }
 }
 
-export { CUTOFF_API, WINDOWS_API, STANDING_API, SCORE_API, REGIONS, LivePointsError, normalizeRegion, selectLiveWindow, loadLivePoints }
+export {
+  CUTOFF_API,
+  WINDOWS_API,
+  STANDING_API,
+  SCORE_API,
+  REGIONS,
+  LivePointsError,
+  normalizeRegion,
+  selectLiveWindow,
+  loadLiveWindows,
+  loadLivePoints,
+}

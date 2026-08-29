@@ -91,6 +91,52 @@ refresh spam cannot consume ticket capacity. It is a burst safeguard rather
 than a global DDoS control; distributed abuse still belongs behind Cloudflare
 rate limiting/WAF.
 
+The panel's live-window menu has its own five-second per-user refresh guard so
+button spam cannot turn the region picker into an unbounded `/windows` proxy.
+The menu guard is separate from the final points-lookup cooldown and from the
+ticket/VIP KV limiter.
+
+## Private `#free-stuff` utility panel
+
+The preferred channel surface is a persistent Maxx Bot panel in `#free-stuff`,
+not a chat box. Ordinary members can read the channel and click its buttons
+without having `SEND_MESSAGES`; button clicks, menus, and modal submissions are
+Discord interactions handled by the Worker. The bot's prompts and results are
+ephemeral, so no user's identity, form input, or answer is posted to the
+channel.
+
+The panel has four entry points:
+
+- **Live tournament points** — choose a region, choose a freshly loaded exact
+  live window, then enter an Epic display name or 32-character account ID,
+  games left, and an optional cushion. The submit step re-checks that exact
+  window before asking for the standing.
+- **Manual points pace** — enter current points, target points, games left, and
+  an optional cushion.
+- **Storm · BR** and **Storm · Reload** — enter the current zone state and get
+  a private timing read using the selected mode's reference table.
+
+Live windows are not hardcoded into the buttons. Qualifiers are labelled as a
+moving line and Finals as a live prize race, so the panel can serve every
+supported region without carrying a stale event or cutoff. Slash commands stay
+available as a fallback.
+
+`scripts/post-free-stuff-panel.mjs` is a dry run by default. After the Worker
+release is approved, use it to update only the known Maxx Bot guide message (or
+find a prior panel by its invisible signature); it never edits the original
+Viewmaxxing preview post. The safe live migration order is:
+
+1. Deploy the Worker containing the panel interaction routes.
+2. Run the panel publisher with `--execute` so the existing guide gets the
+   buttons silently and without mentions.
+3. Restore `#free-stuff` to read-only for ordinary members.
+4. Remove the temporary catch-all AutoMod command-only workaround after the
+   read-only permission is confirmed.
+
+Do not run the execute step, change permissions, or remove the AutoMod rule as
+part of a local build. Those are live Discord changes and must be verified
+separately.
+
 ## Deploy
 
 ### 1. Create the rate-limit KV namespace

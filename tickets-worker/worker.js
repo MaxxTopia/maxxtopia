@@ -28,7 +28,19 @@
  */
 
 import { calculatePointsForecast, formatPointsDiscord, formatPointsEmbed } from './points-calculator.js'
-import { loadLivePoints } from './points-live.js'
+import { loadLivePoints, loadLiveWindows, normalizeRegion } from './points-live.js'
+import {
+  PANEL_IDS,
+  buildLivePointsModal,
+  buildLiveRegionPrompt,
+  buildLiveTournamentPrompt,
+  buildManualPointsModal,
+  buildStormModal,
+  decodeWindowValue,
+  parseLiveSubmitCustomId,
+  parseStormSubmitCustomId,
+  parseWindowPickerCustomId,
+} from './panel.js'
 import { calculateStormForecast, formatStormDiscord, formatStormEmbed } from './storm-calculator.js'
 
 const DISCORD_API = 'https://discord.com/api/v10'
@@ -37,11 +49,13 @@ const DISCORD_API = 'https://discord.com/api/v10'
 const INTERACTION_PING = 1
 const INTERACTION_APPLICATION_COMMAND = 2
 const INTERACTION_MESSAGE_COMPONENT = 3
+const INTERACTION_MODAL_SUBMIT = 5
 
 // Response types
 const RESP_PONG = 1
 const RESP_CHANNEL_MESSAGE = 4
 const RESP_DEFERRED_CHANNEL_MESSAGE = 5
+const RESP_SHOW_MODAL = 9
 
 // Channel types
 const CHANNEL_PRIVATE_THREAD = 12
@@ -59,9 +73,12 @@ const RATE_LIMIT_SECONDS = 60
 // remains the correct next layer for distributed abuse.
 const LIVE_POINTS_COOLDOWN_SECONDS = 30
 const LIVE_POINTS_VIP_COOLDOWN_SECONDS = 5
+const LIVE_WINDOWS_COOLDOWN_SECONDS = 5
+const LIVE_WINDOWS_VIP_COOLDOWN_SECONDS = 5
 const LIVE_POINTS_MAX_IN_FLIGHT = 16
 const LIVE_POINTS_MAX_COOLDOWNS = 4096
 const livePointsCooldowns = new Map()
+const liveWindowsCooldowns = new Map()
 let livePointsInFlight = 0
 
 // ─── Endpoint ───────────────────────────────────────────────────────────
@@ -93,7 +110,7 @@ export default {
       return jsonResponse({ type: RESP_PONG })
     }
 
-    // Button click on the ticket panel.
+    // Button/select interaction on a panel.
     if (interaction.type === INTERACTION_MESSAGE_COMPONENT) {
       const customId = interaction.data?.custom_id ?? ''
       if (customId.startsWith('vip-buy-')) {
@@ -117,6 +134,96 @@ export default {
       // custom_id so we know who to grant without prompting.
       if (customId.startsWith('grant-vip:')) {
         ctx.waitUntil(handleGrantVip(env, interaction, customId))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
+
+      // Private utility panel. The public message stays read-only; these
+      // interactions create ephemeral prompts and never post in the channel.
+      if (customId === PANEL_IDS.livePoints) {
+        return jsonResponse({ type: RESP_CHANNEL_MESSAGE, data: buildLiveRegionPrompt() })
+      }
+      if (customId === PANEL_IDS.manualPoints) {
+        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildManualPointsModal() })
+      }
+      if (customId === PANEL_IDS.stormBattleRoyale) {
+        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildStormModal('battleRoyale') })
+      }
+      if (customId === PANEL_IDS.stormReload) {
+        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildStormModal('reload') })
+      }
+      if (customId === PANEL_IDS.liveRegion) {
+        const region = interaction.data?.values?.[0]
+        ctx.waitUntil(handleLiveRegionSelection(env, interaction, region))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
+      if (customId.startsWith(PANEL_IDS.liveWindowPrefix)) {
+        const picker = parseWindowPickerCustomId(customId)
+        const region = normalizeRegion(picker?.region)
+        const windowId = decodeWindowValue(interaction.data?.values?.[0])
+        if (!region || !windowId) {
+          return jsonResponse({
+            type: RESP_CHANNEL_MESSAGE,
+            data: {
+              content: 'That live tournament selection is invalid. Open the live points tool again and choose a fresh window.',
+              flags: MSG_FLAG_EPHEMERAL,
+              allowed_mentions: { parse: [] },
+            },
+          })
+        }
+        try {
+          return jsonResponse({ type: RESP_SHOW_MODAL, data: buildLivePointsModal(region, windowId) })
+        } catch {
+          return jsonResponse({
+            type: RESP_CHANNEL_MESSAGE,
+            data: {
+              content: 'That live tournament cannot be opened in a Discord form. Use `/points live` with its exact tournament name instead.',
+              flags: MSG_FLAG_EPHEMERAL,
+              allowed_mentions: { parse: [] },
+            },
+          })
+        }
+      }
+    }
+
+    // Modal submits stay ephemeral. Live points are deferred because they
+    // perform bounded upstream reads; arithmetic-only forms can answer now.
+    if (interaction.type === INTERACTION_MODAL_SUBMIT) {
+      const customId = interaction.data?.custom_id ?? ''
+      if (customId === PANEL_IDS.manualSubmit) {
+        return jsonResponse({ type: RESP_CHANNEL_MESSAGE, data: handleManualPointsModal(interaction) })
+      }
+
+      const stormModal = parseStormSubmitCustomId(customId)
+      if (stormModal) {
+        return jsonResponse({ type: RESP_CHANNEL_MESSAGE, data: handleStormModal(interaction, stormModal.mode) })
+      }
+
+      const liveModal = parseLiveSubmitCustomId(customId)
+      if (liveModal) {
+        const region = normalizeRegion(liveModal.region)
+        if (!region) {
+          return jsonResponse({
+            type: RESP_CHANNEL_MESSAGE,
+            data: {
+              content: 'The selected region is no longer valid. Open the live points tool again.',
+              flags: MSG_FLAG_EPHEMERAL,
+              allowed_mentions: { parse: [] },
+            },
+          })
+        }
+        ctx.waitUntil(handleLivePointsLookup(env, interaction, {
+          ...identityInput(getModalValue(interaction, 'epic_identity')),
+          region,
+          windowId: liveModal.windowId,
+          games: getModalValue(interaction, 'games_left'),
+          buffer: getModalValue(interaction, 'safety_cushion'),
+        }))
         return jsonResponse({
           type: RESP_DEFERRED_CHANNEL_MESSAGE,
           data: { flags: MSG_FLAG_EPHEMERAL },
@@ -434,6 +541,102 @@ async function handleGrantVip(env, interaction, customId) {
 // ─── Slash command handlers ─────────────────────────────────────────────
 
 async function handleLivePoints(env, interaction) {
+  return handleLivePointsLookup(env, interaction, {
+    ign: getOption(interaction, 'ign'),
+    accountId: getOption(interaction, 'account_id'),
+    region: getOption(interaction, 'region'),
+    tournament: getOption(interaction, 'tournament'),
+    games: getOption(interaction, 'games'),
+    buffer: getOption(interaction, 'buffer'),
+  })
+}
+
+async function handleLiveRegionSelection(env, interaction, regionInput) {
+  if (livePointsInFlight >= LIVE_POINTS_MAX_IN_FLIGHT) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⏳ Live tournament choices are busy. Try again in a moment.',
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+
+  const callerId = interaction.member?.user?.id ?? interaction.user?.id
+  const isVip = hasVipRole(interaction, env)
+  const cooldownSeconds = isVip ? LIVE_WINDOWS_VIP_COOLDOWN_SECONDS : LIVE_WINDOWS_COOLDOWN_SECONDS
+  const cooldown = claimLiveWindowsCooldown(callerId, cooldownSeconds)
+  if (!cooldown.allowed) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: `⏱ Live tournament choices are limited to one refresh every ${cooldownSeconds} seconds. Try again in ${cooldown.retryAfterSeconds}s.`,
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+
+  livePointsInFlight += 1
+  try {
+    const selection = await loadLiveWindows(regionInput)
+    const body = buildLiveTournamentPrompt(selection.region, selection.windows)
+    await editFollowup(interaction.application_id, interaction.token, body)
+  } catch (error) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: `⚠ Live tournament choices are unavailable: ${String(error?.message || 'try again in a moment.').slice(0, 1800)}`,
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+  } finally {
+    livePointsInFlight -= 1
+  }
+}
+
+function handleManualPointsModal(interaction) {
+  const result = calculatePointsForecast({
+    current: getModalValue(interaction, 'current_points'),
+    target: getModalValue(interaction, 'target_points'),
+    games: getModalValue(interaction, 'games_left'),
+    buffer: getModalValue(interaction, 'safety_cushion'),
+  })
+  return {
+    ...(result.ok ? { embeds: [formatPointsEmbed(result)] } : { content: formatPointsDiscord(result) }),
+    flags: MSG_FLAG_EPHEMERAL,
+    allowed_mentions: { parse: [] },
+  }
+}
+
+function handleStormModal(interaction, mode) {
+  const result = calculateStormForecast({
+    mode,
+    zone: getModalValue(interaction, 'zone'),
+    phase: getModalValue(interaction, 'phase').toLowerCase(),
+    timeLeftSeconds: getModalValue(interaction, 'time_left'),
+    damageTaken: getModalValue(interaction, 'damage_taken'),
+    dpsOverride: getModalValue(interaction, 'dps_override'),
+  })
+  return {
+    ...(result.ok ? { embeds: [formatStormEmbed(result)] } : { content: formatStormDiscord(result) }),
+    flags: MSG_FLAG_EPHEMERAL,
+    allowed_mentions: { parse: [] },
+  }
+}
+
+function identityInput(value) {
+  const identity = String(value ?? '').trim()
+  return /^[0-9a-f]{32}$/i.test(identity)
+    ? { accountId: identity, ign: '' }
+    : { accountId: '', ign: identity }
+}
+
+function getModalValue(interaction, customId) {
+  for (const actionRow of interaction.data?.components ?? []) {
+    for (const component of actionRow.components ?? []) {
+      if (component.custom_id === customId) return component.value ?? ''
+    }
+  }
+  return ''
+}
+
+async function handleLivePointsLookup(env, interaction, input) {
   if (livePointsInFlight >= LIVE_POINTS_MAX_IN_FLIGHT) {
     await editFollowup(interaction.application_id, interaction.token, {
       content: '⏳ Live lookup capacity is busy. Try again in a moment.',
@@ -459,14 +662,7 @@ async function handleLivePoints(env, interaction) {
   livePointsInFlight += 1
   let result
   try {
-    result = await loadLivePoints({
-      ign: getOption(interaction, 'ign'),
-      accountId: getOption(interaction, 'account_id'),
-      region: getOption(interaction, 'region'),
-      tournament: getOption(interaction, 'tournament'),
-      games: getOption(interaction, 'games'),
-      buffer: getOption(interaction, 'buffer'),
-    })
+    result = await loadLivePoints(input)
   } catch {
     result = { ok: false, error: 'Live points are unavailable right now. Try again in a moment.' }
   } finally {
@@ -488,11 +684,11 @@ function hasVipRole(interaction, env) {
   )
 }
 
-function claimLivePointsCooldown(userId, cooldownSeconds = LIVE_POINTS_COOLDOWN_SECONDS, now = Date.now()) {
+function claimCooldown(cooldowns, userId, cooldownSeconds, now = Date.now()) {
   if (!userId) return { allowed: true, retryAfterSeconds: 0 }
 
   const key = String(userId)
-  const existingExpiry = livePointsCooldowns.get(key)
+  const existingExpiry = cooldowns.get(key)
   if (existingExpiry && existingExpiry > now) {
     return {
       allowed: false,
@@ -500,16 +696,24 @@ function claimLivePointsCooldown(userId, cooldownSeconds = LIVE_POINTS_COOLDOWN_
     }
   }
 
-  for (const [id, expiry] of livePointsCooldowns) {
-    if (expiry <= now) livePointsCooldowns.delete(id)
+  for (const [id, expiry] of cooldowns) {
+    if (expiry <= now) cooldowns.delete(id)
   }
-  if (livePointsCooldowns.size >= LIVE_POINTS_MAX_COOLDOWNS) {
-    const oldest = livePointsCooldowns.keys().next().value
-    if (oldest) livePointsCooldowns.delete(oldest)
+  if (cooldowns.size >= LIVE_POINTS_MAX_COOLDOWNS) {
+    const oldest = cooldowns.keys().next().value
+    if (oldest) cooldowns.delete(oldest)
   }
 
-  livePointsCooldowns.set(key, now + cooldownSeconds * 1000)
+  cooldowns.set(key, now + cooldownSeconds * 1000)
   return { allowed: true, retryAfterSeconds: 0 }
+}
+
+function claimLivePointsCooldown(userId, cooldownSeconds = LIVE_POINTS_COOLDOWN_SECONDS, now = Date.now()) {
+  return claimCooldown(livePointsCooldowns, userId, cooldownSeconds, now)
+}
+
+function claimLiveWindowsCooldown(userId, cooldownSeconds = LIVE_WINDOWS_COOLDOWN_SECONDS, now = Date.now()) {
+  return claimCooldown(liveWindowsCooldowns, userId, cooldownSeconds, now)
 }
 
 /**
