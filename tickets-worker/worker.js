@@ -36,12 +36,22 @@ import {
   buildLiveTournamentPrompt,
   buildManualPointsModal,
   buildStormModal,
+  buildStormWizard,
+  buildLiveFeedUnavailablePrompt,
   decodeWindowValue,
   parseLiveSubmitCustomId,
   parseStormSubmitCustomId,
+  parseStormWizardCustomId,
   parseWindowPickerCustomId,
 } from './panel.js'
 import { calculateStormForecast, formatStormDiscord, formatStormEmbed } from './storm-calculator.js'
+import {
+  REVIEW_COOLDOWN_SECONDS,
+  REVIEW_MODAL_ID,
+  buildReviewEmbed,
+  buildReviewModal,
+  parseReviewInput,
+} from './reviews.js'
 
 const DISCORD_API = 'https://discord.com/api/v10'
 
@@ -55,6 +65,7 @@ const INTERACTION_MODAL_SUBMIT = 5
 const RESP_PONG = 1
 const RESP_CHANNEL_MESSAGE = 4
 const RESP_DEFERRED_CHANNEL_MESSAGE = 5
+const RESP_UPDATE_MESSAGE = 7
 const RESP_SHOW_MODAL = 9
 
 // Channel types
@@ -62,6 +73,7 @@ const CHANNEL_PRIVATE_THREAD = 12
 
 // Message flags
 const MSG_FLAG_EPHEMERAL = 1 << 6
+const MSG_FLAG_SUPPRESS_NOTIFICATIONS = 1 << 12
 
 // Per-user spam cap. KV write/read pricing makes this trivial.
 const RATE_LIMIT_SECONDS = 60
@@ -80,6 +92,19 @@ const LIVE_POINTS_MAX_COOLDOWNS = 4096
 const livePointsCooldowns = new Map()
 const liveWindowsCooldowns = new Map()
 let livePointsInFlight = 0
+const REVIEW_MAX_IN_FLIGHT = 4
+const REVIEW_MAX_COOLDOWNS = 4096
+const reviewCooldowns = new Map()
+let reviewInFlight = 0
+
+// Discord ephemeral replies are not channel messages, but a user can still
+// accumulate several of them in the client. Keep only the newest Maxx utility
+// reply per user and retire the previous one when the next interaction starts.
+// This is intentionally in-memory: it stores no user input and an expired
+// interaction token is harmless. The delete is best-effort because Workers
+// isolates can be replaced between two clicks.
+const UTILITY_MAX_REPLIES = 4096
+const utilityPrivateReplies = new Map()
 
 // ─── Endpoint ───────────────────────────────────────────────────────────
 
@@ -143,49 +168,55 @@ export default {
       // Private utility panel. The public message stays read-only; these
       // interactions create ephemeral prompts and never post in the channel.
       if (customId === PANEL_IDS.livePoints) {
-        return jsonResponse({ type: RESP_CHANNEL_MESSAGE, data: buildLiveRegionPrompt() })
+        return privateMessageResponse(interaction, ctx, buildLiveRegionPrompt())
       }
       if (customId === PANEL_IDS.manualPoints) {
-        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildManualPointsModal() })
+        return privateModalResponse(interaction, ctx, buildManualPointsModal())
       }
       if (customId === PANEL_IDS.stormBattleRoyale) {
-        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildStormModal('battleRoyale') })
+        return privateMessageResponse(interaction, ctx, buildStormWizard('battleRoyale'))
       }
       if (customId === PANEL_IDS.stormReload) {
-        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildStormModal('reload') })
+        return privateMessageResponse(interaction, ctx, buildStormWizard('reload'))
+      }
+
+      const stormWizard = parseStormWizardCustomId(customId)
+      if (stormWizard) {
+        if (stormWizard.action === 'reset') {
+          return jsonResponse({ type: RESP_UPDATE_MESSAGE, data: buildStormWizard(stormWizard.mode) })
+        }
+        if (stormWizard.action === 'zone' || stormWizard.action === 'phase' || stormWizard.action === 'time' || stormWizard.action === 'damage') {
+          const value = String(interaction.data?.values?.[0] ?? '')
+          const nextState = { ...stormWizard.state }
+          if (stormWizard.action === 'zone') nextState.zone = value
+          if (stormWizard.action === 'phase') nextState.phase = value === 'w' ? 'waiting' : value === 'c' ? 'closing' : ''
+          if (stormWizard.action === 'time') nextState.time = value
+          if (stormWizard.action === 'damage') nextState.damage = value
+          return jsonResponse({ type: RESP_UPDATE_MESSAGE, data: buildStormWizard(stormWizard.mode, nextState) })
+        }
+        if (stormWizard.action === 'submit') {
+          return privateMessageResponse(interaction, ctx, handleStormWizard(interaction, stormWizard))
+        }
       }
       if (customId === PANEL_IDS.liveRegion) {
         const region = interaction.data?.values?.[0]
         ctx.waitUntil(handleLiveRegionSelection(env, interaction, region))
-        return jsonResponse({
-          type: RESP_DEFERRED_CHANNEL_MESSAGE,
-          data: { flags: MSG_FLAG_EPHEMERAL },
-        })
+        return privateDeferredResponse(interaction, ctx)
       }
       if (customId.startsWith(PANEL_IDS.liveWindowPrefix)) {
         const picker = parseWindowPickerCustomId(customId)
         const region = normalizeRegion(picker?.region)
         const windowId = decodeWindowValue(interaction.data?.values?.[0])
         if (!region || !windowId) {
-          return jsonResponse({
-            type: RESP_CHANNEL_MESSAGE,
-            data: {
-              content: 'That live tournament selection is invalid. Open the live points tool again and choose a fresh window.',
-              flags: MSG_FLAG_EPHEMERAL,
-              allowed_mentions: { parse: [] },
-            },
+          return privateMessageResponse(interaction, ctx, {
+            content: 'That live tournament selection is invalid. Open the live points tool again and choose a fresh window.',
           })
         }
         try {
-          return jsonResponse({ type: RESP_SHOW_MODAL, data: buildLivePointsModal(region, windowId) })
+          return privateModalResponse(interaction, ctx, buildLivePointsModal(region, windowId))
         } catch {
-          return jsonResponse({
-            type: RESP_CHANNEL_MESSAGE,
-            data: {
-              content: 'That live tournament cannot be opened in a Discord form. Use `/points live` with its exact tournament name instead.',
-              flags: MSG_FLAG_EPHEMERAL,
-              allowed_mentions: { parse: [] },
-            },
+          return privateMessageResponse(interaction, ctx, {
+            content: 'That live tournament cannot be opened in a Discord form. Use `/points live` with its exact tournament name instead.',
           })
         }
       }
@@ -195,26 +226,28 @@ export default {
     // perform bounded upstream reads; arithmetic-only forms can answer now.
     if (interaction.type === INTERACTION_MODAL_SUBMIT) {
       const customId = interaction.data?.custom_id ?? ''
+      if (customId === REVIEW_MODAL_ID) {
+        ctx.waitUntil(handleReviewSubmit(env, interaction))
+        return jsonResponse({
+          type: RESP_DEFERRED_CHANNEL_MESSAGE,
+          data: { flags: MSG_FLAG_EPHEMERAL },
+        })
+      }
       if (customId === PANEL_IDS.manualSubmit) {
-        return jsonResponse({ type: RESP_CHANNEL_MESSAGE, data: handleManualPointsModal(interaction) })
+        return privateMessageResponse(interaction, ctx, handleManualPointsModal(interaction))
       }
 
       const stormModal = parseStormSubmitCustomId(customId)
       if (stormModal) {
-        return jsonResponse({ type: RESP_CHANNEL_MESSAGE, data: handleStormModal(interaction, stormModal.mode) })
+        return privateMessageResponse(interaction, ctx, handleStormModal(interaction, stormModal.mode))
       }
 
       const liveModal = parseLiveSubmitCustomId(customId)
       if (liveModal) {
         const region = normalizeRegion(liveModal.region)
         if (!region) {
-          return jsonResponse({
-            type: RESP_CHANNEL_MESSAGE,
-            data: {
-              content: 'The selected region is no longer valid. Open the live points tool again.',
-              flags: MSG_FLAG_EPHEMERAL,
-              allowed_mentions: { parse: [] },
-            },
+          return privateMessageResponse(interaction, ctx, {
+            content: 'The selected region is no longer valid. Open the live points tool again.',
           })
         }
         ctx.waitUntil(handleLivePointsLookup(env, interaction, {
@@ -224,21 +257,41 @@ export default {
           games: getModalValue(interaction, 'games_left'),
           buffer: getModalValue(interaction, 'safety_cushion'),
         }))
-        return jsonResponse({
-          type: RESP_DEFERRED_CHANNEL_MESSAGE,
-          data: { flags: MSG_FLAG_EPHEMERAL },
-        })
+        return privateDeferredResponse(interaction, ctx)
       }
     }
 
     // Slash commands. /storm and /points are public utility commands;
-    // /gen, /om, /33, /founderstatus, and /sccoins are registered via
+    // /review, /gen, /om, /33, /founderstatus, and /sccoins are registered via
     // scripts/register-slash-commands.mjs against the guild.
     // The public utility commands stay ephemeral and do not require a
     // Diggy-only gate. Administrative commands enforce their own gate
     // inside their handlers so a picker/role mistake cannot mint keys.
     if (interaction.type === INTERACTION_APPLICATION_COMMAND) {
       const name = interaction.data?.name ?? ''
+      if (name === 'review') {
+        if (!env.FEEDBACK_THREAD_ID) {
+          return jsonResponse({
+            type: RESP_CHANNEL_MESSAGE,
+            data: {
+              content: 'The feedback wall is not configured yet. Please try again later.',
+              flags: MSG_FLAG_EPHEMERAL,
+              allowed_mentions: { parse: [] },
+            },
+          })
+        }
+        if (!isReviewSurface(interaction, env)) {
+          return jsonResponse({
+            type: RESP_CHANNEL_MESSAGE,
+            data: {
+              content: 'Use `/review` inside the #feedback reviews post so your finished card lands in the right place.',
+              flags: MSG_FLAG_EPHEMERAL,
+              allowed_mentions: { parse: [] },
+            },
+          })
+        }
+        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildReviewModal() })
+      }
       if (name === 'storm') {
         const result = calculateStormForecast({
           mode: getOption(interaction, 'mode') || 'battleRoyale',
@@ -248,13 +301,8 @@ export default {
           damageTaken: getOption(interaction, 'damage'),
           dpsOverride: getOption(interaction, 'dps'),
         })
-        return jsonResponse({
-          type: RESP_CHANNEL_MESSAGE,
-          data: {
-            ...(result.ok ? { embeds: [formatStormEmbed(result)] } : { content: formatStormDiscord(result) }),
-            flags: MSG_FLAG_EPHEMERAL,
-            allowed_mentions: { parse: [] },
-          },
+        return privateMessageResponse(interaction, ctx, {
+          ...(result.ok ? { embeds: [formatStormEmbed(result)] } : { content: formatStormDiscord(result) }),
         })
       }
       if (name === 'points') {
@@ -264,17 +312,11 @@ export default {
           // gets its acknowledgement immediately, then edit the private
           // response when the exact event/window lookup finishes.
           ctx.waitUntil(handleLivePoints(env, interaction))
-          return jsonResponse({
-            type: RESP_DEFERRED_CHANNEL_MESSAGE,
-            data: { flags: MSG_FLAG_EPHEMERAL },
-          })
+          return privateDeferredResponse(interaction, ctx)
         }
         if (mode !== 'manual') {
           const result = { ok: false, error: 'Choose manual formula or live Epic lookup.' }
-          return jsonResponse({
-            type: RESP_CHANNEL_MESSAGE,
-            data: { content: formatPointsDiscord(result), flags: MSG_FLAG_EPHEMERAL, allowed_mentions: { parse: [] } },
-          })
+          return privateMessageResponse(interaction, ctx, { content: formatPointsDiscord(result) })
         }
         const result = calculatePointsForecast({
           current: getOption(interaction, 'current'),
@@ -282,13 +324,8 @@ export default {
           games: getOption(interaction, 'games'),
           buffer: getOption(interaction, 'buffer'),
         })
-        return jsonResponse({
-          type: RESP_CHANNEL_MESSAGE,
-          data: {
-            ...(result.ok ? { embeds: [formatPointsEmbed(result)] } : { content: formatPointsDiscord(result) }),
-            flags: MSG_FLAG_EPHEMERAL,
-            allowed_mentions: { parse: [] },
-          },
+        return privateMessageResponse(interaction, ctx, {
+          ...(result.ok ? { embeds: [formatPointsEmbed(result)] } : { content: formatPointsDiscord(result) }),
         })
       }
       if (name === 'gen' || name === 'om') {
@@ -580,11 +617,11 @@ async function handleLiveRegionSelection(env, interaction, regionInput) {
     const body = buildLiveTournamentPrompt(selection.region, selection.windows)
     await editFollowup(interaction.application_id, interaction.token, body)
   } catch (error) {
-    await editFollowup(interaction.application_id, interaction.token, {
-      content: `⚠ Live tournament choices are unavailable: ${String(error?.message || 'try again in a moment.').slice(0, 1800)}`,
-      flags: MSG_FLAG_EPHEMERAL,
-      allowed_mentions: { parse: [] },
-    })
+    await editFollowup(
+      interaction.application_id,
+      interaction.token,
+      buildLiveFeedUnavailablePrompt(normalizeRegion(regionInput) || 'your region', error),
+    )
   } finally {
     livePointsInFlight -= 1
   }
@@ -604,6 +641,19 @@ function handleManualPointsModal(interaction) {
   }
 }
 
+function handleStormWizard(interaction, wizard) {
+  const result = calculateStormForecast({
+    mode: wizard.mode,
+    zone: wizard.state.zone,
+    phase: wizard.state.phase,
+    timeLeftSeconds: wizard.state.time,
+    damageTaken: wizard.state.damage,
+  })
+  return {
+    ...(result.ok ? { embeds: [formatStormEmbed(result)] } : { content: formatStormDiscord(result) }),
+  }
+}
+
 function handleStormModal(interaction, mode) {
   const result = calculateStormForecast({
     mode,
@@ -618,6 +668,149 @@ function handleStormModal(interaction, mode) {
     flags: MSG_FLAG_EPHEMERAL,
     allowed_mentions: { parse: [] },
   }
+}
+
+async function handleReviewSubmit(env, interaction) {
+  const appId = interaction.application_id
+  const token = interaction.token
+  const threadId = String(env.FEEDBACK_THREAD_ID ?? '').trim()
+  const user = interaction.member?.user ?? interaction.user
+  const userId = String(user?.id ?? '').trim()
+
+  if (!threadId || !isReviewSurface(interaction, env)) {
+    await editFollowup(appId, token, {
+      content: 'Please open `/review` from the #feedback reviews post and submit it again.',
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+  if (!userId) {
+    await editFollowup(appId, token, {
+      content: 'We could not identify your Discord account. Please try again.',
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+
+  const parsed = parseReviewInput({
+    rating: getModalValue(interaction, 'rating'),
+    product: getModalValue(interaction, 'product'),
+    comment: getModalValue(interaction, 'comment'),
+  })
+  if (!parsed.ok) {
+    await editFollowup(appId, token, {
+      content: `⚠ ${parsed.error}`,
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+  if (reviewInFlight >= REVIEW_MAX_IN_FLIGHT) {
+    await editFollowup(appId, token, {
+      content: '⏳ The review wall is busy for a moment. Please try again shortly.',
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+
+  const cooldown = claimCooldown(reviewCooldowns, userId, REVIEW_COOLDOWN_SECONDS, Date.now(), REVIEW_MAX_COOLDOWNS)
+  if (!cooldown.allowed) {
+    await editFollowup(appId, token, {
+      content: `⏱ You can submit another review in ${cooldown.retryAfterSeconds}s.`,
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+
+  reviewInFlight += 1
+  try {
+    const thread = await discordFetch(env, `/channels/${threadId}`)
+    if (!thread?.id || thread.locked) {
+      await editFollowup(appId, token, {
+        content: '⚠ The feedback wall is temporarily closed. Please try again later.',
+        flags: MSG_FLAG_EPHEMERAL,
+        allowed_mentions: { parse: [] },
+      })
+      return
+    }
+    if (env.FEEDBACK_CHANNEL_ID && thread.parent_id && String(thread.parent_id) !== String(env.FEEDBACK_CHANNEL_ID)) {
+      await editFollowup(appId, token, {
+        content: '⚠ The feedback wall configuration needs attention. Please tell a moderator.',
+        flags: MSG_FLAG_EPHEMERAL,
+        allowed_mentions: { parse: [] },
+      })
+      return
+    }
+    if (thread.archived) {
+      const reopened = await discordFetch(env, `/channels/${threadId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ archived: false }),
+      })
+      if (!reopened?.id) {
+        await editFollowup(appId, token, {
+          content: '⚠ The feedback wall is temporarily archived. Please try again later.',
+          flags: MSG_FLAG_EPHEMERAL,
+          allowed_mentions: { parse: [] },
+        })
+        return
+      }
+    }
+
+    const message = await discordFetch(env, `/channels/${threadId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify({
+        embeds: [buildReviewEmbed({
+          user,
+          displayName: user.global_name || user.username,
+          rating: parsed.rating,
+          product: parsed.product,
+          comment: parsed.comment,
+        })],
+        flags: MSG_FLAG_SUPPRESS_NOTIFICATIONS,
+        allowed_mentions: { parse: [] },
+      }),
+    })
+    if (!message?.id) {
+      await editFollowup(appId, token, {
+        content: '⚠ Your review could not be posted. Please try again later.',
+        flags: MSG_FLAG_EPHEMERAL,
+        allowed_mentions: { parse: [] },
+      })
+      return
+    }
+
+    // A small visual acknowledgement under each card, matching the reference
+    // without pinging anyone or creating a second public bot message.
+    await discordFetch(env, `/channels/${threadId}/messages/${message.id}/reactions/${encodeURIComponent('✅')}/@me`, {
+      method: 'PUT',
+      body: '{}',
+    })
+    await editFollowup(appId, token, {
+      content: '✓ Thanks — your feedback is now on the review wall.',
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+  } catch {
+    await editFollowup(appId, token, {
+      content: '⚠ The feedback wall is unavailable right now. Please try again later.',
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+  } finally {
+    reviewInFlight -= 1
+  }
+}
+
+function isReviewSurface(interaction, env) {
+  const channelId = String(interaction.channel_id ?? '')
+  const allowed = [env.FEEDBACK_CHANNEL_ID, env.FEEDBACK_THREAD_ID]
+    .map(value => String(value ?? '').trim())
+    .filter(Boolean)
+  return Boolean(channelId && allowed.includes(channelId))
 }
 
 function identityInput(value) {
@@ -684,7 +877,7 @@ function hasVipRole(interaction, env) {
   )
 }
 
-function claimCooldown(cooldowns, userId, cooldownSeconds, now = Date.now()) {
+function claimCooldown(cooldowns, userId, cooldownSeconds, now = Date.now(), maxEntries = LIVE_POINTS_MAX_COOLDOWNS) {
   if (!userId) return { allowed: true, retryAfterSeconds: 0 }
 
   const key = String(userId)
@@ -699,7 +892,7 @@ function claimCooldown(cooldowns, userId, cooldownSeconds, now = Date.now()) {
   for (const [id, expiry] of cooldowns) {
     if (expiry <= now) cooldowns.delete(id)
   }
-  if (cooldowns.size >= LIVE_POINTS_MAX_COOLDOWNS) {
+  if (cooldowns.size >= maxEntries) {
     const oldest = cooldowns.keys().next().value
     if (oldest) cooldowns.delete(oldest)
   }
@@ -1288,6 +1481,73 @@ async function discordFetch(env, path, opts = {}) {
   } catch {
     return null
   }
+}
+
+function utilityUserId(interaction) {
+  return interaction.member?.user?.id ?? interaction.user?.id ?? ''
+}
+
+function retireUtilityReply(interaction, ctx) {
+  const userId = utilityUserId(interaction)
+  if (!userId) return
+  const previous = utilityPrivateReplies.get(String(userId))
+  utilityPrivateReplies.delete(String(userId))
+  if (!previous || previous.token === interaction.token) return
+  const deletion = deleteWebhookReply(previous)
+  if (ctx?.waitUntil) ctx.waitUntil(deletion)
+  else void deletion
+}
+
+function rememberUtilityReply(interaction) {
+  const userId = utilityUserId(interaction)
+  const appId = String(interaction.application_id ?? '').trim()
+  const token = String(interaction.token ?? '').trim()
+  if (!userId || !appId || !token) return
+  utilityPrivateReplies.set(String(userId), { appId, token, createdAt: Date.now() })
+  while (utilityPrivateReplies.size > UTILITY_MAX_REPLIES) {
+    const oldest = utilityPrivateReplies.keys().next().value
+    if (!oldest) break
+    utilityPrivateReplies.delete(oldest)
+  }
+}
+
+async function deleteWebhookReply(reply) {
+  if (!reply?.appId || !reply?.token) return
+  try {
+    await fetch(`${DISCORD_API}/webhooks/${encodeURIComponent(reply.appId)}/${encodeURIComponent(reply.token)}/messages/@original`, {
+      method: 'DELETE',
+    })
+  } catch {
+    // Ephemeral replies expire naturally; a failed cleanup is not user-visible.
+  }
+}
+
+function privateResponseData(data = {}) {
+  return {
+    ...data,
+    flags: (Number(data.flags) || 0) | MSG_FLAG_EPHEMERAL,
+    allowed_mentions: { parse: [] },
+  }
+}
+
+function privateMessageResponse(interaction, ctx, data) {
+  retireUtilityReply(interaction, ctx)
+  rememberUtilityReply(interaction)
+  return jsonResponse({ type: RESP_CHANNEL_MESSAGE, data: privateResponseData(data) })
+}
+
+function privateModalResponse(interaction, ctx, data) {
+  retireUtilityReply(interaction, ctx)
+  return jsonResponse({ type: RESP_SHOW_MODAL, data })
+}
+
+function privateDeferredResponse(interaction, ctx) {
+  retireUtilityReply(interaction, ctx)
+  rememberUtilityReply(interaction)
+  return jsonResponse({
+    type: RESP_DEFERRED_CHANNEL_MESSAGE,
+    data: { flags: MSG_FLAG_EPHEMERAL },
+  })
 }
 
 async function editFollowup(appId, token, body) {

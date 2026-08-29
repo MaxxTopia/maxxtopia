@@ -2,7 +2,12 @@ import assert from 'node:assert/strict'
 import { webcrypto } from 'node:crypto'
 import worker from '../tickets-worker/worker.js'
 import { STANDING_API, WINDOWS_API } from '../tickets-worker/points-live.js'
-import { PANEL_IDS, PANEL_SIGNATURE, buildFreeToolsPanel } from '../tickets-worker/panel.js'
+import {
+  PANEL_IDS,
+  PANEL_SIGNATURE,
+  buildFreeToolsPanel,
+  parseStormWizardCustomId,
+} from '../tickets-worker/panel.js'
 
 if (!globalThis.crypto) globalThis.crypto = webcrypto
 
@@ -81,9 +86,10 @@ assert(points.body.data.embeds[0].description.includes('CHASE THE RACE LINE'))
 assert.equal(points.pending.length, 0)
 
 const panel = buildFreeToolsPanel()
-assert.equal(panel.components[0].components.length, 4)
+assert.equal(panel.components[0].components.length, 3)
 assert(panel.embed.description.includes(PANEL_SIGNATURE))
 assert(!panel.embed.description.includes('[maxx-panel:'))
+assert(!panel.embed.fields.some(field => field.name.includes('MANUAL')))
 
 const livePanel = await invoke({ custom_id: PANEL_IDS.livePoints }, 'panel-user', [], 3)
 assert.equal(livePanel.response.status, 200)
@@ -114,30 +120,53 @@ assert.equal(manualModal.body.data.embeds[0].title, '🏆 POINTS READ // QUALIFI
 assert.equal(manualModal.body.data.allowed_mentions.parse.length, 0)
 
 const stormPanel = await invoke({ custom_id: PANEL_IDS.stormReload }, 'panel-storm-user', [], 3)
-assert.equal(stormPanel.body.type, 9)
-assert(stormPanel.body.data.custom_id.startsWith(PANEL_IDS.stormSubmitPrefix))
+assert.equal(stormPanel.body.type, 4)
+assert.equal(stormPanel.body.data.flags, 64)
 assert.equal(stormPanel.body.data.components.length, 5)
+assert.equal(stormPanel.body.data.components.slice(0, 4).every(component => component.components[0].type === 3), true)
+assert.equal(stormPanel.body.data.components[4].components[0].disabled, true)
 
-const stormModal = await invoke({
-  custom_id: stormPanel.body.data.custom_id,
-  components: [
-    { type: 1, components: [{ type: 4, custom_id: 'zone', value: '7' }] },
-    { type: 1, components: [{ type: 4, custom_id: 'phase', value: 'closing' }] },
-    { type: 1, components: [{ type: 4, custom_id: 'time_left', value: '30' }] },
-    { type: 1, components: [{ type: 4, custom_id: 'damage_taken', value: '550' }] },
-    { type: 1, components: [{ type: 4, custom_id: 'dps_override', value: '' }] },
-  ],
-}, 'panel-storm-user', [], 5)
-assert.equal(stormModal.body.type, 4)
-assert.equal(stormModal.body.data.flags, 64)
-assert.equal(stormModal.body.data.embeds[0].title, '⚡ STORM READ // ROTATE WINDOW')
-assert.equal(stormModal.body.data.allowed_mentions.parse.length, 0)
+let stormWizard = stormPanel.body.data
+for (const [index, value] of [[0, '7'], [1, 'c'], [2, '30'], [3, '500']]) {
+  const picker = stormWizard.components[index].components[0]
+  const parsed = parseStormWizardCustomId(picker.custom_id)
+  assert(parsed)
+  assert.equal(parsed.action, ['zone', 'phase', 'time', 'damage'][index])
+  const step = await invoke({ custom_id: picker.custom_id, values: [value] }, 'panel-storm-user', [], 3)
+  assert.equal(step.body.type, 7)
+  assert.equal(step.body.data.flags, 64)
+  stormWizard = step.body.data
+}
+
+assert.equal(stormWizard.components[4].components[0].disabled, undefined)
+const stormSubmitId = stormWizard.components[4].components[0].custom_id
+const stormCleanupFetch = globalThis.fetch
+const stormCleanupCalls = []
+globalThis.fetch = async (url, options = {}) => {
+  stormCleanupCalls.push({ url: String(url), options })
+  return new Response(null, { status: 204 })
+}
+const stormWizardResult = await invoke({ custom_id: stormSubmitId }, 'panel-storm-user', [], 3)
+await Promise.all(stormWizardResult.pending)
+globalThis.fetch = stormCleanupFetch
+assert.equal(stormWizardResult.body.type, 4)
+assert.equal(stormWizardResult.body.data.flags, 64)
+assert.equal(stormWizardResult.body.data.embeds[0].title, '⚡ STORM READ // ROTATE WINDOW')
+assert.equal(stormWizardResult.body.data.allowed_mentions.parse.length, 0)
+assert.equal(stormCleanupCalls.length, 1)
+assert.equal(stormCleanupCalls[0].options.method, 'DELETE')
 
 const liveFetch = globalThis.fetch
 const liveCalls = []
 globalThis.fetch = async (url, options = {}) => {
   liveCalls.push({ url: String(url), options })
   if (String(url).startsWith(WINDOWS_API)) {
+    if (String(url).includes('region=NAW')) {
+      return new Response(JSON.stringify({ error: 'legacy upstream detail' }), {
+        status: 404,
+        headers: { 'content-type': 'application/json' },
+      })
+    }
     return new Response(JSON.stringify({
       region: 'EU',
       windows: [{
@@ -195,10 +224,13 @@ try {
   assert.equal(throttled.body.type, 5)
   assert.equal(throttled.body.data.flags, 64)
   await Promise.all(throttled.pending)
-  assert.equal(liveCalls.length, 4)
-  const throttleFollowup = JSON.parse(liveCalls[3].options.body)
+  assert.equal(throttled.pending.length, 2)
+  assert.equal(liveCalls.length, 5)
+  const throttleFollowupCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
+  const throttleFollowup = JSON.parse(throttleFollowupCall.options.body)
   assert(throttleFollowup.content.includes('one lookup every 30 seconds'))
   assert.equal(throttleFollowup.allowed_mentions.parse.length, 0)
+  assert(liveCalls.some(call => call.options.method === 'DELETE'))
 
   const vipUserOptions = {
     ...liveOptions,
@@ -210,13 +242,15 @@ try {
   assert.equal(vip.response.status, 200)
   await Promise.all(vip.pending)
   const callsAfterVip = liveCalls.length
-  assert.equal(callsAfterVip, 7)
+  assert.equal(callsAfterVip, 8)
 
   const vipThrottled = await invoke(vipUserOptions, 'vip-fixture-user', ['fixture-vip-role'])
   assert.equal(vipThrottled.response.status, 200)
   await Promise.all(vipThrottled.pending)
-  assert.equal(liveCalls.length, callsAfterVip + 1)
-  const vipThrottleFollowup = JSON.parse(liveCalls.at(-1).options.body)
+  assert.equal(vipThrottled.pending.length, 2)
+  assert.equal(liveCalls.length, callsAfterVip + 2)
+  const vipThrottleCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
+  const vipThrottleFollowup = JSON.parse(vipThrottleCall.options.body)
   assert(vipThrottleFollowup.content.includes('one lookup every 5 seconds'))
   assert.equal(vipThrottleFollowup.allowed_mentions.parse.length, 0)
 
@@ -238,10 +272,23 @@ try {
   const regionRefresh = await invoke({ custom_id: PANEL_IDS.liveRegion, values: ['EU'] }, 'panel-region-user', [], 3)
   assert.equal(regionRefresh.body.type, 5)
   await Promise.all(regionRefresh.pending)
-  assert.equal(liveCalls.length, panelRegionStart + 3)
-  const regionThrottleFollowup = JSON.parse(liveCalls.at(-1).options.body)
+  assert.equal(regionRefresh.pending.length, 2)
+  assert.equal(liveCalls.length, panelRegionStart + 4)
+  const regionThrottleCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
+  const regionThrottleFollowup = JSON.parse(regionThrottleCall.options.body)
   assert(regionThrottleFollowup.content.includes('one refresh every 5 seconds'))
   assert.equal(regionThrottleFollowup.allowed_mentions.parse.length, 0)
+
+  const unavailableStart = liveCalls.length
+  const unavailable = await invoke({ custom_id: PANEL_IDS.liveRegion, values: ['NAW'] }, 'panel-error-user', [], 3)
+  assert.equal(unavailable.body.type, 5)
+  await Promise.all(unavailable.pending)
+  assert.equal(liveCalls.length, unavailableStart + 2)
+  const unavailableCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
+  const unavailableBody = JSON.parse(unavailableCall.options.body)
+  assert.equal(unavailableBody.embeds[0].title, '⏳ LIVE LIST // TRY AGAIN')
+  assert(unavailableBody.embeds[0].description.includes('taking a moment'))
+  assert(!JSON.stringify(unavailableBody).includes('HTTP 404'))
 
   const windowSelect = await invoke({
     custom_id: tournamentPicker.custom_id,

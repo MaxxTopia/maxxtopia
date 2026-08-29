@@ -9,49 +9,55 @@ const STANDARD_THRESHOLDS = Object.freeze({
   sicknessMultiplier: 3,
 })
 
+const COMP_REFERENCE_LABEL = 'Chapter 7 Season 1 · Comp'
+
 const RULESETS = Object.freeze({
   battleRoyale: Object.freeze({
     key: 'battleRoyale',
     label: 'Battle Royale',
-    note: '12-zone reference timing table; verify the live in-game countdown.',
-    timingWarning: 'Reference timings can change after a patch or playlist change. Use the in-game countdown and the DPS override when they differ.',
+    referenceLabel: COMP_REFERENCE_LABEL,
+    openingWaitSeconds: 60,
+    note: 'Chapter 7 Season 1 Comp reference (user-supplied Kinch Analytics table). Blank damage cells are represented as 0 reference DPS; use the advanced override only when the match differs.',
+    timingWarning: 'This is a Comp reference, not a live feed. Ranked, pubs, and playlist/map variants can use another timing track; trust the in-game countdown and use the advanced DPS override only when its damage tick differs.',
     thresholdNote: 'Storm Sickness baseline: 500 warning / 600 sickness / 3x damage. Damage is cumulative, not player HP. This read stops at the practical leave-now sickness rule and does not model a hard-stop cap.',
     thresholds: STANDARD_THRESHOLDS,
     zones: Object.freeze([
-      Object.freeze({ zone: 1, wait: 120, close: 110, dps: 1 }),
-      Object.freeze({ zone: 2, wait: 90, close: 110, dps: 1 }),
-      Object.freeze({ zone: 3, wait: 95, close: 95, dps: 1 }),
-      Object.freeze({ zone: 4, wait: 90, close: 90, dps: 1 }),
-      Object.freeze({ zone: 5, wait: 50, close: 70, dps: 1 }),
-      Object.freeze({ zone: 6, wait: 50, close: 70, dps: 2 }),
-      Object.freeze({ zone: 7, wait: 50, close: 70, dps: 5 }),
-      Object.freeze({ zone: 8, wait: 35, close: 60, dps: 8 }),
-      Object.freeze({ zone: 9, wait: 20, close: 60, dps: 10 }),
-      Object.freeze({ zone: 10, wait: 0, close: 55, dps: 10 }),
-      Object.freeze({ zone: 11, wait: 0, close: 50, dps: 10 }),
-      Object.freeze({ zone: 12, wait: 0, close: 80, dps: 10 }),
+      Object.freeze({ zone: 1, wait: 110, close: 85, total: 255, dps: 0 }),
+      Object.freeze({ zone: 2, wait: 60, close: 90, total: 405, dps: 1 }),
+      Object.freeze({ zone: 3, wait: 50, close: 100, total: 555, dps: 1 }),
+      Object.freeze({ zone: 4, wait: 70, close: 85, total: 710, dps: 1 }),
+      Object.freeze({ zone: 5, wait: 40, close: 70, total: 820, dps: 2 }),
+      Object.freeze({ zone: 6, wait: 40, close: 70, total: 930, dps: 5 }),
+      Object.freeze({ zone: 7, wait: 35, close: 60, total: 1025, dps: 8 }),
+      Object.freeze({ zone: 8, wait: 20, close: 60, total: 1105, dps: 10 }),
+      Object.freeze({ zone: 9, wait: 0, close: 55, total: 1160, dps: 10 }),
+      Object.freeze({ zone: 10, wait: 0, close: 50, total: 1210, dps: 10 }),
+      Object.freeze({ zone: 11, wait: 0, close: 50, total: 1260, dps: 10 }),
+      Object.freeze({ zone: 12, wait: 0, close: 90, total: 1350, dps: 10 }),
     ]),
   }),
   reload: Object.freeze({
     key: 'reload',
     label: 'Reload',
-    note: 'Standard 12-zone Reload reference timing table; current Mini-Venture pacing is faster.',
-    timingWarning: 'Current Reload maps are not one timing track. The v42.00 notes call out faster Mini-Venture pacing, so use the in-game countdown or enter the current DPS override for Mini-Venture.',
+    referenceLabel: COMP_REFERENCE_LABEL,
+    openingWaitSeconds: 0,
+    note: 'Chapter 7 Season 1 Comp Reload reference (user-supplied Kinch Analytics table). Blank damage cells are represented as 0 reference DPS; use the advanced override only when the match differs.',
+    timingWarning: 'This is a Comp Reload reference, not a live feed. Reload maps and variants are not one timing track (including faster Mini-Venture pacing); trust the in-game countdown and use the advanced DPS override only when its damage tick differs.',
     thresholdNote: 'Storm Sickness baseline: 500 warning / 600 sickness / 3x damage. Damage is cumulative, not player HP. This read stops at the practical leave-now sickness rule and does not model a hard-stop cap.',
     thresholds: STANDARD_THRESHOLDS,
     zones: Object.freeze([
-      Object.freeze({ zone: 1, wait: 50, close: 90, dps: 1 }),
-      Object.freeze({ zone: 2, wait: 60, close: 50, dps: 1 }),
-      Object.freeze({ zone: 3, wait: 50, close: 45, dps: 1 }),
-      Object.freeze({ zone: 4, wait: 50, close: 45, dps: 1 }),
-      Object.freeze({ zone: 5, wait: 45, close: 40, dps: 1 }),
-      Object.freeze({ zone: 6, wait: 40, close: 35, dps: 2 }),
-      Object.freeze({ zone: 7, wait: 40, close: 35, dps: 5 }),
-      Object.freeze({ zone: 8, wait: 35, close: 35, dps: 8 }),
-      Object.freeze({ zone: 9, wait: 30, close: 35, dps: 10 }),
-      Object.freeze({ zone: 10, wait: 0, close: 65, dps: 10 }),
-      Object.freeze({ zone: 11, wait: 0, close: 75, dps: 10 }),
-      Object.freeze({ zone: 12, wait: 0, close: 70, dps: 10 }),
+      Object.freeze({ zone: 1, wait: 40, close: 80, total: 120, dps: 0 }),
+      Object.freeze({ zone: 2, wait: 40, close: 70, total: 230, dps: 0 }),
+      Object.freeze({ zone: 3, wait: 25, close: 70, total: 325, dps: 1 }),
+      Object.freeze({ zone: 4, wait: 25, close: 70, total: 420, dps: 1 }),
+      Object.freeze({ zone: 5, wait: 50, close: 70, total: 540, dps: 1 }),
+      Object.freeze({ zone: 6, wait: 50, close: 70, total: 660, dps: 2 }),
+      Object.freeze({ zone: 7, wait: 35, close: 60, total: 755, dps: 5 }),
+      Object.freeze({ zone: 8, wait: 20, close: 60, total: 835, dps: 8 }),
+      Object.freeze({ zone: 9, wait: 0, close: 55, total: 890, dps: 10 }),
+      Object.freeze({ zone: 10, wait: 0, close: 50, total: 940, dps: 10 }),
+      Object.freeze({ zone: 11, wait: 0, close: 50, total: 990, dps: 10 }),
+      Object.freeze({ zone: 12, wait: 0, close: 90, total: 1080, dps: 10 }),
     ]),
   }),
 })
@@ -134,6 +140,7 @@ function calculateStormForecast(input = {}) {
     ok: true,
     mode: profile.key,
     modeLabel: profile.label,
+    referenceLabel: profile.referenceLabel,
     profileNote: profile.note,
     timingWarning: profile.timingWarning,
     thresholdNote: profile.thresholdNote,
@@ -141,6 +148,8 @@ function calculateStormForecast(input = {}) {
     phase,
     phaseLabel: phase === 'waiting' ? 'WAITING' : 'CLOSING',
     phaseDurationSeconds: phase === 'waiting' ? entry.wait : entry.close,
+    referenceOpeningWaitSeconds: profile.openingWaitSeconds,
+    referencePhaseEndSeconds: entry.total,
     referenceDps: entry.dps,
     timeLeftSeconds: time,
     damageTaken: damage,
@@ -166,7 +175,9 @@ function calculateStormForecast(input = {}) {
       ? `Rotate before ${formatDuration(result.timeToSicknessSeconds)}. At ${formatDamage(result.sicknessDamage)} damage, Storm Sickness starts and the tick becomes ${formatDamage(result.activeDps)} DPS.`
       : result.timeToWarningSeconds != null && result.timeToWarningSeconds <= result.timeLeftSeconds
         ? `The ${formatDamage(result.warningDamage)} warning is reached in ${formatDuration(result.timeToWarningSeconds)}. Treat it as rotate-soon; do not plan to touch storm after ${formatDamage(result.sicknessDamage)}.`
-        : `Below warning. You can stay temporarily at ${formatDamage(result.baseDps)} DPS, but re-check when the phase or DPS changes.`
+        : result.baseDps === 0
+          ? 'The reference table lists no storm damage for this phase. Use the in-game tick or enter a DPS override if damage is occurring.'
+          : `Below warning. You can stay temporarily at ${formatDamage(result.baseDps)} DPS, but re-check when the phase or DPS changes.`
   return result
 }
 
@@ -188,12 +199,13 @@ function formatDamage(value) {
 
 function formatStormDiscord(result) {
   if (!result || !result.ok) return `Storm calculator: ${result?.error || 'check your inputs.'}`
-  const dps = `${result.baseDps} DPS${result.dpsOverridden ? ' (override)' : ''}`
+  const dps = `${result.baseDps} damage/sec${result.dpsOverridden ? ' (custom tick)' : ' (reference tick)'}`
   const leaveBy = result.status === 'sickness'
     ? 'Leave-by: NOW'
     : `Leave-by: ${formatDuration(result.timeToSicknessSeconds)} before sickness`
   return [
     `Storm Sickness Calculator - ${result.modeLabel}`,
+    `Reference: ${result.referenceLabel}`,
     `Zone ${result.zone} / ${result.phaseLabel} / ${formatDuration(result.timeLeftSeconds)} left / ${dps}`,
     `Read: ${result.statusLabel}`,
     `Damage: ${formatDamage(result.damageTaken)} / ${result.warningDamage} warning / ${result.sicknessDamage} sickness`,
@@ -223,7 +235,7 @@ function formatStormEmbed(result) {
       ? 0xffc857
       : 0x30d158
   const emoji = result.status === 'sickness' ? '🛑' : result.status === 'warning' ? '⚠️' : '✅'
-  const dps = `${result.baseDps} DPS${result.dpsOverridden ? ' (override)' : ''}`
+  const dps = `${result.baseDps} damage/sec${result.dpsOverridden ? ' (custom tick)' : ' (reference tick)'}`
   const damage = Math.max(0, Number(result.damageTaken) || 0)
   const sicknessDamage = Math.max(1, Number(result.sicknessDamage) || 1)
   const progress = Math.min(10, Math.max(0, Math.round(damage / sicknessDamage * 10)))
@@ -242,7 +254,7 @@ function formatStormEmbed(result) {
     fields: [
       {
         name: 'MATCH SNAPSHOT',
-        value: `**Zone ${result.zone}** · ${result.phaseLabel}\n${formatDuration(result.timeLeftSeconds)} left · ${dps}`,
+        value: `**Zone ${result.zone}** · ${result.phaseLabel}\n${formatDuration(result.timeLeftSeconds)} left · ${dps}\n${result.referenceLabel}`,
         inline: true,
       },
       {
@@ -271,7 +283,7 @@ function formatStormEmbed(result) {
         inline: false,
       },
     ],
-    footer: { text: 'Manual snapshot · private to you · verify the in-game timer and DPS' },
+    footer: { text: 'Quick snapshot · private to you · verify the in-game timer and tick' },
   }
 }
 

@@ -189,6 +189,18 @@ const upstreamFailure = await loadLivePoints({ ign: 'Player', region: 'EU', tour
 assert.equal(upstreamFailure.ok, false)
 assert.equal(upstreamFailure.code, 'upstreamError')
 
+await assert.rejects(
+  () => loadLiveWindows('EU', {
+    fetchImpl: async () => response({ error: 'legacy raw feed detail should stay private' }, 404),
+  }),
+  error => {
+    assert.equal(error.code, 'liveFeedUnavailable')
+    assert.equal(error.message, 'The live tournament list is temporarily unavailable. Try again in a moment.')
+    assert(!error.message.includes('HTTP 404'))
+    return true
+  },
+)
+
 const failedSelectedRegion = await loadLivePoints({ ign: 'Player', region: 'EU', tournament: 'CrashBandicootCup ZB', games: 1 }, {
   fetchImpl: async url => String(url).startsWith(WINDOWS_API)
     ? response({ windows: [qualificationWindow], regionsFailed: ['EU'], partial: true })

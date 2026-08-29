@@ -26,7 +26,9 @@ and they do not post a public message or notify the server.
 
 Required inputs are the current zone, `waiting` or `closing`, seconds left in
 that phase, and cumulative storm damage already taken. `Battle Royale` is the
-default timing reference; choose `Reload` when appropriate. A DPS override is
+default timing reference; choose `Reload` when appropriate. The current
+reference is the user-supplied **Chapter 7 Season 1 Comp** table, including its
+phase totals and opening wait; it is not a live game feed. A DPS override is
 available when the in-game tick differs from the reference table.
 
 The read uses the standard baseline of 500 cumulative damage for the warning,
@@ -37,7 +39,9 @@ tanking the zone after sickness.
 
 Reload timing is a reference only. Current Reload playlists are not one fixed
 timing track, and the current Mini-Venture variant is faster; use the in-game
-countdown or the DPS override when the reference does not match.
+countdown or the DPS override when the reference does not match. Blank damage
+cells in the supplied table are represented as `0 DPS` until an override is
+entered.
 
 ### `/points`
 
@@ -96,6 +100,26 @@ button spam cannot turn the region picker into an unbounded `/windows` proxy.
 The menu guard is separate from the final points-lookup cooldown and from the
 ticket/VIP KV limiter.
 
+## Read-only feedback review wall
+
+The existing `#feedback` Forum channel keeps its original post and is used as
+the review wall. `scripts/post-feedback-review-wall.mjs` renames that one post
+to `reviews` and adds one bot-owned instruction message. It is dry-run by
+default and never deletes or edits user content.
+
+Members use `/review` from that Forum post. The form is private; the Worker
+publishes a compact card containing the rating, review text, optional product,
+the author mention, and an avatar thumbnail when Discord provides one. The
+public card uses `SUPPRESS_NOTIFICATIONS` and `allowed_mentions: { parse: [] }`.
+The acknowledgement stays ephemeral. A ten-minute per-isolate cooldown and a
+four-review in-flight cap limit accidental or abusive bursts; the cooldown is
+intentionally separate from the VIP points cooldown.
+
+The Forum post ID is configured as `FEEDBACK_THREAD_ID`, while
+`FEEDBACK_CHANNEL_ID` remains the parent `#feedback` channel. The Worker can
+re-open the post when Discord auto-archives it, but it will not unlock a
+manually locked post.
+
 ## Private `#free-stuff` utility panel
 
 The preferred channel surface is a persistent Maxx Bot panel in `#free-stuff`,
@@ -105,21 +129,38 @@ Discord interactions handled by the Worker. The bot's prompts and results are
 ephemeral, so no user's identity, form input, or answer is posted to the
 channel.
 
-The panel has four entry points:
+The panel has three entry points:
 
 - **Live tournament points** — choose a region, choose a freshly loaded exact
   live window, then enter an Epic display name or 32-character account ID,
   games left, and an optional cushion. The submit step re-checks that exact
   window before asking for the standing.
-- **Manual points pace** — enter current points, target points, games left, and
-  an optional cushion.
-- **Storm · BR** and **Storm · Reload** — enter the current zone state and get
-  a private timing read using the selected mode's reference table.
+- **Storm · BR** and **Storm · Reload** — choose the current zone, waiting or
+  closing phase, time-left preset, and storm-depth preset. The four menus keep
+  the common Fortnite path fast and avoid asking players to type seconds or
+  damage values.
 
 Live windows are not hardcoded into the buttons. Qualifiers are labelled as a
 moving line and Finals as a live prize race, so the panel can serve every
-supported region without carrying a stale event or cutoff. Slash commands stay
-available as a fallback.
+supported region without carrying a stale event or cutoff. If the live feed is
+empty or temporarily unavailable, the private response says exactly what
+happened and offers a refresh button; it never exposes a raw HTTP status or
+queries a leaderboard from incomplete data. Slash commands stay available as a
+fallback, including the manual arithmetic mode for advanced users who already
+know a target line.
+
+Storm presets use the user-supplied Chapter 7 Season 1 Comp tables. The visible
+panel deliberately hides `DPS override`: it means the current storm damage tick
+when a map or playlist differs from the reference, and is only useful through
+the advanced `/storm` command. The in-game timer and tick always outrank the
+reference.
+
+Every new Maxx utility interaction retires that user's previous ephemeral
+utility reply when Discord still accepts its interaction token. The newest
+result remains available for reference until the next utility interaction (or
+Discord's normal ephemeral expiry), and cleanup failures are silent because
+ephemeral replies expire naturally. This is best-effort per Worker isolate and
+does not affect tickets, reviews, or other bot messages.
 
 `scripts/post-free-stuff-panel.mjs` is a dry run by default. After the Worker
 release is approved, use it to update only the known Maxx Bot guide message (or

@@ -47,7 +47,7 @@ function describeWindows(windows) {
 function selectLiveWindow(windows, tournament, exactEventId = '', exactWindowId = '') {
   const live = (Array.isArray(windows) ? windows : []).filter(window => window?.live === true)
   if (!live.length) {
-    throw new LivePointsError('No live tournament window was found in that region. Use manual mode or check the region.', 'noLiveWindow')
+    throw new LivePointsError('No supported tournament is live in that region right now. Re-open live points when your event is running.', 'noLiveWindow')
   }
 
   const requestedEventId = String(exactEventId ?? '').trim()
@@ -128,6 +128,17 @@ async function fetchJson(url, fetchImpl, label) {
       let payload = null
       try { payload = await response.json() } catch { /* keep the status-only message */ }
       const message = String(payload?.error || payload?.note || '').trim()
+      if (label === 'the live tournament feed') {
+        const status = Number(response?.status)
+        const friendly = status === 404
+          ? 'The live tournament list is temporarily unavailable. Try again in a moment.'
+          : status === 429
+            ? 'The live tournament list is busy. Try again in a moment.'
+            : status >= 500
+              ? 'The live tournament list is temporarily unavailable. Try again shortly.'
+              : 'The live tournament list could not be loaded. Check your region and try again.'
+        throw new LivePointsError(friendly, 'liveFeedUnavailable')
+      }
       throw new LivePointsError(message || `${label} returned HTTP ${response?.status || 'error'}.`, payload?.found === false ? 'scoreNotFound' : 'upstreamError')
     }
     const data = await response.json()
@@ -181,7 +192,7 @@ async function loadLiveWindows(regionInput, deps = {}) {
     .filter(window => supportedWindowFormat(window))
 
   if (!windows.length) {
-    throw new LivePointsError('No supported live tournament window was found in that region. Use manual mode or try again later.', 'noLiveWindow')
+    throw new LivePointsError('No supported tournament is live in that region right now. Re-open live points when your event is running.', 'noLiveWindow')
   }
 
   return {

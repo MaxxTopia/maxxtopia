@@ -16,7 +16,10 @@ const read = file => fs.readFileSync(path.join(here, '..', file), 'utf8')
 
 assert.equal(RULESETS.battleRoyale.zones.length, 12)
 assert.equal(RULESETS.reload.zones.length, 12)
-assert.deepEqual(RULESETS.battleRoyale.zones[5], { zone: 6, wait: 50, close: 70, dps: 2 })
+assert.equal(RULESETS.battleRoyale.referenceLabel, 'Chapter 7 Season 1 · Comp')
+assert.equal(RULESETS.battleRoyale.openingWaitSeconds, 60)
+assert.deepEqual(RULESETS.battleRoyale.zones[5], { zone: 6, wait: 40, close: 70, total: 930, dps: 5 })
+assert.deepEqual(RULESETS.reload.zones[11], { zone: 12, wait: 0, close: 90, total: 1080, dps: 10 })
 assert.deepEqual(RULESETS.reload.thresholds, THRESHOLDS)
 assert(RULESETS.reload.timingWarning.includes('Mini-Venture'))
 
@@ -24,18 +27,20 @@ const early = calculateStormForecast({
   mode: 'battleRoyale',
   zone: 1,
   phase: 'waiting',
-  timeLeftSeconds: 120,
+  timeLeftSeconds: 110,
   damageTaken: 0,
 })
 assert.equal(early.ok, true)
-assert.equal(early.timeToWarningSeconds, 500)
-assert.equal(early.timeToSicknessSeconds, 600)
-assert.equal(early.forecastAtPhaseEnd, 120)
+assert.equal(early.referencePhaseEndSeconds, 255)
+assert.equal(early.referenceDps, 0)
+assert.equal(early.timeToWarningSeconds, null)
+assert.equal(early.timeToSicknessSeconds, null)
+assert.equal(early.forecastAtPhaseEnd, 0)
 assert.equal(early.statusLabel, 'BELOW WARNING')
 
 const crossing = calculateStormForecast({
   mode: 'battleRoyale',
-  zone: 7,
+  zone: 6,
   phase: 'closing',
   timeLeftSeconds: 30,
   damageTaken: 550,
@@ -68,6 +73,7 @@ assert.equal(advanceDamage(599, 1, 1), 600)
 assert.equal(advanceDamage(600, 10, 1), 630)
 
 assert(formatStormDiscord(crossing).includes('Storm Sickness Calculator - Battle Royale'))
+assert(formatStormDiscord(crossing).includes('Reference: Chapter 7 Season 1 · Comp'))
 assert(formatStormDiscord(crossing).includes('After sickness: 3x damage'))
 assert(!formatStormDiscord(crossing).includes('1000'))
 assert.equal(advanceDamage(600, 10, 2000), 60600)
@@ -78,7 +84,7 @@ assert.equal(embed.title, '⚡ STORM READ // ROTATE WINDOW')
 assert.equal(embed.color, 0xffc857)
 assert(embed.description.includes('ROTATE SOON'))
 assert(embed.description.includes('█████████░'))
-assert(embed.fields.some(field => field.name === 'MATCH SNAPSHOT' && field.value.includes('Zone 7')))
+assert(embed.fields.some(field => field.name === 'MATCH SNAPSHOT' && field.value.includes('Zone 6')))
 assert(embed.fields.some(field => field.name === 'DAMAGE TRACKER' && field.value.includes('550')))
 assert(embed.fields.some(field => field.name === 'ROTATE WINDOW' && field.value.includes('0:10')))
 assert(embed.footer.text.includes('private to you'))

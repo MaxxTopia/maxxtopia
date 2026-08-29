@@ -13,6 +13,7 @@
  *   /om user                  — alias for /gen tier:MAXXER++ (OM lifetime context)
  *   /33 user                  — pull one of the 33 pre-minted FOUND* codes
  *   /founderstatus            — show remaining founder pool size
+ *   /review                   — open a private feedback form in the reviews post
  *
  * Diggy-only gating is enforced INSIDE the worker (callerId ===
  * DIGGY_USER_ID). Discord-side `default_member_permissions` is set to
@@ -85,6 +86,12 @@ const OPT_NUMBER = 10;
 const DEFAULT_MOD_ONLY = '0';
 
 const COMMANDS = [
+    {
+        name: 'review',
+        description: 'Share private feedback with the Maxxtopia community.',
+        dm_permission: false,
+        contexts: [0],
+    },
     {
         name: 'storm',
         description: 'Calculate your Storm Sickness rotate window.',
