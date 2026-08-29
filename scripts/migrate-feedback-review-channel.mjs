@@ -25,6 +25,8 @@ import {
 import {
   buildReviewEmbed,
   buildReviewInstruction,
+  buildReviewInstructionComponents,
+  REVIEW_BUTTON_ID,
   REVIEW_CHANNEL_SIGNATURE,
 } from '../tickets-worker/reviews.js'
 
@@ -101,6 +103,14 @@ async function findInstruction(channel, botUserId) {
     message.author?.id === botUserId &&
     message.content?.includes(REVIEW_CHANNEL_SIGNATURE)
   )) || null
+}
+
+function instructionHasReviewButton(message) {
+  return (message?.components || []).some(row => (
+    (row.components || []).some(component => (
+      component.customId === REVIEW_BUTTON_ID || component.custom_id === REVIEW_BUTTON_ID
+    ))
+  ))
 }
 
 async function ensureReadOnlySurface(channel, botUserId, guildId) {
@@ -228,11 +238,12 @@ client.once('clientReady', async () => {
 
     const instruction = buildReviewInstruction()
     const existingInstruction = await findInstruction(target, client.user.id)
-    if (existingInstruction && existingInstruction.content === instruction) {
+    if (existingInstruction && existingInstruction.content === instruction && instructionHasReviewButton(existingInstruction)) {
       console.log(`[feedback-review-migration] Instruction already present (id ${existingInstruction.id}); no duplicate posted.`)
     } else if (existingInstruction) {
       await existingInstruction.edit({
         content: instruction,
+        components: buildReviewInstructionComponents(),
         flags: SILENT,
         allowedMentions: { parse: [] },
       })
@@ -240,6 +251,7 @@ client.once('clientReady', async () => {
     } else {
       const sentInstruction = await target.send({
         content: instruction,
+        components: buildReviewInstructionComponents(),
         flags: SILENT,
         allowedMentions: { parse: [] },
       })

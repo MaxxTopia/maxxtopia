@@ -8,7 +8,7 @@ import {
   buildFreeToolsPanel,
   parseStormWizardCustomId,
 } from '../tickets-worker/panel.js'
-import { REVIEW_MODAL_ID } from '../tickets-worker/reviews.js'
+import { REVIEW_BUTTON_ID, REVIEW_MODAL_ID } from '../tickets-worker/reviews.js'
 
 if (!globalThis.crypto) globalThis.crypto = webcrypto
 
@@ -166,6 +166,12 @@ assert.equal(reviewCommand.response.status, 200)
 assert.equal(reviewCommand.body.type, 9)
 assert.equal(reviewCommand.body.data.custom_id, REVIEW_MODAL_ID)
 assert.equal(reviewCommand.body.data.components.length, 3)
+
+const reviewButton = await invoke({ custom_id: REVIEW_BUTTON_ID }, 'review-button-user', [], 3, 'fixture-review-channel')
+assert.equal(reviewButton.response.status, 200)
+assert.equal(reviewButton.body.type, 9)
+assert.equal(reviewButton.body.data.custom_id, REVIEW_MODAL_ID)
+assert.equal(reviewButton.body.data.components.length, 3)
 
 const reviewCalls = []
 const reviewFetch = globalThis.fetch

@@ -428,3 +428,35 @@ Single best next action: have one ordinary member click `Storm · BR` or
 result; then run one currently-live exact-window points lookup with a real
 Epic account ID. No more deployment or command registration is needed for
 this milestone.
+
+## Review button — local implementation (2026-08-29)
+
+Diggy reported that ordinary members see the read-only composer in `#reviews`
+and asked for the clearer Kinch-style entry point. The review instruction now
+includes a silent `📝 Leave a review` button. `REVIEW_BUTTON_ID` routes that
+button into the same private three-field modal already used by `/review`; no
+second submission path, public input, or notification behavior was added.
+
+Changed files are `tickets-worker/reviews.js`, `tickets-worker/worker.js`,
+`scripts/migrate-feedback-review-channel.mjs`,
+`scripts/post-feedback-review-wall.mjs`, the two focused interaction tests,
+and `tickets-worker/README.md`. The migration updater detects an existing
+instruction without the button and edits only that bot-owned message to add
+the button and clearer copy. The read-only `@everyone` permission remains
+unchanged.
+
+Local checks passed: `node scripts/test-review-command.mjs`,
+`node scripts/test-worker-interactions.mjs`, JavaScript syntax checks,
+`git diff --check`, `npm run build` (27 pages), and the Worker Wrangler
+dry-run. The publisher dry-run could not start because this isolated release
+tree does not contain `.bot-setup.local.env`; it made no Discord change.
+
+Current state: the button source is local and uncommitted; the deployed Worker
+and live instruction message still do not contain the button. No push,
+deployment, Discord edit, or public message was performed for this change.
+The four unrelated dirty site/package files remain untouched.
+
+Next action after Diggy approves publishing: deploy the Worker, then run the
+narrow migration updater with the existing bot credentials to edit the one
+bot-owned instruction message in `#reviews`, and read back the component plus
+the ordinary-member button-to-modal path. A real member test remains required.

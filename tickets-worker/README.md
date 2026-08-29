@@ -103,10 +103,11 @@ ticket/VIP KV limiter.
 ## Read-only feedback review wall
 
 The live review wall is the normal read-only `#reviews` text channel. Members
-cannot send ordinary messages there, but they can run `/review` because slash
-commands are Discord interactions rather than channel messages. The Worker
-publishes the finished card into that channel, so the wall stays clean and
-command-only.
+cannot send ordinary messages there, but they can click the visible **Leave a
+review** button or run `/review` because buttons and slash commands are
+Discord interactions rather than channel messages. Both open the same private
+form. The Worker publishes the finished card into that channel, so the wall
+stays clean and command-only.
 
 The former `#feedback` Forum post is preserved as `#reviews-archive`; it is
 archived, not deleted, and still contains the original user messages.

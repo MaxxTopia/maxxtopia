@@ -2,12 +2,14 @@
  * Review-wall presentation and input validation for the existing Maxxtopia
  * feedback Forum post.
  *
- * The post is intentionally a read-only surface. Users open this modal with
- * /review, and the worker publishes only the finished card into the post.
+ * The wall is intentionally a read-only surface. Users open this modal with
+ * the visible button or /review, and the worker publishes only the finished
+ * card into the channel.
  */
 
 const REVIEW_CHANNEL_SIGNATURE = '\u200b\u200d\ufeff\u2060'
 const REVIEW_MODAL_ID = 'maxx:review:submit'
+const REVIEW_BUTTON_ID = 'maxx:review:open'
 const REVIEW_COOLDOWN_SECONDS = 10 * 60
 const REVIEW_MAX_COMMENT_LENGTH = 1200
 const REVIEW_MAX_PRODUCT_LENGTH = 40
@@ -52,6 +54,23 @@ function buildReviewModal() {
       })),
     ],
   }
+}
+
+function buildReviewInstructionComponents() {
+  return [
+    {
+      type: 1,
+      components: [
+        {
+          type: 2,
+          style: 1,
+          label: 'Leave a review',
+          custom_id: REVIEW_BUTTON_ID,
+          emoji: { name: '📝' },
+        },
+      ],
+    },
+  ]
 }
 
 function parseReviewInput({ rating, product, comment } = {}) {
@@ -126,18 +145,20 @@ function buildReviewInstruction() {
     REVIEW_CHANNEL_SIGNATURE,
     '🌟 **Share Your Feedback!**',
     '',
-    'Use the `/review` command to let us know what you think and help us improve!',
+    'Click **Leave a review** below — or use the `/review` command — to let us know what you think and help us improve!',
   ].join('\n')
 }
 
 export {
   REVIEW_CHANNEL_SIGNATURE,
+  REVIEW_BUTTON_ID,
   REVIEW_MODAL_ID,
   REVIEW_COOLDOWN_SECONDS,
   REVIEW_MAX_COMMENT_LENGTH,
   REVIEW_MAX_PRODUCT_LENGTH,
   buildReviewEmbed,
   buildReviewInstruction,
+  buildReviewInstructionComponents,
   buildReviewModal,
   parseReviewInput,
   starsForRating,

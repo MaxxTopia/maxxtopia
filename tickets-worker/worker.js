@@ -47,6 +47,7 @@ import {
 import { calculateStormForecast, formatStormDiscord, formatStormEmbed } from './storm-calculator.js'
 import {
   REVIEW_COOLDOWN_SECONDS,
+  REVIEW_BUTTON_ID,
   REVIEW_MODAL_ID,
   buildReviewEmbed,
   buildReviewModal,
@@ -165,6 +166,19 @@ export default {
           type: RESP_DEFERRED_CHANNEL_MESSAGE,
           data: { flags: MSG_FLAG_EPHEMERAL },
         })
+      }
+
+      // The review wall is read-only for ordinary messages. This button is
+      // the discoverable path into the same private modal as /review.
+      if (customId === REVIEW_BUTTON_ID) {
+        if (!reviewDestinationId(env) || !isReviewSurface(interaction, env)) {
+          return privateMessageResponse(interaction, ctx, {
+            content: 'Please open the review button from the #reviews channel.',
+          })
+        }
+        // Do not retire a user's separate Storm/points ephemeral result just
+        // because they opened the review form.
+        return jsonResponse({ type: RESP_SHOW_MODAL, data: buildReviewModal() })
       }
 
       // Private utility panel. The public message stays read-only; these

@@ -16,7 +16,12 @@ import { readFileSync } from 'node:fs'
 import { resolve, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Client, GatewayIntentBits, ChannelType } from 'discord.js'
-import { buildReviewInstruction, REVIEW_CHANNEL_SIGNATURE } from '../tickets-worker/reviews.js'
+import {
+  buildReviewInstruction,
+  buildReviewInstructionComponents,
+  REVIEW_BUTTON_ID,
+  REVIEW_CHANNEL_SIGNATURE,
+} from '../tickets-worker/reviews.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
@@ -64,6 +69,14 @@ async function findInstruction(post, botUserId) {
   )) || null
 }
 
+function instructionHasReviewButton(message) {
+  return (message?.components || []).some(row => (
+    (row.components || []).some(component => (
+      component.customId === REVIEW_BUTTON_ID || component.custom_id === REVIEW_BUTTON_ID
+    ))
+  ))
+}
+
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
 })
@@ -94,13 +107,14 @@ client.once('clientReady', async () => {
 
     const instruction = buildReviewInstruction()
     const existing = await findInstruction(post, client.user.id)
-    if (existing && existing.content === instruction) {
+    if (existing && existing.content === instruction && instructionHasReviewButton(existing)) {
       console.log(`[feedback-review-wall] instruction already current (id ${existing.id}). No message edit needed.`)
     } else if (existing) {
       console.log(`[feedback-review-wall] [would] update bot instruction message (id ${existing.id})`)
       if (!DRY) {
         await existing.edit({
           content: instruction,
+          components: buildReviewInstructionComponents(),
           flags: SILENT,
           allowedMentions: { parse: [] },
         })
@@ -111,6 +125,7 @@ client.once('clientReady', async () => {
       if (!DRY) {
         const sent = await post.send({
           content: instruction,
+          components: buildReviewInstructionComponents(),
           flags: SILENT,
           allowedMentions: { parse: [] },
         })

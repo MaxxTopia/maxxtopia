@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict'
 import {
   REVIEW_CHANNEL_SIGNATURE,
+  REVIEW_BUTTON_ID,
   REVIEW_MODAL_ID,
   buildReviewEmbed,
   buildReviewInstruction,
+  buildReviewInstructionComponents,
   buildReviewModal,
   parseReviewInput,
   starsForRating,
@@ -16,6 +18,13 @@ assert.equal(modal.components[0].components[0].custom_id, 'rating')
 assert.equal(modal.components[0].components[0].max_length, 1)
 assert.equal(modal.components[2].components[0].style, 2)
 assert.equal(modal.components[2].components[0].max_length, 1200)
+
+const instructionComponents = buildReviewInstructionComponents()
+assert.equal(instructionComponents.length, 1)
+assert.equal(instructionComponents[0].components[0].type, 2)
+assert.equal(instructionComponents[0].components[0].custom_id, REVIEW_BUTTON_ID)
+assert.equal(instructionComponents[0].components[0].style, 1)
+assert.equal(instructionComponents[0].components[0].label, 'Leave a review')
 
 const valid = parseReviewInput({
   rating: '5',
