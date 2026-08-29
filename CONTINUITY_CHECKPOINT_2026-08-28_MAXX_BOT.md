@@ -10,7 +10,7 @@ The old task is in a system-error state after a failed remote context compaction
 Saved release tree:
 `C:\Users\Diggy\Documents\Codex\2026-08-27\why-is-this-appearing-on-every\work\maxxtopia-storm-points-release`
 
-Base revision: `7122a91` (`origin/main`, `main`, and `origin/HEAD` all pointed here at recovery). Local feature commit: `c5f4c41` (`feat: add Maxx Bot storm and points tools`). The tree remains detached; the main checkout at `C:\Users\Diggy\projects\maxxtopia` is separately dirty and was not edited.
+Base revision: `7122a91` (`origin/main`, `main`, and `origin/HEAD` all pointed here at recovery). Local feature commit: `0fb99dd` (`feat: add Maxx Bot storm and points tools`). The tree remains detached; the main checkout at `C:\Users\Diggy\projects\maxxtopia` is separately dirty and was not edited.
 
 ## Goal
 
@@ -47,10 +47,10 @@ Passed in the saved tree:
 
 ## Release state
 
-- Local source: present in this detached release tree, committed locally at `c5f4c41`.
+- Local source: present in this detached release tree, committed locally at `0fb99dd`.
 - Built: yes; the site build is local only.
 - Tested: yes for the focused fixtures and syntax/build checks above.
-- Committed: yes, local commit `c5f4c41`; not published.
+- Committed: yes, local commit `0fb99dd`; not published.
 - Pushed: no.
 - Registered with Discord: no; the registration script was not executed.
 - Worker deployed: no.
@@ -69,7 +69,7 @@ Git status still displays status-only modification flags for several LF/CRLF-sen
 ## Single best next action
 
 After Diggy approves the release boundary, decide separately whether to push
-`c5f4c41`, register the slash commands, and deploy the worker. Stop before
+`0fb99dd`, register the slash commands, and deploy the worker. Stop before
 those external actions unless each is explicitly approved. Once registered,
 run one real Discord test for `/storm` and `/points` and verify the private
 response behavior.
