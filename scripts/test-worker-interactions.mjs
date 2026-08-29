@@ -8,6 +8,7 @@ import {
   buildFreeToolsPanel,
   parseStormWizardCustomId,
 } from '../tickets-worker/panel.js'
+import { REVIEW_MODAL_ID } from '../tickets-worker/reviews.js'
 
 if (!globalThis.crypto) globalThis.crypto = webcrypto
 
@@ -19,13 +20,14 @@ const publicKey = toHex(await crypto.subtle.exportKey('raw', keyPair.publicKey))
 
 let interactionCounter = 0
 
-async function invoke(data, userId = null, roles = [], type = 2) {
+async function invoke(data, userId = null, roles = [], type = 2, channelId = null) {
   interactionCounter += 1
   const interaction = {
     type,
     data,
     application_id: 'fixture-application',
     token: `fixture-token-${interactionCounter}`,
+    ...(channelId ? { channel_id: channelId } : {}),
   }
   if (userId || roles.length) interaction.member = { user: { id: userId }, roles }
   const body = JSON.stringify(interaction)
@@ -44,6 +46,9 @@ async function invoke(data, userId = null, roles = [], type = 2) {
   const response = await worker.fetch(request, {
     DISCORD_PUBLIC_KEY: publicKey,
     VIP_ROLE_ID: 'fixture-vip-role',
+    FEEDBACK_REVIEW_CHANNEL_ID: 'fixture-review-channel',
+    FEEDBACK_CHANNEL_ID: 'fixture-feedback-forum',
+    FEEDBACK_THREAD_ID: 'fixture-feedback-thread',
   }, {
     waitUntil(promise) { pending.push(promise) },
   })
@@ -155,6 +160,53 @@ assert.equal(stormWizardResult.body.data.embeds[0].title, '⚡ STORM READ // ROT
 assert.equal(stormWizardResult.body.data.allowed_mentions.parse.length, 0)
 assert.equal(stormCleanupCalls.length, 1)
 assert.equal(stormCleanupCalls[0].options.method, 'DELETE')
+
+const reviewCommand = await invoke({ name: 'review' }, 'review-command-user', [], 2, 'fixture-review-channel')
+assert.equal(reviewCommand.response.status, 200)
+assert.equal(reviewCommand.body.type, 9)
+assert.equal(reviewCommand.body.data.custom_id, REVIEW_MODAL_ID)
+assert.equal(reviewCommand.body.data.components.length, 3)
+
+const reviewCalls = []
+const reviewFetch = globalThis.fetch
+globalThis.fetch = async (url, options = {}) => {
+  reviewCalls.push({ url: String(url), options })
+  if (String(url).endsWith('/channels/fixture-review-channel')) {
+    return new Response(JSON.stringify({ id: 'fixture-review-channel', type: 0 }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    })
+  }
+  if (String(url).endsWith('/channels/fixture-review-channel/messages')) {
+    return new Response(JSON.stringify({ id: 'fixture-review-message' }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    })
+  }
+  return new Response(null, { status: 204 })
+}
+try {
+  const reviewSubmit = await invoke({
+    custom_id: REVIEW_MODAL_ID,
+    components: [
+      { type: 1, components: [{ type: 4, custom_id: 'rating', value: '5' }] },
+      { type: 1, components: [{ type: 4, custom_id: 'product', value: 'Optimizationmaxxing' }] },
+      { type: 1, components: [{ type: 4, custom_id: 'comment', value: 'Fast and useful.' }] },
+    ],
+  }, 'review-submit-user', [], 5, 'fixture-review-channel')
+  assert.equal(reviewSubmit.response.status, 200)
+  assert.equal(reviewSubmit.body.type, 5)
+  await Promise.all(reviewSubmit.pending)
+  const reviewMessageCall = reviewCalls.find(call => call.options.method === 'POST' && call.url.endsWith('/channels/fixture-review-channel/messages'))
+  assert(reviewMessageCall)
+  const reviewMessageBody = JSON.parse(reviewMessageCall.options.body)
+  assert.equal(reviewMessageBody.flags, 4096)
+  assert.equal(reviewMessageBody.allowed_mentions.parse.length, 0)
+  assert.equal(reviewMessageBody.embeds[0].fields[0].name, 'Review by:')
+  assert(reviewCalls.some(call => call.options.method === 'PUT' && call.url.includes('/reactions/')))
+} finally {
+  globalThis.fetch = reviewFetch
+}
 
 const liveFetch = globalThis.fetch
 const liveCalls = []

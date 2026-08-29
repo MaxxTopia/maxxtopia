@@ -21,10 +21,12 @@ TICKET_ARCHIVE_CHANNEL_ID = "1502881819522236527"
 # Role granted by the "Grant VIP" button. Defaults to the @VIP role
 # created in v1; if we ever split per-product VIP roles, add that here.
 VIP_ROLE_ID = "1502870738313674954"
-# Existing Forum post used as the read-only review wall. The Forum channel
-# remains #feedback; the post itself is renamed to #reviews by the publisher.
+# The original Forum surface remains available as a recoverable archive.
 FEEDBACK_CHANNEL_ID = "1502867387962101812"
 FEEDBACK_THREAD_ID = "1539270897024897075"
+# Normal read-only review channel. /review publishes here; the legacy IDs
+# above remain accepted during the migration window.
+FEEDBACK_REVIEW_CHANNEL_ID = "1543384589106679871"
 # Sprite Cannon coin-code worker that /sccoins mints against (POST /admin/gen).
 # The URL is public; the admin token is the SECRET SC_CODES_ADMIN_TOKEN (see bottom).
 SC_CODES_URL = "https://spritecannon-codes.maxxtopia.workers.dev"

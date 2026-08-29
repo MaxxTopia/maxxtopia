@@ -318,6 +318,59 @@ formatter and preserve the silent/read-only contract.
 Single best next action: complete that one real `/review` submission and
 visual notification check; do not create a sample review from the bot.
 
+## Normal review-channel migration — 2026-08-29
+
+Diggy clarified that the existing Forum post should no longer be the live
+review surface and asked to convert the legacy `!tonka` review into the
+reference embed layout. Discord cannot change a Forum post into a text channel
+in place, so the safe migration created the normal text channel `#reviews`
+(`1543384589106679871`) in the existing category. It is read-only for ordinary
+members (`@everyone` allow `ViewChannel` + `ReadMessageHistory`, deny
+`SendMessages`) while `/review` remains available as an interaction.
+
+The migration script `scripts/migrate-feedback-review-channel.mjs` found the
+legacy root message by `!tonka` / `tonks.rx` (`1539270897024897075`) and posted
+one bot-authored review card (`1543384593439264819`) with the exact text
+`used optimization hella good`, a visible `Review by: <@1190553068065005670>`
+field, the user's avatar thumbnail, the existing Maxx teal embed styling, a
+five-star presentation, a ✅ reaction, `SUPPRESS_NOTIFICATIONS` (`4096`), and
+no actual mentions. The original user message was not edited or deleted. Its
+Forum post was renamed `reviews-archive` and archived (`locked=false`) so the
+old content remains recoverable. The new channel's instruction message is
+`1543384596740309164`, also silent and mention-free.
+
+`tickets-worker/wrangler.toml` now sets
+`FEEDBACK_REVIEW_CHANNEL_ID=1543384589106679871`. The Worker accepts the new
+normal channel (and temporarily accepts the legacy IDs as command surfaces)
+but always publishes new cards to the normal channel. It was deployed at
+`https://maxxtopia-tickets.maxxtopia.workers.dev` as version
+`250cf924-270d-4983-b634-37c5e255a0f5`.
+
+Verification completed after the migration: live Discord REST read-back of
+channel type, parent, topic, permissions, card embed, avatar URL, mention
+array, reaction, instruction, archived original, and Worker GET `404`; review
+unit fixtures; signed Worker interaction fixture including normal-channel
+review routing and silent POST/reaction; JavaScript syntax checks; Astro build
+(27 pages); Wrangler dry-run; and `git diff --check`. The five-star value is a
+legacy formatting inference because the old message contained no numeric
+rating or star reaction; the original wording was preserved exactly.
+
+The intended source files are currently local and uncommitted:
+`tickets-worker/worker.js`, `tickets-worker/wrangler.toml`,
+`tickets-worker/README.md`, `scripts/test-worker-interactions.mjs`, and
+`scripts/migrate-feedback-review-channel.mjs`. The pre-existing unrelated
+dirty files `astro.config.mjs`, `package-lock.json`, `package.json`, and
+`tsconfig.json` remain untouched and must not be staged. No push was performed.
+
+Diggy-owed gate: run `/review` once from an ordinary Discord account in the
+new `#reviews` channel, submit an honest review, and confirm the modal,
+rendered card, avatar, reaction, and absence of a notification on desktop or
+mobile. No bot-generated sample review should be added.
+
+Single best next action: commit only the five intended review migration files
+locally, leave the unrelated worktree changes and remote branch untouched, and
+then perform the one real member interaction test.
+
 ## Maxx Bot utility UX hardening — interrupted-task recovery (2026-08-29)
 
 Diggy asked to ship the Discord changes silently, remove confusing manual

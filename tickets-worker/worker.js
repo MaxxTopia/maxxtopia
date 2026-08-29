@@ -69,6 +69,8 @@ const RESP_UPDATE_MESSAGE = 7
 const RESP_SHOW_MODAL = 9
 
 // Channel types
+const CHANNEL_GUILD_TEXT = 0
+const CHANNEL_PUBLIC_THREAD = 11
 const CHANNEL_PRIVATE_THREAD = 12
 
 // Message flags
@@ -270,7 +272,7 @@ export default {
     if (interaction.type === INTERACTION_APPLICATION_COMMAND) {
       const name = interaction.data?.name ?? ''
       if (name === 'review') {
-        if (!env.FEEDBACK_THREAD_ID) {
+        if (!reviewDestinationId(env)) {
           return jsonResponse({
             type: RESP_CHANNEL_MESSAGE,
             data: {
@@ -284,7 +286,7 @@ export default {
           return jsonResponse({
             type: RESP_CHANNEL_MESSAGE,
             data: {
-              content: 'Use `/review` inside the #feedback reviews post so your finished card lands in the right place.',
+              content: 'Use `/review` inside the #reviews channel so your finished card lands in the right place.',
               flags: MSG_FLAG_EPHEMERAL,
               allowed_mentions: { parse: [] },
             },
@@ -673,13 +675,13 @@ function handleStormModal(interaction, mode) {
 async function handleReviewSubmit(env, interaction) {
   const appId = interaction.application_id
   const token = interaction.token
-  const threadId = String(env.FEEDBACK_THREAD_ID ?? '').trim()
+  const destinationId = reviewDestinationId(env)
   const user = interaction.member?.user ?? interaction.user
   const userId = String(user?.id ?? '').trim()
 
-  if (!threadId || !isReviewSurface(interaction, env)) {
+  if (!destinationId || !isReviewSurface(interaction, env)) {
     await editFollowup(appId, token, {
-      content: 'Please open `/review` from the #feedback reviews post and submit it again.',
+      content: 'Please open `/review` from the #reviews channel and submit it again.',
       flags: MSG_FLAG_EPHEMERAL,
       allowed_mentions: { parse: [] },
     })
@@ -728,8 +730,13 @@ async function handleReviewSubmit(env, interaction) {
 
   reviewInFlight += 1
   try {
-    const thread = await discordFetch(env, `/channels/${threadId}`)
-    if (!thread?.id || thread.locked) {
+    const destination = await discordFetch(env, `/channels/${destinationId}`)
+    const destinationType = Number(destination?.type)
+    const isTextChannel = destinationType === CHANNEL_GUILD_TEXT
+    const isSupportedThread = destinationType === CHANNEL_PUBLIC_THREAD || destinationType === CHANNEL_PRIVATE_THREAD
+    const isLocked = Boolean(destination?.locked ?? destination?.thread_metadata?.locked)
+    const isArchived = Boolean(destination?.archived ?? destination?.thread_metadata?.archived)
+    if (!destination?.id || (!isTextChannel && !isSupportedThread) || isLocked) {
       await editFollowup(appId, token, {
         content: '⚠ The feedback wall is temporarily closed. Please try again later.',
         flags: MSG_FLAG_EPHEMERAL,
@@ -737,7 +744,7 @@ async function handleReviewSubmit(env, interaction) {
       })
       return
     }
-    if (env.FEEDBACK_CHANNEL_ID && thread.parent_id && String(thread.parent_id) !== String(env.FEEDBACK_CHANNEL_ID)) {
+    if (isSupportedThread && env.FEEDBACK_CHANNEL_ID && destination.parent_id && String(destination.parent_id) !== String(env.FEEDBACK_CHANNEL_ID)) {
       await editFollowup(appId, token, {
         content: '⚠ The feedback wall configuration needs attention. Please tell a moderator.',
         flags: MSG_FLAG_EPHEMERAL,
@@ -745,8 +752,8 @@ async function handleReviewSubmit(env, interaction) {
       })
       return
     }
-    if (thread.archived) {
-      const reopened = await discordFetch(env, `/channels/${threadId}`, {
+    if (isSupportedThread && isArchived) {
+      const reopened = await discordFetch(env, `/channels/${destinationId}`, {
         method: 'PATCH',
         body: JSON.stringify({ archived: false }),
       })
@@ -760,7 +767,7 @@ async function handleReviewSubmit(env, interaction) {
       }
     }
 
-    const message = await discordFetch(env, `/channels/${threadId}/messages`, {
+    const message = await discordFetch(env, `/channels/${destinationId}/messages`, {
       method: 'POST',
       body: JSON.stringify({
         embeds: [buildReviewEmbed({
@@ -785,7 +792,7 @@ async function handleReviewSubmit(env, interaction) {
 
     // A small visual acknowledgement under each card, matching the reference
     // without pinging anyone or creating a second public bot message.
-    await discordFetch(env, `/channels/${threadId}/messages/${message.id}/reactions/${encodeURIComponent('✅')}/@me`, {
+    await discordFetch(env, `/channels/${destinationId}/messages/${message.id}/reactions/${encodeURIComponent('✅')}/@me`, {
       method: 'PUT',
       body: '{}',
     })
@@ -805,9 +812,13 @@ async function handleReviewSubmit(env, interaction) {
   }
 }
 
+function reviewDestinationId(env) {
+  return String(env.FEEDBACK_REVIEW_CHANNEL_ID || env.FEEDBACK_THREAD_ID || '').trim()
+}
+
 function isReviewSurface(interaction, env) {
   const channelId = String(interaction.channel_id ?? '')
-  const allowed = [env.FEEDBACK_CHANNEL_ID, env.FEEDBACK_THREAD_ID]
+  const allowed = [env.FEEDBACK_REVIEW_CHANNEL_ID, env.FEEDBACK_CHANNEL_ID, env.FEEDBACK_THREAD_ID]
     .map(value => String(value ?? '').trim())
     .filter(Boolean)
   return Boolean(channelId && allowed.includes(channelId))

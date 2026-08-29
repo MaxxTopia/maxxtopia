@@ -102,23 +102,32 @@ ticket/VIP KV limiter.
 
 ## Read-only feedback review wall
 
-The existing `#feedback` Forum channel keeps its original post and is used as
-the review wall. `scripts/post-feedback-review-wall.mjs` renames that one post
-to `reviews` and adds one bot-owned instruction message. It is dry-run by
-default and never deletes or edits user content.
+The live review wall is the normal read-only `#reviews` text channel. Members
+cannot send ordinary messages there, but they can run `/review` because slash
+commands are Discord interactions rather than channel messages. The Worker
+publishes the finished card into that channel, so the wall stays clean and
+command-only.
 
-Members use `/review` from that Forum post. The form is private; the Worker
-publishes a compact card containing the rating, review text, optional product,
-the author mention, and an avatar thumbnail when Discord provides one. The
-public card uses `SUPPRESS_NOTIFICATIONS` and `allowed_mentions: { parse: [] }`.
-The acknowledgement stays ephemeral. A ten-minute per-isolate cooldown and a
-four-review in-flight cap limit accidental or abusive bursts; the cooldown is
-intentionally separate from the VIP points cooldown.
+The former `#feedback` Forum post is preserved as `#reviews-archive`; it is
+archived, not deleted, and still contains the original user messages.
+`scripts/migrate-feedback-review-channel.mjs` performs this narrow migration,
+converts only the identified legacy `!tonka` review, and is dry-run by default.
+It never edits or deletes the user's original message and never sends a public
+notification.
 
-The Forum post ID is configured as `FEEDBACK_THREAD_ID`, while
-`FEEDBACK_CHANNEL_ID` remains the parent `#feedback` channel. The Worker can
-re-open the post when Discord auto-archives it, but it will not unlock a
-manually locked post.
+The private form produces a compact card containing the rating, review text,
+optional product, the author mention, and an avatar thumbnail when Discord
+provides one. The public card uses `SUPPRESS_NOTIFICATIONS` and
+`allowed_mentions: { parse: [] }`; the acknowledgement stays ephemeral. A
+ten-minute per-isolate cooldown and a four-review in-flight cap limit
+accidental or abusive bursts; the cooldown is intentionally separate from the
+VIP points cooldown.
+
+`FEEDBACK_REVIEW_CHANNEL_ID` configures the normal text-channel destination.
+`FEEDBACK_CHANNEL_ID` and `FEEDBACK_THREAD_ID` remain as the legacy parent and
+archive IDs during the transition, and are still accepted as command surfaces
+so an old saved command does not fail unexpectedly. New cards always publish
+to `FEEDBACK_REVIEW_CHANNEL_ID`.
 
 ## Private `#free-stuff` utility panel
 
