@@ -532,3 +532,38 @@ pre-change stale ephemeral replies may remain until Discord expires them.
 Single best next action: after explicit approval, push `c4321c1`, deploy the
 Worker, and perform a silent live read-back/click test before changing any
 Discord panel message.
+
+## Fortnite utility live release — 2026-08-29
+
+Diggy approved the live release after the local verification gate. The current
+branch `codex/maxx-bot-fortnite-utilities` was pushed to
+`origin/codex/maxx-bot-fortnite-utilities` at `e504ec6`. The four unrelated
+working-tree files remain unstaged and were not included.
+
+The Worker was deployed from `tickets-worker` to
+`https://maxxtopia-tickets.maxxtopia.workers.dev` as version
+`30ad40f1-4946-4b94-af4e-0784eeb64ddf`. Its unauthenticated GET boundary still
+returns the expected `404 not found`; no interaction endpoint or command
+registration change was needed.
+
+The narrow publisher edited only the existing Maxx Bot guide message
+`1543352185092444191` in the normal text channel `#free-stuff`
+(`1519790996559364307`). It did not edit the original Viewmaxxing preview,
+post an announcement, or send a public message. Live REST read-back confirmed
+the title `MAXX DESK // PRIVATE TOOLS`, three buttons (`Live tournament
+points`, `Storm · BR`, and `Storm · Reload`), display-name and storm-damage
+copy, silent message flag `4096`, no message mentions, and the existing
+read-only `@everyone` overwrite (`sendMessagesAllowed=false`,
+`sendMessagesDenied=true`).
+
+Current release state: source, build, tests, push, Worker deployment, panel
+edit, and live panel read-back are complete. The release remains silent. A
+real ordinary-member click-through is still owed for one live finals lookup,
+one console-only qualifier where available, BR timing, Reload timing, and a
+second lookup confirming newest-private-result cleanup. The live source can
+change between checks, and Storm remains a Chapter 7 reference rather than
+live telemetry; the in-game timer and damage tick remain authoritative.
+
+Single best next action: Diggy performs those real Discord/game checks and
+reports any rendered or upstream mismatch; do not edit the panel again unless
+one of those checks finds a concrete issue.
