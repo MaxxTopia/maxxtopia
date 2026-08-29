@@ -460,3 +460,75 @@ Next action after Diggy approves publishing: deploy the Worker, then run the
 narrow migration updater with the existing bot credentials to edit the one
 bot-owned instruction message in `#reviews`, and read back the component plus
 the ordinary-member button-to-modal path. A real member test remains required.
+
+## Fortnite utility UX and live-feed hardening — local completion (2026-08-29)
+
+The interrupted-task continuation completed the requested comp-player UX pass
+without publishing anything. The public Maxx Bot guide remains the existing
+read-only panel in `#free-stuff`; the Viewmaxxing preview/first guide message
+was not edited or deleted. The visible copy now says **Epic display name**
+shown in Fortnite, not Epic account ID. The live flow exposes `ALL` plus each
+supported region, then requires one exact live Epic event/window before asking
+for the display name. Finals remain a prize race and qualifiers remain a live
+cutoff; no prior event, cross-region line, or guessed result is substituted.
+
+Storm now has a compact private BR/Reload wizard with four choices: current
+zone, waiting/closing phase, time left, and accumulated storm damage taken.
+The confusing `storm depth` wording is gone. Both time and damage menus have
+an **Enter exact** modal for values such as 25 seconds or 25 damage. The
+result gives the current threat tier, a prominent leave call, current tick,
+500 warning timing, 600 MAX THREAT timing, phase-end damage, and the Chapter 7
+Comp reference timeline. At 600 cumulative storm damage the displayed rule
+is 3x damage; the result remains explicit that the in-game timer and damage
+tick outrank the reference because this tool has no live game telemetry.
+Advanced `/storm` DPS and `/points` account-ID fallbacks remain for edge cases
+but are not placed in the normal panel or normal storm result.
+
+The live event feed now retries one transient 404/408/425/429/5xx or network
+failure after 250 ms, then shows a private actionable status without exposing
+raw HTTP status/upstream response text. Non-transient 4xx responses are not
+retried. Storm wizard submission updates its existing ephemeral message, and
+the per-Worker-isolate cleanup retires the previous private Maxx utility reply
+when a new utility interaction starts. Old pre-change ephemeral messages
+cannot be retroactively deleted because their interaction tokens were not
+retained; Cloudflare isolate replacement can also make cleanup best-effort.
+Cleanup does not touch public channel messages, tickets, reviews, or the
+Viewmaxxing post.
+
+Changed and committed locally in `c4321c1` (`fix: simplify Maxx Bot Fortnite
+utility inputs`): `tickets-worker/panel.js`, `tickets-worker/worker.js`,
+`tickets-worker/points-live.js`, `tickets-worker/storm-calculator.js`,
+`tickets-worker/points-calculator.js`, the three focused fixtures, and
+`tickets-worker/README.md`. The four unrelated dirty files remain unstaged:
+`astro.config.mjs`, `package-lock.json`, `package.json`, and `tsconfig.json`.
+
+Verification for this exact local commit: all focused command/interaction
+fixtures passed (`test-storm-command`, `test-points-live`,
+`test-worker-interactions`, `test-points-command`, and
+`test-review-command`); all changed Worker modules passed `node --check`;
+`git diff --check` passed with only the repository's existing LF-to-CRLF
+warnings; `npm run build` produced 27 Astro pages; and
+`npx wrangler deploy --dry-run` bundled the Worker successfully with the
+expected KV/env bindings. A separate read-only probe of the already deployed
+source feed returned HTTP 200 for `windows?region=ALL` and `windows?region=NAC`
+with exact finals and console-only qualifier windows. That is not proof that
+the new Maxx Worker is deployed or that a real Discord member lookup works.
+
+Current state: local source and tests are complete; implementation commit
+`c4321c1` was four commits ahead of
+`origin/codex/maxx-bot-fortnite-utilities`; this checkpoint is the fifth local
+commit. Neither local commit is pushed. The new Worker is not deployed, the live `#free-stuff` panel was
+not edited, slash commands were not re-registered, and no Discord notification
+or external message was sent in this continuation. The publisher dry-run still
+requires the bot setup environment in the release tree.
+
+Diggy-owed gates after approval: one ordinary-member click-through of Live
+Points with a currently live exact event (including one finals and one
+console-only qualifier where available), one BR wizard run, and one Reload
+wizard run against the actual in-game timer/tick. Confirm that a second Live
+Points run leaves only the newest private result in the same Worker isolate;
+pre-change stale ephemeral replies may remain until Discord expires them.
+
+Single best next action: after explicit approval, push `c4321c1`, deploy the
+Worker, and perform a silent live read-back/click test before changing any
+Discord panel message.
