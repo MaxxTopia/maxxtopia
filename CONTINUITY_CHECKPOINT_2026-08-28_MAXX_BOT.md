@@ -45,6 +45,13 @@ Passed in the saved tree:
 - `npm run build` (Astro static build; 27 pages generated)
 - Read-only `https://snipemaxxer-brain.maxxtopia.workers.dev/cutoffs?region=EU`: HTTP 200 and expected event/window/threshold shape. The feed had zero live EU windows at the time, so no score lookup was attempted.
 
+## Latest live probe (2026-08-29)
+
+- The live feed returned qualification-style windows for the enabled regions, but its source intentionally omits windows decoded as `final`; Maxx Bot therefore cannot currently select a finals window from `/cutoffs`.
+- `Clix` resolved as an Epic display name, but the tested currently exposed windows returned no scored leaderboard result for that account. No points or qualification answer was claimed.
+- `heartzkaitt` did not resolve under that exact display name. This needs an exact Epic display name/account identity and the correct event/region before it can be a valid open-tournament test.
+- Recommended finals behavior: keep qualification and finals as separate result types. Qualifiers show the moving rank/points cut; finals show current rank, points, games, and a clearly labeled projected prize tier from the verified payout ladder, with no invented point cutoff. If the payout ladder is unavailable, say that placement is being tracked but prize information is unverified.
+
 ## Release state
 
 - Local source: present in this detached release tree, committed locally at `0fb99dd`.
@@ -65,11 +72,12 @@ Git status still displays status-only modification flags for several LF/CRLF-sen
 - A real Discord interaction test is still owed by Diggy after registration.
 - Any command registration, local commit, push, worker deploy, or production/live test requiring credentials must be explicitly approved before execution.
 - The live qualifying line can move; manual estimates are not a substitute for the current Epic feed.
+- Finals are not yet represented in the Maxx Bot live adapter; the upstream data contract needs to expose all active windows and verified prize tiers before a finals response can be truthful.
+- Region is currently required from the fixed enabled list; automatic all-region event detection would reduce wrong-region failures but must still require exact event/window evidence.
 
 ## Single best next action
 
-After Diggy approves the release boundary, decide separately whether to push
-`0fb99dd`, register the slash commands, and deploy the worker. Stop before
-those external actions unless each is explicitly approved. Once registered,
-run one real Discord test for `/storm` and `/points` and verify the private
-response behavior.
+Implement and fixture-test the separate finals/prize-ladder response path in
+the saved release tree, using the existing Snipemaxxer event/payout decoding
+as the source of truth. Do not push, register, deploy, or run credentialed
+production actions until Diggy explicitly approves them.
