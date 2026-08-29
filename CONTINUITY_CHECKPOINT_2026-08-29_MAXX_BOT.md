@@ -352,16 +352,18 @@ returned HTTP 200 for NAC, EU, NAW, BR, ASIA, OCE, and ME; the current response
 had no live windows because the observed events had ended. These are source
 and fixture checks, not proof of a real Discord member click.
 
-Current state at this checkpoint: local changes present in the detached bot
-release tree; current UX changes not yet committed or pushed; the already
-deployed bot version is the previous `25ae956d-d44a-4d31-9270-20e07256b609`
-until the next deploy; no new public Discord message has been sent. The
-authorized next boundary is to review the focused diff, deploy only
-`tickets-worker`, silently edit the known guide message with the new panel,
-read it back, then create a dedicated branch and push only the intended bot,
-Worker, fixture, and runbook files. Do not deploy the site, register commands,
-change channel permissions, edit the original Viewmaxxing post, or stage
-unrelated site/package/TypeScript/review-WIP files.
+Current state at this checkpoint: the tested changes are committed as
+`9ad4eba` on `codex/maxx-bot-fortnite-utilities` and pushed to
+`origin/codex/maxx-bot-fortnite-utilities`. The Worker was deployed at
+`https://maxxtopia-tickets.maxxtopia.workers.dev` as version
+`10552096-3e93-4bf5-af06-f53a839c06b4`. The known guide message
+`1543352185092444191` in `#free-stuff` was edited in place with the new panel,
+`SUPPRESS_NOTIFICATIONS` (`4096`), and no mentions; no new public Discord
+message was sent. A live read-back confirmed the three button labels, text
+channel, and ordinary-member send denial. The site was not deployed, slash
+commands were not re-registered, channel permissions were not changed, the
+original Viewmaxxing post was not edited, and unrelated site/package/TypeScript
+WIP remains outside the commit.
 
 Remaining risks and human gates: Worker-isolate memory makes old-ephemeral
 cleanup best-effort across isolates; no platform callback reliably tells the
@@ -370,6 +372,8 @@ through each Storm wizard plus one currently-live exact-window points lookup
 are still owed. In-game Storm timing must be compared against the supplied
 Chapter 7 tables on both BR and Reload.
 
-Single best next action: deploy the tested Worker, silently refresh the known
-`#free-stuff` guide message, and verify the new message payload before pushing
-the focused branch.
+Single best next action: have one ordinary member click `Storm · BR` or
+`Storm · Reload`, complete all four menus, and report the rendered private
+result; then run one currently-live exact-window points lookup with a real
+Epic account ID. No more deployment or command registration is needed for
+this milestone.
