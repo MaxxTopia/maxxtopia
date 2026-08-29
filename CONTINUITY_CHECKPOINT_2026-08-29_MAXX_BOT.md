@@ -52,6 +52,24 @@ bot deploy: `/storm`, `/points`, `/gen`, `/om`, `/33`, `/founderstatus`, and
 `/sccoins`. No public Discord message, announcement, notification, or ticket
 panel edit was sent.
 
+## Discord channel surface
+
+The existing `#free-stuff` text channel was renamed to `#tournament-live`
+(`1519790996559364307`) in the existing `— maxxtopia —` category. Its topic is
+now `Live Fortnite tournament points and prize-race lookups. Use /points live.
+Results are private.` The separate later caption message
+`1519794106233262193` containing `Viewmaxxing, as it looks now` was removed at
+Diggy's request. The original Viewmaxxing app preview post
+`1519790997595226315` was verified present and unchanged, including its
+components and silent-message flag.
+
+The channel remains read-only for ordinary member messages. This is
+intentional: members can enter `/points live` and receive the existing
+ephemeral result, while ordinary text cannot become a notification stream.
+The deployed interaction Worker is not a Discord Gateway listener, so an
+instant-delete-after-send design is not implemented; deletion after delivery
+would not guarantee that other members were never notified.
+
 ## Verification evidence
 
 Passed in the bot release tree:
@@ -65,6 +83,11 @@ Passed in the bot release tree:
 - `git diff --check`
 - `npm run build` (Astro static build, 27 pages)
 - `npx wrangler deploy --config wrangler.toml --dry-run` from `tickets-worker`
+
+The live Discord channel metadata was re-read after the update: the channel is
+`#tournament-live`, the old caption message is absent, and the original
+Viewmaxxing preview post remains the only message returned in the first-page
+check.
 
 Latest read-only live source check returned HTTP 200 for EU Finals window
 `FNCSDivisionalCup Division1`, event
