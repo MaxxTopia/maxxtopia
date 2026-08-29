@@ -11,8 +11,10 @@ const toHex = bytes => Array.from(new Uint8Array(bytes), byte => byte.toString(1
 const keyPair = await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign', 'verify'])
 const publicKey = toHex(await crypto.subtle.exportKey('raw', keyPair.publicKey))
 
-async function invoke(data) {
-  const body = JSON.stringify({ type: 2, data })
+async function invoke(data, userId = null) {
+  const interaction = { type: 2, data }
+  if (userId) interaction.member = { user: { id: userId } }
+  const body = JSON.stringify(interaction)
   const timestamp = String(Math.floor(Date.now() / 1000))
   const signature = toHex(await crypto.subtle.sign('Ed25519', keyPair.privateKey, encoder.encode(timestamp + body)))
   const pending = []
@@ -97,7 +99,7 @@ globalThis.fetch = async (url, options = {}) => {
 }
 
 try {
-  const live = await invoke({
+  const liveOptions = {
     name: 'points',
     options: [
       { name: 'mode', value: 'live' },
@@ -106,7 +108,8 @@ try {
       { name: 'region', value: 'EU' },
       { name: 'tournament', value: 'Fixture Cup' },
     ],
-  })
+  }
+  const live = await invoke(liveOptions, 'fixture-user')
   assert.equal(live.response.status, 200)
   assert.equal(live.body.type, 5)
   assert.equal(live.body.data.flags, 64)
@@ -121,6 +124,16 @@ try {
   const followupBody = JSON.parse(followup.options.body)
   assert.equal(followupBody.embeds[0].title, '🏆 POINTS READ // LIVE QUALIFICATION')
   assert.equal(followupBody.allowed_mentions.parse.length, 0)
+
+  const throttled = await invoke(liveOptions, 'fixture-user')
+  assert.equal(throttled.response.status, 200)
+  assert.equal(throttled.body.type, 5)
+  assert.equal(throttled.body.data.flags, 64)
+  await Promise.all(throttled.pending)
+  assert.equal(liveCalls.length, 4)
+  const throttleFollowup = JSON.parse(liveCalls[3].options.body)
+  assert(throttleFollowup.content.includes('one lookup every 30 seconds'))
+  assert.equal(throttleFollowup.allowed_mentions.parse.length, 0)
 } finally {
   globalThis.fetch = liveFetch
 }

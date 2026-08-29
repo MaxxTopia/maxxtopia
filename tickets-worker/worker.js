@@ -52,6 +52,18 @@ const MSG_FLAG_EPHEMERAL = 1 << 6
 // Per-user spam cap. KV write/read pricing makes this trivial.
 const RATE_LIMIT_SECONDS = 60
 
+// Live points is deliberately isolated from the ticket/VIP KV limiter. A
+// short best-effort per-isolate cooldown protects normal refresh spam without
+// allowing a public utility command to consume the ticket system's KV quota.
+// This is a burst guard, not a global DDoS boundary; Cloudflare rate limiting
+// remains the correct next layer for distributed abuse.
+const LIVE_POINTS_COOLDOWN_SECONDS = 30
+const LIVE_POINTS_COOLDOWN_MS = LIVE_POINTS_COOLDOWN_SECONDS * 1000
+const LIVE_POINTS_MAX_IN_FLIGHT = 16
+const LIVE_POINTS_MAX_COOLDOWNS = 4096
+const livePointsCooldowns = new Map()
+let livePointsInFlight = 0
+
 // ─── Endpoint ───────────────────────────────────────────────────────────
 
 export default {
@@ -69,7 +81,12 @@ export default {
     const valid = await verifyDiscordSignature(env.DISCORD_PUBLIC_KEY, sig, ts, bodyText)
     if (!valid) return new Response('bad signature', { status: 401 })
 
-    const interaction = JSON.parse(bodyText)
+    let interaction
+    try {
+      interaction = JSON.parse(bodyText)
+    } catch {
+      return new Response('invalid body', { status: 400 })
+    }
 
     // PING — Discord verifies the endpoint with this on save.
     if (interaction.type === INTERACTION_PING) {
@@ -417,6 +434,27 @@ async function handleGrantVip(env, interaction, customId) {
 // ─── Slash command handlers ─────────────────────────────────────────────
 
 async function handleLivePoints(interaction) {
+  if (livePointsInFlight >= LIVE_POINTS_MAX_IN_FLIGHT) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: '⏳ Live lookup capacity is busy. Try again in a moment.',
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+
+  const callerId = interaction.member?.user?.id ?? interaction.user?.id
+  const cooldown = claimLivePointsCooldown(callerId)
+  if (!cooldown.allowed) {
+    await editFollowup(interaction.application_id, interaction.token, {
+      content: `⏱ Live points is limited to one lookup every ${LIVE_POINTS_COOLDOWN_SECONDS} seconds. Try again in ${cooldown.retryAfterSeconds}s.`,
+      flags: MSG_FLAG_EPHEMERAL,
+      allowed_mentions: { parse: [] },
+    })
+    return
+  }
+
+  livePointsInFlight += 1
   let result
   try {
     result = await loadLivePoints({
@@ -429,12 +467,38 @@ async function handleLivePoints(interaction) {
     })
   } catch {
     result = { ok: false, error: 'Live points are unavailable right now. Try again in a moment.' }
+  } finally {
+    livePointsInFlight -= 1
   }
   await editFollowup(interaction.application_id, interaction.token, {
     ...(result.ok ? { embeds: [formatPointsEmbed(result)] } : { content: formatPointsDiscord(result) }),
     flags: MSG_FLAG_EPHEMERAL,
     allowed_mentions: { parse: [] },
   })
+}
+
+function claimLivePointsCooldown(userId, now = Date.now()) {
+  if (!userId) return { allowed: true, retryAfterSeconds: 0 }
+
+  const key = String(userId)
+  const existingExpiry = livePointsCooldowns.get(key)
+  if (existingExpiry && existingExpiry > now) {
+    return {
+      allowed: false,
+      retryAfterSeconds: Math.max(1, Math.ceil((existingExpiry - now) / 1000)),
+    }
+  }
+
+  for (const [id, expiry] of livePointsCooldowns) {
+    if (expiry <= now) livePointsCooldowns.delete(id)
+  }
+  if (livePointsCooldowns.size >= LIVE_POINTS_MAX_COOLDOWNS) {
+    const oldest = livePointsCooldowns.keys().next().value
+    if (oldest) livePointsCooldowns.delete(oldest)
+  }
+
+  livePointsCooldowns.set(key, now + LIVE_POINTS_COOLDOWN_MS)
+  return { allowed: true, retryAfterSeconds: 0 }
 }
 
 /**
