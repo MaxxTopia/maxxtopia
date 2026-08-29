@@ -202,12 +202,15 @@ limiter, so repeated select clicks cannot create an unbounded `/windows` proxy.
 - Local: yes; the new panel implementation is present only in the isolated bot
   release tree, while the main Maxxtopia and Snipemaxxer checkouts remain
   untouched and dirty.
-- Built: the prior site build and Worker dry-run passed; this panel milestone
-  still needs its post-edit build/dry-run evidence.
-- Tested: the prior focused fixtures passed, and the new panel fixtures still
-  need to be recorded here; real Discord rendering remains owed.
-- Committed: prior source `c3eacca` plus docs `8625666`; prior bot `58cff5d`.
-  The panel milestone is not committed until its final verification passes.
+- Built: yes; the post-edit Astro build completed 27 pages and the Worker
+  `wrangler deploy --dry-run` completed successfully.
+- Tested: yes; syntax checks, storm and manual-points fixtures, live exact-window
+  and Finals prize-race fixtures, signed interaction fixtures, the panel
+  publisher dry run, and `git diff --check` all passed. Real Discord rendering
+  remains owed.
+- Committed: yes; panel milestone `5589a84` (`feat: add private tournament
+  utility panel`) is local only. Prior source `c3eacca` plus docs `8625666` and
+  prior bot `58cff5d` remain in its history.
 - Pushed: no.
 - Registered: yes, silently; the schema was unchanged by the abuse guard.
 - Deployed: source and prior bot yes; the panel milestone is not deployed;
