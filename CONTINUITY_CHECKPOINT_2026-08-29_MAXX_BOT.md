@@ -41,9 +41,10 @@ Source documentation commit: `8625666` (`docs: record live lookup abuse boundari
 Source deployed Worker version: `19ca57bf-b140-472d-ad26-a26552465995` at
 `https://snipemaxxer-brain.maxxtopia.workers.dev`.
 
-Bot code commit: `cef3e11` (`fix: guard live points refresh abuse`). The prior
+Bot code commit: `58cff5d` (`fix: give VIPs faster live points refresh`). The
+prior abuse-guard release is included in its history at `cef3e11`; the prior
 bot visual release is included in its history at `9fdc540`.
-Bot deployed Worker version: `dbd8bd0b-ebe2-41dd-a4e0-351d048443ea` at
+Bot deployed Worker version: `f1da54de-25b5-4980-9318-7bf5479057cd` at
 `https://maxxtopia-tickets.maxxtopia.workers.dev`.
 
 The unchanged seven-command Discord schema was silently registered before the
@@ -58,7 +59,8 @@ Passed in the bot release tree:
 - `node scripts/test-storm-command.mjs`
 - `node scripts/test-points-command.mjs`
 - `node scripts/test-points-live.mjs`
-- `node scripts/test-worker-interactions.mjs`, including same-user live lookup throttling
+- `node scripts/test-worker-interactions.mjs`, including regular-user 30-second
+  and signed `@VIP`-role 5-second live lookup throttling
 - syntax checks for the changed Worker modules
 - `git diff --check`
 - `npm run build` (Astro static build, 27 pages)
@@ -79,10 +81,12 @@ The real valid Discord interaction/rendered embed test is still owed by Diggy.
 
 ## Abuse and isolation boundary
 
-`/points live` now has a 30-second per-Discord-user cooldown and a 16-request
-per-Worker-isolate in-flight cap. The guard is in memory and intentionally does
-not reuse `TICKETS_RATELIMIT`, so points refresh spam cannot consume ticket/VIP
-KV capacity. A signed malformed payload returns `400 invalid body` before any
+`/points live` now has a 30-second per-Discord-user cooldown for regular members,
+a 5-second cooldown for members carrying the configured `@VIP` role, and a
+16-request per-Worker-isolate in-flight cap. The VIP decision uses Discord's
+signed member-role payload. The guard is in memory and intentionally does not
+reuse `TICKETS_RATELIMIT`, so points refresh spam cannot consume ticket/VIP KV
+capacity. A signed malformed payload returns `400 invalid body` before any
 command work.
 
 This is a normal-abuse burst guard, not global DDoS protection. A distributed
@@ -122,7 +126,7 @@ not publicly inspectable.
 - Built: yes, site build and Worker dry-run passed.
 - Tested: yes for focused fixtures, signed privacy behavior, source live data,
   and unauthenticated endpoint rejection; real Discord rendering remains owed.
-- Committed: yes, source `c3eacca` plus docs `8625666`; bot `cef3e11`.
+- Committed: yes, source `c3eacca` plus docs `8625666`; bot `58cff5d`.
 - Pushed: no.
 - Registered: yes, silently; the schema was unchanged by the abuse guard.
 - Deployed: source and bot yes; Maxxtopia site no new deployment.
@@ -138,6 +142,7 @@ you want a true Kinch channel-by-channel comparison, provide authenticated
 channel screenshots/export or explicitly approve a live Discord login/join
 flow at the moment it is requested.
 
-Single best next action: perform the real Discord visual test, then decide
-whether the remaining distributed-abuse boundary warrants a separate
-Cloudflare WAF/rate-limit rule before any broader rollout.
+Single best next action: perform the real Discord visual test, including a VIP
+member and a console account-ID fallback, then decide whether the remaining
+distributed-abuse boundary warrants a separate Cloudflare WAF/rate-limit rule
+before any broader rollout.
