@@ -69,8 +69,8 @@ assert.equal(storm.response.status, 200)
 assert.equal(storm.body.type, 4)
 assert.equal(storm.body.data.flags, 64)
 assert.equal(storm.body.data.allowed_mentions.parse.length, 0)
-assert.equal(storm.body.data.embeds[0].title, '⚡ STORM READ // ROTATE WINDOW')
-assert(storm.body.data.embeds[0].description.includes('ROTATE SOON'))
+assert.equal(storm.body.data.embeds[0].title, '⚡ STORM SICKNESS CALCULATOR')
+assert(storm.body.data.embeds[0].description.includes('WARNING'))
 assert.equal(storm.pending.length, 0)
 
 const points = await invoke({
@@ -93,6 +93,9 @@ assert.equal(points.pending.length, 0)
 const panel = buildFreeToolsPanel()
 assert.equal(panel.components[0].components.length, 3)
 assert(panel.embed.description.includes(PANEL_SIGNATURE))
+assert(panel.embed.description.includes('Epic display name'))
+assert(!panel.embed.description.includes('account ID'))
+assert(panel.embed.fields.some(field => field.name.includes('STORM TIMING') && field.value.includes('storm damage taken')))
 assert(!panel.embed.description.includes('[maxx-panel:'))
 assert(!panel.embed.fields.some(field => field.name.includes('MANUAL')))
 
@@ -102,8 +105,8 @@ assert.equal(livePanel.body.type, 4)
 assert.equal(livePanel.body.data.flags, 64)
 assert.equal(livePanel.body.data.allowed_mentions.parse.length, 0)
 assert.equal(livePanel.body.data.components[0].components[0].custom_id, PANEL_IDS.liveRegion)
-assert.equal(livePanel.body.data.components[0].components[0].options.length, 7)
-assert(livePanel.body.data.embeds[0].description.includes('currently live Epic windows'))
+assert.equal(livePanel.body.data.components[0].components[0].options.length, 8)
+assert(livePanel.body.data.embeds[0].description.includes('exact live Epic windows'))
 
 const manualPanel = await invoke({ custom_id: PANEL_IDS.manualPoints }, 'panel-manual-user', [], 3)
 assert.equal(manualPanel.body.type, 9)
@@ -154,12 +157,54 @@ globalThis.fetch = async (url, options = {}) => {
 const stormWizardResult = await invoke({ custom_id: stormSubmitId }, 'panel-storm-user', [], 3)
 await Promise.all(stormWizardResult.pending)
 globalThis.fetch = stormCleanupFetch
-assert.equal(stormWizardResult.body.type, 4)
+assert.equal(stormWizardResult.body.type, 7)
 assert.equal(stormWizardResult.body.data.flags, 64)
-assert.equal(stormWizardResult.body.data.embeds[0].title, '⚡ STORM READ // ROTATE WINDOW')
+assert.equal(stormWizardResult.body.data.embeds[0].title, '⚡ STORM SICKNESS CALCULATOR')
 assert.equal(stormWizardResult.body.data.allowed_mentions.parse.length, 0)
-assert.equal(stormCleanupCalls.length, 1)
-assert.equal(stormCleanupCalls[0].options.method, 'DELETE')
+assert.equal(stormCleanupCalls.length, 0)
+assert(stormWizardResult.body.data.embeds[0].fields.some(field => field.name === 'THREAT TIERS'))
+
+const manualStormPanel = await invoke({ custom_id: PANEL_IDS.stormBattleRoyale }, 'panel-manual-storm-user', [], 3)
+let manualStormWizard = manualStormPanel.body.data
+for (const [index, value] of [[0, '7'], [1, 'c']]) {
+  const picker = manualStormWizard.components[index].components[0]
+  const step = await invoke({ custom_id: picker.custom_id, values: [value] }, 'panel-manual-storm-user', [], 3)
+  assert.equal(step.body.type, 7)
+  manualStormWizard = step.body.data
+}
+
+const exactTimePicker = manualStormWizard.components[2].components[0]
+const exactTimeModal = await invoke({ custom_id: exactTimePicker.custom_id, values: ['manual'] }, 'panel-manual-storm-user', [], 3)
+assert.equal(exactTimeModal.body.type, 9)
+assert.equal(exactTimeModal.body.data.title, 'Battle Royale · Exact time left')
+assert.equal(exactTimeModal.body.data.components[0].components[0].custom_id, 'storm_manual_value')
+const exactTimeResult = await invoke({
+  custom_id: exactTimeModal.body.data.custom_id,
+  components: [{ type: 1, components: [{ type: 4, custom_id: 'storm_manual_value', value: '25' }] }],
+}, 'panel-manual-storm-user', [], 5)
+assert.equal(exactTimeResult.body.type, 4)
+assert.equal(exactTimeResult.body.data.flags, 64)
+manualStormWizard = exactTimeResult.body.data
+assert(manualStormWizard.components[2].components[0].options.some(option => option.value === '25' && option.default === true))
+
+const exactDamagePicker = manualStormWizard.components[3].components[0]
+const exactDamageModal = await invoke({ custom_id: exactDamagePicker.custom_id, values: ['manual'] }, 'panel-manual-storm-user', [], 3)
+assert.equal(exactDamageModal.body.type, 9)
+assert.equal(exactDamageModal.body.data.title, 'Battle Royale · Storm damage taken')
+const exactDamageResult = await invoke({
+  custom_id: exactDamageModal.body.data.custom_id,
+  components: [{ type: 1, components: [{ type: 4, custom_id: 'storm_manual_value', value: '25' }] }],
+}, 'panel-manual-storm-user', [], 5)
+assert.equal(exactDamageResult.body.type, 4)
+assert.equal(exactDamageResult.body.data.flags, 64)
+manualStormWizard = exactDamageResult.body.data
+assert(manualStormWizard.components[3].components[0].options.some(option => option.value === '25' && option.default === true))
+assert.equal(manualStormWizard.components[4].components[0].disabled, undefined)
+const exactStormResult = await invoke({ custom_id: manualStormWizard.components[4].components[0].custom_id }, 'panel-manual-storm-user', [], 3)
+assert.equal(exactStormResult.body.type, 7)
+assert.equal(exactStormResult.body.data.embeds[0].title, '⚡ STORM SICKNESS CALCULATOR')
+assert(exactStormResult.body.data.embeds[0].description.includes('25 / 600'))
+assert(exactStormResult.body.data.embeds[0].fields.some(field => field.name === 'LEAVE CALL'))
 
 const reviewCommand = await invoke({ name: 'review' }, 'review-command-user', [], 2, 'fixture-review-channel')
 assert.equal(reviewCommand.response.status, 200)
@@ -341,7 +386,7 @@ try {
   const unavailable = await invoke({ custom_id: PANEL_IDS.liveRegion, values: ['NAW'] }, 'panel-error-user', [], 3)
   assert.equal(unavailable.body.type, 5)
   await Promise.all(unavailable.pending)
-  assert.equal(liveCalls.length, unavailableStart + 2)
+  assert.equal(liveCalls.length, unavailableStart + 3)
   const unavailableCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
   const unavailableBody = JSON.parse(unavailableCall.options.body)
   assert.equal(unavailableBody.embeds[0].title, '⏳ LIVE LIST // TRY AGAIN')

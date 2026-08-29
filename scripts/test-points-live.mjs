@@ -195,11 +195,41 @@ await assert.rejects(
   }),
   error => {
     assert.equal(error.code, 'liveFeedUnavailable')
-    assert.equal(error.message, 'The live tournament list is temporarily unavailable. Try again in a moment.')
+    assert.equal(error.message, 'The live tournament list is temporarily unavailable. Try again shortly.')
     assert(!error.message.includes('HTTP 404'))
     return true
   },
 )
+
+let clientErrorAttempts = 0
+await assert.rejects(
+  () => loadLiveWindows('EU', {
+    fetchImpl: async () => {
+      clientErrorAttempts += 1
+      return response({ error: 'bad request detail should stay private' }, 400)
+    },
+    sleepImpl: async () => {},
+  }),
+  error => {
+    assert.equal(error.code, 'liveFeedUnavailable')
+    assert.equal(error.message, 'The live tournament list could not be loaded. Check your region and try again.')
+    return true
+  },
+)
+assert.equal(clientErrorAttempts, 1)
+
+let retryAttempts = 0
+const retriedWindows = await loadLiveWindows('EU', {
+  fetchImpl: async () => {
+    retryAttempts += 1
+    return retryAttempts === 1
+      ? response({ error: 'temporary upstream response' }, 503)
+      : response({ region: 'EU', windows: [qualificationWindow], fetched: 'retry-success' })
+  },
+  sleepImpl: async () => {},
+})
+assert.equal(retryAttempts, 2)
+assert.equal(retriedWindows.windows[0].windowId, qualificationWindow.windowId)
 
 const failedSelectedRegion = await loadLivePoints({ ign: 'Player', region: 'EU', tournament: 'CrashBandicootCup ZB', games: 1 }, {
   fetchImpl: async url => String(url).startsWith(WINDOWS_API)

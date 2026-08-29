@@ -14,6 +14,8 @@ const STANDING_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/standing'
 const SCORE_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/myscore'
 const REQUEST_TIMEOUT_MS = 8_000
 const REGIONS = Object.freeze(['NAC', 'EU', 'NAW', 'BR', 'ASIA', 'OCE', 'ME'])
+const LIVE_FEED_LABEL = 'the live tournament feed'
+const LIVE_FEED_RETRY_DELAYS_MS = Object.freeze([250])
 
 class LivePointsError extends Error {
   constructor(message, code = 'liveUnavailable') {
@@ -115,41 +117,79 @@ function supportedWindowFormat(window) {
   return ['qualification', 'final'].includes(format) ? format : null
 }
 
-async function fetchJson(url, fetchImpl, label) {
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
-  try {
-    const response = await fetchImpl(url, {
-      method: 'GET',
-      cache: 'no-store',
-      signal: controller.signal,
-    })
-    if (!response?.ok) {
-      let payload = null
-      try { payload = await response.json() } catch { /* keep the status-only message */ }
-      const message = String(payload?.error || payload?.note || '').trim()
-      if (label === 'the live tournament feed') {
-        const status = Number(response?.status)
-        const friendly = status === 404
-          ? 'The live tournament list is temporarily unavailable. Try again in a moment.'
-          : status === 429
-            ? 'The live tournament list is busy. Try again in a moment.'
-            : status >= 500
-              ? 'The live tournament list is temporarily unavailable. Try again shortly.'
-              : 'The live tournament list could not be loaded. Check your region and try again.'
-        throw new LivePointsError(friendly, 'liveFeedUnavailable')
+function retryableLiveFeedStatus(status) {
+  const value = Number(status)
+  return value === 404 || value === 408 || value === 425 || value === 429 || value >= 500
+}
+
+function liveFeedError(response) {
+  const status = Number(response?.status)
+  const friendly = status === 429
+    ? 'The live tournament list is busy. Try again in a moment.'
+    : status === 404 || status >= 500
+      ? 'The live tournament list is temporarily unavailable. Try again shortly.'
+      : 'The live tournament list could not be loaded. Check your region and try again.'
+  return new LivePointsError(friendly, 'liveFeedUnavailable')
+}
+
+async function fetchJson(url, fetchImpl, label, options = {}) {
+  const retryDelays = label === LIVE_FEED_LABEL ? LIVE_FEED_RETRY_DELAYS_MS : []
+  const sleepImpl = typeof options.sleepImpl === 'function'
+    ? options.sleepImpl
+    : milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
+  let attempt = 0
+  while (true) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+    let retry = false
+    try {
+      const response = await fetchImpl(url, {
+        method: 'GET',
+        cache: 'no-store',
+        signal: controller.signal,
+      })
+      if (!response?.ok) {
+        let payload = null
+        try { payload = await response.json() } catch { /* keep the status-only message */ }
+        if (label === LIVE_FEED_LABEL && retryableLiveFeedStatus(response?.status) && attempt < retryDelays.length) {
+          retry = true
+        } else if (label === LIVE_FEED_LABEL) {
+          throw liveFeedError(response)
+        } else {
+          const message = String(payload?.error || payload?.note || '').trim()
+          throw new LivePointsError(message || `${label} returned HTTP ${response?.status || 'error'}.`, payload?.found === false && !payload?.error ? 'scoreNotFound' : 'upstreamError')
+        }
+      } else {
+        const data = await response.json()
+        if (!data || typeof data !== 'object') throw new LivePointsError(`${label} returned an invalid response.`, 'invalidResponse')
+        if (label === LIVE_FEED_LABEL && data.error) {
+          if (attempt < retryDelays.length) {
+            retry = true
+          } else {
+            throw new LivePointsError('The live tournament list is temporarily unavailable. Try again shortly.', 'liveFeedUnavailable')
+          }
+        } else {
+          return data
+        }
       }
-      throw new LivePointsError(message || `${label} returned HTTP ${response?.status || 'error'}.`, payload?.found === false ? 'scoreNotFound' : 'upstreamError')
+    } catch (error) {
+      if (error instanceof LivePointsError) {
+        if (!retry) {
+          throw error
+        }
+      } else if (label === LIVE_FEED_LABEL && attempt < retryDelays.length) {
+        retry = true
+      } else if (error?.name === 'AbortError') {
+        throw new LivePointsError(`${label} timed out. Try again in a moment.`, 'timeout')
+      } else {
+        throw new LivePointsError(`Could not reach ${label}. Try again in a moment.`, 'upstreamError')
+      }
+    } finally {
+      clearTimeout(timeout)
     }
-    const data = await response.json()
-    if (!data || typeof data !== 'object') throw new LivePointsError(`${label} returned an invalid response.`, 'invalidResponse')
-    return data
-  } catch (error) {
-    if (error instanceof LivePointsError) throw error
-    if (error?.name === 'AbortError') throw new LivePointsError(`${label} timed out. Try again in a moment.`, 'timeout')
-    throw new LivePointsError(`Could not reach ${label}. Try again in a moment.`, 'upstreamError')
-  } finally {
-    clearTimeout(timeout)
+    if (!retry) throw new LivePointsError(`Could not reach ${label}. Try again in a moment.`, 'upstreamError')
+    await sleepImpl(retryDelays[attempt])
+    attempt += 1
   }
 }
 
@@ -165,7 +205,8 @@ async function loadLiveWindows(regionInput, deps = {}) {
   const windowsData = await fetchJson(
     `${WINDOWS_API}?region=${encodeURIComponent(region)}`,
     fetchImpl,
-    'the live tournament feed',
+    LIVE_FEED_LABEL,
+    { sleepImpl: deps.sleepImpl },
   )
   if (windowsData.error) throw new LivePointsError(String(windowsData.error), 'upstreamError')
 
@@ -228,7 +269,7 @@ function liveErrorResult(error) {
 async function loadLivePoints(input = {}, deps = {}) {
   const ign = String(input.ign ?? '').trim()
   const accountId = String(input.accountId ?? '').trim().toLowerCase()
-  if (!ign && !accountId) return { ok: false, error: 'Enter your exact Epic display name or 32-character Epic account ID for live mode.', code: 'missingIgn' }
+  if (!ign && !accountId) return { ok: false, error: 'Enter your Epic display name for live mode.', code: 'missingIgn' }
   if (accountId && !/^[0-9a-f]{32}$/.test(accountId)) {
     return { ok: false, error: 'Epic account ID must be exactly 32 hexadecimal characters.', code: 'invalidAccountId' }
   }
@@ -241,7 +282,7 @@ async function loadLivePoints(input = {}, deps = {}) {
 
   try {
     const windowsUrl = `${WINDOWS_API}?region=${encodeURIComponent(region)}`
-    const windowsData = await fetchJson(windowsUrl, fetchImpl, 'the live tournament feed')
+    const windowsData = await fetchJson(windowsUrl, fetchImpl, LIVE_FEED_LABEL, { sleepImpl: deps.sleepImpl })
     if (windowsData.error) throw new LivePointsError(String(windowsData.error), 'upstreamError')
     const failedRegions = Array.isArray(windowsData.regionsFailed)
       ? windowsData.regionsFailed.map(value => String(value).trim().toUpperCase()).filter(Boolean)
@@ -271,7 +312,7 @@ async function loadLivePoints(input = {}, deps = {}) {
     else params.set('ign', ign)
     const standingUrl = `${STANDING_API}?${params.toString()}`
     const standing = await fetchJson(standingUrl, fetchImpl, 'the Epic leaderboard')
-    if (standing.error) throw new LivePointsError(String(standing.error), standing.found === false ? 'scoreNotFound' : 'upstreamError')
+    if (standing.error) throw new LivePointsError(String(standing.error), 'upstreamError')
     if (standing.found !== true) {
       throw new LivePointsError(
         String(standing.note || 'That Epic identity is not on this tournament leaderboard yet. Play a game, then try again.'),
@@ -289,7 +330,7 @@ async function loadLivePoints(input = {}, deps = {}) {
 
     const common = {
       source: 'live',
-      ign: String(standing.ign || ign || accountId).trim(),
+      ign: String(standing.ign || ign).trim() || 'Player lookup',
       accountId: String(standing.accountId || accountId || '').trim() || null,
       region: standingRegion,
       tournamentName: String(standing.name || window.name || 'Live tournament'),

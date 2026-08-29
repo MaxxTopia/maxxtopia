@@ -468,7 +468,7 @@ function formatFinalsEmbed(result) {
     fields: [
       {
         name: 'TOURNAMENT SNAPSHOT',
-        value: `**${result.tournamentName || 'Finals'}**${result.roundType ? ` · ${result.roundType}` : ''}\n${result.region} · Epic leaderboard\n${result.ign || 'Epic account ID'}`,
+        value: `**${result.tournamentName || 'Finals'}**${result.roundType ? ` · ${result.roundType}` : ''}\n${result.region} · Epic leaderboard\n${result.ign || 'Player lookup'}`,
         inline: true,
       },
       {

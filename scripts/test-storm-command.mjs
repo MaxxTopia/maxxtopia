@@ -36,7 +36,9 @@ assert.equal(early.referenceDps, 0)
 assert.equal(early.timeToWarningSeconds, null)
 assert.equal(early.timeToSicknessSeconds, null)
 assert.equal(early.forecastAtPhaseEnd, 0)
-assert.equal(early.statusLabel, 'BELOW WARNING')
+assert.equal(early.statusLabel, 'SAFE · UNDER 500')
+assert.equal(early.leaveTimerSeconds, null)
+assert(early.referenceTimeToSicknessSeconds != null)
 
 const crossing = calculateStormForecast({
   mode: 'battleRoyale',
@@ -47,6 +49,9 @@ const crossing = calculateStormForecast({
 })
 assert.equal(crossing.ok, true)
 assert.equal(crossing.timeToSicknessSeconds, 10)
+assert.equal(crossing.referenceTimeToSicknessSeconds, 10)
+assert.equal(crossing.leaveTimerSeconds, 20)
+assert.equal(crossing.statusLabel, 'WARNING · 500–599')
 assert.equal(crossing.forecastAtPhaseEnd, 900)
 
 const active = calculateStormForecast({
@@ -57,7 +62,9 @@ const active = calculateStormForecast({
   damageTaken: 600,
 })
 assert.equal(active.activeDps, 30)
-assert.equal(active.statusLabel, 'LEAVE NOW')
+assert.equal(active.statusLabel, 'MAX THREAT · 600+')
+assert.equal(active.threatLabel, 'MAX THREAT')
+assert.equal(active.leaveTimerSeconds, 0)
 
 const override = calculateStormForecast({
   mode: 'reload',
@@ -72,22 +79,25 @@ assert.equal(override.dpsOverridden, true)
 assert.equal(advanceDamage(599, 1, 1), 600)
 assert.equal(advanceDamage(600, 10, 1), 630)
 
-assert(formatStormDiscord(crossing).includes('Storm Sickness Calculator - Battle Royale'))
+assert(formatStormDiscord(crossing).includes('Storm Sickness Calculator · Battle Royale'))
 assert(formatStormDiscord(crossing).includes('Reference: Chapter 7 Season 1 · Comp'))
-assert(formatStormDiscord(crossing).includes('After sickness: 3x damage'))
+assert(formatStormDiscord(crossing).includes('after 600: 3x storm damage'))
 assert(!formatStormDiscord(crossing).includes('1000'))
 assert.equal(advanceDamage(600, 10, 2000), 60600)
 
 const embed = formatStormEmbed(crossing)
 assert.equal(embed.author.name, 'MAXX BOT  ·  FORTNITE TOOLS')
-assert.equal(embed.title, '⚡ STORM READ // ROTATE WINDOW')
+assert.equal(embed.title, '⚡ STORM SICKNESS CALCULATOR')
 assert.equal(embed.color, 0xffc857)
-assert(embed.description.includes('ROTATE SOON'))
+assert(embed.description.includes('WARNING · 500–599'))
+assert(embed.description.includes('0:20'))
 assert(embed.description.includes('█████████░'))
-assert(embed.fields.some(field => field.name === 'MATCH SNAPSHOT' && field.value.includes('Zone 6')))
-assert(embed.fields.some(field => field.name === 'DAMAGE TRACKER' && field.value.includes('550')))
-assert(embed.fields.some(field => field.name === 'ROTATE WINDOW' && field.value.includes('0:10')))
-assert(embed.footer.text.includes('private to you'))
+assert(embed.fields.some(field => field.name === 'CURRENT READ' && field.value.includes('Zone 6')))
+assert(embed.fields.some(field => field.name === 'THREAT TIERS' && field.value.includes('MAX THREAT')))
+assert(embed.fields.some(field => field.name === 'LEAVE CALL' && field.value.includes('0:20')))
+assert(embed.fields.some(field => field.name === 'TIMERS FROM NOW' && field.value.includes('0:10')))
+assert(embed.footer.text.includes('Private quick read'))
+assert(!embed.fields.some(field => field.value.includes('DPS override')))
 
 const worker = read('tickets-worker/worker.js')
 const register = read('scripts/register-slash-commands.mjs')

@@ -24,7 +24,10 @@ const PANEL_IDS = Object.freeze({
   stormWizardPrefix: STORM_WIZARD_PREFIX,
 })
 
+const PANEL_REGION_OPTIONS = Object.freeze(['ALL', ...REGIONS])
+
 const REGION_DETAILS = Object.freeze({
+  ALL: ['All regions', 'All supported regions'],
   NAC: ['North America Central', 'NAC leaderboard'],
   EU: ['Europe', 'EU leaderboard'],
   NAW: ['North America West', 'NAW leaderboard'],
@@ -54,6 +57,7 @@ const STORM_TIME_OPTIONS = Object.freeze([
   { value: '15', label: '0:15 left', description: 'About fifteen seconds remaining' },
   { value: '5', label: '0:05 left', description: 'Almost finished' },
   { value: '0', label: '0:00 left', description: 'Closing now' },
+  { value: 'manual', label: 'Enter exact seconds', description: 'Type any whole number, such as 25' },
 ])
 
 const STORM_DAMAGE_OPTIONS = Object.freeze([
@@ -61,8 +65,9 @@ const STORM_DAMAGE_OPTIONS = Object.freeze([
   { value: '250', label: 'Light · 250', description: 'A little storm damage taken' },
   { value: '500', label: 'Warning · 500', description: 'The warning threshold' },
   { value: '600', label: 'Sickness · 600', description: 'The sickness threshold' },
-  { value: '900', label: 'Deep · 900', description: 'Heavy accumulated damage' },
+  { value: '900', label: 'Heavy · 900', description: 'Heavy accumulated damage' },
   { value: '1200', label: 'Critical · 1,200', description: 'Very heavy accumulated damage' },
+  { value: 'manual', label: 'Enter exact damage', description: 'Type damage already taken, such as 25' },
 ])
 
 function regionLabel(region) {
@@ -149,22 +154,23 @@ function buildFreeToolsPanel() {
       author: { name: 'MAXX BOT  ·  FORTNITE TOOLS' },
       title: '🎮 MAXX DESK // PRIVATE TOOLS',
       description: [
-        '**One click → one private form → one useful read.**',
-        'Choose a tool below. Your inputs and result stay visible only to you; nothing is posted as a channel message.',
+        '**Fast reads for comp. No channel spam.**',
+        'Choose a tool below. Your form and result stay visible only to you.',
         '',
-        'Live tournament choices are loaded for the region you select. Qualifiers use the moving live line; Finals use the live prize race. Storm timing uses quick presets so you can get back to the game faster.',
+        'Live points: choose your region and event, then enter your Epic display name.',
+        'Storm timing: choose BR or Reload, then your zone, phase, time left, and storm damage taken.',
         PANEL_SIGNATURE,
       ].join('\n'),
       color: 0x16c7b7,
       fields: [
         {
           name: '🏆 LIVE TOURNAMENT POINTS',
-          value: 'Pick a region and the exact live window. Enter your Epic display name or 32-character account ID, then see your current rank, target, and pace.',
+          value: 'Choose the exact live event and enter your Epic display name as shown in Fortnite. See your rank, target, and pace.',
           inline: true,
         },
         {
           name: '⚡ STORM TIMING',
-          value: 'Choose Battle Royale or Reload, then pick your zone, phase, time left, and storm depth from simple menus. No typing or DPS knowledge needed.',
+          value: 'Choose BR or Reload, then pick your zone, phase, time left, and storm damage taken. Presets or exact values.',
           inline: true,
         },
       ],
@@ -181,7 +187,7 @@ function buildFreeToolsPanel() {
 }
 
 function buildLiveRegionPrompt() {
-  const options = REGIONS.map(region => ({
+  const options = PANEL_REGION_OPTIONS.map(region => ({
     label: `${regionLabel(region)} (${region})`,
     value: region,
     description: regionDescription(region),
@@ -191,7 +197,7 @@ function buildLiveRegionPrompt() {
     embeds: [{
       author: { name: 'MAXX BOT  ·  LIVE POINTS' },
       title: '🏆 CHOOSE YOUR REGION',
-      description: 'The next menu is populated from the currently live Epic windows in this region. Your selection is private.',
+      description: 'Choose a region. The next menu shows only exact live Epic windows; your selection is private.',
       color: 0x4d7cff,
       footer: { text: 'Exact region first · no cross-region cutoff is substituted' },
     }],
@@ -244,10 +250,12 @@ function buildLiveTournamentPrompt(region, windows) {
   const options = liveWindows.map((window, index) => {
     const round = formatWindowRound(window)
     const name = truncate(window.name || 'Unnamed tournament', 76)
+    const windowRegion = String(window.region || region || '').trim().toUpperCase()
+    const regionPrefix = region === 'ALL' && windowRegion ? `${regionLabel(windowRegion)} · ` : ''
     return {
-      label: truncate(`${name} · ${round}`, 100),
+      label: truncate(`${regionPrefix}${name} · ${round}`, 100),
       value: values[index],
-      description: truncate(`${region} · exact live window · enter your Epic identity next`, 100),
+      description: truncate(`${windowRegion || region} · exact live window · enter your Epic display name next`, 100),
       emoji: { name: round.startsWith('FINALS') ? '🏆' : '🏁' },
     }
   })
@@ -256,7 +264,7 @@ function buildLiveTournamentPrompt(region, windows) {
     embeds: [{
       author: { name: 'MAXX BOT  ·  LIVE POINTS' },
       title: `🏆 LIVE WINDOWS // ${region}`,
-      description: `Choose the exact live tournament. **${regionLabel(region)}** is locked for this lookup, and Finals are clearly marked as a prize race.`,
+      description: `Choose the exact live tournament. **${regionLabel(region)}** is locked for this lookup; Finals are marked as a prize race.`,
       color: 0xffc857,
       footer: { text: 'Fresh window list · the final lookup re-checks that it is still live' },
     }],
@@ -284,8 +292,8 @@ function buildLivePointsModal(region, windowId) {
     custom_id: customId,
     title: `Live points · ${region}`,
     components: [
-      row(textInput('epic_identity', 'Epic name or account ID', 1, {
-        placeholder: 'Exact Epic display name or 32-character ID',
+      row(textInput('epic_identity', 'Epic display name', 1, {
+        placeholder: 'Exact name shown in Fortnite',
         maxLength: 100,
       })),
       row(textInput('games_left', 'Games left', 1, {
@@ -325,12 +333,12 @@ function buildStormModal(mode) {
     title: `${mode === 'reload' ? 'Reload' : 'Battle Royale'} storm timing`,
     components: [
       row(textInput('zone', 'Current zone (1–12)', 1, { placeholder: 'Example: 7', maxLength: 2 })),
-      row(textInput('phase', 'Phase: waiting or closing', 1, { placeholder: 'Example: closing', maxLength: 7 })),
-      row(textInput('time_left', 'Seconds left in phase', 1, { placeholder: 'Example: 30', maxLength: 4 })),
-      row(textInput('damage_taken', 'Cumulative storm damage', 1, { placeholder: 'Example: 550', maxLength: 12 })),
-      row(textInput('dps_override', 'DPS override (optional)', 1, {
+      row(textInput('phase', 'Is the zone waiting or closing?', 1, { placeholder: 'Example: closing', maxLength: 7 })),
+      row(textInput('time_left', 'Time left (seconds)', 1, { placeholder: 'Example: 30', maxLength: 4 })),
+      row(textInput('damage_taken', 'Storm damage taken', 1, { placeholder: 'Example: 550', maxLength: 12 })),
+      row(textInput('dps_override', 'Storm tick override (advanced)', 1, {
         required: false,
-        placeholder: 'Leave blank for the zone reference',
+        placeholder: 'Leave blank unless you know exact damage/sec',
         maxLength: 8,
       })),
     ],
@@ -345,22 +353,25 @@ function stormModeFromKey(modeKey) {
   return modeKey === 'reload' ? 'reload' : modeKey === 'br' ? 'battleRoyale' : null
 }
 
+function normalizeWholeNumber(value, max) {
+  const text = String(value ?? '').trim()
+  if (!/^\d+$/.test(text)) return ''
+  const number = Number(text)
+  return Number.isSafeInteger(number) && number <= max ? String(number) : ''
+}
+
 function normalizeStormWizardState(input = {}) {
   const zone = STORM_ZONE_OPTIONS.some(option => option.value === String(input.zone ?? ''))
     ? String(input.zone)
     : ''
   const phase = input.phase === 'waiting' || input.phase === 'closing' ? input.phase : ''
-  const time = STORM_TIME_OPTIONS.some(option => option.value === String(input.time ?? ''))
-    ? String(input.time)
-    : ''
-  const damage = STORM_DAMAGE_OPTIONS.some(option => option.value === String(input.damage ?? ''))
-    ? String(input.damage)
-    : ''
+  const time = normalizeWholeNumber(input.time, 3600)
+  const damage = normalizeWholeNumber(input.damage, 1000000)
   return { zone, phase, time, damage }
 }
 
 function stormWizardComplete(state) {
-  return Boolean(state.zone && state.phase && state.time && state.damage)
+  return Boolean(state.zone && state.phase && state.time !== '' && state.damage !== '')
 }
 
 function stormPhaseToken(phase) {
@@ -388,7 +399,59 @@ function selectedLabel(options, value, empty = 'Not selected') {
   return options.find(option => option.value === value)?.label || empty
 }
 
-function buildStormWizard(mode, inputState = {}) {
+function formatNumber(value) {
+  return Number(value).toLocaleString('en-US')
+}
+
+function stormTimeLabel(value) {
+  const preset = selectedLabel(STORM_TIME_OPTIONS, value)
+  return preset !== 'Not selected'
+    ? preset
+    : value !== '' && value != null
+      ? `${formatNumber(value)}s left`
+      : 'Not selected'
+}
+
+function stormDamageLabel(value) {
+  const preset = selectedLabel(STORM_DAMAGE_OPTIONS, value)
+  return preset !== 'Not selected'
+    ? preset
+    : value !== '' && value != null
+      ? `${formatNumber(value)} damage`
+      : 'Not selected'
+}
+
+function withCurrentOption(options, value, label, description) {
+  if (value == null || value === '' || options.some(option => option.value === value)) return options
+  return [...options, { value, label, description }]
+}
+
+function buildStormManualModal(mode, field, inputState = {}) {
+  const modeKey = mode === 'reload' ? 'reload' : 'br'
+  const state = normalizeStormWizardState(inputState)
+  const isTime = field === 'time'
+  const action = isTime ? 'manualTime' : field === 'damage' ? 'manualDamage' : null
+  if (!action) return null
+  const modeLabel = modeKey === 'reload' ? 'Reload' : 'Battle Royale'
+  return {
+    custom_id: stormWizardCustomId(modeKey, state, action),
+    title: `${modeLabel} · ${isTime ? 'Exact time left' : 'Storm damage taken'}`,
+    components: [row(textInput(
+      'storm_manual_value',
+      isTime ? 'Seconds left' : 'Damage already taken',
+      1,
+      {
+        placeholder: 'Example: 25',
+        value: isTime
+          ? state.time !== '' ? state.time : undefined
+          : state.damage !== '' ? state.damage : undefined,
+        maxLength: isTime ? 4 : 7,
+      },
+    ))],
+  }
+}
+
+function buildStormWizard(mode, inputState = {}, options = {}) {
   const modeKey = mode === 'reload' ? 'reload' : 'battleRoyale'
   const state = normalizeStormWizardState(inputState)
   const modeLabel = modeKey === 'reload' ? 'Reload' : 'Battle Royale'
@@ -397,8 +460,10 @@ function buildStormWizard(mode, inputState = {}) {
     ...option,
     value: option.value === 'w' ? 'waiting' : 'closing',
   })), state.phase)
-  const timeLabel = selectedLabel(STORM_TIME_OPTIONS, state.time)
-  const damageLabel = selectedLabel(STORM_DAMAGE_OPTIONS, state.damage)
+  const timeLabel = stormTimeLabel(state.time)
+  const damageLabel = stormDamageLabel(state.damage)
+  const timeOptions = withCurrentOption(STORM_TIME_OPTIONS, state.time, `Exact · ${formatNumber(state.time)}s left`, 'Your exact time entry')
+  const damageOptions = withCurrentOption(STORM_DAMAGE_OPTIONS, state.damage, `Exact · ${formatNumber(state.damage)} damage`, 'Your exact damage entry')
   const complete = stormWizardComplete(state)
 
   return privateMessage({
@@ -406,20 +471,20 @@ function buildStormWizard(mode, inputState = {}) {
       author: { name: 'MAXX BOT  ·  STORM TIMING' },
       title: `⚡ ${modeLabel.toUpperCase()} // QUICK STORM READ`,
       description: [
-        'Pick the four closest choices from your screen. The result stays private and uses the Chapter 7 Season 1 Comp reference for this playlist.',
-        '',
-        '**DPS override** is intentionally hidden here: it is only an advanced `/storm` option for a different map or playlist tick. Most players should leave it alone.',
+        'Pick four quick values from your screen. Use **Enter exact** when a preset does not fit.',
+        'Your result stays private and gives a leave call using the Chapter 7 Comp timing reference.',
+        ...(options.notice ? ['', `⚠️ ${options.notice}`] : []),
       ].join('\n'),
       color: modeKey === 'reload' ? 0x7c67ff : 0xff8a3d,
       fields: [
         {
-          name: 'CURRENT SNAPSHOT',
+          name: 'CURRENT READ',
           value: `**${zoneLabel}** · ${phaseLabel} · ${timeLabel} · ${damageLabel}`,
           inline: false,
         },
         {
           name: complete ? 'READY' : 'NEXT',
-          value: complete ? 'Tap **Get storm read** for your private rotate / leave call.' : 'Choose one item in each menu, then tap **Get storm read**.',
+          value: complete ? 'Tap **Get storm read** for your warning and leave timing.' : 'Choose one item in each menu, then tap **Get storm read**.',
           inline: false,
         },
       ],
@@ -440,14 +505,14 @@ function buildStormWizard(mode, inputState = {}) {
       )),
       row(select(
         stormWizardCustomId(modeKey, state, 'time'),
-        `3/4 · Time left${state.time ? ` · ${timeLabel}` : ''}`,
-        STORM_TIME_OPTIONS,
+        `3/4 · Time left${state.time !== '' ? ` · ${timeLabel}` : ''}`,
+        timeOptions,
         state.time,
       )),
       row(select(
         stormWizardCustomId(modeKey, state, 'damage'),
-        `4/4 · Storm depth${state.damage ? ` · ${damageLabel}` : ''}`,
-        STORM_DAMAGE_OPTIONS,
+        `4/4 · Storm damage taken${state.damage !== '' ? ` · ${damageLabel}` : ''}`,
+        damageOptions,
         state.damage,
       )),
       row(
@@ -510,7 +575,7 @@ function parseStormWizardCustomId(customId) {
   if (parts.length !== 6) return null
   const [modeKey, zoneToken, phaseToken, timeToken, damageToken, action] = parts
   const mode = stormModeFromKey(modeKey)
-  if (!mode || !['zone', 'phase', 'time', 'damage', 'submit', 'reset'].includes(action)) return null
+  if (!mode || !['zone', 'phase', 'time', 'damage', 'manualTime', 'manualDamage', 'submit', 'reset'].includes(action)) return null
   const zone = zoneToken === 'x' ? '' : decodeSegment(zoneToken)
   const time = timeToken === 'x' ? '' : decodeSegment(timeToken)
   const damage = damageToken === 'x' ? '' : decodeSegment(damageToken)
@@ -526,6 +591,7 @@ function parseStormWizardCustomId(customId) {
 export {
   MSG_FLAG_EPHEMERAL,
   PANEL_IDS,
+  PANEL_REGION_OPTIONS,
   PANEL_SIGNATURE,
   buildFreeToolsPanel,
   buildLiveRegionPrompt,
@@ -533,9 +599,11 @@ export {
   buildLivePointsModal,
   buildManualPointsModal,
   buildStormModal,
+  buildStormManualModal,
   buildStormWizard,
   buildLiveFeedUnavailablePrompt,
   decodeWindowValue,
+  normalizeStormWizardState,
   parseLiveSubmitCustomId,
   parseStormSubmitCustomId,
   parseStormWizardCustomId,

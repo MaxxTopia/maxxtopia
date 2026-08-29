@@ -36,9 +36,11 @@ import {
   buildLiveTournamentPrompt,
   buildManualPointsModal,
   buildStormModal,
+  buildStormManualModal,
   buildStormWizard,
   buildLiveFeedUnavailablePrompt,
   decodeWindowValue,
+  normalizeStormWizardState,
   parseLiveSubmitCustomId,
   parseStormSubmitCustomId,
   parseStormWizardCustomId,
@@ -203,6 +205,12 @@ export default {
         }
         if (stormWizard.action === 'zone' || stormWizard.action === 'phase' || stormWizard.action === 'time' || stormWizard.action === 'damage') {
           const value = String(interaction.data?.values?.[0] ?? '')
+          if (stormWizard.action === 'time' && value === 'manual') {
+            return privateModalResponse(interaction, ctx, buildStormManualModal(stormWizard.mode, 'time', stormWizard.state))
+          }
+          if (stormWizard.action === 'damage' && value === 'manual') {
+            return privateModalResponse(interaction, ctx, buildStormManualModal(stormWizard.mode, 'damage', stormWizard.state))
+          }
           const nextState = { ...stormWizard.state }
           if (stormWizard.action === 'zone') nextState.zone = value
           if (stormWizard.action === 'phase') nextState.phase = value === 'w' ? 'waiting' : value === 'c' ? 'closing' : ''
@@ -211,7 +219,10 @@ export default {
           return jsonResponse({ type: RESP_UPDATE_MESSAGE, data: buildStormWizard(stormWizard.mode, nextState) })
         }
         if (stormWizard.action === 'submit') {
-          return privateMessageResponse(interaction, ctx, handleStormWizard(interaction, stormWizard))
+          return jsonResponse({
+            type: RESP_UPDATE_MESSAGE,
+            data: privateResponseData(handleStormWizard(interaction, stormWizard)),
+          })
         }
       }
       if (customId === PANEL_IDS.liveRegion) {
@@ -251,6 +262,23 @@ export default {
       }
       if (customId === PANEL_IDS.manualSubmit) {
         return privateMessageResponse(interaction, ctx, handleManualPointsModal(interaction))
+      }
+
+      const stormWizardModal = parseStormWizardCustomId(customId)
+      if (stormWizardModal && (stormWizardModal.action === 'manualTime' || stormWizardModal.action === 'manualDamage')) {
+        const field = stormWizardModal.action === 'manualTime' ? 'time' : 'damage'
+        const rawValue = getModalValue(interaction, 'storm_manual_value')
+        const nextState = normalizeStormWizardState({
+          ...stormWizardModal.state,
+          [field]: rawValue,
+        })
+        if (!nextState[field]) {
+          const range = field === 'time' ? '0 to 3,600 seconds' : '0 to 1,000,000 damage'
+          return privateMessageResponse(interaction, ctx, buildStormWizard(stormWizardModal.mode, stormWizardModal.state, {
+            notice: `Enter a whole number from ${range}.`,
+          }))
+        }
+        return privateMessageResponse(interaction, ctx, buildStormWizard(stormWizardModal.mode, nextState))
       }
 
       const stormModal = parseStormSubmitCustomId(customId)

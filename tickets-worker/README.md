@@ -142,13 +142,14 @@ channel.
 The panel has three entry points:
 
 - **Live tournament points** — choose a region, choose a freshly loaded exact
-  live window, then enter an Epic display name or 32-character account ID,
-  games left, and an optional cushion. The submit step re-checks that exact
-  window before asking for the standing.
+  live window, then enter the Epic display name shown in Fortnite, games left,
+  and an optional cushion. The submit step re-checks that exact window before
+  asking for the standing. The advanced `/points` command still accepts a
+  32-character account ID when a platform alias does not resolve.
 - **Storm · BR** and **Storm · Reload** — choose the current zone, waiting or
-  closing phase, time-left preset, and storm-depth preset. The four menus keep
-  the common Fortnite path fast and avoid asking players to type seconds or
-  damage values.
+  closing phase, time-left preset, and storm damage already taken. The four
+  menus keep the common Fortnite path fast; **Enter exact** is available for
+  values such as 25 seconds or 25 damage.
 
 Live windows are not hardcoded into the buttons. Qualifiers are labelled as a
 moving line and Finals as a live prize race, so the panel can serve every
@@ -159,10 +160,14 @@ queries a leaderboard from incomplete data. Slash commands stay available as a
 fallback, including the manual arithmetic mode for advanced users who already
 know a target line.
 
-Storm presets use the user-supplied Chapter 7 Season 1 Comp tables. The visible
-panel deliberately hides `DPS override`: it means the current storm damage tick
-when a map or playlist differs from the reference, and is only useful through
-the advanced `/storm` command. The in-game timer and tick always outrank the
+Storm presets use the user-supplied Chapter 7 Season 1 Comp tables. The result
+shows a direct leave call, the current damage tier (`SAFE` below 500,
+`WARNING` from 500–599, and `MAX THREAT` at 600+), and the estimated time until
+each threshold. Reaching 600 triples storm damage, so the leave call is the
+useful action rather than a confusing hard-stop number. The visible panel
+deliberately hides `DPS override`: it means the current storm damage tick when
+a map or playlist differs from the reference, and is only useful through the
+advanced `/storm` command. The in-game timer and tick always outrank the
 reference.
 
 Every new Maxx utility interaction retires that user's previous ephemeral
