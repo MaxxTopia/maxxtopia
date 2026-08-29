@@ -23,7 +23,7 @@ regions, distinguishes qualifiers from Finals, and shows a trustworthy prize
 race while a tournament is still running. It must use the exact Epic event,
 window, region, and identity; accept a 32-character Epic account ID when a
 console/platform alias is not an Epic display name; fail closed instead of
-guessing; and never notify a Discord channel.
+guessing; keep command results private; and avoid notifying a Discord channel.
 
 The source Worker now provides `/windows?region=` and
 `/standing?ign=&accountId=&eventId=&windowId=&region=`. Finals use Epic's
@@ -49,26 +49,34 @@ Bot deployed Worker version: `f1da54de-25b5-4980-9318-7bf5479057cd` at
 
 The unchanged seven-command Discord schema was silently registered before the
 bot deploy: `/storm`, `/points`, `/gen`, `/om`, `/33`, `/founderstatus`, and
-`/sccoins`. No public Discord message, announcement, notification, or ticket
-panel edit was sent.
+`/sccoins`. No public announcement, notification, or ticket-panel edit was
+sent. The later channel-surface update added one silent instructional embed
+only, with no mentions.
 
 ## Discord channel surface
 
-The existing `#free-stuff` text channel was renamed to `#tournament-live`
-(`1519790996559364307`) in the existing `— maxxtopia —` category. Its topic is
-now `Live Fortnite tournament points and prize-race lookups. Use /points live.
-Results are private.` The separate later caption message
-`1519794106233262193` containing `Viewmaxxing, as it looks now` was removed at
-Diggy's request. The original Viewmaxxing app preview post
-`1519790997595226315` was verified present and unchanged, including its
-components and silent-message flag.
+The existing `#free-stuff` text channel (`1519790996559364307`) remains in the
+existing `— maxxtopia —` category. Its topic is now `Free Maxxtopia tools and
+private Fortnite tournament lookups. Use /points or /storm. Results are
+private.` The separate later caption message `1519794106233262193` containing
+`Viewmaxxing, as it looks now` was removed at Diggy's request. The original
+Viewmaxxing app preview post `1519790997595226315` was verified present and
+unchanged, including its components and silent-message flag.
+
+A new silent instruction embed `1543352185092444191`, titled
+`🧭 FREE TOOLS // PRIVATE BY DEFAULT`, explains `/points`, the Finals prize
+race, the console account-ID fallback, supported regions, `/storm`, and the
+private command-only use case. It has five fields, no components, no mentions,
+and message flag `4096` (`SUPPRESS_NOTIFICATIONS`).
 
 The channel remains read-only for ordinary member messages. This is
 intentional: members can enter `/points live` and receive the existing
 ephemeral result, while ordinary text cannot become a notification stream.
-The deployed interaction Worker is not a Discord Gateway listener, so an
-instant-delete-after-send design is not implemented; deletion after delivery
-would not guarantee that other members were never notified.
+The `@everyone` overwrite remains allow `1024` / deny `377957124160`, and the
+slash-command permission is not denied. The deployed interaction Worker is not
+a Discord Gateway listener, so an instant-delete-after-send design is not
+implemented; deletion after delivery would not guarantee that other members
+were never notified.
 
 ## Verification evidence
 
@@ -84,10 +92,11 @@ Passed in the bot release tree:
 - `npm run build` (Astro static build, 27 pages)
 - `npx wrangler deploy --config wrangler.toml --dry-run` from `tickets-worker`
 
-The live Discord channel metadata was re-read after the update: the channel is
-`#tournament-live`, the old caption message is absent, and the original
-Viewmaxxing preview post remains the only message returned in the first-page
-check.
+The live Discord channel metadata was re-read after the channel-surface
+update: the channel is `#free-stuff`, the old caption message is absent, the
+original Viewmaxxing preview post remains unchanged, and the new instruction
+embed is present with flag `4096`. The ordinary-member read-only overwrite is
+unchanged.
 
 Latest read-only live source check returned HTTP 200 for EU Finals window
 `FNCSDivisionalCup Division1`, event
@@ -153,8 +162,9 @@ not publicly inspectable.
 - Pushed: no.
 - Registered: yes, silently; the schema was unchanged by the abuse guard.
 - Deployed: source and bot yes; Maxxtopia site no new deployment.
-- Verified live: source data and bot rejection paths yes; a real user-issued
-  `/points live` card inside Discord is not yet verified.
+- Verified live: source data, bot rejection paths, and the silent
+  `#free-stuff` channel surface yes; a real user-issued `/points live` card
+  inside Discord is not yet verified.
 
 ## Diggy-owed tests and next action
 
