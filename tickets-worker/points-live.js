@@ -205,6 +205,7 @@ async function loadLivePoints(input = {}, deps = {}) {
     if (current == null) throw new LivePointsError('Epic returned an invalid points total for that player.', 'invalidScore')
     const gamesLeft = finiteWhole(standing.gamesLeft)
     const games = gamesLeft == null ? input.games : gamesLeft
+    const rawRoundType = String(standing.roundType || window.roundType || '').trim() || null
 
     const common = {
       source: 'live',
@@ -212,7 +213,7 @@ async function loadLivePoints(input = {}, deps = {}) {
       accountId: String(standing.accountId || accountId || '').trim() || null,
       region: standingRegion,
       tournamentName: String(standing.name || window.name || 'Live tournament'),
-      roundType: String(standing.roundType || window.roundType || '').trim() || null,
+      roundType: format === 'final' ? 'Finals' : rawRoundType,
       rank: finiteWhole(standing.rank),
       gamesPlayed: finiteWhole(standing.games) ?? 0,
       eventId,

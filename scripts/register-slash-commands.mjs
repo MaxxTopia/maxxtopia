@@ -23,8 +23,9 @@
  *   node scripts/register-slash-commands.mjs --dry-run
  *   node scripts/register-slash-commands.mjs --execute
  *
- * Token sourced from .bot-setup.local.env (same pattern as
- * post-ticket-panel.mjs). Application ID is auto-derived from the
+ * Token sourced from .bot-setup.local.env (or MAXXTOPIA_BOT_ENV_PATH when
+ * the secret is kept outside the release worktree). Application ID is
+ * auto-derived from the
  * token's first base64 segment — no manual config needed.
  */
 
@@ -36,7 +37,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 
 // ─── Env ───────────────────────────────────────────────────────────────────
-const envPath = join(ROOT, '.bot-setup.local.env');
+const envPath = process.env.MAXXTOPIA_BOT_ENV_PATH
+    ? resolve(process.env.MAXXTOPIA_BOT_ENV_PATH)
+    : join(ROOT, '.bot-setup.local.env');
 let TOKEN, GUILD_ID;
 try {
     const raw = readFileSync(envPath, 'utf8');

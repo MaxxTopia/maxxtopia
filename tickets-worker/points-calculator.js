@@ -161,6 +161,23 @@ function prizeTierLine(tier) {
   return tier ? `${prizeTierName(tier)} — ${prizeTierReward(tier)}` : 'Outside the published paid bands'
 }
 
+// One compact visual rail makes the actionable question obvious between games:
+// how close is the current score to the next exact live paid-rank boundary?
+function finalsRaceRail(result) {
+  if (!result.targetTier) {
+    return result.currentTier
+      ? '🏆 **Top published prize band**\nNo higher paid-rank boundary to chase in this snapshot.'
+      : 'No live paid-rank target is available for this snapshot.'
+  }
+  if (result.targetPoints == null) {
+    return `\`${'░'.repeat(14)}\` **boundary pending**\n${prizeTierName(result.targetTier)} is published; Epic has not populated its live points yet.`
+  }
+  const percent = result.targetPoints > 0
+    ? Math.min(100, Math.max(0, Math.round((result.currentPoints / result.targetPoints) * 100)))
+    : 100
+  return `\`${progressBar(percent, 14)}\` **${formatPoints(result.currentPoints)} / ${formatPoints(result.targetPoints)} pts**\n${formatPoints(result.pointsToTarget)} to ${prizeTierName(result.targetTier)} · ${percent}% of live boundary`
+}
+
 // Finals are a rank/prize race, not a qualification race. The function only
 // computes a points gap when the boundary score was read from this exact live
 // leaderboard; it never estimates a cross-region or historical cutoff.
@@ -268,9 +285,11 @@ function formatFinalPointsDiscord(result) {
   const nextPrize = result.targetTier
     ? `${prizeTierLine(result.targetTier)}${result.targetPoints == null ? ' · live boundary unavailable' : ` · boundary ${formatPoints(result.targetPoints)} pts`}`
     : 'No better published tier than the current top band'
-  const gap = result.pointsToTarget == null
-    ? 'unavailable until Epic publishes this live boundary'
-    : `${formatPoints(result.pointsToTarget)} more live points`
+  const gap = !result.targetTier
+    ? 'no higher tier to chase'
+    : result.pointsToTarget == null
+      ? 'unavailable until Epic publishes this live boundary'
+      : `${formatPoints(result.pointsToTarget)} more live points`
   const pace = result.requiredPerGame == null
     ? 'unavailable'
     : `${formatAverage(result.requiredPerGame)} points/game`
@@ -282,6 +301,7 @@ function formatFinalPointsDiscord(result) {
     `Current prize band: ${currentPrize}`,
     `Next better tier: ${nextPrize}`,
     `Gap to that tier: ${gap} | Required pace: ${pace}`,
+    `Live race: ${finalsRaceRail(result).replace(/\n/g, ' · ').replace(/[*`]/g, '')}`,
     `Games left: ${formatPoints(result.gamesLeft)}`,
     result.prizeLadderVerified
       ? 'Prize tiers come from Epic payout metadata; all point boundaries are live projections and can move before the window closes.'
@@ -420,9 +440,15 @@ function formatFinalsEmbed(result) {
   const currentPrize = prizeTierLine(result.currentTier)
   const nextPrize = result.targetTier
     ? `${prizeTierLine(result.targetTier)}\n${result.targetPoints == null ? 'Live boundary unavailable' : `Boundary: **${formatPoints(result.targetPoints)} pts**`}`
-    : 'No better published tier than the current top band.'
-  const gap = result.pointsToTarget == null ? 'Unavailable' : `${formatPoints(result.pointsToTarget)} live points`
-  const pace = result.requiredPerGame == null ? 'Unavailable' : `${formatAverage(result.requiredPerGame, 1)} PPG`
+    : 'No higher published tier — top band reached in this snapshot.'
+  const gap = !result.targetTier
+    ? 'No higher tier'
+    : result.pointsToTarget == null
+      ? 'Boundary pending'
+      : `${formatPoints(result.pointsToTarget)} live points`
+  const pace = !result.targetTier
+    ? '—'
+    : result.requiredPerGame == null ? 'Unavailable' : `${formatAverage(result.requiredPerGame, 1)} PPG`
   const freshness = result.boundaryFetchedAt ? `Boundary read: ${result.boundaryFetchedAt}` : 'Boundary timestamp unavailable'
   const prizeNote = result.prizeLadderVerified
     ? 'Amounts are from Epic payout metadata. Rank and boundary points are live projections.'
@@ -456,6 +482,11 @@ function formatFinalsEmbed(result) {
         inline: true,
       },
       {
+        name: 'LIVE RACE TO NEXT BAND',
+        value: finalsRaceRail(result),
+        inline: false,
+      },
+      {
         name: 'NEXT BETTER TIER',
         value: nextPrize,
         inline: true,
@@ -467,7 +498,7 @@ function formatFinalsEmbed(result) {
       },
       {
         name: 'SOURCE & FRESHNESS',
-        value: `${prizeNote}\n${freshness}\nNo other region or prior tournament is substituted.`,
+        value: `${prizeNote}\n${freshness}\nExact event/window · same region only\nNo prior tournament is substituted.`,
         inline: true,
       },
       {

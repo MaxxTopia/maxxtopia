@@ -132,8 +132,22 @@ const finalsEmbed = formatPointsEmbed(finalLive)
 assert.equal(finalsEmbed.title, '🏆 POINTS READ // FINALS PRIZE RACE')
 assert(finalsEmbed.fields.some(field => field.name === 'CURRENT PRIZE BAND' && field.value.includes('Top 25')))
 assert(finalsEmbed.fields.some(field => field.name === 'NEXT BETTER TIER' && field.value.includes('Top 5')))
+assert(finalsEmbed.fields.some(field => field.name === 'LIVE RACE TO NEXT BAND' && field.value.includes('220 / 260 pts')))
 assert(finalsEmbed.fields.some(field => field.name === 'PRIZE RACE' && field.value.includes('13.3 PPG')))
-assert(finalsEmbed.fields.some(field => field.name === 'SOURCE & FRESHNESS' && field.value.includes('No other region or prior tournament')))
+assert(finalsEmbed.fields.some(field => field.name === 'SOURCE & FRESHNESS' && field.value.includes('Exact event/window')))
+
+const topBand = calculatePrizeRace({
+  current: 267,
+  rank: 1,
+  games: 2,
+  prizeLadder: [
+    { minRank: 1, maxRank: 1, rewardLabel: 'Ecomm 2,500', verified: true, livePointsAtBoundary: 267 },
+    { minRank: 2, maxRank: 2, rewardLabel: 'Ecomm 1,250', verified: true, livePointsAtBoundary: 218 },
+  ],
+})
+const topBandEmbed = formatPointsEmbed({ ...topBand, source: 'live', region: 'EU', tournamentName: 'FNCSDivisionalCup Division1', roundType: 'Finals', ign: 'T1 darmboss', gamesPlayed: 4 })
+assert(topBandEmbed.fields.some(field => field.name === 'LIVE RACE TO NEXT BAND' && field.value.includes('Top published prize band')))
+assert(topBandEmbed.fields.some(field => field.name === 'PRIZE RACE' && field.value.includes('No higher tier')))
 
 const opaqueFinals = calculatePrizeRace({
   current: 220,
