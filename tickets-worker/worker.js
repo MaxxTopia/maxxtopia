@@ -53,12 +53,12 @@ const MSG_FLAG_EPHEMERAL = 1 << 6
 const RATE_LIMIT_SECONDS = 60
 
 // Live points is deliberately isolated from the ticket/VIP KV limiter. A
-// short best-effort per-isolate cooldown protects normal refresh spam without
+// short best-effort per-isolate cooldown protects refresh spam without
 // allowing a public utility command to consume the ticket system's KV quota.
 // This is a burst guard, not a global DDoS boundary; Cloudflare rate limiting
 // remains the correct next layer for distributed abuse.
 const LIVE_POINTS_COOLDOWN_SECONDS = 30
-const LIVE_POINTS_COOLDOWN_MS = LIVE_POINTS_COOLDOWN_SECONDS * 1000
+const LIVE_POINTS_VIP_COOLDOWN_SECONDS = 5
 const LIVE_POINTS_MAX_IN_FLIGHT = 16
 const LIVE_POINTS_MAX_COOLDOWNS = 4096
 const livePointsCooldowns = new Map()
@@ -156,7 +156,7 @@ export default {
           // The live path does two bounded upstream reads. Defer so Discord
           // gets its acknowledgement immediately, then edit the private
           // response when the exact event/window lookup finishes.
-          ctx.waitUntil(handleLivePoints(interaction))
+          ctx.waitUntil(handleLivePoints(env, interaction))
           return jsonResponse({
             type: RESP_DEFERRED_CHANNEL_MESSAGE,
             data: { flags: MSG_FLAG_EPHEMERAL },
@@ -433,7 +433,7 @@ async function handleGrantVip(env, interaction, customId) {
 
 // ─── Slash command handlers ─────────────────────────────────────────────
 
-async function handleLivePoints(interaction) {
+async function handleLivePoints(env, interaction) {
   if (livePointsInFlight >= LIVE_POINTS_MAX_IN_FLIGHT) {
     await editFollowup(interaction.application_id, interaction.token, {
       content: '⏳ Live lookup capacity is busy. Try again in a moment.',
@@ -444,10 +444,12 @@ async function handleLivePoints(interaction) {
   }
 
   const callerId = interaction.member?.user?.id ?? interaction.user?.id
-  const cooldown = claimLivePointsCooldown(callerId)
+  const isVip = hasVipRole(interaction, env)
+  const cooldownSeconds = isVip ? LIVE_POINTS_VIP_COOLDOWN_SECONDS : LIVE_POINTS_COOLDOWN_SECONDS
+  const cooldown = claimLivePointsCooldown(callerId, cooldownSeconds)
   if (!cooldown.allowed) {
     await editFollowup(interaction.application_id, interaction.token, {
-      content: `⏱ Live points is limited to one lookup every ${LIVE_POINTS_COOLDOWN_SECONDS} seconds. Try again in ${cooldown.retryAfterSeconds}s.`,
+      content: `⏱ Live points is limited to one lookup every ${cooldownSeconds} seconds. Try again in ${cooldown.retryAfterSeconds}s.`,
       flags: MSG_FLAG_EPHEMERAL,
       allowed_mentions: { parse: [] },
     })
@@ -477,7 +479,16 @@ async function handleLivePoints(interaction) {
   })
 }
 
-function claimLivePointsCooldown(userId, now = Date.now()) {
+function hasVipRole(interaction, env) {
+  const vipRoleId = env.VIP_ROLE_ID
+  return Boolean(
+    vipRoleId &&
+    Array.isArray(interaction.member?.roles) &&
+    interaction.member.roles.some(roleId => String(roleId) === String(vipRoleId)),
+  )
+}
+
+function claimLivePointsCooldown(userId, cooldownSeconds = LIVE_POINTS_COOLDOWN_SECONDS, now = Date.now()) {
   if (!userId) return { allowed: true, retryAfterSeconds: 0 }
 
   const key = String(userId)
@@ -497,7 +508,7 @@ function claimLivePointsCooldown(userId, now = Date.now()) {
     if (oldest) livePointsCooldowns.delete(oldest)
   }
 
-  livePointsCooldowns.set(key, now + LIVE_POINTS_COOLDOWN_MS)
+  livePointsCooldowns.set(key, now + cooldownSeconds * 1000)
   return { allowed: true, retryAfterSeconds: 0 }
 }
 

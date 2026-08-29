@@ -11,9 +11,9 @@ const toHex = bytes => Array.from(new Uint8Array(bytes), byte => byte.toString(1
 const keyPair = await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign', 'verify'])
 const publicKey = toHex(await crypto.subtle.exportKey('raw', keyPair.publicKey))
 
-async function invoke(data, userId = null) {
+async function invoke(data, userId = null, roles = []) {
   const interaction = { type: 2, data }
-  if (userId) interaction.member = { user: { id: userId } }
+  if (userId || roles.length) interaction.member = { user: { id: userId }, roles }
   const body = JSON.stringify(interaction)
   const timestamp = String(Math.floor(Date.now() / 1000))
   const signature = toHex(await crypto.subtle.sign('Ed25519', keyPair.privateKey, encoder.encode(timestamp + body)))
@@ -27,7 +27,10 @@ async function invoke(data, userId = null) {
     },
     body,
   })
-  const response = await worker.fetch(request, { DISCORD_PUBLIC_KEY: publicKey }, {
+  const response = await worker.fetch(request, {
+    DISCORD_PUBLIC_KEY: publicKey,
+    VIP_ROLE_ID: 'fixture-vip-role',
+  }, {
     waitUntil(promise) { pending.push(promise) },
   })
   return { response, body: await response.json(), pending }
@@ -134,6 +137,26 @@ try {
   const throttleFollowup = JSON.parse(liveCalls[3].options.body)
   assert(throttleFollowup.content.includes('one lookup every 30 seconds'))
   assert.equal(throttleFollowup.allowed_mentions.parse.length, 0)
+
+  const vipUserOptions = {
+    ...liveOptions,
+    options: liveOptions.options.map(option => option.name === 'ign'
+      ? { ...option, value: 'VIP Fixture Name' }
+      : option),
+  }
+  const vip = await invoke(vipUserOptions, 'vip-fixture-user', ['fixture-vip-role'])
+  assert.equal(vip.response.status, 200)
+  await Promise.all(vip.pending)
+  const callsAfterVip = liveCalls.length
+  assert.equal(callsAfterVip, 7)
+
+  const vipThrottled = await invoke(vipUserOptions, 'vip-fixture-user', ['fixture-vip-role'])
+  assert.equal(vipThrottled.response.status, 200)
+  await Promise.all(vipThrottled.pending)
+  assert.equal(liveCalls.length, callsAfterVip + 1)
+  const vipThrottleFollowup = JSON.parse(liveCalls.at(-1).options.body)
+  assert(vipThrottleFollowup.content.includes('one lookup every 5 seconds'))
+  assert.equal(vipThrottleFollowup.allowed_mentions.parse.length, 0)
 } finally {
   globalThis.fetch = liveFetch
 }

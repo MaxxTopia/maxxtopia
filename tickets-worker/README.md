@@ -82,11 +82,14 @@ Both region and identity remain visible in the result so a copied or stale
 lookup is easier to catch.
 
 Both commands are ephemeral and use `allowed_mentions: { parse: [] }` so an
-answer cannot fan out notifications. `/points live` also allows one lookup per
-Discord user every 30 seconds, with a small per-isolate in-flight cap. This
-guard is separate from the ticket/VIP KV limiter, so refresh spam cannot
-consume ticket capacity. It is a burst safeguard rather than a global DDoS
-control; distributed abuse still belongs behind Cloudflare rate limiting/WAF.
+answer cannot fan out notifications. `/points live` allows one lookup per
+regular Discord user every 30 seconds and one lookup per member with the
+configured `@VIP` role every 5 seconds, with a small per-isolate in-flight cap.
+The VIP check uses Discord's signed member-role payload; it does not trust a
+user-supplied option. This guard is separate from the ticket/VIP KV limiter, so
+refresh spam cannot consume ticket capacity. It is a burst safeguard rather
+than a global DDoS control; distributed abuse still belongs behind Cloudflare
+rate limiting/WAF.
 
 ## Deploy
 
