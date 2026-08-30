@@ -86,6 +86,11 @@ const shots = [
         <h1 class="vm-h1"><span>One app.</span><br><span class="vm-h1-accent">Every mood.</span></h1>
         <p class="vm-sub"><b>5 apps, 1 remote.</b> Ad-free YouTube, movies, anime &amp; <b>live</b> Twitch &mdash;
           running local on your box. <b class="vm-hl">No ads. No login. $0 forever.</b></p>
+        <p class="vm-beta-note" role="status">
+          <span class="vm-beta-kicker">PC WEB</span>
+          <strong>BETA</strong>
+          <span>Browser playback is still being hardened.</span>
+        </p>
         <div class="vm-cta">
           <a class="vm-btn" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>
             {primary.label}
@@ -210,6 +215,9 @@ const shots = [
   .viewmaxxing-tv .vm-sub{ margin-top:16px; font-size:17px; line-height:1.5; color:var(--vm-mid); max-width:30em; font-weight:500; }
   .viewmaxxing-tv .vm-sub b{ color:#eefaf3; font-weight:800; }
   .viewmaxxing-tv .vm-sub .vm-hl{ color:var(--em2); font-weight:800; text-shadow:0 0 16px color-mix(in oklab,var(--em) 45%,transparent); }
+  .viewmaxxing-tv .vm-beta-note{ display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin:15px 0 0; color:var(--vm-muted); font-family:var(--font-mono); font-size:11px; line-height:1.4; letter-spacing:.03em; }
+  .viewmaxxing-tv .vm-beta-kicker{ color:var(--em2); font-weight:800; letter-spacing:.13em; }
+  .viewmaxxing-tv .vm-beta-note strong{ padding:3px 7px; border:1px solid color-mix(in oklab,var(--em) 55%,transparent); border-radius:999px; color:#eefaf3; background:color-mix(in oklab,var(--em) 13%,transparent); font-size:10px; letter-spacing:.12em; }
   .viewmaxxing-tv .vm-cta{ margin-top:30px; display:flex; gap:13px; align-items:center; flex-wrap:wrap; }
   .viewmaxxing-tv .vm-btn{ text-decoration:none; font-family:var(--font-mono); font-size:14px; font-weight:700; color:#04140d; padding:14px 22px; border-radius:12px;
     background:linear-gradient(120deg,var(--em2),var(--em) 60%,var(--em3)); display:inline-flex; align-items:center; gap:9px;
