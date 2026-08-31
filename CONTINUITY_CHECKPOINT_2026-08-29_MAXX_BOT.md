@@ -42,8 +42,10 @@ The supplied Kinch Analytics Chapter 7 Season 1 Comp tables were also applied
 to both Storm consumers: Maxx Bot's `/storm` and the Snipemaxxer desktop Storm
 tab. Battle Royale now uses the supplied 60-second opening wait and cumulative
 phase totals through 1,350 seconds; Reload uses the supplied 0-second opening
-wait and totals through 1,080 seconds. The blank early damage cells are shown
-as a labeled `0 DPS` reference baseline with an in-game override. Radius,
+wait and totals through 1,080 seconds. At this historical snapshot, blank early
+damage cells were shown as a labeled `0 DPS` baseline; the 2026-08-31 repair
+below supersedes that interpretation by carrying the charts' merged DPS cells
+through every covered row. Radius,
 movement speeds, distance, and Surge columns remain informational because
 neither current Storm surface has map/player-distance/lobby inputs to model
 them honestly.
@@ -424,7 +426,7 @@ are still owed. In-game Storm timing must be compared against the supplied
 Chapter 7 tables on both BR and Reload.
 
 Single best next action: have one ordinary member click `Storm · BR` or
-`Storm · Reload`, complete all four menus, and report the rendered private
+`Storm · Reload`, complete the guided inputs, and report the rendered private
 result; then run one currently-live exact-window points lookup with a real
 Epic account ID. No more deployment or command registration is needed for
 this milestone.
@@ -567,3 +569,141 @@ live telemetry; the in-game timer and damage tick remain authoritative.
 Single best next action: Diggy performs those real Discord/game checks and
 reports any rendered or upstream mismatch; do not edit the panel again unless
 one of those checks finds a concrete issue.
+
+## Fortnite live-points, storm, ticket, and review repair — local source + silent Discord edits (2026-08-31)
+
+Diggy reported that Live tournament points returned **LIVE LIST // TRY AGAIN**
+while an event was visibly live, the first region prompt remained open after a
+selection, and the Storm Sickness result treated a Zone 1 example as if the
+current 1 damage/sec tick continued forever. He also requested permanent $115
+Optimizationmaxxing ticket copy, removal of visible internal ticket markers,
+and a review modal button in `#reviews`.
+
+The live-points failure was an upstream-contract drift, not a bad region
+choice. Read-only checks on 2026-08-31 showed the deployed bot's legacy
+`/windows` and `/standing` source routes both returning exact HTTP 404
+`{"error":"not found"}` responses. The current `/tournaments?region=EU`
+contract returned HTTP 200 with seven windows, and `/cutoffs?region=EU`
+returned HTTP 200 with five windows. No EU window was live during the check,
+so this confirms the contract repair but is not a real live-event proof.
+
+Local source now reads `/tournaments`, `/myscore`, `/qualify`, and `/cutoffs`,
+while retaining the legacy paths only as bounded route-missing fallbacks. It
+requires an exact live event/window/region, rechecks the selected window before
+the player lookup, rejects cross-region or ambiguous results, and does not
+invent a Finals payout band when the source omits the prize ladder. The region
+selection and regional refresh use Discord's deferred message-update path, so
+the original private region prompt becomes the event list/status instead of
+leaving a second stale prompt behind. Refresh preserves the selected region.
+
+Storm now follows the merged damage cells and exact timing rows in Diggy's
+Chapter 7 Season 1 Comp charts for both Battle Royale and Reload. The wizard
+adds a required **In storm / Safe now** choice. In-storm results project
+continuous exposure across the remaining phase and later zones with their
+changing damage/sec values; safe results pause the player's actual damage and
+warning clocks while showing a clearly labeled enter-now reference. The
+result separates the player-entered phase countdown from the chart's absolute
+zone-end match clock. For the reported BR example — Zone 1 closing, 30 seconds
+left, 250 cumulative storm damage, in storm — the reference reaches the 500
+warning in **4:10**, during Zone 3 closing, not 4:40.
+
+The `/storm` registration schema now requires an exposure status before its
+optional mode/DPS fields. The Worker defaults old slash-command payloads to
+`inStorm` only for backward compatibility until the command is re-registered.
+
+The existing Discord purchase panels were edited in place using the canonical
+bot environment and an update-only, fail-closed publisher:
+
+- `#open-ticket` Optimizationmaxxing message `1502925467802665051` now says
+  $115 permanently, one payment/no subscription, lifetime future VIP updates,
+  what is included, active maintenance, and possible limited first-time-tuner
+  discount tickets. The dated price increase and $180 copy are gone.
+- `#open-ticket` Discordmaxxer message `1502926885032820827` had its visible
+  internal marker removed without changing the actual tier offer.
+- Neither panel displays its `ticket-panel:*` identifier; durable lookup now
+  uses invisible button IDs with the old marker only as a one-time migration
+  fallback.
+
+Both were exact bot-owned edits with mention parsing disabled. No new panel,
+announcement, mention, notification, channel/permission change, pin, or delete
+was created. A follow-up dry run read both messages as already current.
+
+The existing bot-owned `#reviews` instruction message
+`1543384596740309164` was also edited in place to add **Leave a review**. It
+opens the existing review modal handled by the already-deployed Worker; `/review`
+remains an optional fallback. The updater hard-codes the exact channel/message,
+checks the bot author and hidden review signature, refuses to post or delete,
+suppresses mentions, and performs a forced read-back. The live edit and a
+second dry run both verified the current button without sending a new message.
+A normal-member click/submit remains a human gate.
+
+Local verification passed after the repair: `test-points-command`,
+`test-points-live`, `test-storm-command`, `test-review-command`, and
+`test-worker-interactions`; syntax checks for every changed JS/MJS module;
+`npm run build` with 27 pages; a Wrangler Worker deployment dry-run with the
+expected bindings; and `git diff --check` (only repository LF/CRLF warnings).
+The resilience pass documented source-contract drift, stale/mismatched live
+data, Discord migration duplication, and storm-reference drift in
+`tickets-worker/RESILIENCE.md`, including fail-closed behavior and a future
+remote kill-switch design.
+
+Current state: the two ticket panels and review instruction are updated live
+and silent. The live-points/storm/region source repair, focused tests, safe
+publishers, and resilience notes are local and uncommitted in this worktree.
+The Maxxtopia Worker has not been redeployed, `/storm` has not been
+re-registered, and nothing from this repair has been committed or pushed. The
+four unrelated pre-existing dirty files (`astro.config.mjs`, `package-lock.json`,
+`package.json`, and `tsconfig.json`) remain preserved and unstaged.
+
+Diggy-owed release gates after explicit approval: deploy the focused Worker,
+re-register the slash commands, and push only the intended files; then run one
+ordinary-member Live Points lookup during an actually live exact window plus
+one BR and one Reload in-game comparison. The single best next action is to
+approve that focused deploy/registration/push sequence.
+
+## Fortnite repair production release — 2026-08-31
+
+Diggy explicitly approved the focused live release. Implementation commit
+`f449a33` (`fix: repair Maxx Bot live points and storm timing`) and publisher
+verification commit `87fd939` (`fix: verify free tools panel readback`) were
+pushed to `origin/codex/maxx-bot-fortnite-utilities`. The Astro site was not
+deployed. The four unrelated pre-existing dirty files (`astro.config.mjs`,
+`package-lock.json`, `package.json`, and `tsconfig.json`) remained unstaged and
+untouched.
+
+The production `maxxtopia-tickets` Worker was deployed at
+`https://maxxtopia-tickets.maxxtopia.workers.dev` as version
+`0ffff141-e523-4b21-bd7d-c750d0df216b`. A cache-busted unauthenticated GET
+returned the expected `404` with body `not found`, confirming the interaction
+boundary remained closed after deployment.
+
+Slash-command registration first read the eight live guild commands and found
+no unreviewed command that the replacement PUT would remove. Discord then
+accepted all eight commands. The returned schema contained `/storm` with its
+required `status` option, alongside `/review`, `/points`, `/gen`, `/om`, `/33`,
+`/founderstatus`, and `/sccoins`. No command was silently dropped.
+
+The existing Maxx Bot guide message `1543352185092444191` in `#free-stuff`
+was edited in place with silent flag `4096`, mention parsing disabled, and the
+new storm-exposure wording. No replacement message was posted. Discord's
+component objects include extra default fields, so the original publisher's
+raw JSON comparison produced a false pending-update report after the successful
+edit. Commit `87fd939` normalized embeds/components and added forced exact
+read-back; its live dry run now reports that the known guide is already current.
+The two purchase panels and the `#reviews` instruction also read back as
+already current in their fail-closed dry runs.
+
+Release verification passed: five focused command/interaction fixtures, syntax
+checks for all changed JavaScript modules, `npm run build` with 27 generated
+pages, the Worker deployment dry-run with expected bindings, `git diff --check`,
+the production Worker deploy, command-schema read-back, and silent Discord panel
+read-back. No public announcement, mention, notification, channel permission
+change, pin, delete, or new Discord message was created by this release.
+
+Remaining human gates are intentionally narrow: run Live tournament points as
+an ordinary member while a real exact event is currently live, compare one BR
+and one Reload result against the in-game timer/tick, and submit one review from
+an ordinary-member account. The 2026-08-31 source inspection had no live EU
+window, so fixtures and API contract checks are not presented as live-event
+proof. The single best next action is that real in-game/Discord verification;
+only reopen source work if one of those checks shows a concrete mismatch.
