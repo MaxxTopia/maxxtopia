@@ -274,7 +274,7 @@ const standingsApi = '/api';
     const timeout = window.setTimeout(() => controller.abort(), 12000);
     if (!quiet) setStatus('Checking the latest processed sessions…', 'loading');
     try {
-      const url = new URL(`${API}/standings`);
+      const url = new URL(`${API}/standings`, window.location.origin);
       url.searchParams.set('eventId', state.eventId);
       url.searchParams.set('windowId', state.windowId);
       url.searchParams.set('limit', '10');
@@ -306,7 +306,7 @@ const standingsApi = '/api';
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 12000);
     try {
-      const url = new URL(`${API}/tournaments`);
+      const url = new URL(`${API}/tournaments`, window.location.origin);
       url.searchParams.set('region', state.region);
       url.searchParams.set('history', '1');
       const data = await readJson(url, controller.signal);
