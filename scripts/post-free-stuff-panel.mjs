@@ -53,13 +53,46 @@ if (DRY) console.log('[free-stuff-panel] DRY RUN — no Discord changes. Pass --
 
 const panel = buildFreeToolsPanel()
 
+function normalizedComponents(rows) {
+  return (rows || []).map(row => {
+    const rawRow = row?.toJSON?.() || row || {}
+    return {
+      type: rawRow.type,
+      components: (rawRow.components || []).map(component => {
+        const raw = component?.toJSON?.() || component || {}
+        return {
+          type: raw.type,
+          style: raw.style,
+          label: raw.label,
+          custom_id: raw.customId || raw.custom_id,
+          emoji: raw.emoji?.name ? { name: raw.emoji.name } : undefined,
+          disabled: raw.disabled || undefined,
+        }
+      }),
+    }
+  })
+}
+
+function normalizedEmbed(embed) {
+  const raw = embed?.toJSON?.() || embed || {}
+  return {
+    author: raw.author?.name ? { name: raw.author.name } : undefined,
+    title: raw.title,
+    description: raw.description,
+    color: raw.color,
+    fields: (raw.fields || []).map(field => ({
+      name: field.name,
+      value: field.value,
+      inline: Boolean(field.inline),
+    })),
+    footer: raw.footer?.text ? { text: raw.footer.text } : undefined,
+  }
+}
+
 function messageNeedsUpdate(message) {
   if (!message) return true
-  const currentDescription = message.embeds[0]?.description || ''
-  const currentTitle = message.embeds[0]?.title || ''
-  const currentComponents = JSON.stringify(message.components?.map(component => component.toJSON?.() || component) || [])
-  const nextComponents = JSON.stringify(panel.components)
-  return currentTitle !== panel.embed.title || currentDescription !== panel.embed.description || currentComponents !== nextComponents
+  return JSON.stringify(normalizedEmbed(message.embeds[0])) !== JSON.stringify(normalizedEmbed(panel.embed))
+    || JSON.stringify(normalizedComponents(message.components)) !== JSON.stringify(normalizedComponents(panel.components))
 }
 
 async function findPanel(channel, botUserId) {
@@ -93,6 +126,7 @@ client.once('clientReady', async () => {
       console.log(`[free-stuff-panel] guide already current (id ${existing.id}). No edit needed.`)
     } else if (existing) {
       console.log(`[free-stuff-panel] [would] update guide in #${channel.name} (id ${existing.id})`)
+      if (DRY) console.log('[free-stuff-panel] Re-run with --execute to apply the panel update.')
       if (!DRY) {
         await existing.edit({
           embeds: [panel.embed],
@@ -100,10 +134,15 @@ client.once('clientReady', async () => {
           flags: SILENT,
           allowedMentions: { parse: [] },
         })
-        console.log('[free-stuff-panel] [do] guide updated silently.')
+        const verified = await channel.messages.fetch({ message: existing.id, force: true })
+        if (messageNeedsUpdate(verified)) {
+          throw new Error(`Discord accepted guide edit ${existing.id}, but exact read-back did not match`)
+        }
+        console.log('[free-stuff-panel] [do] guide updated silently and read back successfully.')
       }
     } else {
       console.log(`[free-stuff-panel] [would] post a new guide in #${channel.name}`)
+      if (DRY) console.log('[free-stuff-panel] Re-run with --execute to apply the panel update.')
       if (!DRY) {
         const sent = await channel.send({
           embeds: [panel.embed],
@@ -114,7 +153,6 @@ client.once('clientReady', async () => {
         console.log(`[free-stuff-panel] [do] guide posted silently (id ${sent.id}).`)
       }
     }
-    if (DRY) console.log('[free-stuff-panel] Re-run with --execute to apply the panel update.')
   } catch (error) {
     console.error(`[free-stuff-panel] ${error?.message || error}`)
     process.exitCode = 1
