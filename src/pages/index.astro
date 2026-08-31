@@ -19,6 +19,17 @@ const liveSorted = [...liveProducts].sort(
 ---
 
 <Layout>
+  <!-- The Pages project is shared with maxxtopia.com. Keep the dedicated
+       leaderboard hostname pointed at the maintained standings surface without
+       creating a second static deployment that could drift. -->
+  <script is:inline>
+    (() => {
+      if (window.location.hostname === 'leaderboard.maxxtopia.com') {
+        window.location.replace(`/standings/${window.location.search}`);
+      }
+    })();
+  </script>
+
   <Hero />
 
   <SuiteMarquee />
