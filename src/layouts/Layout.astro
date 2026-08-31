@@ -36,6 +36,8 @@ type Props = {
   noindex?: boolean;
   /** Hide the cross-suite sidebar (e.g., on 404). */
   hideSidebar?: boolean;
+  /** Render a focused product surface without the Maxxtopia site chrome. */
+  hideChrome?: boolean;
   /** OpenGraph type — 'website' for most pages, 'article' for guides. */
   ogType?: 'website' | 'article';
   /** ISO date — emits article:published_time when ogType is 'article'. */
@@ -53,6 +55,7 @@ const {
   image = '/og.png',
   noindex = false,
   hideSidebar = false,
+  hideChrome = false,
   ogType = 'website',
   articlePublished,
   articleModified,
@@ -164,19 +167,18 @@ const yandexVerify = import.meta.env.PUBLIC_YANDEX_VERIFICATION;
          @fontsource) — no third-party Google Fonts request. -->
 
   </head>
-  <body class={hideSidebar ? '' : 'has-sidebar'}>
+  <body class={hideChrome ? 'standalone-page' : hideSidebar ? '' : 'has-sidebar'}>
     <a href="#main" class="skip-link">Skip to content</a>
-    <CustomCursor />
-    <Header />
-    {!hideSidebar && <MaxxerSidebar />}
+    {!hideChrome && <CustomCursor />}
+    {!hideChrome && <Header />}
+    {!hideChrome && !hideSidebar && <MaxxerSidebar />}
     <main id="main">
       <slot />
     </main>
-    <Footer />
-    <RevealOnScroll />
-    <MagneticAndTilt />
-    <!-- Floating quote-of-the-day widget — always visible across every page. -->
-    <DailyQuote />
+    {!hideChrome && <Footer />}
+    {!hideChrome && <RevealOnScroll />}
+    {!hideChrome && <MagneticAndTilt />}
+    {!hideChrome && <DailyQuote />}
 
     {/* Cloudflare Web Analytics — only renders when the token env var is set. */}
     {cfAnalyticsToken && (

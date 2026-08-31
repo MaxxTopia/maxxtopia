@@ -8,8 +8,9 @@ const standingsApi = '/api';
 <Layout
   title="Tournament Standings — Maxxtopia"
   description="A live, replay-aware tournament leaderboard for Fortnite watch parties and stream overlays."
+  hideChrome
 >
-  <main class="standings-page maxxtopia-motion-required" data-motion-required="true">
+  <div class="standings-page maxxtopia-motion-required" data-motion-required="true">
     <Aurora intensity="low" motionRequired />
     <div class="sp-grid" aria-hidden="true"></div>
 
@@ -18,9 +19,9 @@ const standingsApi = '/api';
         <div class="sp-kicker"><span class="sp-kicker-dot"></span> Watch party control room</div>
         <div class="sp-title-row">
           <div>
-            <h1><span class="sp-title-gradient">Standings</span><span class="sp-title-mark">/</span><span class="sp-title-muted">live-ish</span></h1>
+            <h1><span class="sp-title-gradient">Still in it.</span><span class="sp-title-mark">/</span><span class="sp-title-muted">control room</span></h1>
             <p class="sp-intro">
-              The scoreboard for the moments between games. Pick any available Epic tournament,
+              The competitive scoreboard for the moments between games. Pick any available Epic tournament,
               see the comeback math, then send the same board straight into OBS through Streammaxxing.
             </p>
           </div>
@@ -36,11 +37,27 @@ const standingsApi = '/api';
         <div class="sp-stage-topline">
           <div>
             <p class="sp-section-label">Tournament board</p>
-            <h2 id="sp-stage-title">Choose the lobby you’re watching.</h2>
+            <h2 id="sp-stage-title">The board between games.</h2>
+            <div class="sp-board-context"><span id="sp-board-event">Loading event</span><i aria-hidden="true">/</i><span id="sp-board-round">Loading round</span></div>
           </div>
           <div class="sp-stage-actions">
+            <span class="sp-processed-chip" id="sp-board-status">WAITING FOR DATA</span>
             <button class="sp-quiet-button" id="sp-share" type="button">Copy board link</button>
+            <button class="sp-quiet-button" id="sp-copy-overlay" type="button">Copy OBS URL</button>
+            <button class="sp-refresh-button" id="sp-open-overlay" type="button">Open overlay <span aria-hidden="true">↗</span></button>
             <button class="sp-refresh-button" id="sp-refresh" type="button"><span aria-hidden="true">↻</span> Refresh</button>
+          </div>
+        </div>
+
+        <div class="sp-overlay-tools" aria-label="Overlay controls">
+          <span class="sp-overlay-brand"><span class="sp-overlay-mark">M</span> STANDINGS <i>•</i> AFTER GAME</span>
+          <div class="sp-overlay-tool-actions">
+            <div class="sp-segmented sp-segmented--overlay" role="group" aria-label="Overlay board size">
+              <button type="button" data-limit="5" aria-pressed="true">5</button>
+              <button type="button" data-limit="10" aria-pressed="false">10</button>
+            </div>
+            <button class="sp-overlay-collapse" id="sp-overlay-collapse" type="button" aria-expanded="true"><span id="sp-overlay-collapse-label">Minimize</span><span aria-hidden="true">⌃</span></button>
+            <a class="sp-overlay-full" id="sp-full-board" href="/standings/">Full board <span aria-hidden="true">↗</span></a>
           </div>
         </div>
 
@@ -67,8 +84,8 @@ const standingsApi = '/api';
           <div class="sp-control sp-control--view">
             <span>Board size</span>
             <div class="sp-segmented" role="group" aria-label="Board size">
-              <button id="sp-top5" class="is-active" type="button" aria-pressed="true">Top 5</button>
-              <button id="sp-top10" type="button" aria-pressed="false">Top 10</button>
+              <button id="sp-top5" data-limit="5" class="is-active" type="button" aria-pressed="true">Top 5</button>
+              <button id="sp-top10" data-limit="10" type="button" aria-pressed="false">Top 10</button>
             </div>
           </div>
         </div>
@@ -76,18 +93,20 @@ const standingsApi = '/api';
         <div class="sp-status-line" role="status" aria-live="polite">
           <span class="sp-status-dot" id="sp-status-dot"></span>
           <span id="sp-status">Loading tournament catalog…</span>
+          <span class="sp-status-delay" id="sp-delay"></span>
         </div>
 
         <div class="sp-summary" aria-label="Leaderboard summary">
           <div class="sp-summary-item sp-summary-item--live"><span class="sp-summary-label">Signal</span><strong id="sp-signal">Waiting</strong></div>
           <div class="sp-summary-item"><span class="sp-summary-label">Players shown</span><strong id="sp-count">—</strong></div>
           <div class="sp-summary-item"><span class="sp-summary-label">Last provider update</span><strong id="sp-updated">—</strong></div>
+          <div class="sp-summary-item"><span class="sp-summary-label">Games reported</span><strong id="sp-games">—</strong></div>
           <div class="sp-summary-item"><span class="sp-summary-label">Source</span><strong id="sp-source">Epic leaderboard</strong></div>
         </div>
 
         <div class="sp-board" id="sp-board" aria-live="polite">
           <div class="sp-board-head" aria-hidden="true">
-            <span>Move</span><span>Player</span><span>Points</span><span>Gap / last game</span>
+            <span>Move</span><span>Competitor</span><span>Points</span><span>Wins</span><span>Prize</span><span>Next target</span>
           </div>
           <div class="sp-rows" id="sp-rows"></div>
           <div class="sp-empty" id="sp-empty">
@@ -119,7 +138,7 @@ const standingsApi = '/api';
         <a href="/streammaxxing">Open Streammaxxing <span aria-hidden="true">↗</span></a>
       </footer>
     </div>
-  </main>
+  </div>
 </Layout>
 
 <script define:vars={{ standingsApi }}>
@@ -136,6 +155,9 @@ const standingsApi = '/api';
     timer: null,
     request: 0,
     hasRows: false,
+    previousRows: new Map(),
+    overlay: false,
+    collapsed: false,
   };
 
   function setStatus(message, tone = 'idle') {
@@ -165,7 +187,22 @@ const standingsApi = '/api';
     if (state.eventId) url.searchParams.set('eventId', state.eventId); else url.searchParams.delete('eventId');
     if (state.windowId) url.searchParams.set('windowId', state.windowId); else url.searchParams.delete('windowId');
     url.searchParams.set('limit', String(state.limit));
+    if (state.overlay) url.searchParams.set('overlay', '1'); else url.searchParams.delete('overlay');
     window.history.replaceState({}, '', url);
+  }
+
+  function overlayUrl() {
+    const url = new URL(window.location.href);
+    url.searchParams.set('overlay', '1');
+    url.searchParams.set('limit', String(state.limit));
+    return url.toString();
+  }
+
+  function updateFullBoardLink() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('overlay');
+    url.searchParams.set('limit', String(state.limit));
+    $('sp-full-board').href = url.pathname + url.search;
   }
 
   function windowLabel(item) {
@@ -194,10 +231,12 @@ const standingsApi = '/api';
     state.windowId = selected.windowId || '';
     select.value = `${state.eventId}::${state.windowId}`;
     select.disabled = false;
+    $('sp-board-event').textContent = selected.name || selected.eventName || selected.eventId || 'Tournament';
+    $('sp-board-round').textContent = selected.windowName || selected.windowId || 'Round';
     updateUrl();
   }
 
-  function renderRows(rows) {
+  function renderLegacyRows(rows) {
     const container = $('sp-rows');
     container.replaceChildren();
     const visible = Array.isArray(rows) ? rows.slice(0, state.limit) : [];
@@ -255,6 +294,135 @@ const standingsApi = '/api';
     });
   }
 
+  function formatNullableNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number.toLocaleString('en-US') : '—';
+  }
+
+  function formatPrize(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? '$' + number.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '—';
+  }
+
+  function rankBadge(rank) {
+    if (rank === 1) {
+      return '<svg class="sp-trophy" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v4.6c0 3.02-2.1 5.28-5 5.28S7 11.62 7 8.6V4Z"/><path d="M7 6H3.8v2.1c0 2.1 1.52 3.7 3.55 3.7M17 6h3.2v2.1c0 2.1-1.52 3.7-3.55 3.7M12 13.9V18M8.5 20h7"/></svg>';
+    }
+    if (rank === 2) return '<span class="sp-rank-roman">II</span>';
+    if (rank === 3) return '<span class="sp-rank-roman">III</span>';
+    return '<span class="sp-rank-number">#' + rank + '</span>';
+  }
+
+  function animateStandingsNumber(element, from, to) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!element || !Number.isFinite(from) || !Number.isFinite(to) || from === to || reduceMotion) {
+      if (element) element.textContent = formatNumber(to);
+      return;
+    }
+    const started = performance.now();
+    const duration = 720;
+    const frame = (now) => {
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      element.textContent = formatNumber(Math.round(from + (to - from) * eased));
+      if (progress < 1) window.requestAnimationFrame(frame);
+    };
+    window.requestAnimationFrame(frame);
+  }
+
+  function renderRows(rows) {
+    const container = $('sp-rows');
+    container.replaceChildren();
+    const visible = Array.isArray(rows) ? rows.slice(0, state.limit) : [];
+    $('sp-count').textContent = visible.length ? visible.length + ' / ' + state.limit : '—';
+    state.hasRows = visible.length > 0;
+    $('sp-empty').hidden = state.hasRows;
+    if (!visible.length) {
+      state.previousRows = new Map();
+      return;
+    }
+
+    const nextRows = new Map();
+    visible.forEach((row, index) => {
+      const rank = Number(row.rank) || index + 1;
+      const delta = Number(row.rankDelta);
+      const movement = Number.isFinite(delta) && delta !== 0;
+      const rowKey = row.name || 'rank-' + rank;
+      const prior = state.previousRows.get(rowKey);
+      const article = document.createElement('article');
+      article.className = 'sp-row sp-row--rank-' + Math.min(3, rank) + ' ' + (movement ? (delta > 0 ? 'sp-row--up' : 'sp-row--down') : 'sp-row--steady');
+      article.style.setProperty('--row-delay', Math.min(index, 9) * 48 + 'ms');
+      article.dataset.rank = String(rank);
+
+      const move = document.createElement('div');
+      move.className = 'sp-movement';
+      move.setAttribute('aria-label', movement ? Math.abs(delta) + ' place' + (Math.abs(delta) === 1 ? '' : 's') + ' ' + (delta > 0 ? 'up' : 'down') : 'No movement');
+      move.innerHTML = movement
+        ? '<span class="sp-movement-arrow" aria-hidden="true">' + (delta > 0 ? '↑' : '↓') + '</span><strong>' + Math.abs(delta) + '</strong>'
+        : '<span class="sp-movement-blank" aria-hidden="true"></span>';
+
+      const identity = document.createElement('div');
+      identity.className = 'sp-player';
+      const rankBadgeElement = document.createElement('span');
+      rankBadgeElement.className = 'sp-rank';
+      rankBadgeElement.innerHTML = rankBadge(rank);
+      const identityCopy = document.createElement('span');
+      identityCopy.className = 'sp-player-copy';
+      const name = document.createElement('strong');
+      name.textContent = row.name || 'Player unavailable';
+      const meta = document.createElement('small');
+      const selected = state.windows.find((item) => item.eventId === state.eventId && item.windowId === state.windowId);
+      const region = row.region || (selected && selected.region) || (state.region !== 'ALL' ? state.region : '');
+      meta.textContent = region ? region + ' · ' + formatNullableNumber(row.games) + ' games' : formatNullableNumber(row.games) + ' games';
+      identityCopy.append(name, meta);
+      identity.append(rankBadgeElement, identityCopy);
+
+      const points = document.createElement('div');
+      points.className = 'sp-points';
+      const pointsValue = document.createElement('strong');
+      const currentPoints = Number(row.points);
+      pointsValue.textContent = formatNullableNumber(row.points);
+      const oldPoints = prior ? Number(prior.points) : NaN;
+      if (Number.isFinite(oldPoints) && Number.isFinite(currentPoints) && oldPoints !== currentPoints) {
+        pointsValue.classList.add(currentPoints > oldPoints ? 'sp-points-flash' : 'sp-points-flash-red');
+        animateStandingsNumber(pointsValue, oldPoints, currentPoints);
+      }
+      const pointsLabel = document.createElement('span');
+      pointsLabel.textContent = 'PTS';
+      points.append(pointsValue, pointsLabel);
+
+      const wins = document.createElement('div');
+      wins.className = 'sp-wins';
+      wins.innerHTML = '<strong>' + formatNullableNumber(row.wins) + '</strong><span>WINS</span>';
+
+      const prize = document.createElement('div');
+      prize.className = 'sp-prize ' + (rank <= 3 ? 'sp-prize--tier-' + rank : 'sp-prize--standard');
+      prize.innerHTML = '<strong>' + formatPrize(row.prize) + '</strong><span>' + (Number.isFinite(Number(row.prize)) ? 'CASH PRIZE' : 'PRIZE DATA PENDING') + '</span>';
+
+      const math = document.createElement('div');
+      math.className = 'sp-math';
+      const gap = document.createElement('strong');
+      gap.className = 'sp-gap';
+      if (rank === 1) {
+        gap.textContent = 'LEAD';
+      } else if (row.pointsToNext != null && Number.isFinite(Number(row.pointsToNext))) {
+        gap.textContent = '+' + formatNullableNumber(row.pointsToNext) + ' to #' + Math.max(1, rank - 1);
+      } else {
+        gap.textContent = 'NEXT TARGET —';
+      }
+      const last = document.createElement('span');
+      const lastKnown = row.lastGamePoints != null && Number.isFinite(Number(row.lastGamePoints));
+      last.className = 'sp-last' + (lastKnown && Number(row.lastGamePoints) < 0 ? ' sp-last--negative' : '');
+      last.textContent = lastKnown ? formatSigned(row.lastGamePoints) + ' last game' : 'LAST GAME —';
+      math.append(gap, last);
+
+      article.append(move, identity, points, wins, prize, math);
+      container.append(article);
+      nextRows.set(rowKey, { points: currentPoints });
+    });
+    state.previousRows = nextRows;
+  }
+
   async function readJson(url, signal) {
     const response = await fetch(url, { signal, headers: { Accept: 'application/json' } });
     const data = await response.json().catch(() => ({}));
@@ -285,12 +453,16 @@ const standingsApi = '/api';
       $('sp-signal').textContent = state.hasRows ? 'Provider snapshot' : 'No processed rows';
       $('sp-updated').textContent = formatTime(data.fetched);
       $('sp-source').textContent = data.source || 'Epic leaderboard';
+      $('sp-games').textContent = Number.isFinite(Number(data.maxGames)) ? Number(data.maxGames).toLocaleString('en-US') : '—';
+      $('sp-delay').textContent = data.replayAware ? 'PROCESSING DELAY EXPECTED' : '';
+      $('sp-board-status').textContent = state.hasRows ? `UPDATED ${formatTime(data.fetched)}` : 'NO PROCESSED ROWS';
       setStatus(`Updated ${formatTime(data.fetched)} · next check in ${state.pollSeconds}s`, 'good');
       updateUrl();
       schedulePoll();
     } catch (error) {
       if (requestId !== state.request) return;
       $('sp-signal').textContent = state.hasRows ? 'Showing last good' : 'Unavailable';
+      $('sp-board-status').textContent = state.hasRows ? 'LAST GOOD SNAPSHOT' : 'DATA UNAVAILABLE';
       setStatus(state.hasRows ? `Provider update unavailable — showing the last good snapshot. ${error.message}` : `Standings unavailable: ${error.message}`, 'warn');
       schedulePoll();
     } finally {
@@ -335,12 +507,14 @@ const standingsApi = '/api';
 
   function setLimit(limit) {
     state.limit = limit === 10 ? 10 : 5;
-    $('sp-top5').classList.toggle('is-active', state.limit === 5);
-    $('sp-top10').classList.toggle('is-active', state.limit === 10);
-    $('sp-top5').setAttribute('aria-pressed', String(state.limit === 5));
-    $('sp-top10').setAttribute('aria-pressed', String(state.limit === 10));
+    document.querySelectorAll('[data-limit]').forEach((button) => {
+      const active = Number(button.dataset.limit) === state.limit;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
     updateUrl();
-    loadStandings({ quiet: true });
+    updateFullBoardLink();
+    if (state.eventId && state.windowId) loadStandings({ quiet: true });
   }
 
   $('sp-region').addEventListener('change', (event) => {
@@ -356,9 +530,25 @@ const standingsApi = '/api';
     updateUrl();
     loadStandings();
   });
-  $('sp-top5').addEventListener('click', () => setLimit(5));
-  $('sp-top10').addEventListener('click', () => setLimit(10));
+  document.querySelectorAll('[data-limit]').forEach((button) => {
+    button.addEventListener('click', () => setLimit(Number(button.dataset.limit)));
+  });
   $('sp-refresh').addEventListener('click', () => loadStandings());
+  $('sp-open-overlay').addEventListener('click', () => window.open(overlayUrl(), '_blank', 'noopener,noreferrer'));
+  $('sp-copy-overlay').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(overlayUrl());
+      setStatus('OBS URL copied. Add it as a Browser Source in OBS.', 'good');
+    } catch {
+      setStatus('Copy was blocked by the browser. Use the address bar URL for OBS.', 'idle');
+    }
+  });
+  $('sp-overlay-collapse').addEventListener('click', () => {
+    state.collapsed = !state.collapsed;
+    document.querySelector('.standings-page').classList.toggle('sp-overlay-collapsed', state.collapsed);
+    $('sp-overlay-collapse').setAttribute('aria-expanded', String(!state.collapsed));
+    $('sp-overlay-collapse-label').textContent = state.collapsed ? 'Expand' : 'Minimize';
+  });
   $('sp-share').addEventListener('click', async () => {
     updateUrl();
     try {
@@ -376,8 +566,12 @@ const standingsApi = '/api';
   const initialRegion = String(params.get('region') || 'ALL').toUpperCase();
   state.region = REGIONS.has(initialRegion) ? initialRegion : 'ALL';
   state.limit = params.get('limit') === '10' ? 10 : 5;
+  state.overlay = params.get('overlay') === '1' || params.get('view') === 'overlay';
+  document.querySelector('.standings-page').classList.toggle('sp-overlay-mode', state.overlay);
+  if (state.overlay) document.title = 'OBS Standings Overlay — Maxxtopia';
   $('sp-region').value = state.region;
   setLimit(state.limit);
+  updateFullBoardLink();
   loadWindows();
 </script>
 
@@ -550,5 +744,491 @@ const standingsApi = '/api';
     .sp-math { padding-left: 46px; font-size: 10px; }
     .sp-info-card { min-height: 0; padding: 18px; }
     .sp-footer-line { align-items: start; flex-direction: column; }
+  }
+</style>
+
+<style is:global>
+  .standings-page {
+    --lb-ink: #070910;
+    --lb-panel: rgba(12, 17, 29, .9);
+    --lb-line: rgba(255, 255, 255, .1);
+    --lb-text: #f3f7ff;
+    --lb-muted: #8f9bab;
+    --lb-subtle: #5a6575;
+    --lb-cyan: #6bdcff;
+    --lb-magenta: #d86aff;
+    --lb-green: #5cf29a;
+    --lb-red: #ff7185;
+    --lb-gold: #f2bd57;
+    --lb-gold-bright: #ffe4a0;
+    --lb-silver: #cad7e8;
+    --lb-bronze: #c88b65;
+    background: var(--lb-ink);
+    isolation: isolate;
+  }
+
+  .standings-page :where(button, select, a):focus-visible {
+    outline: 2px solid var(--lb-cyan);
+    outline-offset: 3px;
+  }
+
+  .sp-grid {
+    opacity: .28;
+    background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .sp-shell {
+    width: min(1240px, calc(100% - 48px));
+    padding: 28px 0 42px;
+  }
+
+  .sp-kicker, .sp-section-label, .sp-chip-top, .sp-chip-bottom, .sp-summary-label, .sp-board-head, .sp-footer-line, .sp-info-number {
+    letter-spacing: .13em;
+  }
+
+  .sp-hero {
+    max-width: none;
+    padding: 96px 0 58px;
+  }
+
+  .sp-title-row h1 {
+    font-size: clamp(52px, 8vw, 116px);
+    letter-spacing: -.08em;
+  }
+
+  .sp-title-gradient {
+    background: linear-gradient(105deg, #ffe4a0, #f2bd57 34%, #d86aff 70%, #6bdcff);
+  }
+
+  .sp-intro {
+    max-width: 650px;
+    color: var(--lb-muted);
+  }
+
+  .sp-stage {
+    border-color: rgba(107,220,255,.22);
+    border-radius: 16px;
+    background: var(--lb-panel);
+    box-shadow: 0 30px 90px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.06);
+    backdrop-filter: blur(18px);
+  }
+
+  .sp-stage-topline {
+    padding: 25px 29px 22px;
+    background: linear-gradient(110deg, rgba(107,220,255,.055), transparent 35%, rgba(216,106,255,.045));
+  }
+
+  .sp-stage h2 {
+    margin: 7px 0 0;
+    font-size: 27px;
+  }
+
+  .sp-board-context {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 610px;
+    margin-top: 9px;
+    overflow: hidden;
+    color: var(--lb-muted);
+    font: 500 10px var(--font-mono);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sp-board-context i {
+    color: var(--lb-magenta);
+    font-style: normal;
+  }
+
+  .sp-stage-actions {
+    flex-wrap: wrap;
+  }
+
+  .sp-processed-chip {
+    padding: 8px 9px;
+    border: 1px solid rgba(92,242,154,.22);
+    border-radius: 5px;
+    color: var(--lb-green);
+    background: rgba(92,242,154,.035);
+    font: 600 8px var(--font-mono);
+    letter-spacing: .08em;
+    white-space: nowrap;
+  }
+
+  .sp-quiet-button, .sp-refresh-button, .sp-segmented button {
+    border-radius: 5px;
+    font-size: 9px;
+  }
+
+  .sp-controls {
+    padding: 18px 29px 16px;
+  }
+
+  .sp-control select {
+    border-radius: 5px;
+    background: #0a111d;
+  }
+
+  .sp-status-line {
+    min-height: 41px;
+    padding: 0 29px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    font: 500 10px var(--font-mono);
+  }
+
+  .sp-status-delay {
+    margin-left: auto;
+    color: var(--lb-subtle);
+    font: 600 8px var(--font-mono);
+    letter-spacing: .1em;
+  }
+
+  .sp-summary {
+    grid-template-columns: 1.2fr .8fr 1.1fr .8fr 1.2fr;
+  }
+
+  .sp-summary-item {
+    min-height: 74px;
+    padding: 13px 16px;
+  }
+
+  .sp-summary-item strong {
+    font-size: 11px;
+  }
+
+  .sp-board {
+    padding: 0 29px 25px;
+  }
+
+  .sp-board-head, .sp-row {
+    grid-template-columns: 72px minmax(200px, 1.35fr) 104px 72px 130px minmax(160px, .9fr);
+    gap: 13px;
+  }
+
+  .sp-board-head {
+    padding: 19px 16px 10px;
+    font-size: 8px;
+  }
+
+  .sp-board-head span:nth-child(n+3) {
+    text-align: right;
+  }
+
+  .sp-row {
+    min-height: 80px;
+    padding: 11px 16px;
+    border-color: var(--lb-line);
+    border-radius: 8px;
+    background: rgba(255,255,255,.035);
+    animation: sp-row-in 480ms cubic-bezier(.2,.8,.2,1) both;
+  }
+
+  .sp-row:hover {
+    border-color: rgba(255,255,255,.24);
+    background: rgba(255,255,255,.07);
+  }
+
+  .sp-row--rank-1 {
+    border-color: rgba(242,189,87,.58);
+    background: linear-gradient(100deg, rgba(242,189,87,.21), rgba(242,189,87,.055) 47%, rgba(255,255,255,.035));
+    box-shadow: 0 0 38px rgba(242,189,87,.11), inset 0 1px 0 rgba(255,236,181,.17);
+  }
+
+  .sp-row--rank-2 {
+    border-color: rgba(202,215,232,.42);
+    background: linear-gradient(100deg, rgba(202,215,232,.14), rgba(255,255,255,.035));
+    box-shadow: 0 0 27px rgba(202,215,232,.055);
+  }
+
+  .sp-row--rank-3 {
+    border-color: rgba(200,139,101,.42);
+    background: linear-gradient(100deg, rgba(200,139,101,.14), rgba(255,255,255,.035));
+    box-shadow: 0 0 27px rgba(200,139,101,.055);
+  }
+
+  .sp-row--rank-1::before { background: linear-gradient(#fff1b8, var(--lb-gold), var(--lb-magenta)); box-shadow: 0 0 14px rgba(242,189,87,.72); }
+  .sp-row--rank-2::before { background: var(--lb-silver); }
+  .sp-row--rank-3::before { background: var(--lb-bronze); }
+
+  .sp-movement {
+    color: var(--lb-subtle);
+    font: 600 12px var(--font-mono);
+  }
+
+  .sp-movement-arrow {
+    font-size: 23px;
+  }
+
+  .sp-row--up .sp-movement { color: var(--lb-green); }
+  .sp-row--down .sp-movement { color: var(--lb-red); }
+
+  .sp-player {
+    gap: 12px;
+  }
+
+  .sp-player-copy {
+    display: grid;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .sp-player strong {
+    font-size: 15px;
+    letter-spacing: -.02em;
+  }
+
+  .sp-player-copy small {
+    overflow: hidden;
+    color: var(--lb-muted);
+    font: 500 9px var(--font-mono);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sp-row--rank-1 .sp-player strong { color: #fff0bf; }
+
+  .sp-rank {
+    width: 42px;
+    min-width: 42px;
+    height: 29px;
+    border: 1px solid rgba(255,255,255,.1);
+    color: var(--lb-muted);
+  }
+
+  .sp-row--rank-1 .sp-rank { border-color: rgba(242,189,87,.35); background: rgba(242,189,87,.2); color: var(--lb-gold-bright); }
+  .sp-row--rank-2 .sp-rank { border: 1px solid rgba(202,215,232,.23); background: rgba(202,215,232,.14); color: #e4ecf6; }
+  .sp-row--rank-3 .sp-rank { border: 1px solid rgba(200,139,101,.25); background: rgba(200,139,101,.16); color: #f1b893; }
+
+  .sp-trophy {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.65;
+  }
+
+  .sp-rank-roman {
+    font: 800 13px var(--font-mono);
+    letter-spacing: -.1em;
+  }
+
+  .sp-rank-number {
+    font: 600 11px var(--font-mono);
+  }
+
+  .sp-points, .sp-wins, .sp-prize {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .sp-points strong {
+    color: var(--lb-text);
+    font: 700 20px var(--font-mono);
+    letter-spacing: -.07em;
+  }
+
+  .sp-row--rank-1 .sp-points strong {
+    color: var(--lb-gold-bright);
+    text-shadow: 0 0 20px rgba(242,189,87,.3);
+  }
+
+  .sp-points span, .sp-wins span, .sp-prize span {
+    color: var(--lb-subtle);
+    font: 600 8px var(--font-mono);
+    letter-spacing: .1em;
+  }
+
+  .sp-wins strong {
+    color: var(--lb-text);
+    font: 600 15px var(--font-mono);
+  }
+
+  .sp-prize {
+    position: relative;
+  }
+
+  .sp-prize strong {
+    position: relative;
+    z-index: 1;
+    color: var(--lb-green);
+    font: 700 15px var(--font-mono);
+    letter-spacing: -.03em;
+  }
+
+  .sp-prize--tier-1 strong { color: var(--lb-gold-bright); text-shadow: 0 0 16px rgba(242,189,87,.5); }
+  .sp-prize--tier-2 strong { color: var(--lb-silver); text-shadow: 0 0 14px rgba(202,215,232,.34); }
+  .sp-prize--tier-3 strong { color: #e6a57d; text-shadow: 0 0 14px rgba(200,139,101,.34); }
+  .sp-prize--tier-1::before, .sp-prize--tier-2::before, .sp-prize--tier-3::before { position: absolute; top: -12px; right: -12px; width: 54px; height: 54px; border-radius: 50%; content: ''; opacity: .24; pointer-events: none; }
+  .sp-prize--tier-1::before { background: radial-gradient(circle, var(--lb-gold) 0, transparent 68%); }
+  .sp-prize--tier-2::before { background: radial-gradient(circle, var(--lb-silver) 0, transparent 68%); }
+  .sp-prize--tier-3::before { background: radial-gradient(circle, var(--lb-bronze) 0, transparent 68%); }
+
+  .sp-math {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .sp-gap {
+    overflow: hidden;
+    color: #f7ce74;
+    font: 600 11px var(--font-mono);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sp-last {
+    color: var(--lb-green);
+    font: 500 10px var(--font-mono);
+    white-space: nowrap;
+  }
+
+  .sp-last--negative { color: var(--lb-red); }
+  .sp-points-flash { animation: sp-point-up 720ms ease both; }
+  .sp-points-flash-red { animation: sp-point-down 720ms ease both; }
+
+  .sp-overlay-tools {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 47px;
+    padding: 9px 13px;
+    border-bottom: 1px solid var(--lb-line);
+    background: rgba(4,7,13,.6);
+  }
+
+  .sp-overlay-brand {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--lb-text);
+    font: 700 10px var(--font-mono);
+    letter-spacing: .12em;
+  }
+
+  .sp-overlay-brand i { color: var(--lb-gold); font-style: normal; }
+  .sp-overlay-mark { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid rgba(107,220,255,.58); border-radius: 5px; color: white; background: linear-gradient(145deg, rgba(216,106,255,.8), rgba(107,220,255,.32)); font: 800 11px var(--font-sans); }
+  .sp-overlay-tool-actions { display: flex; align-items: center; gap: 9px; }
+  .sp-segmented--overlay { height: 32px; }
+  .sp-segmented--overlay button { min-width: 34px; padding: 0 9px; }
+  .sp-overlay-collapse, .sp-overlay-full { border: 1px solid var(--lb-line); border-radius: 5px; cursor: pointer; padding: 8px 9px; color: var(--lb-muted); background: rgba(255,255,255,.035); font: 600 9px var(--font-mono); text-decoration: none; }
+  .sp-overlay-collapse { display: inline-flex; align-items: center; gap: 6px; }
+  .sp-overlay-collapse:hover, .sp-overlay-full:hover { border-color: var(--lb-cyan); color: var(--lb-text); }
+  .sp-overlay-collapse > span:last-child { color: var(--lb-cyan); font-size: 15px; line-height: .6; }
+  .sp-overlay-full { color: var(--lb-cyan); }
+
+  .sp-overlay-mode {
+    min-height: 0;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .sp-overlay-mode .sp-grid, .sp-overlay-mode .sp-hero, .sp-overlay-mode .sp-controls, .sp-overlay-mode .sp-status-line, .sp-overlay-mode .sp-summary, .sp-overlay-mode .sp-footnote, .sp-overlay-mode .sp-lower-grid, .sp-overlay-mode .sp-footer-line { display: none; }
+  .sp-overlay-mode .sp-shell { width: min(100%, 560px); margin: 0; padding: 10px; }
+  .sp-overlay-mode .sp-stage { border-color: rgba(107,220,255,.3); border-radius: 10px; background: rgba(7,10,17,.92); box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+  .sp-overlay-mode .sp-stage-topline { align-items: center; min-height: 40px; padding: 10px 12px; }
+  .sp-overlay-mode .sp-stage-topline > div:first-child { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .sp-overlay-mode .sp-stage-topline .sp-section-label { display: none; }
+  .sp-overlay-mode .sp-stage h2 { margin: 0; font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+  .sp-overlay-mode .sp-stage h2::after { color: var(--lb-gold); content: ' • LIVE BOARD'; }
+  .sp-overlay-mode .sp-board-context { margin: 0; font-size: 8px; }
+  .sp-overlay-mode .sp-stage-actions { display: none; }
+  .sp-overlay-mode .sp-overlay-tools { display: flex; }
+  .sp-overlay-mode .sp-board { padding: 0 10px 10px; }
+  .sp-overlay-mode .sp-board-head { display: none; }
+  .sp-overlay-mode .sp-row { grid-template-columns: 38px minmax(0, 1fr) 75px; grid-template-areas: 'move player points' 'move math math'; gap: 0 8px; min-height: 64px; padding: 8px 9px; }
+  .sp-overlay-mode .sp-movement { grid-area: move; align-self: center; }
+  .sp-overlay-mode .sp-player { grid-area: player; }
+  .sp-overlay-mode .sp-points { grid-area: points; }
+  .sp-overlay-mode .sp-wins, .sp-overlay-mode .sp-prize { display: none; }
+  .sp-overlay-mode .sp-math { grid-area: math; flex-direction: row; align-items: center; justify-content: space-between; padding-top: 4px; }
+  .sp-overlay-mode .sp-rank { width: 30px; min-width: 30px; height: 24px; }
+  .sp-overlay-mode .sp-trophy { width: 15px; height: 15px; }
+  .sp-overlay-mode .sp-player { gap: 7px; }
+  .sp-overlay-mode .sp-player strong { font-size: 12px; }
+  .sp-overlay-mode .sp-player-copy small { font-size: 8px; }
+  .sp-overlay-mode .sp-points strong { font-size: 16px; }
+  .sp-overlay-mode .sp-points span { font-size: 7px; }
+  .sp-overlay-mode .sp-gap, .sp-overlay-mode .sp-last { font-size: 8px; }
+  .sp-overlay-mode.sp-overlay-collapsed .sp-board { display: none; }
+  .sp-overlay-mode.sp-overlay-collapsed .sp-stage-topline { border-bottom: 0; }
+  .sp-overlay-mode.sp-overlay-collapsed .sp-overlay-collapse > span:last-child { transform: rotate(180deg); }
+
+  @keyframes sp-point-up { 0% { color: var(--lb-text); transform: scale(1); } 35% { color: var(--lb-green); transform: scale(1.15); text-shadow: 0 0 25px rgba(92,242,154,.8); } 100% { color: var(--lb-green); transform: scale(1); } }
+  @keyframes sp-point-down { 0% { color: var(--lb-text); transform: scale(1); } 35% { color: var(--lb-red); transform: scale(1.15); text-shadow: 0 0 25px rgba(255,113,133,.8); } 100% { color: var(--lb-red); transform: scale(1); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sp-kicker-dot, .sp-status-dot--loading, .sp-row, .sp-points-flash, .sp-points-flash-red { animation: none; }
+    .sp-quiet-button, .sp-refresh-button, .sp-segmented button, .sp-row { transition: none; }
+  }
+
+  @media (max-width: 980px) {
+    .sp-summary { grid-template-columns: repeat(3, 1fr); }
+    .sp-summary-item:nth-child(3) { border-right: 0; }
+    .sp-summary-item:nth-child(-n+3) { border-bottom: 1px solid rgba(255,255,255,.075); }
+    .sp-summary-item--source { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 820px) {
+    .sp-shell { width: min(100% - 28px, 700px); }
+    .sp-stage-topline { align-items: start; flex-direction: column; padding: 23px 20px 18px; }
+    .sp-stage-actions { width: 100%; justify-content: start; }
+    .sp-controls { grid-template-columns: 1fr 1fr; padding: 17px 20px 14px; }
+    .sp-control--wide { grid-column: 1 / -1; grid-row: 1; }
+    .sp-control--view { grid-column: 2; grid-row: 2; }
+    .sp-status-line { padding-left: 20px; padding-right: 20px; }
+    .sp-board { padding-left: 20px; padding-right: 20px; }
+    .sp-board-head { display: none; }
+    .sp-row { grid-template-columns: 48px minmax(110px, 1fr) 82px; grid-template-areas: 'move player points' 'move math math'; gap: 0 9px; min-height: 83px; padding: 10px 12px; }
+    .sp-movement { grid-area: move; }
+    .sp-player { grid-area: player; }
+    .sp-points { grid-area: points; }
+    .sp-wins, .sp-prize { display: none; }
+    .sp-math { grid-area: math; flex-direction: row; justify-content: space-between; align-items: center; padding-top: 6px; }
+    .sp-player strong { font-size: 14px; }
+    .sp-points strong { font-size: 17px; }
+    .sp-footnote { margin-left: 20px; margin-right: 20px; }
+  }
+
+  @media (max-width: 520px) {
+    .sp-shell { width: min(100% - 20px, 500px); padding-top: 18px; }
+    .sp-title-row h1 { font-size: 62px; }
+    .sp-intro { font-size: 14px; }
+    .sp-stage-actions { display: grid; grid-template-columns: 1fr 1fr 36px; }
+    .sp-processed-chip { grid-column: 1 / -1; justify-self: start; }
+    #sp-share, #sp-copy-overlay { grid-row: 2; }
+    #sp-open-overlay { grid-row: 2; grid-column: 2; }
+    #sp-refresh { grid-row: 2; grid-column: 3; }
+    .sp-controls { grid-template-columns: 1fr; }
+    .sp-control--wide, .sp-control--view { grid-column: auto; grid-row: auto; }
+    .sp-field--view .sp-segmented { width: 100%; }
+    .sp-summary-item { min-height: 63px; padding: 11px 12px; }
+    .sp-summary-item strong { font-size: 10px; }
+    .sp-summary-item--source { grid-column: 1 / -1; }
+    .sp-row { grid-template-columns: 42px minmax(84px, 1fr) 73px; padding-left: 9px; padding-right: 9px; }
+    .sp-movement { gap: 2px; font-size: 10px; }
+    .sp-movement-arrow { font-size: 20px; }
+    .sp-rank { width: 34px; min-width: 34px; }
+    .sp-player { gap: 6px; }
+    .sp-player strong { font-size: 12px; }
+    .sp-player-copy small { font-size: 8px; }
+    .sp-gap, .sp-last { font-size: 9px; }
+    .sp-info-card { min-height: 0; padding: 18px; }
+    .sp-footer-line { align-items: start; flex-direction: column; }
+    .sp-overlay-mode .sp-shell { width: 100%; padding: 6px; }
+    .sp-overlay-mode .sp-stage-topline { padding: 9px; }
+    .sp-overlay-mode .sp-overlay-tools { padding: 7px 9px; }
+    .sp-overlay-brand { font-size: 8px; }
+    .sp-overlay-mode .sp-overlay-full { display: none; }
   }
 </style>
