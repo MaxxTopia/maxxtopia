@@ -295,11 +295,13 @@ const standingsApi = '/api';
   }
 
   function formatNullableNumber(value) {
+    if (value === null || value === undefined || value === '') return '—';
     const number = Number(value);
     return Number.isFinite(number) ? number.toLocaleString('en-US') : '—';
   }
 
   function formatPrize(value) {
+    if (value === null || value === undefined || value === '') return '—';
     const number = Number(value);
     return Number.isFinite(number) ? '$' + number.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '—';
   }
@@ -397,7 +399,8 @@ const standingsApi = '/api';
 
       const prize = document.createElement('div');
       prize.className = 'sp-prize ' + (rank <= 3 ? 'sp-prize--tier-' + rank : 'sp-prize--standard');
-      prize.innerHTML = '<strong>' + formatPrize(row.prize) + '</strong><span>' + (Number.isFinite(Number(row.prize)) ? 'CASH PRIZE' : 'PRIZE DATA PENDING') + '</span>';
+      const prizeKnown = row.prize !== null && row.prize !== undefined && row.prize !== '' && Number.isFinite(Number(row.prize));
+      prize.innerHTML = '<strong>' + formatPrize(row.prize) + '</strong><span>' + (prizeKnown ? 'CASH PRIZE' : 'PRIZE DATA PENDING') + '</span>';
 
       const math = document.createElement('div');
       math.className = 'sp-math';
