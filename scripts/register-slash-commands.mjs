@@ -7,7 +7,7 @@
  * we send. Re-running adds/removes/edits cleanly with no stale commands.
  *
  * Currently registers:
- *   /storm zone phase time damage — private Storm Sickness timing read
+ *   /storm zone phase time damage status — private Storm Sickness timing read
  *   /points mode games ...      — private tournament pace read
  *   /gen tier user            — mint a tier-encoded code on demand + DM to user
  *   /om user                  — alias for /gen tier:MAXXER++ (OM lifetime context)
@@ -23,6 +23,9 @@
  * Usage:
  *   node scripts/register-slash-commands.mjs --dry-run
  *   node scripts/register-slash-commands.mjs --execute
+ *
+ * Execute mode first reads the live guild commands and refuses to remove an
+ * unknown command. Use --allow-remove only after intentionally reviewing it.
  *
  * Token sourced from .bot-setup.local.env (or MAXXTOPIA_BOT_ENV_PATH when
  * the secret is kept outside the release worktree). Application ID is
@@ -130,6 +133,16 @@ const COMMANDS = [
                 required: true,
                 min_value: 0,
                 max_value: 1000000,
+            },
+            {
+                type: OPT_STRING,
+                name: 'status',
+                description: 'Are you taking storm damage right now?',
+                required: true,
+                choices: [
+                    { name: 'In storm', value: 'inStorm' },
+                    { name: 'Safe now', value: 'safe' },
+                ],
             },
             {
                 type: OPT_STRING,
@@ -358,10 +371,29 @@ if (DRY) {
 }
 
 const url = `https://discord.com/api/v10/applications/${APP_ID}/guilds/${GUILD_ID}/commands`;
+const authHeaders = { Authorization: `Bot ${TOKEN}` };
+const currentRes = await fetch(url, { headers: authHeaders });
+if (!currentRes.ok) {
+    console.error(`[register] Preflight FAILED ${currentRes.status}. No commands changed.`);
+    process.exit(1);
+}
+
+let current;
+try { current = await currentRes.json(); } catch { current = []; }
+const nextNames = new Set(COMMANDS.map(command => command.name));
+const unmanaged = current.filter(command => !nextNames.has(command.name));
+if (unmanaged.length > 0 && !process.argv.includes('--allow-remove')) {
+    console.error('[register] Refusing to remove live command(s) missing from this source list:');
+    for (const command of unmanaged) console.error(`  /${command.name}`);
+    console.error('[register] Review them first, then rerun with --allow-remove only if removal is intentional.');
+    process.exit(1);
+}
+
+console.log(`[register] Preflight: ${current.length} live command(s); no unreviewed removals.`);
 const res = await fetch(url, {
     method: 'PUT',
     headers: {
-        Authorization: `Bot ${TOKEN}`,
+        ...authHeaders,
         'Content-Type': 'application/json',
     },
     body: JSON.stringify(COMMANDS),
@@ -374,6 +406,17 @@ if (!res.ok) {
 
 let registered;
 try { registered = JSON.parse(text); } catch { registered = []; }
+const registeredNames = new Set(registered.map(command => command.name));
+const missing = COMMANDS.filter(command => !registeredNames.has(command.name));
+const stormStatus = registered
+    .find(command => command.name === 'storm')
+    ?.options?.find(option => option.name === 'status');
+if (missing.length > 0 || !stormStatus?.required) {
+    console.error('[register] Discord accepted the PUT, but read-back did not match the required command schema.');
+    if (missing.length > 0) console.error(`[register] Missing: ${missing.map(command => `/${command.name}`).join(', ')}`);
+    if (!stormStatus?.required) console.error('[register] /storm status is missing or not required.');
+    process.exit(1);
+}
 console.log(`\n[register] ✓ ${registered.length} command(s) registered.`);
 for (const c of registered) {
     console.log(`  /${c.name}  (id: ${c.id})`);

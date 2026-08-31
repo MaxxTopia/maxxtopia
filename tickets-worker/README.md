@@ -6,7 +6,7 @@ Mirror layout of `vip-worker/` and `telemetry-worker/`. Same Cloudflare account.
 
 ## What it does
 
-1. User clicks the **"Buy VIP — $115 launch sale →"** button posted by the Maxx bot in `#open-ticket`.
+1. User clicks the **"Buy VIP — $115 lifetime"** button posted by the Maxx bot in `#open-ticket`. The $115 price is permanent, the purchase includes future VIP updates for life at no extra cost, and limited first-time-tuner discount tickets may occasionally appear.
 2. Discord POSTs the interaction here (Ed25519-signed).
 3. We verify, defer the reply, then via REST:
    - Create a **private thread** in `#open-ticket` named `vip-optmaxxing-<username>`
@@ -25,11 +25,16 @@ and they do not post a public message or notify the server.
 ### `/storm`
 
 Required inputs are the current zone, `waiting` or `closing`, seconds left in
-that phase, and cumulative storm damage already taken. `Battle Royale` is the
-default timing reference; choose `Reload` when appropriate. The current
+that phase, cumulative storm damage already taken, and whether the player is
+currently **In storm** or **Safe now**. `Battle Royale` is the default timing
+reference; choose `Reload` when appropriate. The current
 reference is the user-supplied **Chapter 7 Season 1 Comp** table, including its
 phase totals and opening wait; it is not a live game feed. A DPS override is
-available when the in-game tick differs from the reference table.
+available when the in-game tick differs from the reference table. **In storm**
+projects uninterrupted exposure through later phases and automatically applies
+each zone's changing DPS. **Safe now** pauses the player's actual warning and
+sickness clocks, while showing a clearly labelled enter-now reference for
+decision support.
 
 The read uses the standard baseline of 500 cumulative damage for the warning,
 600 for Storm Sickness, and 3x damage after sickness. It deliberately stops at
@@ -39,9 +44,9 @@ tanking the zone after sickness.
 
 Reload timing is a reference only. Current Reload playlists are not one fixed
 timing track, and the current Mini-Venture variant is faster; use the in-game
-countdown or the DPS override when the reference does not match. Blank damage
-cells in the supplied table are represented as `0 DPS` until an override is
-entered.
+countdown or the DPS override when the reference does not match. Damage values
+spanning several rows in the supplied charts are carried across those rows;
+the current in-game storm tick remains authoritative.
 
 ### `/points`
 
@@ -96,7 +101,8 @@ than a global DDoS control; distributed abuse still belongs behind Cloudflare
 rate limiting/WAF.
 
 The panel's live-window menu has its own five-second per-user refresh guard so
-button spam cannot turn the region picker into an unbounded `/windows` proxy.
+button spam cannot turn the region picker into an unbounded live-tournament
+feed proxy.
 The menu guard is separate from the final points-lookup cooldown and from the
 ticket/VIP KV limiter.
 
@@ -147,9 +153,10 @@ The panel has three entry points:
   asking for the standing. The advanced `/points` command still accepts a
   32-character account ID when a platform alias does not resolve.
 - **Storm · BR** and **Storm · Reload** — choose the current zone, waiting or
-  closing phase, time-left preset, and storm damage already taken. The four
-  menus keep the common Fortnite path fast; **Enter exact** is available for
-  values such as 25 seconds or 25 damage.
+  closing phase, time-left preset, storm damage already taken, and whether the
+  player is **In storm** or **Safe now**. The guided controls keep the common
+  Fortnite path fast; **Enter exact** is available for values such as 25
+  seconds or 25 damage.
 
 Live windows are not hardcoded into the buttons. Qualifiers are labelled as a
 moving line and Finals as a live prize race, so the panel can serve every

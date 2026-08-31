@@ -5,11 +5,11 @@
  * buyer (handler in tickets-worker/worker.js).
  *
  * Idempotent per panel — looks for a prior Maxx-authored panel with each
- * panel's unique signature and edits it in-place if it exists. Safe to
- * re-run after copy changes.
+ * panel's unique button ID (or its one-time legacy marker) and edits it
+ * in-place if it exists. Internal identifiers are never shown in the embed.
  *
  * Two panels currently posted:
- *   1. Optimizationmaxxing — single-tier $115 launch sale, single button
+ *   1. Optimizationmaxxing — permanent $115 lifetime purchase, single button
  *   2. Discordmaxxer — 4-tier ladder (MAXXER / MAXXER+ / MAXXER++ / Founder),
  *      4 buttons in a single row per Discord's row limit (5)
  *
@@ -38,7 +38,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 
 // ─── Read env ──────────────────────────────────────────────────────────────
-const envPath = join(ROOT, '.bot-setup.local.env');
+const envPath = process.env.MAXX_BOT_ENV_PATH || join(ROOT, '.bot-setup.local.env');
 let TOKEN, GUILD_ID;
 try {
     const raw = readFileSync(envPath, 'utf8');
@@ -55,36 +55,44 @@ try {
 
 const ARGS = new Set(process.argv.slice(2));
 const DRY = !ARGS.has('--execute');
+const UPDATE_ONLY = ARGS.has('--update-only');
+const SILENT = 1 << 12;
 if (DRY) console.log('[post-panel] DRY RUN — no changes. Pass --execute to commit.\n');
 
 // ─── Panel definitions ─────────────────────────────────────────────────────
-// Each panel has a unique signature (zero-width-space prefix + version tag).
-// Bump a panel's SIGNATURE_VERSION when you want a fresh repost; otherwise
-// in-place edits trigger automatically when title/description change.
+// Legacy signatures are lookup-only so the first clean migration can find
+// old panels. Unique component IDs are the durable, invisible identifiers.
 const sig = (key, ver) => `​​​[ticket-panel:${key}:${ver}]`;
 
 const OPEN_TICKET_CHANNEL_NAME = 'open-ticket';
 
 const OPTMAXXING_PANEL = {
     key: 'optmaxxing',
-    signature: sig('optmaxxing', 'v1'),
-    title: 'Buy Optimizationmaxxing VIP — $115 launch sale',
+    legacySignatures: [sig('optmaxxing', 'v1')],
+    title: 'Buy Optimizationmaxxing VIP — $115 lifetime',
     color: 0x3af0f0, // Element 115 cyan
     description: [
-        'You paid **$150** for a Superlight 2 to gain 0.5 ms.',
-        'Pay **$115** once for **12-22 ms** off your click-to-pixel.',
+        '**$115 permanently. One payment, no subscription.**',
+        'Your VIP access and every future VIP update are yours for life at no extra cost.',
         '',
-        '**Click the button below** → a private thread spawns where only you and Diggy can see it. Tell Diggy your preferred payment (PayPal / BTC / Venmo / Cash App), pay, receive a 16-char activation code via DM.',
+        '**What is included**',
+        '• The current VIP-only tuning catalog and curated competitive packs',
+        '• A permanent activation for your rig, plus visible recovery paths',
+        '• Future VIP tweaks, packs, and improvements as Windows, drivers, and games change',
+        '• Access to the Maxxtopia VIP and early-access channels after purchase',
         '',
-        'Lifetime — pay once, every future tweak pack included.',
-        'After **2026-05-31** the price moves to $180.',
+        'Possible first-time-tuner discount tickets may occasionally appear. They are limited offers, not a price increase or subscription.',
+        '',
+        '**Click below** to open a private thread visible only to you and Diggy. Choose PayPal / BTC / Venmo / Cash App, then receive your activation code by DM.',
+        '',
+        '*Actively maintained. Results vary by rig, so Optimizationmaxxing measures changes and keeps recovery in view instead of promising one universal latency number.*',
         '',
         '*Element 115 — the substance that turns dead PCs into living ones.*',
     ].join('\n'),
     buttons: [
         {
             customId: 'vip-buy-optmaxxing',
-            label: 'Buy VIP — $115 launch sale',
+            label: 'Buy VIP — $115 lifetime',
             style: ButtonStyle.Success,
             emoji: '🧪', // test tube — closest universal emoji to "Element 115"
         },
@@ -93,7 +101,7 @@ const OPTMAXXING_PANEL = {
 
 const DISCORDMAXXER_PANEL = {
     key: 'discordmaxxer',
-    signature: sig('discordmaxxer', 'v2'),
+    legacySignatures: [sig('discordmaxxer', 'v2')],
     title: 'Buy Discordmaxxer VIP — 4 tiers + Founder slot',
     color: 0xffaa00, // gold (MAXXER++ accent)
     description: [
@@ -143,7 +151,7 @@ function buildEmbed(panel) {
     return new EmbedBuilder()
         .setColor(panel.color)
         .setTitle(panel.title)
-        .setDescription(`${panel.description}\n${panel.signature}`)
+        .setDescription(panel.description)
         .setFooter({ text: 'Maxxtopia · self-hosted ticket system · click → private thread' });
 }
 
@@ -163,14 +171,26 @@ function buildRow(panel) {
 async function syncPanel(channel, clientUserId, panel) {
     const embed = buildEmbed(panel);
     const row = buildRow(panel);
-    const fullDescription = `${panel.description}\n${panel.signature}`;
+    const fullDescription = panel.description;
+    const expectedButtons = panel.buttons.map((button) => ({
+        customId: button.customId,
+        label: button.label,
+        style: button.style,
+    }));
 
     let existing = null;
     try {
         const recent = await channel.messages.fetch({ limit: 50 });
-        existing = recent.find(
-            (m) => m.author.id === clientUserId && m.embeds[0]?.description?.includes(panel.signature),
-        );
+        existing = recent.find((message) => {
+            if (message.author.id !== clientUserId) return false;
+            const componentIds = (message.components || []).flatMap((row) => (
+                (row.components || []).map((component) => component.customId || component.custom_id)
+            ));
+            const hasPanelButton = panel.buttons.some((button) => componentIds.includes(button.customId));
+            const description = String(message.embeds[0]?.description || '');
+            const hasLegacyMarker = panel.legacySignatures.some((marker) => description.includes(marker));
+            return hasPanelButton || hasLegacyMarker;
+        });
     } catch (e) {
         console.warn(`[${panel.key}] could not fetch recent messages: ${e.message}`);
     }
@@ -178,19 +198,33 @@ async function syncPanel(channel, clientUserId, panel) {
     if (existing) {
         const sameDesc = existing.embeds[0]?.description === fullDescription;
         const sameTitle = existing.embeds[0]?.title === panel.title;
-        if (sameDesc && sameTitle) {
+        const currentButtons = (existing.components || []).flatMap((componentRow) => (
+            (componentRow.components || []).map((component) => ({
+                customId: component.customId || component.custom_id,
+                label: component.label,
+                style: component.style,
+            }))
+        ));
+        const sameButtons = JSON.stringify(currentButtons) === JSON.stringify(expectedButtons);
+        if (sameDesc && sameTitle && sameButtons) {
             console.log(`[${panel.key}] panel already current (id ${existing.id}). No edit needed.`);
         } else {
-            console.log(`[${panel.key}] [would] edit existing panel (id ${existing.id}) — copy or title changed`);
+            console.log(`[${panel.key}] [would] edit existing panel (id ${existing.id}) — copy, title, or button changed`);
             if (!DRY) {
-                await existing.edit({ embeds: [embed], components: [row] });
+                // Editing an existing message does not create a notification.
+                // Suppress all mention parsing; SuppressNotifications is a
+                // create-only flag in discord.js and must not be sent here.
+                await existing.edit({ embeds: [embed], components: [row], allowedMentions: { parse: [] } });
                 console.log(`[${panel.key}] [do]   panel updated in place.`);
             }
         }
     } else {
+        if (UPDATE_ONLY) {
+            throw new Error(`[${panel.key}] expected an existing panel but none matched its button ID or legacy marker; refusing to post a duplicate`);
+        }
         console.log(`[${panel.key}] [would] post new panel in #${channel.name}`);
         if (!DRY) {
-            const sent = await channel.send({ embeds: [embed], components: [row] });
+            const sent = await channel.send({ embeds: [embed], components: [row], flags: SILENT, allowedMentions: { parse: [] } });
             console.log(`[${panel.key}] [do]   posted (id ${sent.id}).`);
             try {
                 await sent.pin(`Pin the ${panel.key} buy-ticket panel`);

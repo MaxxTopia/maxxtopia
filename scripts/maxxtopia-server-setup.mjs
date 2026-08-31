@@ -219,7 +219,7 @@ const SHOWCASE_POSTS = [
 // Keep in sync with each product's in-app pricing surface when those
 // change. As of 2026-05-10:
 //   - discordmaxxer: MAXXER tier ladder (subscription)
-//   - optimizationmaxxing: $115 launch lifetime / $180 reg lifetime (decided v0.1.57)
+//   - optimizationmaxxing: permanent $115 lifetime purchase; occasional first-time-tuner offers
 const WELCOME_MESSAGE = [
     '**Welcome to Maxxtopia.**',
     '',
@@ -235,7 +235,7 @@ const WELCOME_MESSAGE = [
     '',
     '🔧 **optimizationmaxxing** — one-shot product, lifetime price:',
     '— FREE: ~70 safe tweaks · auto-detect · /tune one-click apply · Asta Bench · Restore Point',
-    '— **VIP $115 launch sale** through 2026-05-31 → $180 after. One-time, lifetime, every future tweak pack included. *Element 115 — the substance that turns dead PCs into living ones.*',
+    '— **VIP $115 permanently.** One payment, lifetime access, and every future tweak pack included at no extra cost. Possible first-time-tuner discount tickets may occasionally appear. *Element 115 — the substance that turns dead PCs into living ones.*',
     '',
     '💬 **discordmaxxer** — continuous-service product, tier ladder:',
     '— FREE: all plugins · all themes · Tournament Mode · Hub panel · 1 active video bg',

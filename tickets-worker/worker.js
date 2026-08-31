@@ -42,6 +42,7 @@ import {
   decodeWindowValue,
   normalizeStormWizardState,
   parseLiveSubmitCustomId,
+  parseLiveRefreshCustomId,
   parseStormSubmitCustomId,
   parseStormWizardCustomId,
   parseWindowPickerCustomId,
@@ -68,6 +69,7 @@ const INTERACTION_MODAL_SUBMIT = 5
 const RESP_PONG = 1
 const RESP_CHANNEL_MESSAGE = 4
 const RESP_DEFERRED_CHANNEL_MESSAGE = 5
+const RESP_DEFERRED_UPDATE_MESSAGE = 6
 const RESP_UPDATE_MESSAGE = 7
 const RESP_SHOW_MODAL = 9
 
@@ -218,6 +220,13 @@ export default {
           if (stormWizard.action === 'damage') nextState.damage = value
           return jsonResponse({ type: RESP_UPDATE_MESSAGE, data: buildStormWizard(stormWizard.mode, nextState) })
         }
+        if (stormWizard.action === 'exposureIn' || stormWizard.action === 'exposureSafe') {
+          const nextState = {
+            ...stormWizard.state,
+            exposure: stormWizard.action === 'exposureIn' ? 'inStorm' : 'safe',
+          }
+          return jsonResponse({ type: RESP_UPDATE_MESSAGE, data: buildStormWizard(stormWizard.mode, nextState) })
+        }
         if (stormWizard.action === 'submit') {
           return jsonResponse({
             type: RESP_UPDATE_MESSAGE,
@@ -228,7 +237,19 @@ export default {
       if (customId === PANEL_IDS.liveRegion) {
         const region = interaction.data?.values?.[0]
         ctx.waitUntil(handleLiveRegionSelection(env, interaction, region))
-        return privateDeferredResponse(interaction, ctx)
+        return privateDeferredUpdateResponse()
+      }
+      if (customId.startsWith(PANEL_IDS.liveRefreshPrefix)) {
+        const refresh = parseLiveRefreshCustomId(customId)
+        const region = normalizeRegion(refresh?.region)
+        if (!region) {
+          return jsonResponse({
+            type: RESP_UPDATE_MESSAGE,
+            data: privateResponseData(buildLiveRegionPrompt()),
+          })
+        }
+        ctx.waitUntil(handleLiveRegionSelection(env, interaction, region))
+        return privateDeferredUpdateResponse()
       }
       if (customId.startsWith(PANEL_IDS.liveWindowPrefix)) {
         const picker = parseWindowPickerCustomId(customId)
@@ -344,6 +365,7 @@ export default {
           timeLeftSeconds: getOption(interaction, 'time'),
           damageTaken: getOption(interaction, 'damage'),
           dpsOverride: getOption(interaction, 'dps'),
+          exposure: getOption(interaction, 'status') || 'inStorm',
         })
         return privateMessageResponse(interaction, ctx, {
           ...(result.ok ? { embeds: [formatStormEmbed(result)] } : { content: formatStormDiscord(result) }),
@@ -692,6 +714,7 @@ function handleStormWizard(interaction, wizard) {
     phase: wizard.state.phase,
     timeLeftSeconds: wizard.state.time,
     damageTaken: wizard.state.damage,
+    exposure: wizard.state.exposure,
   })
   return {
     ...(result.ok ? { embeds: [formatStormEmbed(result)] } : { content: formatStormDiscord(result) }),
@@ -723,7 +746,7 @@ async function handleReviewSubmit(env, interaction) {
 
   if (!destinationId || !isReviewSurface(interaction, env)) {
     await editFollowup(appId, token, {
-      content: 'Please open `/review` from the #reviews channel and submit it again.',
+      content: 'Please use **Leave a review** in #reviews (or `/review` there) and submit it again.',
       flags: MSG_FLAG_EPHEMERAL,
       allowed_mentions: { parse: [] },
     })
@@ -1469,9 +1492,10 @@ function buildWelcomeMessage(product, productLabel, userId, diggyId) {
       '',
       '**To complete your purchase:**',
       '1. Tell Diggy your preferred payment: PayPal / BTC / Venmo / Cash App.',
-      '2. He sends you the address + amount. **$115** during the launch sale (through 2026-05-31), $180 after.',
+      '2. He sends you the address + amount. **$115 permanently** — one payment, no subscription.',
       '3. Once payment lands, Diggy DMs you a 16-char activation code.',
       '4. In-app: Pricing → tap "$115" 5x in 3 seconds → paste code → first-claim-wins on your rig forever.',
+      '5. Every future VIP tweak pack and update stays included for life at no extra cost. Occasional first-time-tuner discount tickets may appear.',
       '',
       '*Element 115 — the substance that turns dead PCs into living ones.*',
       '',
@@ -1601,6 +1625,10 @@ function privateDeferredResponse(interaction, ctx) {
     type: RESP_DEFERRED_CHANNEL_MESSAGE,
     data: { flags: MSG_FLAG_EPHEMERAL },
   })
+}
+
+function privateDeferredUpdateResponse() {
+  return jsonResponse({ type: RESP_DEFERRED_UPDATE_MESSAGE })
 }
 
 async function editFollowup(appId, token, body) {

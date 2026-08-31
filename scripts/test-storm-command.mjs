@@ -20,6 +20,9 @@ assert.equal(RULESETS.battleRoyale.referenceLabel, 'Chapter 7 Season 1 · Comp')
 assert.equal(RULESETS.battleRoyale.openingWaitSeconds, 60)
 assert.deepEqual(RULESETS.battleRoyale.zones[5], { zone: 6, wait: 40, close: 70, total: 930, dps: 5 })
 assert.deepEqual(RULESETS.reload.zones[11], { zone: 12, wait: 0, close: 90, total: 1080, dps: 10 })
+assert.equal(RULESETS.battleRoyale.zones[0].dps, 1)
+assert.equal(RULESETS.reload.zones[0].dps, 1)
+assert.equal(RULESETS.reload.zones[1].dps, 1)
 assert.deepEqual(RULESETS.reload.thresholds, THRESHOLDS)
 assert(RULESETS.reload.timingWarning.includes('Mini-Venture'))
 
@@ -29,16 +32,40 @@ const early = calculateStormForecast({
   phase: 'waiting',
   timeLeftSeconds: 110,
   damageTaken: 0,
+  exposure: 'safe',
 })
 assert.equal(early.ok, true)
 assert.equal(early.referencePhaseEndSeconds, 255)
-assert.equal(early.referenceDps, 0)
+assert.equal(early.referenceZoneEndMatchClockSeconds, 255)
+assert.equal(early.referenceDps, 1)
 assert.equal(early.timeToWarningSeconds, null)
 assert.equal(early.timeToSicknessSeconds, null)
 assert.equal(early.forecastAtPhaseEnd, 0)
+assert.equal(early.referenceForecastAtPhaseEnd, 110)
+assert.equal(early.activeDps, 0)
+assert.equal(early.timersRunning, false)
 assert.equal(early.statusLabel, 'SAFE · UNDER 500')
 assert.equal(early.leaveTimerSeconds, null)
 assert(early.referenceTimeToSicknessSeconds != null)
+
+// User-supplied regression: the calculation must cross zone boundaries and
+// use each later zone's damage value, not hold the current tick forever.
+const suppliedExample = calculateStormForecast({
+  mode: 'battleRoyale',
+  zone: 1,
+  phase: 'closing',
+  timeLeftSeconds: 30,
+  damageTaken: 250,
+  exposure: 'inStorm',
+})
+assert.equal(suppliedExample.ok, true)
+assert.equal(suppliedExample.referenceTimeToWarningSeconds, 250)
+assert.equal(suppliedExample.referenceWarningSegment, 'Zone 3 closing')
+assert.equal(suppliedExample.forecastAtPhaseEnd, 280)
+assert.equal(suppliedExample.referenceZoneEndMatchClockSeconds, 255)
+assert(formatStormDiscord(suppliedExample).includes('500 warning 4:10'))
+assert(formatStormDiscord(suppliedExample).includes('At current timer 0 (0:30)'))
+assert(formatStormDiscord(suppliedExample).includes('Zone 1 ends at match clock 4:15'))
 
 const crossing = calculateStormForecast({
   mode: 'battleRoyale',
@@ -46,6 +73,7 @@ const crossing = calculateStormForecast({
   phase: 'closing',
   timeLeftSeconds: 30,
   damageTaken: 550,
+  exposure: 'inStorm',
 })
 assert.equal(crossing.ok, true)
 assert.equal(crossing.timeToSicknessSeconds, 10)
@@ -60,6 +88,7 @@ const active = calculateStormForecast({
   phase: 'closing',
   timeLeftSeconds: 20,
   damageTaken: 600,
+  exposure: 'inStorm',
 })
 assert.equal(active.activeDps, 30)
 assert.equal(active.statusLabel, 'MAX THREAT · 600+')
@@ -73,6 +102,7 @@ const override = calculateStormForecast({
   timeLeftSeconds: 20,
   damageTaken: 0,
   dpsOverride: 4,
+  exposure: 'inStorm',
 })
 assert.equal(override.baseDps, 4)
 assert.equal(override.dpsOverridden, true)
@@ -81,7 +111,7 @@ assert.equal(advanceDamage(600, 10, 1), 630)
 
 assert(formatStormDiscord(crossing).includes('Storm Sickness Calculator · Battle Royale'))
 assert(formatStormDiscord(crossing).includes('Reference: Chapter 7 Season 1 · Comp'))
-assert(formatStormDiscord(crossing).includes('after 600: 3x storm damage'))
+assert.match(formatStormDiscord(crossing), /600.*triples storm damage/i)
 assert(!formatStormDiscord(crossing).includes('1000'))
 assert.equal(advanceDamage(600, 10, 2000), 60600)
 
@@ -95,7 +125,8 @@ assert(embed.description.includes('█████████░'))
 assert(embed.fields.some(field => field.name === 'CURRENT READ' && field.value.includes('Zone 6')))
 assert(embed.fields.some(field => field.name === 'THREAT TIERS' && field.value.includes('MAX THREAT')))
 assert(embed.fields.some(field => field.name === 'LEAVE CALL' && field.value.includes('0:20')))
-assert(embed.fields.some(field => field.name === 'TIMERS FROM NOW' && field.value.includes('0:10')))
+assert(embed.fields.some(field => field.name === 'CONTINUOUS-EXPOSURE TIMERS' && field.value.includes('0:10')))
+assert(embed.fields.some(field => field.name === 'REFERENCE TIMELINE' && field.value.includes('current phase ends in **0:30**')))
 assert(embed.footer.text.includes('Private quick read'))
 assert(!embed.fields.some(field => field.value.includes('DPS override')))
 
@@ -108,6 +139,7 @@ assert(worker.includes('formatStormEmbed(result)'))
 assert(worker.includes('allowed_mentions: { parse: [] }'))
 assert(register.includes("name: 'storm'"))
 assert(register.includes("name: 'dps'"))
+assert(register.includes("name: 'status'"))
 assert(readme.includes('do not require a special channel'))
 assert(readme.includes('instead of presenting a hard-stop damage'))
 assert(readme.includes('Mini-Venture'))

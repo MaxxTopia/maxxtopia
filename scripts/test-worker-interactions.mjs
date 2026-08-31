@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict'
 import { webcrypto } from 'node:crypto'
 import worker from '../tickets-worker/worker.js'
-import { STANDING_API, WINDOWS_API } from '../tickets-worker/points-live.js'
+import {
+  CUTOFF_API,
+  SCORE_API,
+  TOURNAMENTS_API,
+  WINDOWS_API,
+} from '../tickets-worker/points-live.js'
 import {
   PANEL_IDS,
   PANEL_SIGNATURE,
@@ -62,6 +67,7 @@ const storm = await invoke({
     { name: 'phase', value: 'closing' },
     { name: 'time', value: 30 },
     { name: 'damage', value: 550 },
+    { name: 'status', value: 'inStorm' },
     { name: 'mode', value: 'battleRoyale' },
   ],
 })
@@ -95,7 +101,7 @@ assert.equal(panel.components[0].components.length, 3)
 assert(panel.embed.description.includes(PANEL_SIGNATURE))
 assert(panel.embed.description.includes('Epic display name'))
 assert(!panel.embed.description.includes('account ID'))
-assert(panel.embed.fields.some(field => field.name.includes('STORM TIMING') && field.value.includes('storm damage taken')))
+assert(panel.embed.fields.some(field => field.name.includes('STORM TIMING') && field.value.includes('damage taken')))
 assert(!panel.embed.description.includes('[maxx-panel:'))
 assert(!panel.embed.fields.some(field => field.name.includes('MANUAL')))
 
@@ -132,7 +138,7 @@ assert.equal(stormPanel.body.type, 4)
 assert.equal(stormPanel.body.data.flags, 64)
 assert.equal(stormPanel.body.data.components.length, 5)
 assert.equal(stormPanel.body.data.components.slice(0, 4).every(component => component.components[0].type === 3), true)
-assert.equal(stormPanel.body.data.components[4].components[0].disabled, true)
+assert.equal(stormPanel.body.data.components[4].components[2].disabled, true)
 
 let stormWizard = stormPanel.body.data
 for (const [index, value] of [[0, '7'], [1, 'c'], [2, '30'], [3, '500']]) {
@@ -146,8 +152,14 @@ for (const [index, value] of [[0, '7'], [1, 'c'], [2, '30'], [3, '500']]) {
   stormWizard = step.body.data
 }
 
-assert.equal(stormWizard.components[4].components[0].disabled, undefined)
-const stormSubmitId = stormWizard.components[4].components[0].custom_id
+assert.equal(stormWizard.components[4].components[2].disabled, true)
+const stormExposure = await invoke({ custom_id: stormWizard.components[4].components[0].custom_id }, 'panel-storm-user', [], 3)
+assert.equal(stormExposure.body.type, 7)
+assert.equal(stormExposure.body.data.flags, 64)
+stormWizard = stormExposure.body.data
+assert.equal(stormWizard.components[4].components[0].style, 3)
+assert.equal(stormWizard.components[4].components[2].disabled, undefined)
+const stormSubmitId = stormWizard.components[4].components[2].custom_id
 const stormCleanupFetch = globalThis.fetch
 const stormCleanupCalls = []
 globalThis.fetch = async (url, options = {}) => {
@@ -199,8 +211,12 @@ assert.equal(exactDamageResult.body.type, 4)
 assert.equal(exactDamageResult.body.data.flags, 64)
 manualStormWizard = exactDamageResult.body.data
 assert(manualStormWizard.components[3].components[0].options.some(option => option.value === '25' && option.default === true))
-assert.equal(manualStormWizard.components[4].components[0].disabled, undefined)
-const exactStormResult = await invoke({ custom_id: manualStormWizard.components[4].components[0].custom_id }, 'panel-manual-storm-user', [], 3)
+assert.equal(manualStormWizard.components[4].components[2].disabled, true)
+const exactExposureResult = await invoke({ custom_id: manualStormWizard.components[4].components[0].custom_id }, 'panel-manual-storm-user', [], 3)
+assert.equal(exactExposureResult.body.type, 7)
+manualStormWizard = exactExposureResult.body.data
+assert.equal(manualStormWizard.components[4].components[2].disabled, undefined)
+const exactStormResult = await invoke({ custom_id: manualStormWizard.components[4].components[2].custom_id }, 'panel-manual-storm-user', [], 3)
 assert.equal(exactStormResult.body.type, 7)
 assert.equal(exactStormResult.body.data.embeds[0].title, '⚡ STORM SICKNESS CALCULATOR')
 assert(exactStormResult.body.data.embeds[0].description.includes('25 / 600'))
@@ -263,10 +279,10 @@ const liveFetch = globalThis.fetch
 const liveCalls = []
 globalThis.fetch = async (url, options = {}) => {
   liveCalls.push({ url: String(url), options })
-  if (String(url).startsWith(WINDOWS_API)) {
+  if (String(url).startsWith(TOURNAMENTS_API)) {
     if (String(url).includes('region=NAW')) {
-      return new Response(JSON.stringify({ error: 'legacy upstream detail' }), {
-        status: 404,
+      return new Response(JSON.stringify({ region: 'NAW', windows: [], regionsFailed: ['NAW'] }), {
+        status: 200,
         headers: { 'content-type': 'application/json' },
       })
     }
@@ -283,14 +299,35 @@ globalThis.fetch = async (url, options = {}) => {
       }],
     }), { status: 200, headers: { 'content-type': 'application/json' } })
   }
-  if (String(url).startsWith(STANDING_API)) {
+  if (String(url).startsWith(WINDOWS_API)) {
+    return new Response(JSON.stringify({ error: 'not found' }), {
+      status: 404,
+      headers: { 'content-type': 'application/json' },
+    })
+  }
+  if (String(url).startsWith(SCORE_API)) {
     assert(String(url).includes('eventId=fixture-event-EU'))
     assert(String(url).includes('windowId=fixture-window-EU'))
     assert(String(url).includes('region=EU'))
-    return new Response(JSON.stringify({ found: true, points: 120, rank: 700, games: 4 }), {
+    return new Response(JSON.stringify({ found: true, ign: 'Exact Fixture Name', region: 'EU', points: 120, rank: 700, games: 4 }), {
       status: 200,
       headers: { 'content-type': 'application/json' },
     })
+  }
+  if (String(url).startsWith(CUTOFF_API)) {
+    return new Response(JSON.stringify({
+      region: 'EU',
+      windows: [{
+        live: true,
+        region: 'EU',
+        name: 'Fixture Cup',
+        roundType: 'Qualifiers',
+        eventId: 'fixture-event-EU',
+        windowId: 'fixture-window-EU',
+        format: 'qualification',
+        threshold: { type: 'rank', label: 'Top 500 advance', cutoffPoints: 200 },
+      }],
+    }), { status: 200, headers: { 'content-type': 'application/json' } })
   }
   return new Response(null, { status: 204 })
 }
@@ -312,11 +349,12 @@ try {
   assert.equal(live.body.data.flags, 64)
   assert.equal(live.pending.length, 1)
   await Promise.all(live.pending)
-  assert.equal(liveCalls.length, 3)
-  assert(liveCalls[0].url.startsWith(WINDOWS_API))
+  assert.equal(liveCalls.length, 4)
+  assert(liveCalls[0].url.startsWith(TOURNAMENTS_API))
   assert(liveCalls[1].url.includes('eventId=fixture-event-EU'))
   assert(liveCalls[1].url.includes('windowId=fixture-window-EU'))
-  const followup = liveCalls[2]
+  assert(liveCalls[2].url.startsWith(CUTOFF_API))
+  const followup = liveCalls[3]
   assert(followup.url.includes('/webhooks/'))
   const followupBody = JSON.parse(followup.options.body)
   assert.equal(followupBody.embeds[0].title, '🏆 POINTS READ // LIVE QUALIFICATION')
@@ -328,7 +366,7 @@ try {
   assert.equal(throttled.body.data.flags, 64)
   await Promise.all(throttled.pending)
   assert.equal(throttled.pending.length, 2)
-  assert.equal(liveCalls.length, 5)
+  assert.equal(liveCalls.length, 6)
   const throttleFollowupCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
   const throttleFollowup = JSON.parse(throttleFollowupCall.options.body)
   assert(throttleFollowup.content.includes('one lookup every 30 seconds'))
@@ -345,7 +383,7 @@ try {
   assert.equal(vip.response.status, 200)
   await Promise.all(vip.pending)
   const callsAfterVip = liveCalls.length
-  assert.equal(callsAfterVip, 8)
+  assert.equal(callsAfterVip, 10)
 
   const vipThrottled = await invoke(vipUserOptions, 'vip-fixture-user', ['fixture-vip-role'])
   assert.equal(vipThrottled.response.status, 200)
@@ -360,8 +398,7 @@ try {
   const panelRegionStart = liveCalls.length
   const regionSelect = await invoke({ custom_id: PANEL_IDS.liveRegion, values: ['EU'] }, 'panel-region-user', [], 3)
   assert.equal(regionSelect.response.status, 200)
-  assert.equal(regionSelect.body.type, 5)
-  assert.equal(regionSelect.body.data.flags, 64)
+  assert.equal(regionSelect.body.type, 6)
   assert.equal(regionSelect.pending.length, 1)
   await Promise.all(regionSelect.pending)
   assert.equal(liveCalls.length, panelRegionStart + 2)
@@ -372,11 +409,13 @@ try {
   assert(tournamentPicker.options[0].label.includes('QUALIFIERS'))
   assert(tournamentPicker.options[0].description.includes('EU'))
 
-  const regionRefresh = await invoke({ custom_id: PANEL_IDS.liveRegion, values: ['EU'] }, 'panel-region-user', [], 3)
-  assert.equal(regionRefresh.body.type, 5)
+  const refreshButton = regionFollowup.components[1].components[0]
+  assert(refreshButton.custom_id.startsWith(PANEL_IDS.liveRefreshPrefix))
+  const regionRefresh = await invoke({ custom_id: refreshButton.custom_id }, 'panel-region-user', [], 3)
+  assert.equal(regionRefresh.body.type, 6)
   await Promise.all(regionRefresh.pending)
-  assert.equal(regionRefresh.pending.length, 2)
-  assert.equal(liveCalls.length, panelRegionStart + 4)
+  assert.equal(regionRefresh.pending.length, 1)
+  assert.equal(liveCalls.length, panelRegionStart + 3)
   const regionThrottleCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
   const regionThrottleFollowup = JSON.parse(regionThrottleCall.options.body)
   assert(regionThrottleFollowup.content.includes('one refresh every 5 seconds'))
@@ -384,7 +423,7 @@ try {
 
   const unavailableStart = liveCalls.length
   const unavailable = await invoke({ custom_id: PANEL_IDS.liveRegion, values: ['NAW'] }, 'panel-error-user', [], 3)
-  assert.equal(unavailable.body.type, 5)
+  assert.equal(unavailable.body.type, 6)
   await Promise.all(unavailable.pending)
   assert.equal(liveCalls.length, unavailableStart + 3)
   const unavailableCall = liveCalls.findLast(call => call.options.method !== 'DELETE' && String(call.url).includes('/webhooks/'))
@@ -415,11 +454,12 @@ try {
   assert.equal(panelLive.body.data.flags, 64)
   assert.equal(panelLive.pending.length, 1)
   await Promise.all(panelLive.pending)
-  assert.equal(liveCalls.length, panelLookupStart + 3)
-  assert(liveCalls[panelLookupStart].url.startsWith(WINDOWS_API))
+  assert.equal(liveCalls.length, panelLookupStart + 4)
+  assert(liveCalls[panelLookupStart].url.startsWith(TOURNAMENTS_API))
   assert(liveCalls[panelLookupStart + 1].url.includes('eventId=fixture-event-EU'))
   assert(liveCalls[panelLookupStart + 1].url.includes('windowId=fixture-window-EU'))
-  const panelLiveFollowup = JSON.parse(liveCalls[panelLookupStart + 2].options.body)
+  assert(liveCalls[panelLookupStart + 2].url.startsWith(CUTOFF_API))
+  const panelLiveFollowup = JSON.parse(liveCalls[panelLookupStart + 3].options.body)
   assert.equal(panelLiveFollowup.embeds[0].title, '🏆 POINTS READ // LIVE QUALIFICATION')
   assert.equal(panelLiveFollowup.allowed_mentions.parse.length, 0)
 } finally {
@@ -433,6 +473,7 @@ const invalid = await invoke({
     { name: 'phase', value: 'closing' },
     { name: 'time', value: 30 },
     { name: 'damage', value: 0 },
+    { name: 'status', value: 'inStorm' },
   ],
 })
 assert.equal(invalid.body.type, 4)

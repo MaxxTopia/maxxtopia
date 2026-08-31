@@ -9,6 +9,8 @@
 import { calculatePointsForecast, calculatePrizeRace } from './points-calculator.js'
 
 const CUTOFF_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/cutoffs'
+const TOURNAMENTS_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/tournaments'
+const QUALIFY_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/qualify'
 const WINDOWS_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/windows'
 const STANDING_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/standing'
 const SCORE_API = 'https://snipemaxxer-brain.maxxtopia.workers.dev/myscore'
@@ -122,6 +124,12 @@ function retryableLiveFeedStatus(status) {
   return value === 404 || value === 408 || value === 425 || value === 429 || value >= 500
 }
 
+function routeMissingPayload(payload) {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return false
+  const keys = Object.keys(payload)
+  return keys.length === 1 && keys[0] === 'error' && String(payload.error).trim().toLowerCase() === 'not found'
+}
+
 function liveFeedError(response) {
   const status = Number(response?.status)
   const friendly = status === 429
@@ -144,20 +152,26 @@ async function fetchJson(url, fetchImpl, label, options = {}) {
     let retry = false
     try {
       const response = await fetchImpl(url, {
-        method: 'GET',
+        method: options.method || 'GET',
         cache: 'no-store',
         signal: controller.signal,
+        ...(options.body === undefined ? {} : {
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(options.body),
+        }),
       })
       if (!response?.ok) {
         let payload = null
         try { payload = await response.json() } catch { /* keep the status-only message */ }
-        if (label === LIVE_FEED_LABEL && retryableLiveFeedStatus(response?.status) && attempt < retryDelays.length) {
+        if (options.allowRouteMissing && Number(response?.status) === 404 && routeMissingPayload(payload)) {
+          return null
+        } else if (label === LIVE_FEED_LABEL && retryableLiveFeedStatus(response?.status) && attempt < retryDelays.length) {
           retry = true
         } else if (label === LIVE_FEED_LABEL) {
           throw liveFeedError(response)
         } else {
           const message = String(payload?.error || payload?.note || '').trim()
-          throw new LivePointsError(message || `${label} returned HTTP ${response?.status || 'error'}.`, payload?.found === false && !payload?.error ? 'scoreNotFound' : 'upstreamError')
+          throw new LivePointsError(message || `${label} returned HTTP ${response?.status || 'error'}.`, payload?.found === false ? 'scoreNotFound' : 'upstreamError')
         }
       } else {
         const data = await response.json()
@@ -193,22 +207,10 @@ async function fetchJson(url, fetchImpl, label, options = {}) {
   }
 }
 
-async function loadLiveWindows(regionInput, deps = {}) {
-  const region = normalizeRegion(regionInput)
-  if (!region) {
-    throw new LivePointsError(`Choose a current region or ALL: ${REGIONS.join(', ')}, ALL.`, 'invalidRegion')
+function normalizeLiveFeed(windowsData, region, contract) {
+  if (!windowsData || typeof windowsData !== 'object') {
+    throw new LivePointsError('The live tournament list returned an invalid response.', 'invalidResponse')
   }
-
-  const fetchImpl = deps.fetchImpl || globalThis.fetch
-  if (typeof fetchImpl !== 'function') throw new LivePointsError('Live tournament choices are unavailable in this environment.', 'noFetch')
-
-  const windowsData = await fetchJson(
-    `${WINDOWS_API}?region=${encodeURIComponent(region)}`,
-    fetchImpl,
-    LIVE_FEED_LABEL,
-    { sleepImpl: deps.sleepImpl },
-  )
-  if (windowsData.error) throw new LivePointsError(String(windowsData.error), 'upstreamError')
 
   const failedRegions = Array.isArray(windowsData.regionsFailed)
     ? windowsData.regionsFailed.map(value => String(value).trim().toUpperCase()).filter(Boolean)
@@ -231,16 +233,59 @@ async function loadLiveWindows(regionInput, deps = {}) {
     .filter(window => region === 'ALL' || window.region === region)
     .filter(window => String(window.eventId || '').trim() && String(window.windowId || '').trim())
     .filter(window => supportedWindowFormat(window))
-
-  if (!windows.length) {
-    throw new LivePointsError('No supported tournament is live in that region right now. Re-open live points when your event is running.', 'noLiveWindow')
-  }
+    .filter(window => String(window?.threshold?.type || '').trim().toLowerCase() !== 'none')
 
   return {
     region,
     windows,
     fetched: windowsData.fetched || null,
+    contract,
   }
+}
+
+async function loadWindowFeed(regionInput, deps = {}) {
+  const region = normalizeRegion(regionInput)
+  if (!region) {
+    throw new LivePointsError(`Choose a current region or ALL: ${REGIONS.join(', ')}, ALL.`, 'invalidRegion')
+  }
+
+  const fetchImpl = deps.fetchImpl || globalThis.fetch
+  if (typeof fetchImpl !== 'function') throw new LivePointsError('Live tournament choices are unavailable in this environment.', 'noFetch')
+
+  let modernError = null
+  try {
+    const modern = await fetchJson(
+      `${TOURNAMENTS_API}?region=${encodeURIComponent(region)}`,
+      fetchImpl,
+      LIVE_FEED_LABEL,
+      { sleepImpl: deps.sleepImpl, allowRouteMissing: true },
+    )
+    if (modern) return normalizeLiveFeed(modern, region, 'tournaments')
+  } catch (error) {
+    modernError = error
+  }
+
+  try {
+    const legacy = await fetchJson(
+      `${WINDOWS_API}?region=${encodeURIComponent(region)}`,
+      fetchImpl,
+      LIVE_FEED_LABEL,
+      { sleepImpl: deps.sleepImpl, allowRouteMissing: true },
+    )
+    if (legacy) return normalizeLiveFeed(legacy, region, 'windows')
+  } catch (legacyError) {
+    throw modernError || legacyError
+  }
+
+  throw modernError || new LivePointsError('The live tournament list is temporarily unavailable. Try again shortly.', 'liveFeedUnavailable')
+}
+
+async function loadLiveWindows(regionInput, deps = {}) {
+  const selection = await loadWindowFeed(regionInput, deps)
+  if (!selection.windows.length) {
+    throw new LivePointsError('No supported tournament is live in that region right now. Re-open live points when your event is running.', 'noLiveWindow')
+  }
+  return selection
 }
 
 function finiteWhole(value) {
@@ -266,6 +311,89 @@ function liveErrorResult(error) {
   }
 }
 
+async function loadExactScore({ ign, eventId, windowId, region }, fetchImpl) {
+  // The modern /myscore contract resolves display names only. Account-ID
+  // lookups use /qualify below, which accepts the exact 32-character id.
+  if (!ign) return null
+  const params = new URLSearchParams({ ign, eventId, windowId, region })
+  const score = await fetchJson(
+    `${SCORE_API}?${params.toString()}`,
+    fetchImpl,
+    'the Epic leaderboard',
+    { allowRouteMissing: true },
+  )
+  if (!score) return null
+  if (score.error || score.found !== true) {
+    throw new LivePointsError(
+      String(score.note || score.error || 'That Epic identity is not on this tournament leaderboard yet. Play a game, then try again.'),
+      score.found === false ? 'scoreNotFound' : 'upstreamError',
+    )
+  }
+  return score
+}
+
+async function loadLegacyStanding({ ign, accountId, eventId, windowId, region }, fetchImpl) {
+  const params = new URLSearchParams({ eventId, windowId, region })
+  if (accountId) params.set('accountId', accountId)
+  else params.set('ign', ign)
+  const standing = await fetchJson(
+    `${STANDING_API}?${params.toString()}`,
+    fetchImpl,
+    'the Epic leaderboard',
+    { allowRouteMissing: true },
+  )
+  if (!standing) return null
+  if (standing.error || standing.found !== true) {
+    throw new LivePointsError(
+      String(standing.note || standing.error || 'That Epic identity is not on this tournament leaderboard yet. Play a game, then try again.'),
+      standing.found === false ? 'scoreNotFound' : 'upstreamError',
+    )
+  }
+  return standing
+}
+
+async function loadQualification(accountId, eventId, windowId, fetchImpl) {
+  if (!/^[0-9a-f]{32}$/.test(String(accountId || '').toLowerCase())) return null
+  const data = await fetchJson(
+    QUALIFY_API,
+    fetchImpl,
+    'the exact tournament projection',
+    {
+      method: 'POST',
+      body: { accountIds: [String(accountId).toLowerCase()], eventId, windowId },
+      allowRouteMissing: true,
+    },
+  )
+  if (!data) return null
+  if (data.error) throw new LivePointsError(String(data.error), 'upstreamError')
+  return data
+}
+
+async function loadExactCutoff(eventId, windowId, region, fetchImpl) {
+  const data = await fetchJson(
+    `${CUTOFF_API}?region=${encodeURIComponent(region)}`,
+    fetchImpl,
+    'the exact qualifying line',
+    { allowRouteMissing: true },
+  )
+  if (!data) return null
+  if (data.error) throw new LivePointsError(String(data.error), 'upstreamError')
+  const matches = (Array.isArray(data.windows) ? data.windows : []).filter(window => (
+    String(window?.eventId || '').trim() === eventId
+    && String(window?.windowId || '').trim() === windowId
+    && String(window?.region || region).trim().toUpperCase() === region
+  ))
+  if (matches.length > 1) {
+    throw new LivePointsError('The exact qualifying line was ambiguous; no cutoff was claimed.', 'ambiguousCutoff')
+  }
+  return matches.length === 1 ? { window: matches[0], fetched: data.fetched || null } : null
+}
+
+function qualificationStanding(data, accountId) {
+  if (!data || !accountId || !data.standings || typeof data.standings !== 'object') return null
+  return data.standings[String(accountId).toLowerCase()] || null
+}
+
 async function loadLivePoints(input = {}, deps = {}) {
   const ign = String(input.ign ?? '').trim()
   const accountId = String(input.accountId ?? '').trim().toLowerCase()
@@ -281,19 +409,7 @@ async function loadLivePoints(input = {}, deps = {}) {
   if (typeof fetchImpl !== 'function') return { ok: false, error: 'Live lookup is unavailable in this environment.', code: 'noFetch' }
 
   try {
-    const windowsUrl = `${WINDOWS_API}?region=${encodeURIComponent(region)}`
-    const windowsData = await fetchJson(windowsUrl, fetchImpl, LIVE_FEED_LABEL, { sleepImpl: deps.sleepImpl })
-    if (windowsData.error) throw new LivePointsError(String(windowsData.error), 'upstreamError')
-    const failedRegions = Array.isArray(windowsData.regionsFailed)
-      ? windowsData.regionsFailed.map(value => String(value).trim().toUpperCase()).filter(Boolean)
-      : []
-    if (region !== 'ALL' && failedRegions.includes(region)) {
-      throw new LivePointsError('The live tournament feed is unavailable for that region. Try again in a moment.', 'upstreamError')
-    }
-    if (region === 'ALL' && failedRegions.length === REGIONS.length) {
-      throw new LivePointsError('The live tournament feed is unavailable for every region. Try again in a moment.', 'upstreamError')
-    }
-
+    const windowsData = await loadWindowFeed(region, deps)
     const window = selectLiveWindow(windowsData.windows, input.tournament, input.eventId, input.windowId)
     const eventId = String(window.eventId || '').trim()
     const windowId = String(window.windowId || '').trim()
@@ -307,51 +423,84 @@ async function loadLivePoints(input = {}, deps = {}) {
       throw new LivePointsError('The selected tournament does not expose a supported qualification or Finals prize format.', 'unsupportedFormat')
     }
 
-    const params = new URLSearchParams({ eventId, windowId, region: windowRegion })
-    if (accountId) params.set('accountId', accountId)
-    else params.set('ign', ign)
-    const standingUrl = `${STANDING_API}?${params.toString()}`
-    const standing = await fetchJson(standingUrl, fetchImpl, 'the Epic leaderboard')
-    if (standing.error) throw new LivePointsError(String(standing.error), 'upstreamError')
-    if (standing.found !== true) {
-      throw new LivePointsError(
-        String(standing.note || 'That Epic identity is not on this tournament leaderboard yet. Play a game, then try again.'),
-        'scoreNotFound',
-      )
+    const identity = { ign, accountId, eventId, windowId, region: windowRegion }
+    let qualification = null
+    let qualificationError = null
+    if (/^[0-9a-f]{32}$/.test(accountId)) {
+      try {
+        qualification = await loadQualification(accountId, eventId, windowId, fetchImpl)
+      } catch (error) {
+        qualificationError = error
+      }
     }
-    const standingRegion = String(standing.region || windowRegion).trim().toUpperCase()
+
+    let standing = await loadExactScore(identity, fetchImpl)
+    if (!standing && ign) standing = await loadLegacyStanding(identity, fetchImpl)
+    if (!standing && !ign && qualification) {
+      const accountStanding = qualificationStanding(qualification, accountId)
+      if (!accountStanding) {
+        throw new LivePointsError('That Epic account is not on this tournament leaderboard yet. Play a game, then try again.', 'scoreNotFound')
+      }
+      standing = {
+        found: true,
+        accountId,
+        ign: 'Epic account ID',
+        region: qualification.region || windowRegion,
+        roundType: qualification.roundType || window.roundType,
+        beginTime: qualification.beginTime || window.beginTime,
+        endTime: qualification.endTime || window.endTime,
+        ...accountStanding,
+      }
+    }
+    if (!standing && !ign) standing = await loadLegacyStanding(identity, fetchImpl)
+    if (!standing) {
+      throw qualificationError || new LivePointsError('The live score route is temporarily unavailable. No player result was guessed.', 'liveScoreUnavailable')
+    }
+
+    const resolvedAccountId = String(standing.accountId || accountId || '').trim().toLowerCase()
+    if (!qualification && /^[0-9a-f]{32}$/.test(resolvedAccountId)) {
+      try {
+        qualification = await loadQualification(resolvedAccountId, eventId, windowId, fetchImpl)
+      } catch (error) {
+        qualificationError = error
+      }
+    }
+    const exactStanding = qualificationStanding(qualification, resolvedAccountId)
+
+    const standingRegion = String(qualification?.region || standing.region || windowRegion).trim().toUpperCase()
     if (standingRegion !== windowRegion) throw new LivePointsError('Epic returned a standing from a different region; no result was claimed.', 'regionMismatch')
 
-    const current = finiteWhole(standing.points)
+    const current = finiteWhole(exactStanding?.points) ?? finiteWhole(standing.points)
     if (current == null) throw new LivePointsError('Epic returned an invalid points total for that player.', 'invalidScore')
-    const gamesLeft = finiteWhole(standing.gamesLeft)
+    const gamesLeft = finiteWhole(exactStanding?.gamesLeft) ?? finiteWhole(standing.gamesLeft)
     const games = gamesLeft == null ? input.games : gamesLeft
-    const rawRoundType = String(standing.roundType || window.roundType || '').trim() || null
+    const rawRoundType = String(qualification?.roundType || standing.roundType || window.roundType || '').trim() || null
 
     const common = {
       source: 'live',
       ign: String(standing.ign || ign).trim() || 'Player lookup',
-      accountId: String(standing.accountId || accountId || '').trim() || null,
+      accountId: resolvedAccountId || null,
       region: standingRegion,
-      tournamentName: String(standing.name || window.name || 'Live tournament'),
+      tournamentName: String(qualification?.name || standing.name || window.name || 'Live tournament'),
       roundType: format === 'final' ? 'Finals' : rawRoundType,
-      rank: finiteWhole(standing.rank),
-      gamesPlayed: finiteWhole(standing.games) ?? 0,
+      rank: finiteWhole(exactStanding?.rank) ?? finiteWhole(standing.rank),
+      gamesPlayed: finiteWhole(exactStanding?.games) ?? finiteWhole(standing.games) ?? 0,
       eventId,
       windowId,
-      windowBeginTime: standing.beginTime || window.beginTime || null,
-      windowEndTime: standing.endTime || window.endTime || null,
-      windowFetchedAt: standing.boundaryFetchedAt || standing.fetchedAt || windowsData.fetched || null,
+      windowBeginTime: qualification?.beginTime || standing.beginTime || window.beginTime || null,
+      windowEndTime: qualification?.endTime || standing.endTime || window.endTime || null,
+      windowFetchedAt: qualification?.boundaryFetchedAt || standing.boundaryFetchedAt || standing.fetchedAt || windowsData.fetched || null,
     }
 
     if (format === 'final') {
+      const prizeLadder = qualification?.prizeLadder || standing.prizeLadder || window.prizeLadder || []
       const prize = calculatePrizeRace({
         current,
         rank: common.rank,
         games,
-        prizeLadder: standing.prizeLadder || window.prizeLadder || [],
-        prizeLadderVerified: standing.prizeLadderVerified === true,
-        boundaryFetchedAt: standing.boundaryFetchedAt || null,
+        prizeLadder,
+        prizeLadderVerified: qualification?.prizeLadderVerified === true || standing.prizeLadderVerified === true,
+        boundaryFetchedAt: qualification?.boundaryFetchedAt || standing.boundaryFetchedAt || null,
       })
       if (!prize.ok) return prize
       return {
@@ -359,15 +508,28 @@ async function loadLivePoints(input = {}, deps = {}) {
         ...common,
         format: 'final',
         targetType: 'final',
-        targetLabel: standing.threshold?.label || window.threshold?.label || 'Finals - place for prizes',
-        pointsSourceNote: 'Live score, published prize ladder, and same-region leaderboard boundaries from this exact Epic event/window; boundaries can move until the window closes.',
-        targetSource: prize.prizeLadderVerified ? 'Epic payout ladder + live regional leaderboard' : 'Epic live leaderboard; prize amount not verified',
+        targetLabel: qualification?.threshold?.label || standing.threshold?.label || window.threshold?.label || 'Finals - place for prizes',
+        pointsSourceNote: prize.prizeLadder.length
+          ? 'Live score, published prize ladder, and same-region leaderboard boundaries from this exact Epic event/window; boundaries can move until the window closes.'
+          : 'Live score and rank from this exact Epic event/window. The upstream feed did not expose a prize ladder, so no paid band or target was guessed.',
+        targetSource: prize.prizeLadderVerified
+          ? 'Epic payout ladder + live regional leaderboard'
+          : prize.prizeLadder.length
+            ? 'Epic live leaderboard; prize amount not verified'
+            : 'Epic live score and rank only',
       }
     }
 
-    const cutoff = cutoffValue(window) ?? cutoffValue(standing)
+    let cutoffResult = null
+    try {
+      cutoffResult = await loadExactCutoff(eventId, windowId, windowRegion, fetchImpl)
+    } catch (error) {
+      if (!qualification) throw qualificationError || error
+    }
+    const cutoffWindow = cutoffResult?.window || null
+    const cutoff = cutoffValue(cutoffWindow) ?? cutoffValue(qualification) ?? cutoffValue(window) ?? cutoffValue(standing)
     if (cutoff == null) {
-      const note = String(window.threshold?.cutoffNote || standing.threshold?.cutoffNote || '').trim()
+      const note = String(cutoffWindow?.threshold?.cutoffNote || qualification?.threshold?.cutoffNote || window.threshold?.cutoffNote || standing.threshold?.cutoffNote || '').trim()
       throw new LivePointsError(
         `The live leaderboard has not published a qualifying point yet${note ? ` (${note})` : ''}. Try again after more scores are posted.`,
         'missingCutoff',
@@ -386,8 +548,9 @@ async function loadLivePoints(input = {}, deps = {}) {
       ...forecast,
       ...common,
       format: 'qualification',
-      targetType: window.threshold?.type || null,
-      targetLabel: standing.threshold?.label || window.threshold?.label || null,
+      targetType: cutoffWindow?.threshold?.type || qualification?.threshold?.type || window.threshold?.type || null,
+      targetLabel: cutoffWindow?.threshold?.label || qualification?.threshold?.label || standing.threshold?.label || window.threshold?.label || null,
+      windowFetchedAt: cutoffResult?.fetched || common.windowFetchedAt,
       pointsSourceNote: 'Live qualifying line from the public Epic leaderboard feed; it can move as the board fills.',
       targetSource: 'Epic live leaderboard',
     }
@@ -398,6 +561,8 @@ async function loadLivePoints(input = {}, deps = {}) {
 
 export {
   CUTOFF_API,
+  TOURNAMENTS_API,
+  QUALIFY_API,
   WINDOWS_API,
   STANDING_API,
   SCORE_API,

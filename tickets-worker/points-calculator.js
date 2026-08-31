@@ -281,11 +281,16 @@ function liveTargetLine(result) {
 }
 
 function formatFinalPointsDiscord(result) {
-  const currentPrize = prizeTierLine(result.currentTier)
-  const nextPrize = result.targetTier
+  const hasPrizeLadder = Array.isArray(result.prizeLadder) && result.prizeLadder.length > 0
+  const currentPrize = hasPrizeLadder ? prizeTierLine(result.currentTier) : 'Unavailable — no payout ladder exposed'
+  const nextPrize = !hasPrizeLadder
+    ? 'Unavailable — no paid tier is being guessed'
+    : result.targetTier
     ? `${prizeTierLine(result.targetTier)}${result.targetPoints == null ? ' · live boundary unavailable' : ` · boundary ${formatPoints(result.targetPoints)} pts`}`
     : 'No better published tier than the current top band'
-  const gap = !result.targetTier
+  const gap = !hasPrizeLadder
+    ? 'unavailable without a published payout ladder'
+    : !result.targetTier
     ? 'no higher tier to chase'
     : result.pointsToTarget == null
       ? 'unavailable until Epic publishes this live boundary'
@@ -437,16 +442,21 @@ function formatPointsEmbed(result) {
 
 function formatFinalsEmbed(result) {
   const color = result.status === 'noGames' ? 0xff4d6d : result.status === 'inPrize' ? 0xffc857 : 0xffa62b
-  const currentPrize = prizeTierLine(result.currentTier)
-  const nextPrize = result.targetTier
+  const hasPrizeLadder = Array.isArray(result.prizeLadder) && result.prizeLadder.length > 0
+  const currentPrize = hasPrizeLadder ? prizeTierLine(result.currentTier) : 'Unavailable — Epic did not expose a payout ladder.'
+  const nextPrize = !hasPrizeLadder
+    ? 'Unavailable — no paid tier or amount is guessed.'
+    : result.targetTier
     ? `${prizeTierLine(result.targetTier)}\n${result.targetPoints == null ? 'Live boundary unavailable' : `Boundary: **${formatPoints(result.targetPoints)} pts**`}`
     : 'No higher published tier — top band reached in this snapshot.'
-  const gap = !result.targetTier
+  const gap = !hasPrizeLadder
+    ? 'Unavailable'
+    : !result.targetTier
     ? 'No higher tier'
     : result.pointsToTarget == null
       ? 'Boundary pending'
       : `${formatPoints(result.pointsToTarget)} live points`
-  const pace = !result.targetTier
+  const pace = !hasPrizeLadder || !result.targetTier
     ? '—'
     : result.requiredPerGame == null ? 'Unavailable' : `${formatAverage(result.requiredPerGame, 1)} PPG`
   const freshness = result.boundaryFetchedAt ? `Boundary read: ${result.boundaryFetchedAt}` : 'Boundary timestamp unavailable'

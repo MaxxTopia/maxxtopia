@@ -1,6 +1,6 @@
 /**
  * Review-wall presentation and input validation for the existing Maxxtopia
- * feedback Forum post.
+ * reviews channel.
  *
  * The wall is intentionally a read-only surface. Users open this modal with
  * the visible button or /review, and the worker publishes only the finished

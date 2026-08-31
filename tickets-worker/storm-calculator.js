@@ -17,12 +17,12 @@ const RULESETS = Object.freeze({
     label: 'Battle Royale',
     referenceLabel: COMP_REFERENCE_LABEL,
     openingWaitSeconds: 60,
-    note: 'Chapter 7 Season 1 Comp reference (user-supplied Kinch Analytics table). Blank damage cells are represented as 0 reference DPS; use the advanced override only when the match differs.',
+    note: 'Chapter 7 Season 1 Comp reference (user-supplied Kinch Analytics table). Damage values follow merged phase cells in that table; use the advanced override only when the in-game tick differs.',
     timingWarning: 'This is a Comp timing reference, not a live game feed. Ranked, pubs, and playlist/map variants can use another timing track; trust the in-game countdown and damage tick.',
     thresholdNote: 'Storm Sickness baseline: 500 warning / 600 sickness / 3x damage. Damage is cumulative, not player HP. This read stops at the practical leave-now sickness rule and does not model a hard-stop cap.',
     thresholds: STANDARD_THRESHOLDS,
     zones: Object.freeze([
-      Object.freeze({ zone: 1, wait: 110, close: 85, total: 255, dps: 0 }),
+      Object.freeze({ zone: 1, wait: 110, close: 85, total: 255, dps: 1 }),
       Object.freeze({ zone: 2, wait: 60, close: 90, total: 405, dps: 1 }),
       Object.freeze({ zone: 3, wait: 50, close: 100, total: 555, dps: 1 }),
       Object.freeze({ zone: 4, wait: 70, close: 85, total: 710, dps: 1 }),
@@ -41,13 +41,13 @@ const RULESETS = Object.freeze({
     label: 'Reload',
     referenceLabel: COMP_REFERENCE_LABEL,
     openingWaitSeconds: 0,
-    note: 'Chapter 7 Season 1 Comp Reload reference (user-supplied Kinch Analytics table). Blank damage cells are represented as 0 reference DPS; use the advanced override only when the match differs.',
+    note: 'Chapter 7 Season 1 Comp Reload reference (user-supplied Kinch Analytics table). Damage values follow merged phase cells in that table; use the advanced override only when the in-game tick differs.',
     timingWarning: 'This is a Comp Reload timing reference, not a live game feed. Reload maps and variants are not one timing track (including faster Mini-Venture pacing); trust the in-game countdown and damage tick.',
     thresholdNote: 'Storm Sickness baseline: 500 warning / 600 sickness / 3x damage. Damage is cumulative, not player HP. This read stops at the practical leave-now sickness rule and does not model a hard-stop cap.',
     thresholds: STANDARD_THRESHOLDS,
     zones: Object.freeze([
-      Object.freeze({ zone: 1, wait: 40, close: 80, total: 120, dps: 0 }),
-      Object.freeze({ zone: 2, wait: 40, close: 70, total: 230, dps: 0 }),
+      Object.freeze({ zone: 1, wait: 40, close: 80, total: 120, dps: 1 }),
+      Object.freeze({ zone: 2, wait: 40, close: 70, total: 230, dps: 1 }),
       Object.freeze({ zone: 3, wait: 25, close: 70, total: 325, dps: 1 }),
       Object.freeze({ zone: 4, wait: 25, close: 70, total: 420, dps: 1 }),
       Object.freeze({ zone: 5, wait: 50, close: 70, total: 540, dps: 1 }),
@@ -170,6 +170,8 @@ function calculateStormForecast(input = {}) {
   const timeLeftSeconds = Math.max(0, finite(input.timeLeftSeconds, NaN))
   const damageTaken = Math.max(0, finite(input.damageTaken, NaN))
   const dpsOverride = optionalNumber(input.dpsOverride)
+  const exposure = input.exposure === 'safe' ? 'safe' : 'inStorm'
+  const isInStorm = exposure === 'inStorm'
 
   if (!entry) return { ok: false, error: `Choose a zone from 1 to ${profile.zones.length}.` }
   if (!phase) return { ok: false, error: 'Choose waiting or closing for the phase.' }
@@ -184,14 +186,19 @@ function calculateStormForecast(input = {}) {
   const reference = buildReferenceSegments(profile, entry, zone, phase, time, dpsOverride)
   const warningCrossing = findThresholdAcrossSegments(damage, reference.segments, thresholds.warningDamage, thresholds)
   const sicknessCrossing = findThresholdAcrossSegments(damage, reference.segments, thresholds.sicknessDamage, thresholds)
-  const timeToWarningSeconds = timeToThreshold(damage, thresholds.warningDamage, baseDps, thresholds)
-  const timeToSicknessSeconds = timeToThreshold(damage, thresholds.sicknessDamage, baseDps, thresholds)
-  const leaveTimerSeconds = status === 'sickness'
+  const referenceTimeToWarningInPhase = timeToThreshold(damage, thresholds.warningDamage, baseDps, thresholds)
+  const referenceTimeToSicknessInPhase = timeToThreshold(damage, thresholds.sicknessDamage, baseDps, thresholds)
+  const timeToWarningSeconds = isInStorm ? referenceTimeToWarningInPhase : null
+  const timeToSicknessSeconds = isInStorm ? referenceTimeToSicknessInPhase : null
+  const leaveTimerSeconds = !isInStorm
+    ? null
+    : status === 'sickness'
     ? 0
     : timeToSicknessSeconds != null && timeToSicknessSeconds <= time
       ? Math.max(0, time - timeToSicknessSeconds)
       : null
   const referencePhaseEndDamage = forecastDamage(damage, baseDps, time, thresholds)
+  const forecastAtPhaseEnd = isInStorm ? referencePhaseEndDamage : damage
   const referenceTimelineDurationSeconds = reference.segments.reduce((total, segment) => total + Math.max(0, Number(segment.seconds) || 0), 0)
   const referenceEndDamage = reference.segments.reduce(
     (projected, segment) => forecastDamage(projected, segment.dps, segment.seconds, thresholds),
@@ -210,12 +217,19 @@ function calculateStormForecast(input = {}) {
     phaseLabel: phase === 'waiting' ? 'WAITING' : 'CLOSING',
     phaseDurationSeconds: phase === 'waiting' ? entry.wait : entry.close,
     referenceOpeningWaitSeconds: profile.openingWaitSeconds,
+    // `entry.total` is the table's absolute match-clock timestamp at the end
+    // of this zone. It is not the amount of time remaining in the phase; the
+    // player-entered countdown above is the source of truth for that.
+    referenceZoneEndMatchClockSeconds: entry.total,
     referencePhaseEndSeconds: entry.total,
     referenceDps: entry.dps,
     timeLeftSeconds: time,
     damageTaken: damage,
+    exposure,
+    isInStorm,
+    timersRunning: isInStorm,
     baseDps,
-    activeDps: status === 'sickness' ? baseDps * thresholds.sicknessMultiplier : baseDps,
+    activeDps: isInStorm ? (status === 'sickness' ? baseDps * thresholds.sicknessMultiplier : baseDps) : 0,
     dpsOverridden: dpsOverride != null,
     warningDamage: thresholds.warningDamage,
     sicknessDamage: thresholds.sicknessDamage,
@@ -229,7 +243,8 @@ function calculateStormForecast(input = {}) {
     referenceTimelineAvailable: reference.available,
     referenceTimelineDurationSeconds,
     leaveTimerSeconds,
-    forecastAtPhaseEnd: referencePhaseEndDamage,
+    forecastAtPhaseEnd,
+    referenceForecastAtPhaseEnd: referencePhaseEndDamage,
     forecastAtReferenceEnd: referenceEndDamage,
     status,
   }
@@ -243,7 +258,9 @@ function calculateStormForecast(input = {}) {
     warning: 'WARNING',
     sickness: 'MAX THREAT',
   }[status]
-  result.guidance = status === 'sickness'
+  result.guidance = !isInStorm
+    ? `Storm clocks are paused while you are safe. If you enter now and stay exposed, the ${formatDamage(result.warningDamage)} warning is about ${formatDuration(result.referenceTimeToWarningSeconds)} away${result.referenceWarningSegment ? ` during ${result.referenceWarningSegment}` : ''}.`
+    : status === 'sickness'
     ? `Leave storm now. ${formatDamage(result.sicknessDamage)} cumulative damage is MAX THREAT; the storm tick is now ${formatDamage(result.activeDps)} damage/sec.`
     : result.leaveTimerSeconds != null
       ? `Leave when the storm timer shows ${formatStormTimer(result.leaveTimerSeconds)} — about ${formatDuration(result.timeToSicknessSeconds)} from now. ${formatDamage(result.sicknessDamage)} is MAX THREAT and triples storm damage.`
@@ -274,6 +291,9 @@ function formatDamage(value) {
 }
 
 function leaveCallText(result) {
+  if (!result.isInStorm) {
+    return `No active leave countdown while safe. If you enter now, recheck the timer and plan around the ${formatDamage(result.sicknessDamage)} max-threat line.`
+  }
   if (result.status === 'sickness') {
     return `LEAVE NOW — ${formatDamage(result.sicknessDamage)}+ is MAX THREAT; the storm tick is ${formatDamage(result.activeDps)} damage/sec.`
   }
@@ -296,10 +316,11 @@ function formatStormDiscord(result) {
     `Storm Sickness Calculator · ${result.modeLabel}`,
     `${result.threatLabel} — ${result.statusLabel}`,
     `LEAVE CALL: ${leaveCallText(result)}`,
-    `Now: Zone ${result.zone} · ${result.phaseLabel} · ${formatDuration(result.timeLeftSeconds)} left · ${formatDamage(result.damageTaken)} damage`,
-    `Storm tick: ${formatDamage(result.activeDps)} damage/sec${result.dpsOverridden ? ' (custom)' : ' (reference)'}`,
-    `Timers: 500 warning ${thresholdTimeText(result.referenceTimeToWarningSeconds)} · 600 MAX THREAT ${thresholdTimeText(result.referenceTimeToSicknessSeconds)}`,
-    `Current phase end: ${formatDamage(result.forecastAtPhaseEnd)} damage · after 600: ${result.sicknessMultiplier}x storm damage`,
+    `Now: Zone ${result.zone} · ${result.phaseLabel} · ${formatDuration(result.timeLeftSeconds)} left · ${formatDamage(result.damageTaken)} damage · ${result.isInStorm ? 'IN STORM' : 'SAFE NOW'}`,
+    `Active tick: ${formatDamage(result.activeDps)} damage/sec${result.dpsOverridden ? ' (custom reference)' : ''}`,
+    `${result.isInStorm ? 'Continuous-exposure timers' : 'If entering now and staying exposed'}: 500 warning ${thresholdTimeText(result.referenceTimeToWarningSeconds)} · 600 MAX THREAT ${thresholdTimeText(result.referenceTimeToSicknessSeconds)}`,
+    `At current timer 0 (${formatStormTimer(result.timeLeftSeconds)}): ${formatDamage(result.forecastAtPhaseEnd)} damage${result.isInStorm ? '' : ` (enter-now reference: ${formatDamage(result.referenceForecastAtPhaseEnd)})`}`,
+    `Table reference: Zone ${result.zone} ends at match clock ${formatStormTimer(result.referenceZoneEndMatchClockSeconds)}; your in-game timer is the live source of truth.`,
     `Read: ${result.guidance}`,
     `Reference: ${result.referenceLabel}. ${result.timingWarning}`,
   ].join('\n')
@@ -342,7 +363,7 @@ function formatStormEmbed(result) {
       },
       {
         name: 'CURRENT READ',
-        value: `**Zone ${result.zone}** · ${result.phaseLabel}\n${formatStormTimer(result.timeLeftSeconds)} left · ${formatDamage(result.activeDps)} damage/sec${result.dpsOverridden ? ' custom' : ''}`,
+        value: `**Zone ${result.zone}** · ${result.phaseLabel} · **${result.isInStorm ? 'IN STORM' : 'SAFE NOW'}**\n${formatStormTimer(result.timeLeftSeconds)} left · active tick ${formatDamage(result.activeDps)}/sec${result.dpsOverridden ? ' · custom reference' : ''}`,
         inline: true,
       },
       {
@@ -351,17 +372,17 @@ function formatStormEmbed(result) {
         inline: true,
       },
       {
-        name: 'TIMERS FROM NOW',
-        value: `500 warning: **${warning}**\n600 max threat: **${sickness}**\nPhase end: **${formatDamage(result.forecastAtPhaseEnd)}** damage`,
+        name: result.isInStorm ? 'CONTINUOUS-EXPOSURE TIMERS' : 'IF YOU ENTER NOW',
+        value: `500 warning: **${warning}**\n600 max threat: **${sickness}**\nPhase end: **${formatDamage(result.forecastAtPhaseEnd)}** damage${result.isInStorm ? '' : ` · entry-now ref **${formatDamage(result.referenceForecastAtPhaseEnd)}**`}`,
         inline: true,
       },
       {
         name: 'REFERENCE TIMELINE',
-        value: `${result.referenceLabel}. ${referenceDetails || 'No threshold crossing is forecast on the remaining reference timeline.'}\n${result.timingWarning}`,
+        value: `${result.referenceLabel}. Your current phase ends in **${formatStormTimer(result.timeLeftSeconds)}**; the table places the end of Zone ${result.zone} at match clock **${formatStormTimer(result.referenceZoneEndMatchClockSeconds)}**. ${referenceDetails || 'No threshold crossing is forecast on the remaining continuous-exposure timeline.'}\n${result.timingWarning}`,
         inline: false,
       },
     ],
-    footer: { text: 'Private quick read · leave before 600 · verify the in-game timer and tick' },
+    footer: { text: `Private quick read · ${result.isInStorm ? 'timers assume continuous exposure' : 'clocks paused while safe'} · verify the in-game timer and tick` },
   }
 }
 
