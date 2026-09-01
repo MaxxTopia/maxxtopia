@@ -225,7 +225,12 @@ const liveSorted = [...liveProducts].sort(
       100% { opacity: 0; transform: translate(0,0) scale(.5) rotate(0deg); }
     }
 
-    @media (max-width: 700px) { .scb__copy { max-width: 100%; } .scb__scene { display: none; } }
+    @media (max-width: 700px) {
+      .scb { flex-direction: column; align-items: stretch; gap: .75rem; }
+      .scb__copy { max-width: 100%; }
+      /* Keep the Arcade proof visible on phones; use a compact second row. */
+      .scb__scene { display: block; width: 100%; height: 132px; align-self: stretch; }
+    }
 
     @media (prefers-reduced-motion: reduce) {
       /* The launch loop is the Arcade banner's product content; keep it

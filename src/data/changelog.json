@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-09-01",
+    "product": "Betmaxxing",
+    "version": "Scorecard redesign",
+    "title": "Betmaxxing makes the question exact.",
+    "body": "The sports board now turns a player, team, or game question into a readable scorecard with current-market checks and an honest answer when the data is not ready.",
+    "items": [
+      "Checks the exact player, game, line, and market before showing a result.",
+      "Keeps stale or closed prices out instead of presenting an outdated answer.",
+      "Adds readable scorecards and a small parlay desk for up to three verified legs from different games.",
+      "Stays read-only: a second look before you play, with no wager placement."
+    ]
+  },
+  {
+    "date": "2026-09-01",
     "product": "MontageMaxxer",
     "version": "Pristine Auto",
     "title": "MontageMaxxer makes the full cut reviewable.",
