@@ -54,14 +54,14 @@ const breadcrumbSchema = {
               Open MontageMaxxer
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
             </a>
-            <a href="#controls" class="mmx-button mmx-button--ghost">See what moves</a>
+            <a href="#controls" class="mmx-button mmx-button--ghost">See the controls</a>
           </div>
           <p class="mmx-note">Private editor host &middot; render stays with the machine that has your clips</p>
         </div>
 
         <div class="mmx-stage mmx-edit-loop" aria-label="Animated MontageMaxxer edit loop">
           <div class="mmx-stage-glow" aria-hidden="true"></div>
-          <div class="mmx-stage-kicker" aria-hidden="true"><span class="mmx-live-dot"></span><b>CUT LOOP / PLAYING</b><i></i><span>01 — 03</span></div>
+          <div class="mmx-stage-kicker" aria-hidden="true"><span class="mmx-live-dot"></span><b>CUT LOOP / PLAYING</b><i></i><span class="mmx-stage-state"><i class="mmx-stage-state__item mmx-stage-state__item--source">01 / SOURCE</i><i class="mmx-stage-state__item mmx-stage-state__item--cut">02 / BEAT CUT</i><i class="mmx-stage-state__item mmx-stage-state__item--render">03 / RENDER</i></span></div>
 
           <div class="mmx-source-stack" aria-hidden="true">
             <div class="mmx-source-card mmx-source-card--raw"><span>01 / SOURCE</span><b>RAW CLIPS</b><i>drop in</i></div>
@@ -83,10 +83,10 @@ const breadcrumbSchema = {
               <div class="mmx-preview-title mmx-preview-title--b" aria-hidden="true">CLIP<br /><span>LOCK</span></div>
               <div class="mmx-paper-strip" aria-hidden="true"><span>THANKS FOR WATCHING</span></div>
               <div class="mmx-preview-cut" aria-hidden="true"><span></span> KILL FRAME / ON BEAT</div>
-              <div class="mmx-preview-hud"><span>00:41.08</span><span>NEON BLADE</span><span>60 FPS</span></div>
+              <div class="mmx-preview-hud"><span class="mmx-timecode"><i class="mmx-timecode__item mmx-timecode__item--source">00:12.44</i><i class="mmx-timecode__item mmx-timecode__item--cut">00:41.08</i><i class="mmx-timecode__item mmx-timecode__item--render">00:47.18</i></span><span>NEON BLADE</span><span>60 FPS</span></div>
             </div>
             <div class="mmx-timeline" aria-hidden="true">
-              <div class="mmx-timeline-head"><span>EDIT TIMELINE</span><b>SOURCE &rarr; CUT &rarr; RENDER</b></div>
+              <div class="mmx-timeline-head"><span>EDIT TIMELINE</span><div class="mmx-phase-rail"><span class="mmx-phase mmx-phase--source"><strong>01</strong><b>SOURCE</b></span><i class="mmx-phase-arrow">&rarr;</i><span class="mmx-phase mmx-phase--cut"><strong>02</strong><b>BEAT CUT</b></span><i class="mmx-phase-arrow">&rarr;</i><span class="mmx-phase mmx-phase--render"><strong>03</strong><b>RENDER</b></span></div></div>
               <div class="mmx-timeline-ruler"><span>00:00</span><span>00:12</span><span>00:24</span><span>00:36</span><span>00:48</span></div>
               <div class="mmx-track mmx-track--clips">
                 <span class="mmx-track-label">CLIPS</span>
@@ -108,7 +108,7 @@ const breadcrumbSchema = {
                 <span class="mmx-track-label">SONG</span>
                 <div class="mmx-track-lane"><div class="mmx-mini-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
               </div>
-              <div class="mmx-playhead"><span>00:41.08</span></div>
+              <div class="mmx-playhead"><span class="mmx-playhead-time"><i class="mmx-timecode__item mmx-timecode__item--source">00:12.44</i><i class="mmx-timecode__item mmx-timecode__item--cut">00:41.08</i><i class="mmx-timecode__item mmx-timecode__item--render">00:47.18</i></span></div>
             </div>
             <div class="mmx-window-bottom">
               <div class="mmx-window-summary">
@@ -235,6 +235,14 @@ const breadcrumbSchema = {
   .mmx-stage-kicker > span:last-child { color: var(--mmx-paper); }
   .mmx-stage-kicker .mmx-live-dot { width: 7px; height: 7px; flex: 0 0 auto; animation: mmx-signal-pulse 1.8s ease-in-out infinite; }
   @keyframes mmx-signal-pulse { 0%,100% { opacity: .52; } 50% { opacity: 1; } }
+  .mmx-stage-state { position: relative; display: inline-grid; min-width: 78px; height: 11px; color: var(--mmx-paper); }
+  .mmx-stage-state__item { grid-area: 1 / 1; color: inherit; font-style: normal; opacity: 0; white-space: nowrap; }
+  .mmx-stage-state__item--source { animation: mmx-stage-state-source var(--mmx-loop-duration) linear infinite; }
+  .mmx-stage-state__item--cut { animation: mmx-stage-state-cut var(--mmx-loop-duration) linear infinite; }
+  .mmx-stage-state__item--render { animation: mmx-stage-state-render var(--mmx-loop-duration) linear infinite; }
+  @keyframes mmx-stage-state-source { 0%,20% { opacity: 1; } 28%,100% { opacity: 0; } }
+  @keyframes mmx-stage-state-cut { 0%,24% { opacity: 0; } 32%,62% { opacity: 1; } 70%,100% { opacity: 0; } }
+  @keyframes mmx-stage-state-render { 0%,64% { opacity: 0; } 72%,94% { opacity: 1; } 100% { opacity: 0; } }
   .mmx-source-stack { position: absolute; left: -3%; bottom: 8%; z-index: 1; width: 152px; height: 106px; transform: rotate(-8deg); }
   .mmx-source-card { position: absolute; display: grid; gap: 4px; width: 138px; padding: 12px 13px; border: 1px solid rgba(255,255,255,.16); border-radius: 7px; background: #11151d; box-shadow: 0 18px 34px rgba(0,0,0,.38); font-family: var(--font-mono); }
   .mmx-source-card span { color: #6f7886; font-size: 8px; letter-spacing: .12em; }
@@ -274,9 +282,27 @@ const breadcrumbSchema = {
   .mmx-preview-cut { position: absolute; left: 7%; bottom: 9%; z-index: 2; display: flex; align-items: center; gap: 6px; color: var(--mmx-paper); font: 8px var(--font-mono); letter-spacing: .08em; animation: mmx-cut-breathe var(--mmx-loop-duration) ease-in-out infinite; }
   @keyframes mmx-cut-breathe { 0%,38%,100% { opacity: .3; } 45%,65% { opacity: 1; } 72% { opacity: .42; } }
   .mmx-preview-hud { position: absolute; right: 5%; top: 9%; z-index: 2; display: flex; gap: 10px; color: rgba(247,242,232,.72); font: 9px var(--font-mono); }
+  .mmx-timecode { position: relative; display: inline-grid; min-width: 43px; height: 10px; }
+  .mmx-timecode__item { grid-area: 1 / 1; font-style: normal; opacity: 0; white-space: nowrap; }
+  .mmx-timecode__item--source { animation: mmx-timecode-source var(--mmx-loop-duration) linear infinite; }
+  .mmx-timecode__item--cut { animation: mmx-timecode-cut var(--mmx-loop-duration) linear infinite; }
+  .mmx-timecode__item--render { animation: mmx-timecode-render var(--mmx-loop-duration) linear infinite; }
+  @keyframes mmx-timecode-source { 0%,20% { opacity: 1; } 28%,100% { opacity: 0; } }
+  @keyframes mmx-timecode-cut { 0%,24% { opacity: 0; } 32%,62% { opacity: 1; } 70%,100% { opacity: 0; } }
+  @keyframes mmx-timecode-render { 0%,64% { opacity: 0; } 72%,94% { opacity: 1; } 100% { opacity: 0; } }
   .mmx-timeline { position: relative; padding: 10px 10px 8px; background: #11141b; border-top: 1px solid rgba(255,255,255,.08); }
   .mmx-timeline-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: #7d8795; font: 8px var(--font-mono); letter-spacing: .12em; }
-  .mmx-timeline-head b { color: var(--mmx-cyan); font-weight: 400; letter-spacing: .07em; }
+  .mmx-phase-rail { display: flex; align-items: center; justify-content: flex-end; gap: 4px; min-width: 0; }
+  .mmx-phase { display: inline-flex; align-items: center; gap: 4px; padding: 3px 5px; border: 1px solid rgba(255,255,255,.1); border-radius: 999px; color: #697480; white-space: nowrap; animation-duration: var(--mmx-loop-duration); animation-timing-function: linear; animation-iteration-count: infinite; }
+  .mmx-phase strong { color: #59646f; font-size: 7px; font-weight: 400; letter-spacing: .03em; }
+  .mmx-phase b { color: inherit; font-size: 7px; font-weight: 400; letter-spacing: .07em; }
+  .mmx-phase--source { animation-name: mmx-phase-source; }
+  .mmx-phase--cut { animation-name: mmx-phase-cut; }
+  .mmx-phase--render { animation-name: mmx-phase-render; }
+  .mmx-phase-arrow { color: #4e5965; font-style: normal; font-size: 9px; }
+  @keyframes mmx-phase-source { 0%,20% { color: var(--mmx-paper); border-color: rgba(242,196,91,.55); background: rgba(242,196,91,.09); box-shadow: 0 0 13px rgba(242,196,91,.12); } 28%,100% { color: #697480; border-color: rgba(255,255,255,.1); background: transparent; box-shadow: none; } }
+  @keyframes mmx-phase-cut { 0%,24% { color: #697480; border-color: rgba(255,255,255,.1); background: transparent; box-shadow: none; } 32%,62% { color: var(--mmx-cyan); border-color: rgba(39,217,195,.55); background: rgba(39,217,195,.08); box-shadow: 0 0 13px rgba(39,217,195,.12); } 70%,100% { color: #697480; border-color: rgba(255,255,255,.1); background: transparent; box-shadow: none; } }
+  @keyframes mmx-phase-render { 0%,64% { color: #697480; border-color: rgba(255,255,255,.1); background: transparent; box-shadow: none; } 72%,94% { color: var(--mmx-paper); border-color: rgba(242,196,91,.55); background: rgba(242,196,91,.09); box-shadow: 0 0 13px rgba(242,196,91,.12); } 100% { color: #697480; border-color: rgba(255,255,255,.1); background: transparent; box-shadow: none; } }
   .mmx-timeline-ruler { display: flex; justify-content: space-between; padding-left: 43px; color: #5e6875; font: 7px var(--font-mono); }
   .mmx-track { position: relative; display: grid; grid-template-columns: 35px minmax(0, 1fr); gap: 8px; align-items: center; height: 23px; }
   .mmx-track-label { color: #65707d; font: 7px var(--font-mono); letter-spacing: .08em; }
@@ -295,7 +321,7 @@ const breadcrumbSchema = {
   @keyframes mmx-wave-dance { from { transform: scaleY(.62); } to { transform: scaleY(1); } }
   .mmx-playhead { position: absolute; left: 12%; top: 28px; bottom: 8px; z-index: 4; width: 1px; background: var(--mmx-paper); box-shadow: 0 0 10px rgba(242,196,91,.9); animation: mmx-playhead-sweep var(--mmx-loop-duration) linear infinite; }
   .mmx-playhead::before { content: ''; position: absolute; top: -3px; left: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--mmx-paper); box-shadow: 0 0 10px var(--mmx-paper); }
-  .mmx-playhead span { position: absolute; top: -19px; left: 5px; white-space: nowrap; color: var(--mmx-paper); font: 7px var(--font-mono); letter-spacing: .04em; }
+  .mmx-playhead-time { position: absolute; top: -19px; left: 5px; display: inline-grid; min-width: 43px; height: 9px; color: var(--mmx-paper); font: 7px var(--font-mono); letter-spacing: .04em; }
   @keyframes mmx-playhead-sweep { 0%,5% { left: 12%; opacity: 0; } 10% { left: 17%; opacity: 1; } 84% { left: 89%; opacity: 1; } 92%,100% { left: 93%; opacity: 0; } }
   .mmx-window-bottom { position: relative; padding: 10px 10px 7px; background: #0b0d12; }
   .mmx-window-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -331,7 +357,7 @@ const breadcrumbSchema = {
   .mmx-steps { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--mmx-line); } .mmx-steps li { display: grid; grid-template-columns: 64px 1fr; gap: 25px; padding: 24px 0; border-bottom: 1px solid var(--mmx-line); } .mmx-steps li > span { color: var(--mmx-paper); font: 11px var(--font-mono); } .mmx-steps b { display: block; color: #f1edf0; font: 400 28px/.95 var(--font-display); letter-spacing: .03em; text-transform: uppercase; } .mmx-steps p { margin: 8px 0 0; color: #858c98; font-size: 13px; }
   .mmx-final { position: relative; padding: 130px 0 150px; text-align: center; background: radial-gradient(circle at 50% 20%, rgba(242,196,91,.13), transparent 25%), #08090e; } .mmx-final-inner { display: grid; justify-items: center; } .mmx-final .mmx-tag { color: var(--mmx-cyan); } .mmx-final h2 { font-size: clamp(68px, 10vw, 130px); } .mmx-final p:not(.mmx-tag) { max-width: 32rem; margin: 28px auto 0; color: #a7a2af; line-height: 1.65; }
   @media (max-width: 980px) { .mmx-hero-grid { grid-template-columns: 1fr; padding-top: 60px; } .mmx-copy { max-width: 670px; } .mmx-stage { min-height: 620px; } .mmx-section-heading, .mmx-build-grid { grid-template-columns: 1fr; gap: 30px; } .mmx-section-heading { margin-bottom: 45px; } }
-  @media (max-width: 700px) { .mmx-wrap { width: min(100% - 30px, 560px); } .mmx-copy h1, .mmx-section h2 { font-size: clamp(58px, 16vw, 86px); } .mmx-hero { min-height: auto; } .mmx-hero-grid { padding: 50px 0 45px; gap: 10px; } .mmx-back { margin-bottom: 24px; } .mmx-stage { min-height: 430px; margin: 10px -8px 0; transform: scale(.98); } .mmx-stage-kicker { left: 3%; top: 1%; gap: 6px; font-size: 7px; } .mmx-stage-kicker > i, .mmx-stage-kicker > span:last-child { display: none; } .mmx-source-stack { left: -8px; bottom: 1%; transform: scale(.75) rotate(-8deg); transform-origin: bottom left; } .mmx-window { width: calc(100% - 2px); animation-name: mmx-window-drift-mobile; } @keyframes mmx-window-drift-mobile { 0%,100% { transform: translate3d(0,0,0) rotate(1deg); } 50% { transform: translate3d(0,-4px,0) rotate(.5deg); } } .mmx-window-mode { font-size: 7px; } .mmx-timeline { padding: 8px 7px 6px; } .mmx-timeline-head { margin-bottom: 6px; font-size: 7px; } .mmx-timeline-head b { font-size: 6px; } .mmx-timeline-ruler { padding-left: 35px; font-size: 6px; } .mmx-track { grid-template-columns: 30px minmax(0, 1fr); gap: 5px; height: 20px; } .mmx-track-label { font-size: 6px; } .mmx-preview-signal, .mmx-preview-cut { font-size: 7px; } .mmx-float { min-width: 120px; padding: 9px 10px; } .mmx-float--style { left: -2px; top: 4%; } .mmx-float--mix { right: -2px; bottom: 17%; } .mmx-float--render { right: 0; bottom: 1%; min-width: 112px; } .mmx-float b { font-size: 9px; } .mmx-preview-title { font-size: clamp(42px, 13vw, 67px); } .mmx-paper-strip { right: 4%; bottom: 13%; } .mmx-paper-strip span { font-size: 8px; } .mmx-preview-hud { gap: 5px; font-size: 7px; } .mmx-receipts-grid { grid-template-columns: 1fr; } .mmx-receipts-grid > div, .mmx-receipts-grid > div:first-child { min-height: auto; padding: 20px 0; border-right: 0; border-bottom: 1px solid var(--mmx-line); } .mmx-receipts-grid > div:last-child { border-bottom: 0; } .mmx-receipt-value { font-size: 32px; } .mmx-section { padding: 85px 0 95px; } .mmx-control-grid { grid-template-columns: 1fr; } .mmx-control-card { min-height: 320px; } .mmx-steps li { grid-template-columns: 42px 1fr; gap: 14px; } .mmx-steps b { font-size: 24px; } .mmx-final { padding: 95px 0 115px; } }
+  @media (max-width: 700px) { .mmx-wrap { width: min(100% - 30px, 560px); } .mmx-copy h1, .mmx-section h2 { font-size: clamp(58px, 16vw, 86px); } .mmx-hero { min-height: auto; } .mmx-hero-grid { padding: 50px 0 45px; gap: 10px; } .mmx-back { margin-bottom: 24px; } .mmx-stage { min-height: 430px; margin: 10px -8px 0; transform: scale(.98); } .mmx-stage-kicker { left: 3%; top: 1%; gap: 6px; font-size: 7px; } .mmx-stage-kicker > i, .mmx-stage-kicker > span:last-child:not(.mmx-stage-state) { display: none; } .mmx-stage-kicker > .mmx-stage-state { display: inline-grid; min-width: 62px; } .mmx-source-stack { left: -8px; bottom: 1%; transform: scale(.75) rotate(-8deg); transform-origin: bottom left; } .mmx-window { width: calc(100% - 2px); animation-name: mmx-window-drift-mobile; } @keyframes mmx-window-drift-mobile { 0%,100% { transform: translate3d(0,0,0) rotate(1deg); } 50% { transform: translate3d(0,-4px,0) rotate(.5deg); } } .mmx-window-mode { font-size: 7px; } .mmx-timeline { padding: 8px 7px 6px; } .mmx-timeline-head { margin-bottom: 6px; font-size: 7px; } .mmx-phase-rail { gap: 2px; } .mmx-phase { gap: 2px; padding: 2px 3px; } .mmx-phase strong { font-size: 6px; } .mmx-phase b { font-size: 5.5px; letter-spacing: .04em; } .mmx-phase-arrow { font-size: 7px; } .mmx-timeline-ruler { padding-left: 35px; font-size: 6px; } .mmx-track { grid-template-columns: 30px minmax(0, 1fr); gap: 5px; height: 20px; } .mmx-track-label { font-size: 6px; } .mmx-preview-signal, .mmx-preview-cut { font-size: 7px; } .mmx-float { min-width: 120px; padding: 9px 10px; } .mmx-float--style { left: -2px; top: 4%; } .mmx-float--mix { right: -2px; bottom: 17%; } .mmx-float--render { right: 0; bottom: 1%; min-width: 112px; } .mmx-float b { font-size: 9px; } .mmx-preview-title { font-size: clamp(42px, 13vw, 67px); } .mmx-paper-strip { right: 4%; bottom: 13%; } .mmx-paper-strip span { font-size: 8px; } .mmx-preview-hud { gap: 5px; font-size: 7px; } .mmx-timecode, .mmx-playhead-time { min-width: 38px; } .mmx-receipts-grid { grid-template-columns: 1fr; } .mmx-receipts-grid > div, .mmx-receipts-grid > div:first-child { min-height: auto; padding: 20px 0; border-right: 0; border-bottom: 1px solid var(--mmx-line); } .mmx-receipts-grid > div:last-child { border-bottom: 0; } .mmx-receipt-value { font-size: 32px; } .mmx-section { padding: 85px 0 95px; } .mmx-control-grid { grid-template-columns: 1fr; } .mmx-control-card { min-height: 320px; } .mmx-steps li { grid-template-columns: 42px 1fr; gap: 14px; } .mmx-steps b { font-size: 24px; } .mmx-final { padding: 95px 0 115px; } }
   @media (prefers-reduced-motion: reduce) { .mmx-edit-loop { --mmx-loop-duration: 12s; --mmx-drift-duration: 14s; --mmx-wave-duration: 1.8s; } .mmx-button, .mmx-control-card, .mmx-inline-link span { transition: none; } .mmx-button:hover, .mmx-control-card:hover { transform: none; } }
   :global(body:has(.mmx-page) .daily-quote) { display: none; }
 </style>
