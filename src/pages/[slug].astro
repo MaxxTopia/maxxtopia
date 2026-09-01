@@ -845,7 +845,7 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
         <LiveEmbed
           url={product.primaryCta.href}
           title={product.name}
-          poster={screenshotMain}
+          poster={isDrop ? '/screenshots/dropmaxxer/preview.webp' : screenshotMain}
           accentHex={product.accentHex}
           host="dropmaxxer.pages.dev"
         />
@@ -1009,6 +1009,47 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
       </div>
     </div>
   </section>
+
+  {/* Discordmaxxer-only closing bridge to the existing VIP page. */}
+  {isDM && (
+    <section class="relative border-t border-[var(--color-line)]" aria-labelledby="discordmaxxer-vip-heading">
+      <div class="mx-auto max-w-5xl px-5 sm:px-8 py-20 sm:py-24">
+        <div
+          class="reveal-on-scroll relative overflow-hidden rounded-2xl border bg-[var(--color-bg-card)] p-7 sm:p-10"
+          style="border-color: rgba(88,101,242,0.42); background: linear-gradient(135deg, rgba(88,101,242,0.13), rgba(0,212,255,0.04)); box-shadow: 0 18px 48px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.03) inset;"
+        >
+          <div
+            class="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full blur-3xl"
+            style="background: rgba(88,101,242,0.16);"
+            aria-hidden="true"
+          ></div>
+          <div class="relative flex flex-col gap-7">
+            <div class="max-w-2xl">
+              <p class="text-[11px] uppercase tracking-[0.14em] font-mono" style="color: #8f9cff;">
+                Discordmaxxer · optional upgrade
+              </p>
+              <h2 id="discordmaxxer-vip-heading" class="mt-3 text-[30px] sm:text-[42px] font-semibold tracking-[-0.035em] leading-[1.04]">
+                <span class="gradient-text">Keep the client free.</span> <span class="serif-accent gradient-suite">Add the flex.</span>
+              </h2>
+              <p class="mt-4 max-w-xl text-[14.5px] leading-[1.6] text-[var(--color-text-mid)]">
+                The whole client stays free. Explore MAXXER, MAXXER+, MAXXER++, and the limited Founder slots for extra cosmetics and profile flair.
+              </p>
+            </div>
+            <a
+              href="/discordmaxxer/vip/"
+              class="inline-flex self-start items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-semibold text-white transition-transform hover:-translate-y-0.5"
+              style="background: #5865F2; box-shadow: 0 10px 28px rgba(88,101,242,0.34);"
+            >
+              See VIP tiers
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Floating Notify-me CTA on coming-soon products (aimmaxxer uses its own
        v2 teaser CTA instead). -->
