@@ -89,7 +89,7 @@ const liveSorted = [...liveProducts].sort(
   </section>
 
   <!-- Arcade strip: palette-correct, placed AFTER the apps grid so it reinforces the suite instead of intercepting the product funnel -->
-  <section class="relative">
+  <section class="relative maxxtopia-motion-required">
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
       <a href="/play" class="scb group" aria-label="Play Sprite Cannon — the free Maxxtopia Arcade game">
         <!-- seamless rotating aurora behind the cannon -->
@@ -228,9 +228,8 @@ const liveSorted = [...liveProducts].sort(
     @media (max-width: 700px) { .scb__copy { max-width: 100%; } .scb__scene { display: none; } }
 
     @media (prefers-reduced-motion: reduce) {
-      .scb__aurora, .scb__stars, .scb__flash, .scb__shot { animation: none; }
-      .scb__shot { opacity: 1; transform: translate(-118px,-54px) scale(1.05) rotate(-22deg); }
-      .scb__flash { opacity: .8; transform: scale(1); }
+      /* The launch loop is the Arcade banner's product content; keep it
+         visible for animations-off users while still disabling hover lift. */
       .scb:hover { transform: none; }
     }
   </style>

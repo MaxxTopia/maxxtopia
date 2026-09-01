@@ -1,6 +1,28 @@
 [
   {
     "date": "2026-09-01",
+    "product": "MontageMaxxer",
+    "version": "Pristine Auto",
+    "title": "MontageMaxxer makes the full cut reviewable.",
+    "body": "Pristine Auto now turns visual evidence into an editor-grade first cut, then keeps the uncertain moments and final decision in your hands.",
+    "items": [
+      "Selects from visual evidence with opener, drive, breather, and hero roles instead of audio spikes.",
+      "Balances beat-aware timing, source variety, and duplicate protection across the cut.",
+      "Preflights storage and fails closed when media or analysis is not trustworthy.",
+      "Checks resolution, frame rate, audio, loudness, true peak, black, silence, and freeze conditions before export.",
+      "Review Center keeps manual control available for uncertain moments and re-adds."
+    ]
+  },
+  {
+    "date": "2026-09-01",
+    "product": "Aimmaxxer",
+    "productSlug": "aimmaxxer",
+    "version": "v0.8.17",
+    "title": "Aimmaxxer keeps getting sharper in the lab.",
+    "body": "Private testing continues behind the scenes. We’ll share the next public step when it’s ready."
+  },
+  {
+    "date": "2026-09-01",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
     "version": "v1.6.16",
