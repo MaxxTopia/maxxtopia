@@ -2,6 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 
 const editorUrl = 'https://montage.maxxtopia.com/';
+const showcaseVideo = '/screenshots/montagemaxxer/peterbot-showcase.mp4';
+const showcasePoster = '/screenshots/montagemaxxer/peterbot-showcase-poster.webp';
 const pageTitle = 'MontageMaxxer — Build Your Montage, Your Way';
 const pageDescription =
   'A local-first montage editor for Fortnite, Valorant, and serious gameplay edits. Tune titles, songs, clip volume, pacing, and the final render in one place.';
@@ -59,69 +61,33 @@ const breadcrumbSchema = {
           <p class="mmx-note">Private editor host &middot; render stays with the machine that has your clips</p>
         </div>
 
-        <div class="mmx-stage mmx-edit-loop" aria-label="Animated MontageMaxxer edit loop">
+        <div class="mmx-stage mmx-showcase" aria-label="A real MontageMaxxer export showcase">
           <div class="mmx-stage-glow" aria-hidden="true"></div>
-          <div class="mmx-stage-kicker" aria-hidden="true"><span class="mmx-live-dot"></span><b>CUT LOOP / PLAYING</b><i></i><span class="mmx-stage-state"><i class="mmx-stage-state__item mmx-stage-state__item--source">01 / SOURCE</i><i class="mmx-stage-state__item mmx-stage-state__item--cut">02 / BEAT CUT</i><i class="mmx-stage-state__item mmx-stage-state__item--render">03 / RENDER</i></span></div>
+          <div class="mmx-showcase-kicker" aria-hidden="true"><span class="mmx-live-dot"></span><b>REAL EXPORT / PLAYBACK</b><i></i><span>01 / 01</span></div>
 
-          <div class="mmx-source-stack" aria-hidden="true">
-            <div class="mmx-source-card mmx-source-card--raw"><span>01 / SOURCE</span><b>RAW CLIPS</b><i>drop in</i></div>
-            <div class="mmx-source-card mmx-source-card--selected"><span>02 / SHAPE</span><b>BEAT CUT</b><i>18 clips</i></div>
-          </div>
-
-          <div class="mmx-window">
+          <figure class="mmx-showcase-window">
             <div class="mmx-window-bar">
               <span class="mmx-window-brand"><i></i> MONTAGEMAXXER</span>
-              <span class="mmx-window-mode">EDITOR / LIVE PREVIEW</span>
+              <span class="mmx-window-mode">FINAL CUT / PROOF</span>
               <span class="mmx-window-dots" aria-hidden="true"><b></b><b></b><b></b></span>
             </div>
-            <div class="mmx-preview">
-              <div class="mmx-preview-grid" aria-hidden="true"></div>
-              <div class="mmx-preview-scan" aria-hidden="true"></div>
-              <div class="mmx-preview-kicker">RANSOM TOSS &middot; PAPER THROW</div>
-              <div class="mmx-preview-signal"><span></span> SEQUENCE 04 / LOCKED</div>
-              <div class="mmx-preview-title mmx-preview-title--a" aria-hidden="true">PAPER<br /><span>THROW</span></div>
-              <div class="mmx-preview-title mmx-preview-title--b" aria-hidden="true">CLIP<br /><span>LOCK</span></div>
-              <div class="mmx-paper-strip" aria-hidden="true"><span>THANKS FOR WATCHING</span></div>
-              <div class="mmx-preview-cut" aria-hidden="true"><span></span> KILL FRAME / ON BEAT</div>
-              <div class="mmx-preview-hud"><span class="mmx-timecode"><i class="mmx-timecode__item mmx-timecode__item--source">00:12.44</i><i class="mmx-timecode__item mmx-timecode__item--cut">00:41.08</i><i class="mmx-timecode__item mmx-timecode__item--render">00:47.18</i></span><span>NEON BLADE</span><span>60 FPS</span></div>
+            <div class="mmx-showcase-media">
+              <video class="mmx-showcase-video" poster={showcasePoster} autoplay muted loop playsinline controls preload="metadata" aria-label="A real Fortnite montage rendered with MontageMaxxer">
+                <source src={showcaseVideo} type="video/mp4" />
+              </video>
+              <div class="mmx-media-overlay mmx-media-overlay--top" aria-hidden="true"><span>REAL EXPORT</span><span>CLICK SOUND ON</span></div>
+              <div class="mmx-media-overlay mmx-media-overlay--bottom" aria-hidden="true"><span>PETERBOT / FINAL PLAY</span><span>MADE ON LOCAL MACHINE</span></div>
             </div>
-            <div class="mmx-timeline" aria-hidden="true">
-              <div class="mmx-timeline-head"><span>EDIT TIMELINE</span><div class="mmx-phase-rail"><span class="mmx-phase mmx-phase--source"><strong>01</strong><b>SOURCE</b></span><i class="mmx-phase-arrow">&rarr;</i><span class="mmx-phase mmx-phase--cut"><strong>02</strong><b>BEAT CUT</b></span><i class="mmx-phase-arrow">&rarr;</i><span class="mmx-phase mmx-phase--render"><strong>03</strong><b>RENDER</b></span></div></div>
-              <div class="mmx-timeline-ruler"><span>00:00</span><span>00:12</span><span>00:24</span><span>00:36</span><span>00:48</span></div>
-              <div class="mmx-track mmx-track--clips">
-                <span class="mmx-track-label">CLIPS</span>
-                <div class="mmx-track-lane">
-                  <i class="mmx-timeline-clip mmx-timeline-clip--one" style="--mmx-delay: -0.6s"></i>
-                  <i class="mmx-timeline-clip mmx-timeline-clip--two" style="--mmx-delay: -1.8s"></i>
-                  <i class="mmx-timeline-clip mmx-timeline-clip--three" style="--mmx-delay: -3.1s"></i>
-                  <i class="mmx-timeline-clip mmx-timeline-clip--four" style="--mmx-delay: -4.2s"></i>
-                  <i class="mmx-timeline-clip mmx-timeline-clip--five" style="--mmx-delay: -5.6s"></i>
-                  <i class="mmx-timeline-clip mmx-timeline-clip--six" style="--mmx-delay: -6.8s"></i>
-                  <span class="mmx-kill-marker mmx-kill-marker--one"></span><span class="mmx-kill-marker mmx-kill-marker--two"></span><span class="mmx-kill-marker mmx-kill-marker--three"></span>
-                </div>
-              </div>
-              <div class="mmx-track mmx-track--title">
-                <span class="mmx-track-label">TITLE</span>
-                <div class="mmx-track-lane"><i class="mmx-title-block mmx-title-block--intro"></i><i class="mmx-title-block mmx-title-block--outro"></i></div>
-              </div>
-              <div class="mmx-track mmx-track--song">
-                <span class="mmx-track-label">SONG</span>
-                <div class="mmx-track-lane"><div class="mmx-mini-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-              </div>
-              <div class="mmx-playhead"><span class="mmx-playhead-time"><i class="mmx-timecode__item mmx-timecode__item--source">00:12.44</i><i class="mmx-timecode__item mmx-timecode__item--cut">00:41.08</i><i class="mmx-timecode__item mmx-timecode__item--render">00:47.18</i></span></div>
-            </div>
-            <div class="mmx-window-bottom">
-              <div class="mmx-window-summary">
-                <div class="mmx-transport"><span>&#9654;</span><b>18 clips / 04:12</b></div>
-                <div class="mmx-edit-status"><i></i><span class="mmx-edit-status--source">SELECT</span><span class="mmx-edit-status--ready">READY TO RENDER</span></div>
-              </div>
-              <small class="mmx-window-hint">drag title &middot; preview &middot; render</small>
-            </div>
-          </div>
-          <p class="mmx-stage-a11y">The preview loops through a selected clip sequence, a title card on the beat, and a final render-ready state.</p>
-          <div class="mmx-float mmx-float--style"><span>STYLE</span><b>RANSOM TOSS</b><i>paper + scramble</i></div>
-          <div class="mmx-float mmx-float--mix"><span>MIX</span><b>CLIPS +2.5 dB</b><i>group volume</i></div>
-          <div class="mmx-float mmx-float--render"><span>EXPORT</span><b>1080P60</b><i>render locked</i></div>
+            <figcaption class="mmx-showcase-caption">
+              <div><span class="mmx-showcase-label">MADE WITH MONTAGEMAXXER</span><strong>PETERBOT / FINAL PLAY</strong></div>
+              <div class="mmx-showcase-spec"><b>1080P</b><span>60 FPS</span></div>
+            </figcaption>
+          </figure>
+
+          <div class="mmx-showcase-float mmx-showcase-float--left" aria-hidden="true"><span>THE INPUT</span><b>YOUR FOOTAGE</b><i>stays local</i></div>
+          <div class="mmx-showcase-float mmx-showcase-float--right" aria-hidden="true"><span>THE RESULT</span><b>REAL FINAL CUT</b><i>title + mix + outro</i></div>
+          <div class="mmx-showcase-trace" aria-hidden="true"><span>01 SOURCE</span><i></i><span>02 EDIT</span><i></i><b>03 EXPORT</b></div>
+          <p class="mmx-stage-a11y">This is a real Fortnite montage rendered with MontageMaxxer. It autoplays muted; use the video controls to turn sound on.</p>
         </div>
       </div>
     </section>
@@ -358,6 +324,74 @@ const breadcrumbSchema = {
   .mmx-final { position: relative; padding: 130px 0 150px; text-align: center; background: radial-gradient(circle at 50% 20%, rgba(242,196,91,.13), transparent 25%), #08090e; } .mmx-final-inner { display: grid; justify-items: center; } .mmx-final .mmx-tag { color: var(--mmx-cyan); } .mmx-final h2 { font-size: clamp(68px, 10vw, 130px); } .mmx-final p:not(.mmx-tag) { max-width: 32rem; margin: 28px auto 0; color: #a7a2af; line-height: 1.65; }
   @media (max-width: 980px) { .mmx-hero-grid { grid-template-columns: 1fr; padding-top: 60px; } .mmx-copy { max-width: 670px; } .mmx-stage { min-height: 620px; } .mmx-section-heading, .mmx-build-grid { grid-template-columns: 1fr; gap: 30px; } .mmx-section-heading { margin-bottom: 45px; } }
   @media (max-width: 700px) { .mmx-wrap { width: min(100% - 30px, 560px); } .mmx-copy h1, .mmx-section h2 { font-size: clamp(58px, 16vw, 86px); } .mmx-hero { min-height: auto; } .mmx-hero-grid { padding: 50px 0 45px; gap: 10px; } .mmx-back { margin-bottom: 24px; } .mmx-stage { min-height: 430px; margin: 10px -8px 0; transform: scale(.98); } .mmx-stage-kicker { left: 3%; top: 1%; gap: 6px; font-size: 7px; } .mmx-stage-kicker > i, .mmx-stage-kicker > span:last-child:not(.mmx-stage-state) { display: none; } .mmx-stage-kicker > .mmx-stage-state { display: inline-grid; min-width: 62px; } .mmx-source-stack { left: -8px; bottom: 1%; transform: scale(.75) rotate(-8deg); transform-origin: bottom left; } .mmx-window { width: calc(100% - 2px); animation-name: mmx-window-drift-mobile; } @keyframes mmx-window-drift-mobile { 0%,100% { transform: translate3d(0,0,0) rotate(1deg); } 50% { transform: translate3d(0,-4px,0) rotate(.5deg); } } .mmx-window-mode { font-size: 7px; } .mmx-timeline { padding: 8px 7px 6px; } .mmx-timeline-head { margin-bottom: 6px; font-size: 7px; } .mmx-phase-rail { gap: 2px; } .mmx-phase { gap: 2px; padding: 2px 3px; } .mmx-phase strong { font-size: 6px; } .mmx-phase b { font-size: 5.5px; letter-spacing: .04em; } .mmx-phase-arrow { font-size: 7px; } .mmx-timeline-ruler { padding-left: 35px; font-size: 6px; } .mmx-track { grid-template-columns: 30px minmax(0, 1fr); gap: 5px; height: 20px; } .mmx-track-label { font-size: 6px; } .mmx-preview-signal, .mmx-preview-cut { font-size: 7px; } .mmx-float { min-width: 120px; padding: 9px 10px; } .mmx-float--style { left: -2px; top: 4%; } .mmx-float--mix { right: -2px; bottom: 17%; } .mmx-float--render { right: 0; bottom: 1%; min-width: 112px; } .mmx-float b { font-size: 9px; } .mmx-preview-title { font-size: clamp(42px, 13vw, 67px); } .mmx-paper-strip { right: 4%; bottom: 13%; } .mmx-paper-strip span { font-size: 8px; } .mmx-preview-hud { gap: 5px; font-size: 7px; } .mmx-timecode, .mmx-playhead-time { min-width: 38px; } .mmx-receipts-grid { grid-template-columns: 1fr; } .mmx-receipts-grid > div, .mmx-receipts-grid > div:first-child { min-height: auto; padding: 20px 0; border-right: 0; border-bottom: 1px solid var(--mmx-line); } .mmx-receipts-grid > div:last-child { border-bottom: 0; } .mmx-receipt-value { font-size: 32px; } .mmx-section { padding: 85px 0 95px; } .mmx-control-grid { grid-template-columns: 1fr; } .mmx-control-card { min-height: 320px; } .mmx-steps li { grid-template-columns: 42px 1fr; gap: 14px; } .mmx-steps b { font-size: 24px; } .mmx-final { padding: 95px 0 115px; } }
-  @media (prefers-reduced-motion: reduce) { .mmx-edit-loop { --mmx-loop-duration: 12s; --mmx-drift-duration: 14s; --mmx-wave-duration: 1.8s; } .mmx-button, .mmx-control-card, .mmx-inline-link span { transition: none; } .mmx-button:hover, .mmx-control-card:hover { transform: none; } }
+  /* The hero proof is a real export, framed like a finished editor deliverable. */
+  .mmx-showcase { --mmx-drift-duration: 8s; min-height: 630px; overflow: visible; isolation: isolate; transform: none; }
+  .mmx-showcase::before { content: ''; position: absolute; inset: 8% 10%; z-index: -1; border: 1px solid rgba(39,217,195,.09); border-radius: 50%; transform: rotate(-8deg); box-shadow: 0 0 90px rgba(39,217,195,.09) inset; }
+  .mmx-showcase .mmx-stage-glow { width: 74%; height: 68%; background: rgba(39,217,195,.13); }
+  .mmx-showcase-kicker { position: absolute; left: 1%; top: 1%; z-index: 5; display: flex; align-items: center; gap: 9px; color: rgba(242,238,231,.62); font: 9px var(--font-mono); letter-spacing: .14em; }
+  .mmx-showcase-kicker b { color: #d5d9e0; font-weight: 400; }
+  .mmx-showcase-kicker > i { width: 24px; height: 1px; background: rgba(255,255,255,.2); }
+  .mmx-showcase-kicker > span:last-child { color: var(--mmx-paper); }
+  .mmx-showcase-kicker .mmx-live-dot { width: 7px; height: 7px; flex: 0 0 auto; animation: mmx-signal-pulse 1.8s ease-in-out infinite; }
+  .mmx-showcase-window { position: relative; z-index: 2; width: min(700px, calc(100% - 26px)); margin: 27px 0 13px; padding: 10px; border: 1px solid rgba(255,255,255,.18); border-radius: 16px; background: linear-gradient(145deg, #1b1e25, #0b0d12 58%); box-shadow: 0 40px 100px rgba(0,0,0,.68), 0 0 0 1px rgba(255,255,255,.04) inset, 0 0 90px rgba(39,217,195,.14); transform-origin: 50% 54%; animation: mmx-showcase-drift var(--mmx-drift-duration) ease-in-out infinite; }
+  @keyframes mmx-showcase-drift { 0%,100% { transform: translate3d(0,0,0) rotate(1.2deg); } 50% { transform: translate3d(0,-7px,0) rotate(.45deg); } }
+  .mmx-showcase-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #050609; }
+  .mmx-showcase-media::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgba(4,7,11,.38), transparent 22%, transparent 70%, rgba(4,7,11,.55)); }
+  .mmx-showcase-media::after { content: ''; position: absolute; left: -12%; right: -12%; top: -2px; z-index: 3; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(39,217,195,.78), transparent); box-shadow: 0 0 17px rgba(39,217,195,.8); opacity: 0; animation: mmx-showcase-scan 9s linear infinite; }
+  @keyframes mmx-showcase-scan { 0%,7% { top: -2px; opacity: 0; } 15%,82% { opacity: .62; } 93%,100% { top: calc(100% + 2px); opacity: 0; } }
+  .mmx-showcase-video { position: relative; z-index: 0; display: block; width: 100%; height: 100%; object-fit: cover; background: #050609; }
+  .mmx-showcase-video:focus-visible { outline: 2px solid var(--mmx-paper); outline-offset: -4px; }
+  .mmx-media-overlay { position: absolute; z-index: 2; left: 16px; right: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; color: rgba(248,244,235,.84); font: 8px var(--font-mono); letter-spacing: .14em; text-shadow: 0 2px 10px rgba(0,0,0,.8); }
+  .mmx-media-overlay span { padding: 5px 7px 4px; background: rgba(5,7,11,.52); }
+  .mmx-media-overlay span:first-child { color: var(--mmx-paper); border-left: 2px solid var(--mmx-paper); }
+  .mmx-media-overlay span:last-child { color: #b4f8ef; border-right: 2px solid var(--mmx-cyan); text-align: right; }
+  .mmx-media-overlay--top { top: 15px; }
+  .mmx-media-overlay--bottom { bottom: 47px; font-size: 7px; letter-spacing: .11em; }
+  .mmx-showcase-caption { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 16px 17px 15px; background: #0a0d12; border-top: 1px solid rgba(255,255,255,.08); }
+  .mmx-showcase-caption > div:first-child { display: grid; gap: 6px; min-width: 0; }
+  .mmx-showcase-label { color: var(--mmx-cyan); font: 8px var(--font-mono); letter-spacing: .14em; }
+  .mmx-showcase-caption strong { overflow: hidden; color: #f2eee7; font: 400 clamp(23px, 3.1vw, 33px)/.9 var(--font-display); letter-spacing: .03em; text-overflow: ellipsis; white-space: nowrap; }
+  .mmx-showcase-spec { display: grid; justify-items: end; gap: 5px; flex: 0 0 auto; font: 8px var(--font-mono); letter-spacing: .11em; text-align: right; }
+  .mmx-showcase-spec b { color: var(--mmx-paper); font-weight: 400; }
+  .mmx-showcase-spec span { color: #79838e; }
+  .mmx-showcase-float { position: absolute; z-index: 4; display: grid; gap: 3px; min-width: 148px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.17); border-radius: 8px; background: rgba(12,14,19,.9); backdrop-filter: blur(8px); box-shadow: 0 15px 30px rgba(0,0,0,.36); font-family: var(--font-mono); }
+  .mmx-showcase-float span { color: #7c8692; font-size: 8px; letter-spacing: .13em; }
+  .mmx-showcase-float b { color: #f3f5f7; font-size: 11px; font-weight: 500; }
+  .mmx-showcase-float i { color: var(--mmx-paper); font-size: 9px; font-style: normal; }
+  .mmx-showcase-float--left { left: -10px; top: 21%; transform: rotate(-5deg); animation: mmx-showcase-float-left var(--mmx-drift-duration) ease-in-out infinite; }
+  .mmx-showcase-float--right { right: -12px; bottom: 20%; border-color: rgba(242,196,91,.34); transform: rotate(4deg); animation: mmx-showcase-float-right var(--mmx-drift-duration) ease-in-out infinite reverse; }
+  .mmx-showcase-float--right i { color: var(--mmx-cyan); }
+  @keyframes mmx-showcase-float-left { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-7px) rotate(-3deg); } }
+  @keyframes mmx-showcase-float-right { 0%,100% { transform: translateY(0) rotate(4deg); } 50% { transform: translateY(7px) rotate(6deg); } }
+  .mmx-showcase-trace { position: absolute; bottom: 1%; left: 50%; z-index: 4; display: flex; align-items: center; justify-content: center; gap: 8px; width: max-content; color: #697480; font: 8px var(--font-mono); letter-spacing: .11em; transform: translateX(-50%); }
+  .mmx-showcase-trace i { width: 24px; height: 1px; background: rgba(255,255,255,.17); }
+  .mmx-showcase-trace b { color: var(--mmx-paper); font-weight: 400; }
+
+  @media (max-width: 700px) {
+    .mmx-showcase { min-height: 412px; margin: 10px -8px 0; }
+    .mmx-showcase-window { width: calc(100% - 2px); margin-top: 22px; padding: 7px; border-radius: 12px; animation-name: mmx-showcase-drift-mobile; }
+    @keyframes mmx-showcase-drift-mobile { 0%,100% { transform: translate3d(0,0,0) rotate(.8deg); } 50% { transform: translate3d(0,-4px,0) rotate(.25deg); } }
+    .mmx-showcase-kicker { left: 3%; top: 0; gap: 6px; font-size: 7px; }
+    .mmx-showcase-kicker > i { display: none; }
+    .mmx-showcase-kicker > span:last-child { margin-left: auto; }
+    .mmx-window-bar { height: 28px; padding: 0 5px 0 3px; font-size: 7px; }
+    .mmx-window-brand { gap: 5px; }
+    .mmx-window-brand i { width: 6px; height: 6px; }
+    .mmx-window-mode { font-size: 6px; }
+    .mmx-media-overlay { left: 8px; right: 8px; gap: 5px; font-size: 6px; letter-spacing: .09em; }
+    .mmx-media-overlay span { padding: 4px 5px 3px; }
+    .mmx-media-overlay--top { top: 8px; }
+    .mmx-media-overlay--bottom { bottom: 35px; font-size: 5.5px; }
+    .mmx-showcase-caption { gap: 8px; padding: 10px 9px 9px; }
+    .mmx-showcase-caption > div:first-child { gap: 5px; }
+    .mmx-showcase-label { font-size: 6px; }
+    .mmx-showcase-caption strong { font-size: 19px; }
+    .mmx-showcase-spec { gap: 3px; font-size: 6px; }
+    .mmx-showcase-float { display: none; }
+    .mmx-showcase-trace { bottom: 0; gap: 5px; width: 100%; font-size: 6px; }
+    .mmx-showcase-trace i { width: 13px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { .mmx-edit-loop { --mmx-loop-duration: 12s; --mmx-drift-duration: 14s; --mmx-wave-duration: 1.8s; } .mmx-showcase-window, .mmx-showcase-float--left, .mmx-showcase-float--right { animation-duration: 14s; } .mmx-button, .mmx-control-card, .mmx-inline-link span { transition: none; } .mmx-button:hover, .mmx-control-card:hover { transform: none; } }
   :global(body:has(.mmx-page) .daily-quote) { display: none; }
 </style>
