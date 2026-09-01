@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-09-01",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.16",
+    "title": "AdBlock-Maxxer brings HD quality back to YouTube Reclaim.",
+    "body": "Reclaim now continues past a 360p emergency stream when YouTube exposes a higher-quality ladder, and the player gives you a remembered quality choice instead of forcing a soft, blocky fallback.",
+    "items": [
+      "Continues through the 360p emergency response to find compatible HD video and audio tracks when they are available.",
+      "Adds Auto plus a quality picker for the HD ladder, with your choice remembered on this browser.",
+      "Keeps 360p available as an honest emergency fallback when no compatible HD track can be recovered."
+    ]
+  },
+  {
     "date": "2026-08-27",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
