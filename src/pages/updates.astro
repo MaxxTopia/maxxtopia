@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
 import { changelog, changelogEntryId, getChangelogAccentHex, getChangelogDisplayVersion, getChangelogProjectKey } from '../data/changelog';
+import { getProduct } from '../data/products';
 
 // The first entry for each project is its current release because changelog.ts
 // sorts the feed newest-first. Current releases get the active aura, even when
@@ -73,10 +74,10 @@ const newestEntry = changelog[0];
               </div>
 
               <div class="upd__content">
-                {entry.productSlug ? (
+                {entry.productSlug && getProduct(entry.productSlug) ? (
                   <a href={`/${entry.productSlug}`} class="upd__product">{entry.product}</a>
                 ) : (
-                  <span class="upd__product upd__product--plain">{entry.product}</span>
+                  <span class={`upd__product${accent && entry.product !== 'Maxxtopia' ? '' : ' upd__product--plain'}`}>{entry.product}</span>
                 )}
                 <h2 class="upd__title">{entry.title}</h2>
                 {entry.body && <p class="upd__text">{entry.body}</p>}

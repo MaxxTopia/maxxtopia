@@ -68,7 +68,20 @@ export const getChangelogDisplayVersion = (entry: ChangelogEntry) =>
 
 /** One color contract shared by the Updates page and every downstream mirror. */
 const SUITE_UPDATE_ACCENT_HEX = '#cbd5e1';
+/**
+ * Some real suite projects are intentionally not catalog cards in
+ * the product catalog, but their Updates entries still deserve the same visual
+ * identity. Keep these accents here so the feed does not silently gray them.
+ * Betmaxxing uses the scorecard lime; MontageMaxxer uses its showcase teal.
+ */
+const NON_CATALOG_UPDATE_ACCENTS: Record<string, string> = {
+  betmaxxing: '#c7ff43',
+  montagemaxxer: '#27d9c3',
+};
 export const getChangelogAccentHex = (entry: ChangelogEntry) => {
+  const projectKey = getChangelogProjectKey(entry);
+  const nonCatalogAccent = NON_CATALOG_UPDATE_ACCENTS[projectKey];
+  if (nonCatalogAccent) return nonCatalogAccent;
   if (!entry.productSlug) return entry.product === 'Maxxtopia' ? SUITE_UPDATE_ACCENT_HEX : null;
   const product = getProduct(entry.productSlug);
   return product?.updateAccentHex ?? product?.accentHex ?? null;
@@ -84,6 +97,10 @@ for (const product of products) {
   const accent = (product.updateAccentHex ?? product.accentHex).toLowerCase();
   updateAccentOwners.set(accent, [...(updateAccentOwners.get(accent) ?? []), product.slug]);
 }
+for (const [projectKey, accentHex] of Object.entries(NON_CATALOG_UPDATE_ACCENTS)) {
+  const accent = accentHex.toLowerCase();
+  updateAccentOwners.set(accent, [...(updateAccentOwners.get(accent) ?? []), projectKey]);
+}
 const duplicateUpdateAccents = [...updateAccentOwners.entries()]
   .filter(([, owners]) => owners.length > 1)
   .map(([accent, owners]) => `${accent}: ${owners.join(', ')}`);
@@ -94,12 +111,12 @@ if (updateAccentOwners.has(SUITE_UPDATE_ACCENT_HEX)) {
   throw new Error(`Suite Updates accent collides with a product: ${SUITE_UPDATE_ACCENT_HEX}`);
 }
 
-const missingUpdateAccentSlugs = (data as ChangelogEntry[])
-  .filter((entry) => entry.productSlug && !getChangelogAccentHex(entry))
-  .map((entry) => entry.productSlug)
-  .filter((slug, index, all) => slug && all.indexOf(slug) === index);
-if (missingUpdateAccentSlugs.length > 0) {
-  throw new Error(`Updates entries reference products without an accent: ${missingUpdateAccentSlugs.join(', ')}`);
+const missingUpdateAccentProjects = (data as ChangelogEntry[])
+  .filter((entry) => !getChangelogAccentHex(entry))
+  .map((entry) => entry.productSlug ?? entry.product)
+  .filter((project, index, all) => project && all.indexOf(project) === index);
+if (missingUpdateAccentProjects.length > 0) {
+  throw new Error(`Updates entries reference products without an accent: ${missingUpdateAccentProjects.join(', ')}`);
 }
 
 const historicalUnversionedEntries = new Set([

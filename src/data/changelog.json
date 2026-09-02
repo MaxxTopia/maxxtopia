@@ -4,8 +4,95 @@
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.63",
-    "title": "Discordmaxxer v0.7.63",
-    "body": "Maintenance release — under-the-hood fixes and improvements."
+    "title": "Discordmaxxer keeps native screenshares steadier.",
+    "body": "The v0.7.63 pass carries the preview CPU safeguard into the released screenshare path, reducing the chance that preview work competes with the live encoder.",
+    "items": [
+      "Preserves the preview CPU guard in the shipped screenshare path.",
+      "Keeps preview work from competing with the live encoder.",
+      "Makes the native-recipient quality path safer during motion-heavy gameplay."
+    ]
+  },
+  {
+    "date": "2026-09-01",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "Playback recovery + status",
+    "title": "Viewmaxxing waits for playback you can actually see.",
+    "body": "The player now proves a real native frame before it reveals a title, then keeps recovery bounded and shows title and episode health in one place.",
+    "items": [
+      "Retries transient provider failures without opening popup-prone pages.",
+      "Rejects short or unverified media instead of showing the wrong video.",
+      "Adds a title and episode status drawer with readable health states.",
+      "Tolerates legitimate opening and ending differences without accepting truncated media."
+    ]
+  },
+  {
+    "date": "2026-09-01",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.59",
+    "title": "Streammaxxing keeps the OBS hub in view.",
+    "body": "The latest pass keeps one-click overlay setup visible in studio preview and makes the hub recoverable when a preview or connection state changes.",
+    "items": [
+      "Keeps overlay setup visible while you configure a scene.",
+      "Carries the recovery path through the released OBS hub.",
+      "Makes preview and OBS handoff easier to verify before going live."
+    ]
+  },
+  {
+    "date": "2026-09-01",
+    "product": "Snipemaxxer",
+    "productSlug": "snipemaxxer",
+    "version": "Capture freshness",
+    "title": "Snipemaxxer keeps live intel from going stale.",
+    "body": "The tournament desk now distinguishes fresh capture evidence from an idle or delayed feed, while the live lobby report restores its readiness signal.",
+    "items": [
+      "Labels capture freshness before showing a live-looking report.",
+      "Restores the lobby report's explicit ready state.",
+      "Keeps capture policy game-aware instead of running blindly.",
+      "Preserves honest unavailable states when no new evidence arrives."
+    ]
+  },
+  {
+    "date": "2026-09-01",
+    "product": "Clipmaxxer",
+    "productSlug": "clipmaxxer",
+    "version": "Watcher recovery",
+    "title": "Clipmaxxer keeps the watcher honest after a disconnect.",
+    "body": "The local watcher now makes recovery visible and keeps reconnect checks isolated, so missing OBS or replay access cannot quietly look like a finished clip.",
+    "items": [
+      "Recovers from OBS reconnects with bounded health checks.",
+      "Shows watcher state while a connection is recovering.",
+      "Separates reconnect tests from real capture events.",
+      "Leaves uncertain replay input pending instead of claiming a clip."
+    ]
+  },
+  {
+    "date": "2026-09-01",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Player-guided timing",
+    "title": "Playlistmaxxing makes every second easier to place.",
+    "body": "The player-guided timing editor now lets you hear a track, watch its progress, and save exact start and finish points while mobile tools and popout playback stay usable.",
+    "items": [
+      "Previews timing directly from the editor instead of guessing timestamps.",
+      "Persists start and end points across reloads, shares, and playlists.",
+      "Keeps one active playback owner during queue changes.",
+      "Adds a fixed mobile minimize control for Tools and Settings."
+    ]
+  },
+  {
+    "date": "2026-09-01",
+    "product": "Maxxtopia",
+    "version": "Suite control room",
+    "title": "Maxxtopia makes the suite easier to check at a glance.",
+    "body": "The suite shell now carries the latest product passes, a clearer tournament board, and a more dependable Arcade launch while keeping the work easy to scan.",
+    "items": [
+      "Publishes the latest Betmaxxing scorecard and MontageMaxxer showcase work.",
+      "Keeps the Arcade launch visible on mobile and reduced-motion settings.",
+      "Carries clearer tournament standings and Maxx Bot timing states.",
+      "Keeps product updates concise, color-coded, and easy to scan."
+    ]
   },
   {
     "date": "2026-09-01",
