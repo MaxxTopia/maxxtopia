@@ -1216,8 +1216,8 @@ export const products: Product[] = [
       },
       {
         eyebrow: '02 / FORTNITE',
-        headline: 'Play the cutoff, not a feeling.',
-        body: 'The tournament desk keeps your points, rank, games left, qualify gap, event window, and placement-vs-push call together. Epic standing is the fast surface; it never pretends a replay is live.',
+        headline: 'Know the lobby before your next drop.',
+        body: 'Use the official replay to see who shared your game, where they landed, who survived, and how much pressure your drop faced. Track exact names, compare routes, and turn the evidence into a smarter next-game call.',
         visual: { kind: 'image', src: '/screenshots/snipemaxxer/fortnite-home.webp', alt: 'Snipemaxxer Fortnite tournament desk captured from the current app.' },
       },
       {
