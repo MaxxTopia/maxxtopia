@@ -3,6 +3,32 @@
     "date": "2026-09-05",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.20",
+    "title": "AdBlock-Maxxer recovers video without getting stuck reconnecting.",
+    "body": "Reclaim now parks stale signed streams, preserves the current position, and waits for fresh video frames before declaring recovery. This fixes the audio-only black player and stale reconnect message seen after a long regular YouTube video stalls.",
+    "items": [
+      "Stops reusing a failed signed URL that could restart audio while video stayed black.",
+      "Clears the reconnect state only after a video frame is actually presented.",
+      "Keeps the v1.6.19 live-fragment framing repair and one Chromium build for Chrome, Brave, and Edge."
+    ]
+  },
+  {
+    "date": "2026-09-05",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.19",
+    "title": "AdBlock-Maxxer makes live Reclaim fragments finish cleanly.",
+    "body": "A Chrome-only live playback failure left Reclaim black at 0:00 because YouTube's chunked HLS fragments never signaled the end of the response. The companion now delimits those fragments explicitly so hls.js can append them and render live video.",
+    "items": [
+      "Fixes the live-only black player caused by incomplete local HTTP/1.1 response framing.",
+      "Keeps one Chromium build for Chrome, Brave, and Edge; no browser split is needed.",
+      "Preserves the existing fail-closed Reclaim behavior when YouTube extraction is temporarily challenged."
+    ]
+  },
+  {
+    "date": "2026-09-05",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.18",
     "title": "AdBlock-Maxxer repairs black live Reclaim streams.",
     "body": "Live Reclaim now builds its quality ladder from playable signed playlists and refreshes the stream after bounded HLS failures, so a broken upstream master no longer leaves the player black.",
