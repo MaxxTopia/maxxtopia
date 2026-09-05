@@ -68,6 +68,21 @@ git log --oneline origin/main..HEAD
 An automated product-data commit may update `main`. If it does, integrate the
 new remote state without losing unrelated local edits, then rebuild.
 
+## AdBlock-Maxxer v1.6.17 release (2026-09-05, live)
+
+- `src/data/products.ts` now advertises AdBlock-Maxxer v1.6.17 and points the
+  primary download CTA at the versioned R2 ZIP. `src/data/changelog.json` has
+  the Reclaim fail-closed recovery notes.
+- Maxxtopia commit `eacb2cc` is pushed to `origin/main`. GitHub Actions Pages
+  deployment `33952662851` completed successfully. Cache-busted live checks for
+  `/adblockmaxxer/` and `/updates/` returned HTTP 200 and contain v1.6.17.
+- The linked extension is one Chromium build for Chrome, Brave, and Edge. The
+  companion and extension release evidence is recorded in the AdBlock-Maxxer
+  repository's AGENTS.md and the portable continuity snapshot.
+- Remaining product gate is real-browser validation: refresh the unpacked
+  extension in Chrome and Brave, exercise Always Reclaim through a temporary
+  extraction failure, and confirm no native ad is exposed before recovery.
+
 ## Ship
 
 Production publishing requires Diggy's explicit approval. Once approved:
