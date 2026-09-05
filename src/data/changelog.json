@@ -3,6 +3,19 @@
     "date": "2026-09-05",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.21",
+    "title": "AdBlock-Maxxer makes Reclaim Retry actually retry.",
+    "body": "The fail-closed Reclaim hold screen no longer loops on the same cached extraction failure. Retry now starts a fresh bounded attempt, shows progress, and keeps native YouTube playback suppressed if the upstream challenge remains.",
+    "items": [
+      "Makes the hold-screen Retry button issue a real fresh resolve instead of a cached no-op.",
+      "Shows active retry feedback and preserves the existing 15/30/60-second automatic backoff.",
+      "Keeps one Chromium build for Chrome, Brave, and Edge; no browser split is needed."
+    ]
+  },
+  {
+    "date": "2026-09-05",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.20",
     "title": "AdBlock-Maxxer recovers video without getting stuck reconnecting.",
     "body": "Reclaim now parks stale signed streams, preserves the current position, and waits for fresh video frames before declaring recovery. This fixes the audio-only black player and stale reconnect message seen after a long regular YouTube video stalls.",
