@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-09-05",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.17",
+    "title": "AdBlock-Maxxer stops Reclaim from leaking ads during outages.",
+    "body": "The latest pass fixes a trust-breaking edge case: when anonymous Reclaim extraction is temporarily challenged, explicit ad-free mode now holds the native player instead of exposing a YouTube ad, then retries automatically.",
+    "items": [
+      "Keeps native YouTube playback paused while forced Reclaim reconnects.",
+      "Retries extraction at 15, 30, and 60 seconds without hammering YouTube.",
+      "Caches temporary companion failures and spaces update checks for cleaner recovery.",
+      "Ships one Chromium build for Chrome, Brave, and Edge with the same Reclaim contract."
+    ]
+  },
+  {
     "date": "2026-09-02",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
