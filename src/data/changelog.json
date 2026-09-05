@@ -3,6 +3,19 @@
     "date": "2026-09-05",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.18",
+    "title": "AdBlock-Maxxer repairs black live Reclaim streams.",
+    "body": "Live Reclaim now builds its quality ladder from playable signed playlists and refreshes the stream after bounded HLS failures, so a broken upstream master no longer leaves the player black.",
+    "items": [
+      "Builds a local adaptive ladder from concrete quality playlists that are actually playable.",
+      "Fresh-resolves after repeated HLS network, media, or missing-frame failures while preserving position.",
+      "Keeps one Chromium build for Chrome, Brave, and Edge; no browser split is needed."
+    ]
+  },
+  {
+    "date": "2026-09-05",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.17",
     "title": "AdBlock-Maxxer stops Reclaim from leaking ads during outages.",
     "body": "The latest pass fixes a trust-breaking edge case: when anonymous Reclaim extraction is temporarily challenged, explicit ad-free mode now holds the native player instead of exposing a YouTube ad, then retries automatically.",
