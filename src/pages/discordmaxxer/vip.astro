@@ -146,8 +146,9 @@ const breadcrumbSchema = {
       <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono reveal reveal-1">
         Discordmaxxer · pricing
       </p>
-      <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[72px] font-semibold tracking-[-0.035em] leading-[0.95] gradient-text">
-        The whole client is free. <span class="serif-accent gradient-suite">The flex is paid.</span>
+      <h1 class="reveal reveal-2 mt-4 text-[44px] sm:text-[72px] font-semibold tracking-[-0.035em] leading-[0.98] text-[var(--color-text)]">
+        <span class="block">The whole client is free.</span>
+        <span class="serif-accent gradient-suite block">The flex is paid.</span>
       </h1>
       <p class="reveal reveal-3 mt-7 text-[18px] sm:text-[20px] leading-[1.4] text-[var(--color-text-mid)] max-w-2xl">
         Four paid tiers + a 33-slot Founder loop. Every paying tier is cosmetic + cross-user status surfacing — paid subscribers <em>see each other</em> light up across every server. The client itself stays 100% free, forever.
@@ -158,61 +159,75 @@ const breadcrumbSchema = {
     <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-14">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         {TIERS.map((tier) => (
-          <div
-            class={`reveal-on-scroll relative rounded-2xl border p-7 sm:p-8 transition-all ${
-              tier.highlight
-                ? 'border-[var(--color-cyan)] bg-[var(--color-bg-card)]'
-                : 'border-[var(--color-line)] bg-[var(--color-bg-card)]'
-            }`}
-            style={tier.highlight ? `box-shadow: 0 0 0 1px ${tier.bracketColor}33 inset, 0 8px 32px ${tier.bracketColor}22;` : ''}
-          >
+          <div class="reveal-on-scroll vip-tier-card-shell relative">
+            <div
+              class="vip-tier-card__smoke absolute -inset-[18px] z-0 rounded-[2rem] pointer-events-none"
+              aria-hidden="true"
+              style={`--tier-color: ${tier.bracketColor};`}
+            ></div>
+
+            <div
+              class="vip-tier-card relative isolate overflow-visible rounded-2xl border p-7 sm:p-8 transition-all"
+              style={`--tier-color: ${tier.bracketColor}; color: color-mix(in srgb, ${tier.bracketColor} 62%, var(--color-text-mid)); border-color: ${tier.bracketColor}; background: var(--color-bg-card); box-shadow: ${tier.highlight
+                ? `0 0 0 1px ${tier.bracketColor}88, 0 0 26px ${tier.bracketColor}55, inset 0 0 42px ${tier.bracketColor}18, 0 10px 28px rgba(0,0,0,0.34);`
+                : `0 0 0 1px ${tier.bracketColor}60, 0 0 20px ${tier.bracketColor}42, inset 0 0 34px ${tier.bracketColor}12, 0 10px 26px rgba(0,0,0,0.32);`}`}
+            >
+
             {tier.highlight && (
-              <div class="absolute -top-3 left-7 px-2.5 py-1 rounded-full bg-[var(--color-cyan)] text-[var(--color-bg)] text-[10.5px] font-mono uppercase tracking-[0.12em] font-semibold">
+              <div
+                class="absolute z-20 -top-3 left-7 whitespace-nowrap rounded-full border px-2.5 py-1 text-[10.5px] font-mono uppercase tracking-[0.12em] font-semibold"
+                style={`background: ${tier.bracketColor}; border-color: ${tier.bracketColor}; color: #08050f; box-shadow: 0 0 16px ${tier.bracketColor}77, 0 0 30px ${tier.bracketColor}2f;`}
+              >
                 Most-picked
               </div>
             )}
 
-            <!-- Bracket badge — Hypixel-style colored tag -->
-            <div class="mb-5 flex items-baseline gap-3 flex-wrap">
-              <span
-                style={`color: ${tier.bracketColor}; font-family: 'Tungsten Bold', 'Bebas Neue', 'Oswald', 'Arial Black', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: 0.02em; text-shadow: 0 0 14px ${tier.bracketColor}55, 0 1px 0 rgba(0,0,0,0.6);`}
-              >
-                {tier.bracket}
-              </span>
-              <div class="flex flex-col">
-                <span class="text-[20px] font-semibold text-[var(--color-text)]">{tier.monthly}</span>
-                <span class="text-[12px] text-[var(--color-muted)] font-mono">{tier.annual}</span>
+            <div class="relative z-10">
+              <!-- Bracket badge — Hypixel-style colored tag -->
+              <div class="mb-5 flex items-baseline gap-3 flex-wrap">
+                <span
+                  style={`color: ${tier.bracketColor}; font-family: 'Tungsten Bold', 'Bebas Neue', 'Oswald', 'Arial Black', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: 0.02em; text-shadow: 0 0 12px ${tier.bracketColor}66, 0 1px 0 rgba(0,0,0,0.75);`}
+                >
+                  {tier.plusColor ? (
+                    <><span>{tier.bracket.slice(0, -3)}</span><span style={`color: ${tier.plusColor}; text-shadow: 0 0 10px ${tier.plusColor}66;`}>++</span><span>]</span></>
+                  ) : tier.bracket}
+                </span>
+                <div class="flex flex-col">
+                  <span class="text-[20px] font-semibold" style={`color: color-mix(in srgb, ${tier.bracketColor} 90%, var(--color-text)); text-shadow: 0 0 10px ${tier.bracketColor}50;`}>{tier.monthly}</span>
+                  <span class="text-[12px] font-mono" style={`color: color-mix(in srgb, ${tier.bracketColor} 64%, var(--color-muted)); text-shadow: 0 0 8px ${tier.bracketColor}28;`}>{tier.annual}</span>
+                </div>
               </div>
-            </div>
 
-            <p class="mb-5 text-[14.5px] leading-[1.55] text-[var(--color-text-mid)]">
-              {tier.pitch}
-            </p>
-
-            <ul class="space-y-2.5 mb-7">
-              {tier.perks.map((perk) => (
-                <li class="flex items-start gap-2.5 text-[13.5px] leading-[1.45] text-[var(--color-text-mid)]">
-                  <span style={`color: ${tier.bracketColor}; flex-shrink: 0; margin-top: 1px;`}>✓</span>
-                  <span set:html={perk} />
-                </li>
-              ))}
-            </ul>
-
-            <a
-              href={tier.ctaHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="block text-center px-5 py-3 rounded-lg text-[14px] font-semibold transition-all"
-              style={`background: ${tier.bracketColor}; color: #0a0a0a; box-shadow: 0 4px 18px ${tier.bracketColor}44;`}
-            >
-              {tier.ctaLabel}
-            </a>
-
-            {tier.upsell && (
-              <p class="mt-3 text-[11.5px] text-[var(--color-muted)] leading-[1.45]">
-                {tier.upsell}
+              <p class="mb-5 text-[14.5px] leading-[1.55]" style={`color: color-mix(in srgb, ${tier.bracketColor} 68%, var(--color-text-mid)); text-shadow: 0 0 14px ${tier.bracketColor}32;`}>
+                {tier.pitch}
               </p>
-            )}
+
+              <ul class="space-y-2.5 mb-7">
+                {tier.perks.map((perk) => (
+                  <li class="flex items-start gap-2.5 text-[13.5px] leading-[1.45]" style={`color: color-mix(in srgb, ${tier.bracketColor} 62%, var(--color-text-mid)); text-shadow: 0 0 10px ${tier.bracketColor}28;`}>
+                    <span style={`color: ${tier.bracketColor}; flex-shrink: 0; margin-top: 1px; text-shadow: 0 0 12px ${tier.bracketColor}88;`}>✓</span>
+                    <span set:html={perk} />
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href={tier.ctaHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block text-center px-5 py-3 rounded-lg text-[14px] font-semibold transition-all"
+                style={`background: ${tier.bracketColor}; color: #08050f; border: 1px solid ${tier.bracketColor}; box-shadow: 0 0 18px ${tier.bracketColor}66, 0 4px 18px rgba(0,0,0,0.3);`}
+              >
+                {tier.ctaLabel}
+              </a>
+
+              {tier.upsell && (
+                <p class="mt-3 text-[11.5px] leading-[1.45]" style={`color: color-mix(in srgb, ${tier.bracketColor} 56%, var(--color-muted)); text-shadow: 0 0 9px ${tier.bracketColor}28;`}>
+                  {tier.upsell}
+                </p>
+              )}
+            </div>
+            </div>
           </div>
         ))}
       </div>
@@ -289,42 +304,577 @@ const breadcrumbSchema = {
     </section>
 
     <!-- Checkout flow explainer -->
-    <section class="relative mx-auto max-w-3xl px-5 sm:px-8 pb-24">
-      <p class="text-[11px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono mb-6">
-        ◇ How checkout works
-      </p>
-      <div class="space-y-5">
-        <div class="flex gap-4">
-          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">1</span>
-          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
-            Click any "Open Discord ticket" button above. You'll land in the Maxxtopia Discord (suite-wide community hub).
-          </p>
-        </div>
-        <div class="flex gap-4">
-          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">2</span>
-          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
-            In <code class="text-[13px] bg-[var(--color-bg-card)] border border-[var(--color-line)] rounded px-1.5 py-0.5">#open-ticket</code>, click the "Buy Discordmaxxer [tier]" button. A private thread opens with you and Diggy — only the two of you can see it.
-          </p>
-        </div>
-        <div class="flex gap-4">
-          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">3</span>
-          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
-            Tell Diggy your preferred payment: <strong class="text-[var(--color-text)]">PayPal · BTC · Venmo · Cash App</strong>. He sends the address + amount. Once payment lands, he DMs your 16-character HWID-bound activation code.
-          </p>
-        </div>
-        <div class="flex gap-4">
-          <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[13px] font-mono text-[var(--color-cyan)]">4</span>
-          <p class="text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
-            In Discordmaxxer: open the Hub panel → VIP claim → paste code. First-claim-wins — your tier locks to your rig forever, even offline. The Maxx bot grants your <code class="text-[13px] bg-[var(--color-bg-card)] border border-[var(--color-line)] rounded px-1.5 py-0.5">@VIP</code> role in the Discord with one click.
-          </p>
+    <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-24">
+      <div class="checkout-panel-shell relative isolate">
+        <div class="checkout-panel__halo absolute -inset-4 rounded-[2rem] pointer-events-none" aria-hidden="true"></div>
+
+        <div class="checkout-panel relative overflow-hidden rounded-[1.75rem] border p-6 sm:p-9">
+          <div class="checkout-panel__wash checkout-panel__wash--cyan" aria-hidden="true"></div>
+          <div class="checkout-panel__wash checkout-panel__wash--gold" aria-hidden="true"></div>
+          <div class="checkout-panel__grid" aria-hidden="true"></div>
+
+          <div class="relative z-10">
+            <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div class="max-w-2xl">
+                <p class="checkout-panel__eyebrow mb-3">
+                  <span aria-hidden="true">◇</span> How checkout works
+                </p>
+                <h2 class="text-[34px] sm:text-[48px] leading-[0.98] tracking-[-0.035em] font-semibold text-[var(--color-text)]">
+                  The route to your tier.
+                </h2>
+                <p class="mt-4 max-w-xl text-[14px] sm:text-[15px] leading-[1.55] text-[var(--color-text-mid)]">
+                  A short, human-guided handoff from the Discord ticket to your activated rig.
+                </p>
+              </div>
+
+              <div class="checkout-panel__status self-start lg:self-auto">
+                <span class="checkout-panel__status-dot" aria-hidden="true"></span>
+                <span>MANUAL CHECKOUT</span>
+                <span class="checkout-panel__status-divider" aria-hidden="true"></span>
+                <span>NO AUTO-RENEW</span>
+              </div>
+            </div>
+
+            <div class="checkout-route" aria-label="Checkout route">
+              <span class="checkout-route__node" style="--route-color: #00d4ff;">01 <b>DISCORD</b></span>
+              <span class="checkout-route__arrow" aria-hidden="true">→</span>
+              <span class="checkout-route__node" style="--route-color: #55FFFF;">02 <b>TIER</b></span>
+              <span class="checkout-route__arrow" aria-hidden="true">→</span>
+              <span class="checkout-route__node" style="--route-color: #FFAA00;">03 <b>PAYMENT</b></span>
+              <span class="checkout-route__arrow" aria-hidden="true">→</span>
+              <span class="checkout-route__node" style="--route-color: #55FF55;">04 <b>ACTIVATE</b></span>
+            </div>
+
+            <ol class="checkout-steps">
+              <li class="checkout-step" style="--step-color: #00d4ff;">
+                <div class="checkout-step__top">
+                  <span class="checkout-step__number">01</span>
+                  <span class="checkout-step__eyebrow">Start here</span>
+                </div>
+                <h3 class="checkout-step__title">Open the door</h3>
+                <p class="checkout-step__copy">
+                  Click any "Open Discord ticket" button above. You'll land in the Maxxtopia Discord (suite-wide community hub).
+                </p>
+              </li>
+
+              <li class="checkout-step" style="--step-color: #55FFFF;">
+                <div class="checkout-step__top">
+                  <span class="checkout-step__number">02</span>
+                  <span class="checkout-step__eyebrow">Choose your tier</span>
+                </div>
+                <h3 class="checkout-step__title">Pick your flex</h3>
+                <p class="checkout-step__copy">
+                  In <code class="checkout-inline-code">#open-ticket</code>, click the "Buy Discordmaxxer [tier]" button. A private thread opens with you and Diggy — only the two of you can see it.
+                </p>
+              </li>
+
+              <li class="checkout-step" style="--step-color: #FFAA00;">
+                <div class="checkout-step__top">
+                  <span class="checkout-step__number">03</span>
+                  <span class="checkout-step__eyebrow">Settle up</span>
+                </div>
+                <h3 class="checkout-step__title">Pick a payment</h3>
+                <p class="checkout-step__copy">
+                  Tell Diggy your preferred payment: <strong>PayPal · BTC · Venmo · Cash App</strong>. He sends the address + amount. Once payment lands, he DMs your 16-character HWID-bound activation code.
+                </p>
+              </li>
+
+              <li class="checkout-step" style="--step-color: #55FF55;">
+                <div class="checkout-step__top">
+                  <span class="checkout-step__number">04</span>
+                  <span class="checkout-step__eyebrow">Claim it</span>
+                </div>
+                <h3 class="checkout-step__title">Activate your rig</h3>
+                <p class="checkout-step__copy">
+                  In Discordmaxxer: open the Hub panel → VIP claim → paste code. First-claim-wins — your tier locks to your rig forever, even offline. The Maxx bot grants your <code class="checkout-inline-code">@VIP</code> role in the Discord with one click.
+                </p>
+              </li>
+            </ol>
+
+            <div class="checkout-panel__footer">
+              <div class="checkout-reassurance">
+                <span class="checkout-reassurance__mark" aria-hidden="true">✓</span>
+                <div>
+                  <p class="checkout-reassurance__title">No surprise renewal loop.</p>
+                  <p class="checkout-reassurance__copy">
+                    We don't run Stripe yet — every paying tier flows through Discord tickets. Codes are product-specific and HWID-bound: Discordmaxxer codes work in Discordmaxxer, while Optimizationmaxxing codes work in Optimizationmaxxing. Founder codes unlock both products. No subscriptions get auto-charged. No "trial → silent renewal" traps. We send a manual reminder when your month is up.
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href={DISCORD_INVITE}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="checkout-panel__cta"
+              >
+                Open Maxxtopia Discord <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-
-      <p class="mt-10 text-[12.5px] text-[var(--color-muted)] leading-[1.5]">
-        We don't run Stripe yet — every paying tier flows through Discord tickets. The activation codes are HWID-bound,
-        so they work cross-product (the same code unlocks optimizationmaxxing if you own that tier too). No subscriptions
-        get auto-charged. No "trial → silent renewal" traps. We send a manual reminder when your month is up.
-      </p>
     </section>
   </article>
 </Layout>
+
+<style>
+  .vip-tier-card__smoke {
+    border: 14px solid var(--tier-color);
+    filter: blur(24px);
+    opacity: 0.42;
+    transform: translate3d(-1%, 1%, 0) scale(0.96);
+    animation: vip-tier-smoke 8s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .vip-tier-card__smoke::before,
+  .vip-tier-card__smoke::after {
+    content: '';
+    position: absolute;
+    width: 52%;
+    height: 34%;
+    border-radius: 999px;
+    background: var(--tier-color);
+    filter: blur(28px);
+    opacity: 0.68;
+  }
+
+  .vip-tier-card__smoke::before {
+    left: -7%;
+    bottom: -4%;
+  }
+
+  .vip-tier-card__smoke::after {
+    right: -7%;
+    top: -4%;
+  }
+
+  .vip-tier-card-shell:hover .vip-tier-card__smoke {
+    opacity: 0.58;
+  }
+
+  @keyframes vip-tier-smoke {
+    0%,
+    100% {
+      transform: translate3d(-1%, 1%, 0) scale(0.96);
+      opacity: 0.32;
+    }
+
+    50% {
+      transform: translate3d(2%, -2%, 0) scale(1.03);
+      opacity: 0.60;
+    }
+  }
+
+  .checkout-panel-shell {
+    isolation: isolate;
+  }
+
+  .checkout-panel__halo {
+    background:
+      radial-gradient(circle at 8% 18%, rgba(0, 212, 255, 0.24), transparent 30%),
+      radial-gradient(circle at 92% 84%, rgba(255, 170, 0, 0.20), transparent 32%);
+    filter: blur(24px);
+    opacity: 0.72;
+    animation: checkout-halo-breathe 9s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .checkout-panel {
+    background:
+      linear-gradient(135deg, rgba(22, 12, 45, 0.98), rgba(10, 6, 18, 0.98) 70%),
+      var(--color-bg-card);
+    border-color: rgba(0, 212, 255, 0.34);
+    box-shadow:
+      0 0 0 1px rgba(226, 91, 255, 0.16) inset,
+      0 0 32px rgba(0, 212, 255, 0.12),
+      0 22px 58px rgba(0, 0, 0, 0.34);
+  }
+
+  .checkout-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.035) inset;
+  }
+
+  .checkout-panel__wash {
+    position: absolute;
+    width: 22rem;
+    height: 16rem;
+    border-radius: 999px;
+    filter: blur(48px);
+    opacity: 0.13;
+    pointer-events: none;
+  }
+
+  .checkout-panel__wash--cyan {
+    top: -9rem;
+    left: -8rem;
+    background: #00d4ff;
+  }
+
+  .checkout-panel__wash--gold {
+    right: -9rem;
+    bottom: -10rem;
+    background: #ffaa00;
+  }
+
+  .checkout-panel__grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 42%, transparent 72%, rgba(0, 0, 0, 0.6));
+  }
+
+  .checkout-panel__eyebrow,
+  .checkout-step__eyebrow {
+    color: #63eaff;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .checkout-panel__eyebrow {
+    text-shadow: 0 0 12px rgba(0, 212, 255, 0.58);
+  }
+
+  .checkout-panel__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid rgba(85, 255, 85, 0.28);
+    border-radius: 999px;
+    padding: 0.65rem 0.8rem;
+    color: rgba(193, 255, 193, 0.82);
+    background: rgba(85, 255, 85, 0.06);
+    box-shadow: 0 0 18px rgba(85, 255, 85, 0.10), inset 0 0 14px rgba(85, 255, 85, 0.05);
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .checkout-panel__status-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: #55ff55;
+    box-shadow: 0 0 8px #55ff55, 0 0 16px rgba(85, 255, 85, 0.65);
+  }
+
+  .checkout-panel__status-divider {
+    width: 1px;
+    height: 0.75rem;
+    background: rgba(85, 255, 85, 0.28);
+  }
+
+  .checkout-route {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 2rem 0 1.25rem;
+    padding: 0.75rem 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .checkout-route::-webkit-scrollbar {
+    display: none;
+  }
+
+  .checkout-route__node {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex: 0 0 auto;
+    color: var(--route-color);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    line-height: 1;
+    text-shadow: 0 0 10px color-mix(in srgb, var(--route-color) 55%, transparent);
+  }
+
+  .checkout-route__node b {
+    color: rgba(234, 229, 255, 0.76);
+    font-weight: 600;
+  }
+
+  .checkout-route__arrow {
+    flex: 0 0 auto;
+    color: rgba(226, 91, 255, 0.72);
+    font-size: 16px;
+    line-height: 1;
+    text-shadow: 0 0 12px rgba(226, 91, 255, 0.64);
+  }
+
+  .checkout-steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .checkout-step {
+    position: relative;
+    min-height: 13rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--step-color) 35%, rgba(255, 255, 255, 0.08));
+    border-radius: 1rem;
+    padding: 1.15rem 1.2rem 1.25rem;
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--step-color) 10%, var(--color-bg-card)), rgba(12, 7, 24, 0.97) 68%),
+      var(--color-bg-card);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--step-color) 10%, transparent) inset,
+      0 0 22px color-mix(in srgb, var(--step-color) 10%, transparent),
+      0 12px 24px rgba(0, 0, 0, 0.18);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .checkout-step::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 1.15rem;
+    left: 1.15rem;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--step-color), transparent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--step-color) 62%, transparent);
+  }
+
+  .checkout-step::after {
+    content: '';
+    position: absolute;
+    right: -3rem;
+    bottom: -4rem;
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    background: var(--step-color);
+    filter: blur(42px);
+    opacity: 0.09;
+    pointer-events: none;
+  }
+
+  .checkout-step:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--step-color) 70%, rgba(255, 255, 255, 0.12));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--step-color) 18%, transparent) inset,
+      0 0 28px color-mix(in srgb, var(--step-color) 19%, transparent),
+      0 15px 28px rgba(0, 0, 0, 0.24);
+  }
+
+  .checkout-step__top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .checkout-step__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid color-mix(in srgb, var(--step-color) 78%, transparent);
+    border-radius: 0.65rem;
+    color: #08050f;
+    background: var(--step-color);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--step-color) 50%, transparent), inset 0 0 6px rgba(255, 255, 255, 0.28);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .checkout-step__eyebrow {
+    color: color-mix(in srgb, var(--step-color) 82%, var(--color-text-mid));
+    text-shadow: 0 0 10px color-mix(in srgb, var(--step-color) 36%, transparent);
+  }
+
+  .checkout-step__title {
+    position: relative;
+    z-index: 1;
+    margin: 1.1rem 0 0.45rem;
+    color: color-mix(in srgb, var(--step-color) 86%, var(--color-text));
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    text-shadow: 0 0 14px color-mix(in srgb, var(--step-color) 28%, transparent);
+  }
+
+  .checkout-step__copy {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: color-mix(in srgb, var(--step-color) 26%, var(--color-text-mid));
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .checkout-step__copy strong {
+    color: color-mix(in srgb, var(--step-color) 68%, var(--color-text));
+    text-shadow: 0 0 10px color-mix(in srgb, var(--step-color) 30%, transparent);
+  }
+
+  .checkout-inline-code {
+    border: 1px solid color-mix(in srgb, var(--step-color) 35%, rgba(255, 255, 255, 0.08));
+    border-radius: 0.35rem;
+    padding: 0.1rem 0.38rem;
+    color: color-mix(in srgb, var(--step-color) 82%, var(--color-text));
+    background: color-mix(in srgb, var(--step-color) 10%, rgba(8, 5, 15, 0.72));
+    font-family: var(--font-mono);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .checkout-panel__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-top: 1.15rem;
+    padding-top: 1.15rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .checkout-reassurance {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    max-width: 46rem;
+  }
+
+  .checkout-reassurance__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 1.55rem;
+    height: 1.55rem;
+    border: 1px solid rgba(85, 255, 85, 0.42);
+    border-radius: 50%;
+    color: #55ff55;
+    background: rgba(85, 255, 85, 0.08);
+    box-shadow: 0 0 14px rgba(85, 255, 85, 0.22);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .checkout-reassurance__title {
+    margin: 0 0 0.25rem;
+    color: rgba(205, 255, 205, 0.84);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .checkout-reassurance__copy {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  .checkout-panel__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    gap: 0.55rem;
+    min-height: 2.8rem;
+    border: 1px solid rgba(0, 212, 255, 0.64);
+    border-radius: 0.7rem;
+    padding: 0.75rem 1.05rem;
+    color: #07101a;
+    background: #55ffff;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.34), 0 8px 18px rgba(0, 0, 0, 0.26);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    white-space: nowrap;
+  }
+
+  .checkout-panel__cta:hover {
+    transform: translateY(-2px);
+    background: #7cffff;
+    box-shadow: 0 0 26px rgba(0, 212, 255, 0.52), 0 10px 22px rgba(0, 0, 0, 0.28);
+  }
+
+  .checkout-panel__cta:focus-visible,
+  .checkout-step:focus-within {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
+
+  @keyframes checkout-halo-breathe {
+    0%,
+    100% {
+      transform: scale(0.98);
+      opacity: 0.56;
+    }
+
+    50% {
+      transform: scale(1.02);
+      opacity: 0.82;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .checkout-panel__status {
+      align-self: flex-start;
+      font-size: 8.5px;
+      gap: 0.4rem;
+    }
+
+    .checkout-steps {
+      grid-template-columns: 1fr;
+    }
+
+    .checkout-step {
+      min-height: auto;
+    }
+
+    .checkout-panel__footer {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .checkout-panel__cta {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vip-tier-card__smoke,
+    .checkout-panel__halo {
+      animation: none;
+    }
+  }
+</style>
