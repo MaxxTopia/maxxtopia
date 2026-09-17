@@ -33,13 +33,27 @@ const {
   version, versionDate, repoUrl, repoLabel, stats, accentHex,
   linkLabel = 'Open source', linkSub = 'Read the diff',
 } = Astro.props;
+
+const versionParts = version.match(/^v?(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/i);
+const versionHint = versionParts
+  ? `${version} = major release ${versionParts[1]}, feature release ${versionParts[2]}, patch/build ${versionParts[3]}`
+  : `${version} = current build number`;
 ---
 
 <aside class="receipts-band reveal-on-scroll" style={`--receipts-accent: ${accentHex};`}>
   <div class="receipts-band__cell">
     <p class="receipts-band__label">Current build</p>
-    <p class="receipts-band__value">{version}</p>
-    <p class="receipts-band__sub">Released {versionDate}</p>
+    <p class="receipts-band__value">
+      <span
+        class="receipts-band__version-help"
+        tabindex="0"
+        title={versionHint}
+        aria-label={versionHint}
+      >{version}</span>
+    </p>
+    <p class="receipts-band__sub">
+      {versionDate ? `Released ${versionDate}` : 'Release date not published'}
+    </p>
   </div>
 
   {stats.map((s) => (
@@ -127,6 +141,20 @@ const {
     letter-spacing: 0.005em;
     font-variant-numeric: tabular-nums;
     transition: color 200ms ease;
+  }
+  .receipts-band__version-help {
+    cursor: help;
+    text-decoration: underline dotted currentColor;
+    text-underline-offset: 4px;
+  }
+  .receipts-band__version-help:hover,
+  .receipts-band__version-help:focus-visible {
+    color: var(--receipts-accent);
+  }
+  .receipts-band__version-help:focus-visible {
+    outline: 2px solid var(--receipts-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
   }
   .receipts-band__sub {
     font-family: var(--font-mono);

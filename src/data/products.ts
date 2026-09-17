@@ -1,12 +1,4 @@
-// Auto-synced from each product's release CI via repository_dispatch.
-// See .github/workflows/sync-*-release.yml — every time a new tag
-// publishes upstream, the matching JSON gets rewritten and committed.
-import dmRelease from './discordmaxxer-release.json';
-import omRelease from './optimizationmaxxing-release.json';
-import cmRelease from './clipmaxxer-release.json';
-import dpRelease from './dropmaxxer-release.json';
-import amRelease from './aimmaxxer-release.json';
-import vmRelease from './viewmaxxing-release.json';
+import { installerUrlFor, releaseRegistry } from './release-registry';
 
 // Per-product waitlist: one Discord-OAuth click and the Maxx bot DMs the user
 // the moment that product ships. Handled by the vip-worker (waitlist:* keys in
@@ -111,7 +103,7 @@ export const products: Product[] = [
     name: 'Optimizationmaxxing',
     category: 'PC Tuning',
     status: 'live',
-    version: omRelease.version,
+    version: releaseRegistry.optimizationmaxxing.version ?? undefined,
     tagline: 'One hundred tweaks. Zero placebos.',
     description:
       'A free Windows PC tuner for smoother games and more responsive play — with guided presets, plain-English explanations, before-and-after measurements, and a safe way back when a tweak is not right for your rig.',
@@ -149,11 +141,11 @@ export const products: Product[] = [
       { label: 'Installer', value: '3.6 MB' },
       { label: 'Idle RAM', value: '~30 MB' },
     ],
-    primaryCta: omRelease.installerUrl
-        ? { label: 'Download for Windows', href: omRelease.installerUrl, external: true }
+    primaryCta: releaseRegistry.optimizationmaxxing.installerUrl
+        ? { label: 'Download for Windows', href: releaseRegistry.optimizationmaxxing.installerUrl, external: true }
         : { label: 'Get it. Free.', href: '#download' },
-    secondaryCta: omRelease.releasePageUrl
-        ? { label: 'Release notes', href: omRelease.releasePageUrl, external: true }
+    secondaryCta: releaseRegistry.optimizationmaxxing.releasePageUrl
+        ? { label: 'Release notes', href: releaseRegistry.optimizationmaxxing.releasePageUrl, external: true }
         : { label: "What's new", href: '/updates' },
     glyph: '⚡',
     logo: '/logos/optimizationmaxxing.svg',
@@ -284,7 +276,7 @@ export const products: Product[] = [
     name: 'Discordmaxxer',
     category: 'Communication',
     status: 'live',
-    version: dmRelease.version,
+    version: releaseRegistry.discordmaxxer.version ?? undefined,
     tagline: 'Discord. Minus 753 MB.',
     description:
       'Stock Discord uses 1,041 MB on this machine. Ours uses 288. Same servers, same friends, same pings — we just stripped the extra work that wastes RAM and can add lag while you play.',
@@ -314,8 +306,10 @@ export const products: Product[] = [
       { label: 'Native plugins', value: '10' },
       { label: 'Themes', value: '5' },
     ],
-    primaryCta: { label: 'Download for Windows', href: dmRelease.installerUrl, external: true },
-    secondaryCta: { label: 'Release notes', href: dmRelease.releasePageUrl, external: true },
+    primaryCta: { label: 'Download for Windows', href: installerUrlFor('discordmaxxer'), external: true },
+    secondaryCta: releaseRegistry.discordmaxxer.releasePageUrl
+      ? { label: 'Release notes', href: releaseRegistry.discordmaxxer.releasePageUrl, external: true }
+      : undefined,
     glyph: '◆',
     logo: '/logos/discordmaxxer.png',
     accentHex: '#5865F2',
@@ -403,7 +397,7 @@ export const products: Product[] = [
     name: 'Clipmaxxer',
     category: 'Content',
     status: 'beta',
-    version: cmRelease.version ?? undefined,
+    version: releaseRegistry.clipmaxxer.version ?? undefined,
     tagline: 'You stream. We cut your shorts.',
     description:
       "Done-for-you clip editing for streamers. We name the exact opponent, the exact weapon and the exact moment — cut it to vertical, caption it, and drop it in your drafts.",
@@ -497,7 +491,7 @@ export const products: Product[] = [
     name: 'Dropmaxxer',
     category: 'Fortnite',
     status: 'beta',
-    version: dpRelease.version ?? undefined,
+    version: releaseRegistry.dropmaxxer.version ?? undefined,
     tagline: 'Stop guessing your drop.',
     description:
       "Two routes for every POI: cut, free-fall, and re-pull fast, or glide in safe. Built for the glider-cut meta. Current-season POIs.",
@@ -523,8 +517,8 @@ export const products: Product[] = [
     ],
     // Dropmaxxer is a browser app (no installer) — launch it directly.
     primaryCta: { label: 'Launch Dropmaxxer', href: 'https://dropmaxxer.pages.dev', external: true },
-    secondaryCta: dpRelease.releasePageUrl
-        ? { label: 'Release notes', href: dpRelease.releasePageUrl, external: true }
+    secondaryCta: releaseRegistry.dropmaxxer.releasePageUrl
+        ? { label: 'Release notes', href: releaseRegistry.dropmaxxer.releasePageUrl, external: true }
         : undefined,
     glyph: '◇',
     // Placeholder mark: a tactical drop-map badge (grid + POIs + bus path to a
@@ -609,7 +603,7 @@ export const products: Product[] = [
     name: 'Aimmaxxer',
     category: 'Training',
     status: 'soon',
-    version: amRelease.version ?? undefined,
+    version: releaseRegistry.aimmaxxer.version ?? undefined,
     tagline: 'Warm up right. Per game.',
     description:
       'Best aim-routine warmups for now — plus mouse-skate guidance and the setup details that shape your feel. The real-deal Aimmaxxer V2 is currently in the works.',
@@ -625,11 +619,11 @@ export const products: Product[] = [
         body: 'Routine adapts to your DPI, sensitivity, and play style. Not the other way around.',
       },
     ],
-    primaryCta: amRelease.installerUrl
-        ? { label: 'Download for Windows', href: amRelease.installerUrl, external: true }
+    primaryCta: releaseRegistry.aimmaxxer.installerUrl
+        ? { label: 'Download for Windows', href: releaseRegistry.aimmaxxer.installerUrl, external: true }
         : { label: 'Get notified on launch', href: waitlistUrl('aimmaxxer'), external: true },
-    secondaryCta: amRelease.releasePageUrl
-        ? { label: 'Release notes', href: amRelease.releasePageUrl, external: true }
+    secondaryCta: releaseRegistry.aimmaxxer.releasePageUrl
+        ? { label: 'Release notes', href: releaseRegistry.aimmaxxer.releasePageUrl, external: true }
         : undefined,
     glyph: '◎',
     logo: '/logos/aimmaxxer.png',
@@ -672,7 +666,7 @@ export const products: Product[] = [
     name: 'Viewmaxxing',
     category: 'TV Streaming',
     status: 'beta',
-    version: vmRelease.version ?? '0.4.102',
+    version: releaseRegistry.viewmaxxing.version ?? undefined,
     tagline: 'One app. Every mood. Zero bills.',
     description:
       'The free Android TV app for VSeeBox V3, SuperBox V3, and other compatible boxes: ad-free YouTube, movies, TV, anime, and Twitch in one D-pad-first home, with search, Continue Watching, For You, captions, sub/dub, and automatic best-server selection. A new PC web version is in beta at view.maxxtopia.com — no subscription required.',
@@ -794,7 +788,7 @@ export const products: Product[] = [
     name: 'AdBlock-Maxxer',
     category: 'Browser Extension',
     status: 'live',
-    version: '1.6.21',
+    version: releaseRegistry.adblockmaxxer.version ?? undefined,
     tagline: "Way more than an ad blocker.",
     description:
       "Kills ads on YouTube, Spotify & Twitch — then keeps going: a performance mode that frees up RAM, SponsorBlock skipping, Twitch in full HD with a fullscreen chat overlay, even a built-in game. One free extension, every browser.",
@@ -943,7 +937,7 @@ export const products: Product[] = [
         },
       },
     ],
-    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.6.21.zip', external: true },
+    primaryCta: { label: 'Download for Chrome / Brave / Edge', href: installerUrlFor('adblockmaxxer'), external: true },
     secondaryCta: { label: 'On your phone? Get the Brave filter list', href: 'https://dl.maxxtopia.com/adblockmaxxer-mobile.txt', external: true },
     tertiaryCta: {
       label: 'YouTube showing ad-walls? Get the companion (.zip)',
@@ -990,7 +984,7 @@ export const products: Product[] = [
     name: 'Streammaxxing',
     category: 'Stream Alerts',
     status: 'live',
-    version: '0.1.59',
+    version: releaseRegistry.streammaxxing.version ?? undefined,
     tagline: "Everything you stream with, in one free app.",
     description:
       "Everything you need to stream, in one free app. Instant alerts, overlays, all your chat in one place, and donations read out loud — set up with OBS in one click.",
@@ -1144,7 +1138,7 @@ export const products: Product[] = [
         },
       ],
     },
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing-latest-x64-setup.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: installerUrlFor('streammaxxing'), external: true },
     secondaryCta: undefined,
     glyph: '⚡',
     logo: '/logos/streammaxxing.png?v=2',
@@ -1166,7 +1160,7 @@ export const products: Product[] = [
     name: 'Snipemaxxer',
     category: 'Fortnite + Valorant',
     status: 'beta',
-    version: '0.3.0',
+    version: releaseRegistry.snipemaxxer.version ?? undefined,
     tagline: 'Read the lobby. Review the round.',
     description:
       'Pick the game you play: Fortnite gets a tournament desk for live standing, replay scouting, Strategy Lab, and coaching; Valorant gets read-only Riot context, match reports, teammate intel, crosshairs, and alerts. One focused Windows app, two different toolkits.',
@@ -1268,7 +1262,7 @@ export const products: Product[] = [
       { label: 'Riot path', value: 'Read-only' },
       { label: 'Freshness', value: 'Labeled' },
     ],
-    primaryCta: { label: 'Download for Windows', href: 'https://dl.maxxtopia.com/snipemaxxer/Snipemaxxer-Setup-0.3.0.exe', external: true },
+    primaryCta: { label: 'Download for Windows', href: installerUrlFor('snipemaxxer'), external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',

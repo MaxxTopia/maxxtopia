@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "check:release-truth": "node scripts/check-release-truth.mjs",
+    "build": "npm run check:release-truth && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "og": "node scripts/render-og-image.mjs",

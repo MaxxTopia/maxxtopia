@@ -25,13 +25,12 @@ import SnipeMaxxerHero from '../components/SnipeMaxxerHero.astro';
 import StreammaxxingBroadcastHero from '../components/StreammaxxingBroadcastHero.astro';
 import AimDiagnosticHero from '../components/AimDiagnosticHero.astro';
 import DropmaxxerHero from '../components/DropmaxxerHero.astro';
-import dmReleaseMeta from '../data/discordmaxxer-release.json';
-import omReleaseMeta from '../data/optimizationmaxxing-release.json';
+import { releaseFor, releaseVersion } from '../data/release-registry';
 import { products } from '../data/products';
 
 // Per-LIVE-product receipts-band config — version meta + two specs +
 // open-source repo. The 4-up replaces the old hero stats aside.
-function fmtReleaseDate(iso: string | undefined): string {
+function fmtReleaseDate(iso: string | null | undefined): string {
   if (!iso) return '';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
@@ -190,8 +189,6 @@ const reconvertConfig: Record<string, {
 };
 
 const receiptsConfig: Record<string, {
-  version: string;
-  versionDate: string;
   repoUrl: string | null;
   repoLabel: string;
   linkLabel?: string;
@@ -199,8 +196,6 @@ const receiptsConfig: Record<string, {
   stats: Array<{ label: string; value: string }>;
 }> = {
   optimizationmaxxing: {
-    version: omReleaseMeta.version,
-    versionDate: fmtReleaseDate(omReleaseMeta.publishedAt),
     repoUrl: 'https://github.com/MaxxTopia/optimizationmaxxing',
     repoLabel: 'MaxxTopia/optimizationmaxxing',
     stats: [
@@ -209,8 +204,6 @@ const receiptsConfig: Record<string, {
     ],
   },
   discordmaxxer: {
-    version: dmReleaseMeta.version,
-    versionDate: fmtReleaseDate(dmReleaseMeta.publishedAt),
     repoUrl: 'https://github.com/MaxxTopia/discordmaxxer',
     repoLabel: 'MaxxTopia/discordmaxxer',
     stats: [
@@ -221,9 +214,7 @@ const receiptsConfig: Record<string, {
   // Closed-source live products: no public repo, so the 4th cell becomes a
   // download CTA instead of a repo link.
   adblockmaxxer: {
-    version: 'v1.6.6',
-    versionDate: 'Aug 2026',
-    repoUrl: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.6.6.zip',
+    repoUrl: null,
     repoLabel: 'Chrome · Brave · Edge · Firefox',
     linkLabel: 'Download',
     linkSub: 'Free · MV3',
@@ -233,10 +224,7 @@ const receiptsConfig: Record<string, {
     ],
   },
   streammaxxing: {
-    // Keep in sync with the streammaxxing `version` in products.ts (shown in the hero pill).
-    version: '0.1.58',
-    versionDate: 'Aug 2026',
-    repoUrl: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing-latest-x64-setup.exe',
+    repoUrl: null,
     repoLabel: 'Windows',
     linkLabel: 'Download',
     linkSub: 'Free installer',
@@ -274,6 +262,7 @@ const { product } = Astro.props;
 if (!product) {
   return Astro.redirect('/404');
 }
+const productRelease = releaseFor(product.slug);
 
 const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
 const isLive = product.status === 'live';
@@ -379,6 +368,9 @@ const hasZones = Array.isArray(product.zones) && product.zones.length > 0;
 // the hero stats aside, since the band carries the same numbers). Covers the
 // OM/DM bespoke pages plus the closed-source live products (ext, stream).
 const hasReceiptsBand = isLive && !!receiptsConfig[product.slug];
+const receiptVersion = releaseVersion(productRelease);
+const receiptVersionDate = fmtReleaseDate(productRelease?.publishedAt);
+const receiptLink = receiptsConfig[product.slug]?.repoUrl ?? productRelease?.installerUrl ?? null;
 
 // Per-product feature-section header. Each lands on the product's own
 // register — generic "What's inside" is a fallback for products that
@@ -460,7 +452,7 @@ const ogImage = `/og/${product.slug}.png`;
 const firstVideo = product.demoVideo
   ? (Array.isArray(product.demoVideo) ? product.demoVideo[0] : product.demoVideo)
   : undefined;
-const videoUploadDate = isOM ? omReleaseMeta.publishedAt : isDM ? dmReleaseMeta.publishedAt : undefined;
+const videoUploadDate = productRelease?.publishedAt ?? undefined;
 const videoSchema = firstVideo
   ? {
       '@context': 'https://schema.org',
@@ -799,13 +791,9 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
           Replaces the hero stats aside that was dropped in Phase 1. */}
       {hasReceiptsBand && receiptsConfig[product.slug] && (
         <ReceiptsBand
-          version={['streammaxxing', 'adblockmaxxer'].includes(product.slug) && product.version
-            ? `v${product.version}`
-            : receiptsConfig[product.slug].version}
-          versionDate={receiptsConfig[product.slug].versionDate}
-          repoUrl={product.slug === 'adblockmaxxer'
-            ? product.primaryCta.href
-            : receiptsConfig[product.slug].repoUrl}
+          version={receiptVersion}
+          versionDate={receiptVersionDate}
+          repoUrl={receiptLink}
           repoLabel={receiptsConfig[product.slug].repoLabel}
           linkLabel={receiptsConfig[product.slug].linkLabel}
           linkSub={receiptsConfig[product.slug].linkSub}
@@ -859,13 +847,9 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
   {(isExt || isDM || isOM || isStream) && hasReceiptsBand && receiptsConfig[product.slug] && (
     <div class="mx-auto max-w-7xl px-5 sm:px-8 pt-14">
       <ReceiptsBand
-        version={['streammaxxing', 'adblockmaxxer'].includes(product.slug) && product.version
-          ? `v${product.version}`
-          : receiptsConfig[product.slug].version}
-        versionDate={receiptsConfig[product.slug].versionDate}
-        repoUrl={product.slug === 'adblockmaxxer'
-          ? product.primaryCta.href
-          : receiptsConfig[product.slug].repoUrl}
+        version={receiptVersion}
+        versionDate={receiptVersionDate}
+        repoUrl={receiptLink}
         repoLabel={receiptsConfig[product.slug].repoLabel}
         linkLabel={receiptsConfig[product.slug].linkLabel}
         linkSub={receiptsConfig[product.slug].linkSub}
