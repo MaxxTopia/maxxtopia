@@ -52,7 +52,7 @@ const liveSorted = [...liveProducts].sort(
         </h2>
         <p class="mt-4 max-w-xl text-[15.5px] text-[var(--color-text-mid)] leading-relaxed">
           Each product solves one problem the way a pro would solve it themselves.
-          No bloat. No telemetry.
+          Explore the tools and find the one that fits your setup.
         </p>
       </div>
 
@@ -258,49 +258,6 @@ const liveSorted = [...liveProducts].sort(
     })();
   </script>
 
-  <!-- Principles -->
-  <section id="principles" class="relative">
-    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-28 border-t border-[var(--color-line)]">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
-        <div class="md:col-span-5 reveal-on-scroll">
-          <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-magenta)] font-mono">
-            The principle
-          </p>
-          <h2 class="mt-3 text-[36px] sm:text-[48px] font-semibold tracking-[-0.025em] leading-[1.04]">
-            <span class="gradient-text">Built like the tools we</span><br/>
-            <span class="serif-accent gradient-suite">wished existed.</span>
-          </h2>
-          <p class="mt-6 text-[15.5px] text-[var(--color-text-mid)] leading-relaxed">
-            Most gaming tools are someone trying to monetize a Discord script.
-            We started over. Native binaries. Cited sources. Snapshot-backed
-            actions. Ship-quality typography. Software you'd be proud to ship at
-            a multi-billion-dollar company — for the players who care about
-            the millisecond.
-          </p>
-        </div>
-
-        <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]">
-          {[
-            { n: '01', t: 'Native, not Electron', b: 'Rust + Tauri for the tuner, an optimized fork for the Discord client, Manifest V3 for the ad blocker. Megabytes, not gigabytes.' },
-            { n: '02', t: 'Sourced, not guessed', b: 'Every tweak cites Microsoft Learn, vendor docs, or a verified community source. Placebos rejected on principle.' },
-            { n: '03', t: 'Reversible by design', b: 'Snapshot-backed apply. Undo any tweak, anytime. One-click restore-point.' },
-            { n: '04', t: 'No telemetry. Ever.',  b: 'Local-only. No analytics. No remote calls. Software that respects you.' },
-          ].map((card, i) => (
-            <div class={`reveal-on-scroll reveal-delay-${i + 1} bg-[var(--color-bg-card)] p-7 group hover:bg-[var(--color-bg-card-hover)] transition-colors`}>
-              <div class="text-[var(--color-magenta)] text-[18px] font-mono mb-3 group-hover:text-[var(--color-cyan)] transition-colors">
-                {card.n}
-              </div>
-              <h3 class="text-[17px] font-semibold tracking-tight">{card.t}</h3>
-              <p class="mt-2.5 text-[14px] text-[var(--color-muted)] leading-relaxed">
-                {card.b}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- CTA -->
   <section class="relative">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-28">
@@ -315,7 +272,7 @@ const liveSorted = [...liveProducts].sort(
             <span class="serif-accent gradient-suite">The rest will follow.</span>
           </h2>
           <p class="mt-6 text-[16px] text-[var(--color-text-mid)] max-w-md mx-auto leading-relaxed">
-            {liveProducts.length} apps live. All free, all native — no account, no subscription. Start with the 3.6 MB tuner; the rest of the suite is one click away.
+            {liveProducts.length} apps live. Start with the free Windows tuner, then explore the desktop tools, browser extensions, and web apps built for your setup.
           </p>
           <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
             <a href="/optimizationmaxxing" class="btn-primary">

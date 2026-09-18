@@ -3,69 +3,571 @@ import Logo from './Logo.astro';
 import Aurora from './Aurora.astro';
 import { products } from '../data/products';
 const year = new Date().getFullYear();
+const liveProducts = products.filter((product) => product.status === 'live');
+const labProducts = products.filter((product) => product.status !== 'live');
 ---
 
-<footer class="relative border-t border-[var(--color-line)] mt-32 overflow-hidden">
+<footer class="mx-footer relative mt-24 overflow-hidden">
   <Aurora intensity="low" />
-  <div class="relative mx-auto max-w-7xl px-5 sm:px-8 py-20">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
-      <div class="col-span-2">
+
+  <div class="relative mx-auto max-w-7xl px-5 sm:px-8 py-14">
+    <div class="mx-footer__top">
+      <div class="mx-footer__brand">
         <Logo />
-        <p class="mt-5 max-w-xs text-[14.5px] text-[var(--color-muted)] leading-relaxed">
+        <p class="mx-footer__brand-copy">
           Native gaming utilities engineered to push your PC, your game, and your content to maximum.
         </p>
-        <p class="slogan mt-6">made by diggy</p>
+        <p class="slogan mt-4">made by diggy</p>
       </div>
 
-      <div>
-        <h4 class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono mb-4">Apps</h4>
-        <ul class="space-y-2.5 text-[14px]">
-          {products.slice(0, 4).map((p) => (
-            <li>
-              <a href={`/${p.slug}`} class="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
-                {p.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="text-[12px] uppercase tracking-[0.08em] text-[var(--color-subtle)] font-mono mb-4">More</h4>
-        <ul class="space-y-2.5 text-[14px]">
-          {products.slice(4).map((p) => (
-            <li>
-              <a href={`/${p.slug}`} class="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
-                {p.name}
-              </a>
-            </li>
-          ))}
-          <li class="pt-2 border-t border-[var(--color-line)] mt-3">
-            <a href="/why" class="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
-              Why
-            </a>
-          </li>
-          <li>
-            <a href="/play" class="text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
-              Arcade
-            </a>
-          </li>
-        </ul>
-      </div>
+      <section class="mx-footer__coming" aria-labelledby="footer-coming-soon">
+        <div class="mx-footer__coming-head">
+          <div>
+            <p class="mx-footer__eyebrow">Next on the radar</p>
+            <h2 id="footer-coming-soon">Coming soon<span aria-hidden="true">.</span></h2>
+          </div>
+        </div>
+        <div class="mx-footer__coming-grid">
+          <a
+            href="/montagemaxxer/"
+            class="mx-footer__feature"
+            style="--mx-feature-accent: #e25bff;"
+          >
+            <span class="mx-footer__feature-index" aria-hidden="true">01</span>
+            <span class="mx-footer__feature-copy">
+              <strong>MontageMaxxer</strong>
+              <small>Build the cut you hear.</small>
+            </span>
+            <span class="mx-footer__feature-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a
+            href="https://leaderboard.maxxtopia.com/standings/"
+            class="mx-footer__feature"
+            style="--mx-feature-accent: #00d4ff;"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="mx-footer__feature-index" aria-hidden="true">02</span>
+            <span class="mx-footer__feature-copy">
+              <strong>Tournament standings</strong>
+              <small>Live, replay-aware leaderboard.</small>
+            </span>
+            <span class="mx-footer__feature-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
     </div>
 
-    <div class="mt-16 mb-44 sm:mb-0 pt-6 border-t border-[var(--color-line)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-      <p class="text-[12.5px] text-[var(--color-subtle)] font-mono">
-        © {year} Maxxtopia · Built for gamers who measure
-      </p>
-      <nav aria-label="Legal" class="flex items-center gap-2 text-[12.5px] text-[var(--color-subtle)] font-mono">
-        <a href="/legal/privacy" class="hover:text-[var(--color-text)] transition-colors">Privacy</a>
+    <div class="mx-footer__links">
+      <section class="mx-footer__link-group" aria-labelledby="footer-apps">
+        <div class="mx-footer__link-heading">
+          <span class="mx-footer__heading-index" aria-hidden="true">01</span>
+          <h2 id="footer-apps">Apps</h2>
+          <span class="mx-footer__heading-line" aria-hidden="true"></span>
+          <span class="mx-footer__heading-label">LIVE TOOLING</span>
+        </div>
+        <div class="mx-footer__link-list">
+          {liveProducts.map((p) => (
+            <a
+              href={`/${p.slug}`}
+              class="mx-footer__link"
+              style={`--mx-link-accent: ${p.accentHex};`}
+            >
+              <span class="mx-footer__link-mark" aria-hidden="true"></span>
+              <span>{p.name}</span>
+              <span class="mx-footer__link-arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="mx-footer__link-group" aria-labelledby="footer-more">
+        <div class="mx-footer__link-heading">
+          <span class="mx-footer__heading-index" aria-hidden="true">02</span>
+          <h2 id="footer-more">More</h2>
+          <span class="mx-footer__heading-line" aria-hidden="true"></span>
+          <span class="mx-footer__heading-label">IN THE LAB + EXTRAS</span>
+        </div>
+        <div class="mx-footer__link-list">
+          {labProducts.map((p) => (
+            <a
+              href={`/${p.slug}`}
+              class="mx-footer__link"
+              style={`--mx-link-accent: ${p.accentHex};`}
+            >
+              <span class="mx-footer__link-mark" aria-hidden="true"></span>
+              <span>{p.name}</span>
+              <span class="mx-footer__link-arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+          <a href="/why" class="mx-footer__link mx-footer__link--utility">
+            <span class="mx-footer__link-mark" aria-hidden="true"></span>
+            <span>Why Maxxtopia</span>
+            <span class="mx-footer__link-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a href="/play" class="mx-footer__link mx-footer__link--utility">
+            <span class="mx-footer__link-mark" aria-hidden="true"></span>
+            <span>Arcade</span>
+            <span class="mx-footer__link-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <div class="mx-footer__meta mt-10 mb-28 sm:mb-0">
+      <p>© {year} Maxxtopia · Built for gamers who measure</p>
+      <nav aria-label="Legal">
+        <a href="/legal/privacy">Privacy</a>
         <span aria-hidden="true">·</span>
-        <a href="/legal/terms" class="hover:text-[var(--color-text)] transition-colors">Terms</a>
+        <a href="/legal/terms">Terms</a>
       </nav>
-      <p class="text-[12.5px] text-[var(--color-subtle)] font-mono">
-        v0.1.0 · the shell
-      </p>
+      <p>v0.1.0 · the shell</p>
     </div>
   </div>
 </footer>
+
+<style>
+  .mx-footer {
+    --mx-footer-ink: #f8f6ff;
+    --mx-footer-muted: #aaa2c4;
+    --mx-footer-line: rgba(174, 153, 255, 0.18);
+    border-top: 1px solid rgba(226, 91, 255, 0.28);
+    background:
+      radial-gradient(circle at 12% 0%, rgba(226, 91, 255, 0.14), transparent 28rem),
+      radial-gradient(circle at 84% 22%, rgba(0, 212, 255, 0.09), transparent 32rem),
+      linear-gradient(145deg, #090511 0%, #0c071a 52%, #08060f 100%);
+  }
+
+  .mx-footer::before {
+    position: absolute;
+    inset: 0;
+    content: '';
+    pointer-events: none;
+    opacity: 0.34;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(to bottom, black, transparent 84%);
+  }
+
+  .mx-footer::after {
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    content: '';
+    background: linear-gradient(90deg, transparent, var(--color-cyan), var(--color-magenta), transparent);
+    box-shadow: 0 0 22px rgba(0, 212, 255, 0.46), 0 0 38px rgba(226, 91, 255, 0.25);
+  }
+
+  .mx-footer__top {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.65fr);
+    gap: clamp(1.5rem, 4vw, 4.25rem);
+    align-items: stretch;
+  }
+
+  .mx-footer__brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.75rem 0;
+  }
+
+  .mx-footer__brand-copy {
+    max-width: 21rem;
+    margin-top: 1rem;
+    color: var(--mx-footer-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .mx-footer__coming {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(1.05rem, 2vw, 1.45rem);
+    border: 1px solid rgba(0, 212, 255, 0.28);
+    border-radius: 1.1rem;
+    background:
+      radial-gradient(circle at 92% 0%, rgba(0, 212, 255, 0.12), transparent 18rem),
+      linear-gradient(135deg, rgba(21, 13, 45, 0.95), rgba(12, 10, 28, 0.86));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 18px 52px rgba(0, 0, 0, 0.2);
+  }
+
+  .mx-footer__coming::before {
+    position: absolute;
+    top: 0;
+    left: 1.4rem;
+    width: 7rem;
+    height: 2px;
+    content: '';
+    background: linear-gradient(90deg, var(--color-cyan), transparent);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+  }
+
+  .mx-footer__coming-head,
+  .mx-footer__link-heading {
+    display: flex;
+    align-items: center;
+  }
+
+  .mx-footer__coming-head {
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .mx-footer__eyebrow,
+  .mx-footer__coming-count,
+  .mx-footer__heading-label {
+    color: var(--color-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .mx-footer__coming h2 {
+    margin-top: 0.35rem;
+    color: var(--mx-footer-ink);
+    font-family: var(--font-display);
+    font-size: clamp(1.65rem, 3vw, 2.35rem);
+    letter-spacing: 0.01em;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  .mx-footer__coming h2 span {
+    color: var(--color-magenta);
+    text-shadow: 0 0 14px rgba(226, 91, 255, 0.75);
+  }
+
+  .mx-footer__coming-count {
+    color: var(--color-subtle);
+    white-space: nowrap;
+  }
+
+  .mx-footer__coming-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .mx-footer__feature {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.9rem;
+    min-height: 4.65rem;
+    overflow: hidden;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--mx-feature-accent) 35%, var(--color-line));
+    border-radius: 0.9rem;
+    background:
+      radial-gradient(circle at 10% 50%, color-mix(in srgb, var(--mx-feature-accent) 15%, transparent), transparent 62%),
+      rgba(9, 7, 22, 0.72);
+    color: var(--mx-footer-ink);
+    text-decoration: none;
+    transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+  }
+
+  .mx-footer__feature::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    content: '';
+    background: var(--mx-feature-accent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--mx-feature-accent) 80%, transparent);
+  }
+
+  .mx-footer__feature::after {
+    position: absolute;
+    top: -4rem;
+    right: -2rem;
+    width: 9rem;
+    height: 9rem;
+    content: '';
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--mx-feature-accent) 13%, transparent);
+    filter: blur(24px);
+    pointer-events: none;
+  }
+
+  .mx-footer__feature:hover,
+  .mx-footer__feature:focus-visible {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--mx-feature-accent) 72%, white 5%);
+    background:
+      radial-gradient(circle at 10% 50%, color-mix(in srgb, var(--mx-feature-accent) 22%, transparent), transparent 68%),
+      rgba(16, 11, 35, 0.9);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--mx-feature-accent) 22%, transparent), 0 12px 30px color-mix(in srgb, var(--mx-feature-accent) 15%, transparent);
+  }
+
+  .mx-footer__feature-index {
+    position: relative;
+    z-index: 1;
+    align-self: start;
+    color: color-mix(in srgb, var(--mx-feature-accent) 78%, white 6%);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .mx-footer__feature-copy,
+  .mx-footer__feature-arrow {
+    position: relative;
+    z-index: 1;
+  }
+
+  .mx-footer__feature-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .mx-footer__feature-copy strong {
+    overflow: hidden;
+    color: color-mix(in srgb, var(--mx-feature-accent) 84%, white 16%);
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 0 18px color-mix(in srgb, var(--mx-feature-accent) 30%, transparent);
+  }
+
+  .mx-footer__feature-copy small {
+    overflow: hidden;
+    color: var(--mx-footer-muted);
+    font-size: 0.68rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mx-footer__feature-arrow,
+  .mx-footer__link-arrow {
+    color: color-mix(in srgb, var(--mx-feature-accent, var(--color-cyan)) 72%, white 10%);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    transition: transform 220ms ease;
+  }
+
+  .mx-footer__feature:hover .mx-footer__feature-arrow,
+  .mx-footer__feature:focus-visible .mx-footer__feature-arrow,
+  .mx-footer__link:hover .mx-footer__link-arrow,
+  .mx-footer__link:focus-visible .mx-footer__link-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .mx-footer__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 4vw, 4.5rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--mx-footer-line);
+  }
+
+  .mx-footer__link-heading {
+    gap: 0.7rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .mx-footer__heading-index {
+    color: var(--color-magenta);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .mx-footer__link-group:nth-child(2) .mx-footer__heading-index {
+    color: var(--color-cyan);
+  }
+
+  .mx-footer__link-heading h2 {
+    color: var(--mx-footer-ink);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .mx-footer__heading-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-line-strong), transparent);
+  }
+
+  .mx-footer__heading-label {
+    color: var(--color-subtle);
+    font-size: 0.52rem;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .mx-footer__link-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .mx-footer__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+    min-height: 2.45rem;
+    padding: 0.52rem 0.7rem;
+    overflow: hidden;
+    border: 1px solid rgba(174, 153, 255, 0.14);
+    border-radius: 0.65rem;
+    background: rgba(16, 10, 35, 0.52);
+    color: var(--mx-footer-muted);
+    font-size: 0.74rem;
+    text-decoration: none;
+    transition: transform 200ms ease, border-color 200ms ease, color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+  }
+
+  .mx-footer__link::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background: linear-gradient(90deg, color-mix(in srgb, var(--mx-link-accent, var(--color-cyan)) 8%, transparent), transparent 70%);
+    opacity: 0;
+    transition: opacity 200ms ease;
+    pointer-events: none;
+  }
+
+  .mx-footer__link:hover,
+  .mx-footer__link:focus-visible {
+    transform: translateX(3px);
+    border-color: color-mix(in srgb, var(--mx-link-accent, var(--color-cyan)) 54%, var(--color-line));
+    background: rgba(22, 14, 46, 0.82);
+    color: var(--mx-footer-ink);
+    box-shadow: 0 7px 22px color-mix(in srgb, var(--mx-link-accent, var(--color-cyan)) 10%, transparent);
+  }
+
+  .mx-footer__link:hover::after,
+  .mx-footer__link:focus-visible::after {
+    opacity: 1;
+  }
+
+  .mx-footer__link > span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .mx-footer__link-mark {
+    flex: 0 0 auto;
+    width: 0.42rem;
+    height: 0.42rem;
+    border: 1px solid color-mix(in srgb, var(--mx-link-accent, var(--color-cyan)) 82%, white 10%);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--mx-link-accent, var(--color-cyan)) 64%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--mx-link-accent, var(--color-cyan)) 55%, transparent);
+  }
+
+  .mx-footer__link > span:nth-child(2) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mx-footer__link-arrow {
+    margin-left: auto;
+    color: color-mix(in srgb, var(--mx-link-accent, var(--color-cyan)) 75%, white 8%);
+    font-size: 0.85rem;
+  }
+
+  .mx-footer__link--utility {
+    --mx-link-accent: var(--color-magenta);
+  }
+
+  .mx-footer__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--mx-footer-line);
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .mx-footer__meta nav {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .mx-footer__meta a {
+    transition: color 180ms ease;
+  }
+
+  .mx-footer__meta a:hover,
+  .mx-footer__meta a:focus-visible {
+    color: var(--mx-footer-ink);
+  }
+
+  @media (max-width: 900px) {
+    .mx-footer__top {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+      gap: 2rem;
+    }
+
+    .mx-footer__coming-grid,
+    .mx-footer__link-list {
+      grid-template-columns: 1fr;
+    }
+
+    .mx-footer__heading-label {
+      display: none;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .mx-footer__top,
+    .mx-footer__links {
+      grid-template-columns: 1fr;
+    }
+
+    .mx-footer__brand {
+      padding-bottom: 0;
+    }
+
+    .mx-footer__coming-count {
+      align-self: flex-start;
+      padding-top: 0.15rem;
+    }
+
+    .mx-footer__links {
+      gap: 2.8rem;
+    }
+
+    .mx-footer__meta {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mx-footer__feature,
+    .mx-footer__link,
+    .mx-footer__feature-arrow,
+    .mx-footer__link-arrow {
+      transition: none;
+    }
+  }
+</style>
