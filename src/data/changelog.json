@@ -12,6 +12,76 @@
     ]
   },
   {
+    "date": "2026-09-17",
+    "product": "Maxxtopia",
+    "productSlug": null,
+    "version": "Release truth + live standings",
+    "title": "Maxxtopia makes the suite easier to verify.",
+    "body": "The suite hub now keeps release truth, structured updates, clearer tournament standings, and the main product paths in one live surface.",
+    "items": [
+      "Adds a structured updates feed so the page and release-aware clients share one history.",
+      "Keeps product release pointers centralized and cache-verifiable.",
+      "Makes live tournament standings and context easier to scan.",
+      "Tightens the footer, preview assets, and Discordmaxxer VIP purchase path."
+    ]
+  },
+  {
+    "date": "2026-09-14",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Exact trim + rapid handoff",
+    "title": "Playlistmaxxing keeps every edit inside its exact bounds.",
+    "body": "The player now proves its saved start before audio can leak and stops at the saved end, while rapid next and previous handoffs recover without stale callbacks.",
+    "items": [
+      "Holds YouTube, SoundCloud, and Spotify silent until real progress and the saved start are confirmed.",
+      "Stops at the exact saved end before advancing to the next track.",
+      "Coalesces rapid next and previous events and clears stale recovery timers.",
+      "Keeps mobile recovery bounded instead of falling back to full-song playback."
+    ]
+  },
+  {
+    "date": "2026-09-08",
+    "product": "Aimmaxxer",
+    "productSlug": "aimmaxxer",
+    "version": "v0.8.21",
+    "title": "Aimmaxxer makes long tuner and model pages easier to use.",
+    "body": "The public v0.8.21 bundle improves navigation, model-picker clarity, and live box-area guidance while the updater points at the current public build.",
+    "items": [
+      "Adds page-aware wheel and keyboard scrolling plus a model-list horizontal scrollbar.",
+      "Makes Installed, Uninstalled, and Untested model states explicit.",
+      "Shows readable model metadata and separate Min Floor and Max Ceiling guidance.",
+      "Refreshes FOV overlays after color changes and carries Rainbow loadout into the header."
+    ]
+  },
+  {
+    "date": "2026-09-07",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "Provider drift + playback audit",
+    "title": "Viewmaxxing keeps provider drift from becoming fake playback.",
+    "body": "The playback audit now checks route identity, duration, language, and native media evidence while approved anime fallbacks stay bounded and resumable.",
+    "items": [
+      "Audits movies, TV, anime, and live discovery through native media checks.",
+      "Allows only signed approved anime CDN hosts and rejects ambiguous language.",
+      "Keeps provider outages bounded with resumable audits and honest blocked states.",
+      "Proves live browser playback without claiming every third-party route is healthy."
+    ]
+  },
+  {
+    "date": "2026-09-06",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Mobile manual-start recovery",
+    "title": "Playlistmaxxing gives stuck mobile starts a bounded recovery.",
+    "body": "Touch starts now retry forward, rebuild the provider handoff, or stop truthfully instead of leaving a silent 0:00 track selected.",
+    "items": [
+      "Adds bounded retry, rebuild, and skip behavior for touch starts.",
+      "Keeps desktop retry behavior deliberate instead of changing its contract.",
+      "Stops after three consecutive failures rather than looping forever.",
+      "Keeps the selected track and recovery state honest while the queue moves on."
+    ]
+  },
+  {
     "date": "2026-09-05",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
