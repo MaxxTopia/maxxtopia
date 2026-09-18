@@ -44,14 +44,8 @@
     "product": "Aimmaxxer",
     "productSlug": "aimmaxxer",
     "version": "v0.8.21",
-    "title": "Aimmaxxer makes long tuner and model pages easier to use.",
-    "body": "The public v0.8.21 bundle improves navigation, model-picker clarity, and live box-area guidance while the updater points at the current public build.",
-    "items": [
-      "Adds page-aware wheel and keyboard scrolling plus a model-list horizontal scrollbar.",
-      "Makes Installed, Uninstalled, and Untested model states explicit.",
-      "Shows readable model metadata and separate Min Floor and Max Ceiling guidance.",
-      "Refreshes FOV overlays after color changes and carries Rainbow loadout into the header."
-    ]
+    "title": "Aimmaxxer keeps getting sharper in the lab.",
+    "body": "Private testing continues behind the scenes. We’ll share the next public step when it’s ready."
   },
   {
     "date": "2026-09-07",
