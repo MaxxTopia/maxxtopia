@@ -76,6 +76,19 @@
     ]
   },
   {
+    "date": "2026-09-19",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.22",
+    "title": "AdBlock-Maxxer keeps YouTube Reclaim audio in English.",
+    "body": "YouTube Reclaim format selection now prioritizes English and original audio tracks over auto-dubbed foreign translations. Videos with multi-language AI dubs (such as Japanese) no longer replace the original English audio track during Reclaim playback.",
+    "items": [
+      "Ranks English original and default audio tracks over auto-dubbed foreign translations regardless of bitrate.",
+      "Preserves original and default audio tracks when no English track is present.",
+      "Updates companion v0.4.8 and keeps one Chromium build for Chrome, Brave, and Edge."
+    ]
+  },
+  {
     "date": "2026-09-05",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
