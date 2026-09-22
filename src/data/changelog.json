@@ -24,6 +24,47 @@
     ]
   },
   {
+    "date": "2026-09-21",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "Focus + Workspace player",
+    "title": "Viewmaxxing lets you choose how to watch.",
+    "body": "Focus keeps the cinema-style player clean; Workspace adds an episode queue, related titles, and a wider desktop layout without leaving playback.",
+    "items": [
+      "Switch between Focus and Workspace from the player header.",
+      "Keeps episode selection and watched state inside the queue.",
+      "Opens related titles from the same player surface.",
+      "Remembers the layout choice on this browser."
+    ]
+  },
+  {
+    "date": "2026-09-20",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.60",
+    "title": "Streammaxxing makes the next game easier to stage.",
+    "body": "The OBS setup pass keeps break scenes, tournament tracking, chat, and now-playing previews aligned while the app stays open.",
+    "items": [
+      "Adds a Waiting for Next Game scene that updates the shared overlay without refreshing OBS.",
+      "Keeps tournament score and cutoff refresh tied to the selected Epic event while Streammaxxing is open.",
+      "Polishes vinyl previews and responsive chat sizing before you go live."
+    ]
+  },
+  {
+    "date": "2026-09-19",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Mobile autoplay + Discover resilience",
+    "title": "Playlistmaxxing gives slow mobile starts room to recover.",
+    "body": "Playback now gives providers time to start, ignores background timer noise, and recovers stalled tracks without confusing a real start for a dead one.",
+    "items": [
+      "Adds a short foreground grace when mobile browsers resume.",
+      "Separates never-started tracks from tracks that started and later stalled.",
+      "Adds bounded recovery for SoundCloud, YouTube, and Spotify starts.",
+      "Makes Discover retries and shared-IP rate-limit guidance explicit."
+    ]
+  },
+  {
     "date": "2026-09-18",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
