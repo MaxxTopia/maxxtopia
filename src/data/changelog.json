@@ -3,48 +3,28 @@
     "date": "2026-09-23",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
-    "version": "v0.7.66",
-    "title": "Discordmaxxer v0.7.66",
-    "body": "Maintenance release — under-the-hood fixes and improvements."
-  },
-  {
-    "date": "2026-09-23",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.7.65",
-    "title": "Discordmaxxer v0.7.65",
-    "body": "Maintenance release — under-the-hood fixes and improvements."
-  },
-  {
-    "date": "2026-09-22",
-    "product": "Discordmaxxer",
-    "productSlug": "discordmaxxer",
-    "version": "v0.7.64",
-    "title": "Discordmaxxer v0.7.64",
-    "body": "Maintenance release — under-the-hood fixes and improvements."
-  },
-  {
-    "date": "2026-09-21",
-    "product": "Optimizationmaxxing",
-    "productSlug": "optimizationmaxxing",
-    "version": "v0.4.7",
-    "title": "Optimizationmaxxing v0.4.7",
+    "version": "v0.7.64–v0.7.66",
+    "title": "Discordmaxxer tightens sharing, profiles, and tiers.",
+    "body": "Three public releases improve Windows screenshare capture, profile flair consistency, and tier controls across the client.",
     "items": [
-      "Verified transactional tuning captures pre-state, reads eligible actions back, and attempts reverse-order rollback with per-action receipts.",
-      "Rig-aware closed-loop evidence uses exact board/CPU/SPD guidance and named per-game PresentMon capture contracts instead of treating proxies as Fortnite proof.",
-      "NVIDIA profiles carry review/hash/rollback metadata, exported profiles can be diffed read-only, and driver guidance keeps a schema-checked last-known-good response offline."
+      "Covered-window screenshare now uses Windows Graphics Capture with clearer source and frame-rate diagnostics while protecting Chrome occlusion state.",
+      "Founder and higher numeric tiers normalize to MAXXER++ with lower-tier benefits, while Tournament Mode settings reach the native bridge.",
+      "Profile flair now follows the published roster consistently; Save stays explicit and merge-only, with safer cosmetic profile-look sharing and local media previews."
     ]
   },
   {
     "date": "2026-09-21",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
-    "version": "v0.4.6",
-    "title": "Optimizationmaxxing v0.4.6",
+    "version": "v0.4.6–v0.4.7",
+    "title": "Optimizationmaxxing tightens evidence-backed tuning.",
+    "body": "The latest tuning pass connects measured hardware guidance, transactional rollback, and rig-aware proof instead of treating proxies as performance results.",
     "items": [
       "Game CPU-set presets include a measured Intel P-core Fortnite A/B option and saved per-game auto-pin rules; restoring Windows defaults stays available.",
       "Upgrade Advisor supports game-specific comparisons, while Grind and Hardware use dated, linked result and price snapshots.",
-      "NVIDIA profile, SCEWIN, driver, and ONU guidance now give clearer setup steps and explicitly state what they do not prove."
+      "Verified transactional tuning captures pre-state, reads eligible actions back, and attempts reverse-order rollback with per-action receipts.",
+      "Rig-aware closed-loop evidence uses exact board/CPU/SPD guidance and named per-game PresentMon capture contracts instead of treating proxies as Fortnite proof.",
+      "NVIDIA profiles carry review/hash/rollback metadata, exported profiles can be diffed read-only, and driver guidance keeps a schema-checked last-known-good response offline."
     ]
   },
   {
@@ -75,16 +55,18 @@
     ]
   },
   {
-    "date": "2026-09-19",
+    "date": "2026-09-22",
     "product": "Playlistmaxxing",
     "productSlug": "playlistmaxxing",
-    "version": "Mobile autoplay + Discover resilience",
-    "title": "Playlistmaxxing gives slow mobile starts room to recover.",
-    "body": "Playback now gives providers time to start, ignores background timer noise, and recovers stalled tracks without confusing a real start for a dead one.",
+    "version": "Mobile playback resilience",
+    "title": "Playlistmaxxing keeps mobile playback and handoffs honest.",
+    "body": "Providers now get a bounded chance to start, while popout and lock-screen state stay tied to the current track and proven position.",
     "items": [
       "Adds a short foreground grace when mobile browsers resume.",
       "Separates never-started tracks from tracks that started and later stalled.",
       "Adds bounded recovery for SoundCloud, YouTube, and Spotify starts.",
+      "Prepares the selected provider from the popout gesture and walks remaining eligible tracks without retrying the same failure.",
+      "Keeps Media Session and lock-screen controls paused until the current provider proves progress, then repairs stale identity before resuming.",
       "Makes Discover retries and shared-IP rate-limit guidance explicit."
     ]
   },
