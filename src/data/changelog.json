@@ -3,6 +3,18 @@
     "date": "2026-09-24",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
+    "version": "v0.4.10",
+    "title": "Optimizationmaxxing v0.4.10",
+    "items": [
+      "Verified transactional tuning captures pre-state, reads eligible actions back, and attempts reverse-order rollback with per-action receipts.",
+      "Rig-aware closed-loop evidence uses exact board/CPU/SPD guidance and named per-game PresentMon capture contracts instead of treating proxies as Fortnite proof.",
+      "NVIDIA profiles carry review/hash/rollback metadata, exported profiles can be diffed read-only, and driver guidance keeps a schema-checked last-known-good response offline."
+    ]
+  },
+  {
+    "date": "2026-09-24",
+    "product": "Optimizationmaxxing",
+    "productSlug": "optimizationmaxxing",
     "version": "v0.4.9",
     "title": "Optimizationmaxxing v0.4.9",
     "items": [
