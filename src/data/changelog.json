@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-24",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.70",
+    "title": "Discordmaxxer v0.7.70",
+    "body": "Maintenance release — under-the-hood fixes and improvements."
+  },
+  {
+    "date": "2026-09-24",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
     "version": "v0.4.12",
