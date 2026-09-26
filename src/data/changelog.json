@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-09-26",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.72",
+    "title": "Discordmaxxer v0.7.72",
+    "body": "Maintenance release — under-the-hood fixes and improvements."
+  },
+  {
+    "date": "2026-09-26",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
     "version": "v1.6.23",
