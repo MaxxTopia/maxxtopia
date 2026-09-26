@@ -8,6 +8,7 @@
     "start": "astro dev",
     "check:release-truth": "node scripts/check-release-truth.mjs",
     "check:sitemap": "node scripts/check-sitemap-routes.mjs",
+    "test:public-api-cache": "node scripts/test-public-api-cache.mjs",
     "build": "npm run check:release-truth && npm run check:sitemap && astro build",
     "preview": "astro preview",
     "astro": "astro",
