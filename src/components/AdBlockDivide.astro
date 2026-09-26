@@ -89,6 +89,12 @@ const shield = product.logo ?? '/logos/adblockmaxxer.png';
         )}
       </div>
 
+      {product.secondaryCta?.note && (
+        <p class="abx-companion-note">
+          {product.secondaryCta.note}
+        </p>
+      )}
+
       <div class="abx-feed" aria-hidden="true">
         <div class="abx-feed__scr">
           <video class="abx-feed__vid" src={clip} autoplay muted loop playsinline preload="metadata"></video>
@@ -230,6 +236,7 @@ const shield = product.logo ?? '/logos/adblockmaxxer.png';
   }
   .adblock-divide .abx-sub { position:relative; z-index:2; margin-top:16px; font-size:15.5px; line-height:1.55; color:var(--abx-text-mid); max-width:30em; }
   .adblock-divide .abx-cta-row { position:relative; z-index:2; margin-top:26px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .adblock-divide .abx-companion-note { position:relative; z-index:2; margin-top:12px; max-width:30em; font-size:13px; line-height:1.5; color:var(--abx-text-mid); }
 
   .adblock-divide .abx-btn {
     position:relative; overflow:hidden; isolation:isolate; text-decoration:none;
