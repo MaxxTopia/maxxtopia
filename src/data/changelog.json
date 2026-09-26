@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-09-26",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.23",
+    "title": "AdBlock-Maxxer now includes one-click YouTube Companion setup.",
+    "body": "The Chrome/Brave download now includes the YouTube Companion and clearer setup guidance for server-enforced YouTube playback.",
+    "items": [
+      "The companion installer is included with the extension download and registers the local helper for Brave, Chrome, and Edge.",
+      "Popup, welcome, and download copy explain that the companion makes enforced YouTube videos play ad-free.",
+      "The companion remains optional for normal ad blocking and uses negligible resources while idle."
+    ]
+  },
+  {
+    "date": "2026-09-26",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.71",

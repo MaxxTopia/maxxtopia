@@ -659,6 +659,11 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
               </a>
             )}
           </div>
+          {product.secondaryCta?.note && (
+            <p class="reveal reveal-5 mt-3 text-sm text-[var(--color-subtle)]">
+              {product.secondaryCta.note}
+            </p>
+          )}
           {product.tertiaryCta && (
             <p class="reveal reveal-5 mt-3 text-sm text-[var(--color-subtle)]">
               <a

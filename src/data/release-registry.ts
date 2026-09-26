@@ -47,8 +47,8 @@ export const releaseRegistry = {
   },
 
   adblockmaxxer: {
-    version: '1.6.22',
-    installerUrl: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.6.22.zip',
+    version: '1.6.23',
+    installerUrl: 'https://dl.maxxtopia.com/adblockmaxxer-chrome-v1.6.23.zip?v=1.6.23',
     releasePageUrl: null,
     publishedAt: null,
     source: 'public-manifest',

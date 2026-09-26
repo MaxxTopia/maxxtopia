@@ -59,9 +59,8 @@ export type Product = {
    *  giant treatment doesn't read as a flex). */
   heroStat?: { value: string; label: string; inline?: boolean };
   primaryCta: { label: string; href: string; external?: boolean };
-  secondaryCta?: { label: string; href: string; external?: boolean };
-  /** Optional third download, rendered as a subtle link + note under the buttons.
-   *  Used for opt-in add-ons most users don't need (e.g. the YouTube companion). */
+  secondaryCta?: { label: string; href: string; external?: boolean; note?: string };
+  /** Optional third download, rendered as a subtle link + note under the buttons. */
   tertiaryCta?: { label: string; href: string; external?: boolean; note?: string };
   glyph: string;
   /** SVG mark path under /logos/. If absent, ProductCard falls back to wordmark-only. */
@@ -938,12 +937,16 @@ export const products: Product[] = [
       },
     ],
     primaryCta: { label: 'Download for Chrome / Brave / Edge', href: installerUrlFor('adblockmaxxer'), external: true },
-    secondaryCta: { label: 'On your phone? Get the Brave filter list', href: 'https://dl.maxxtopia.com/adblockmaxxer-mobile.txt', external: true },
-    tertiaryCta: {
-      label: 'YouTube showing ad-walls? Get the companion (.zip)',
-      href: 'https://dl.maxxtopia.com/adblockmaxxer-companion.zip',
+    secondaryCta: {
+      label: 'Get YouTube Companion (Windows)',
+      href: 'https://dl.maxxtopia.com/adblockmaxxer-companion.zip?v=1.6.23',
       external: true,
-      note: 'Optional — only if your YouTube account black-screens videos or shows an "allow ads" wall. Unzip it and run the app once (nothing to install); from then on your browser starts it automatically whenever Reclaim is on — no need to launch it again. Keep the unzipped folder together. Windows may show an "unknown publisher" notice the first time — that\'s expected for a new indie tool; click More info → Run anyway. Everything else works with just the extension above.',
+      note: 'This is the component that makes server-enforced YouTube videos play ad-free. Download the ZIP, extract it, and run install-companion.bat once; normal ads still work with just the extension.',
+    },
+    tertiaryCta: {
+      label: 'On your phone? Get the Brave filter list',
+      href: 'https://dl.maxxtopia.com/adblockmaxxer-mobile.txt',
+      external: true,
     },
     glyph: '⏭',
     logo: '/logos/adblockmaxxer.png',
