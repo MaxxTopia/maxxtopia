@@ -572,6 +572,8 @@ const standingsApi = '/api';
               <button type="button" data-limit="5" aria-pressed="true">5</button>
               <button type="button" data-limit="10" aria-pressed="false">10</button>
             </div>
+            <span class="sp-overlay-crawl-status" id="sp-overlay-crawl-status" aria-live="off">TEAMS 1–5 / —</span>
+            <button class="sp-overlay-crawl-toggle" id="sp-overlay-crawl-toggle" type="button" aria-pressed="false">Pause</button>
             <button class="sp-overlay-collapse" id="sp-overlay-collapse" type="button" aria-expanded="true"><span id="sp-overlay-collapse-label">Minimize</span><span aria-hidden="true">⌃</span></button>
             <a class="sp-overlay-full" id="sp-full-board" href="/standings/">Full board <span aria-hidden="true">↗</span></a>
           </div>
@@ -600,8 +602,9 @@ const standingsApi = '/api';
           <div class="sp-control sp-control--view">
             <span>Board size</span>
             <div class="sp-segmented" role="group" aria-label="Board size">
-              <button id="sp-top5" data-limit="5" class="is-active" type="button" aria-pressed="true">Top 5</button>
-              <button id="sp-top10" data-limit="10" type="button" aria-pressed="false">Top 10</button>
+              <button id="sp-top5" data-page-limit="5" class="is-active" type="button" aria-pressed="true">Top 5</button>
+              <button id="sp-top10" data-page-limit="10" type="button" aria-pressed="false">Top 10</button>
+              <button id="sp-all-teams" data-page-limit="all" type="button" aria-pressed="false">All teams</button>
             </div>
           </div>
         </div>
@@ -622,6 +625,26 @@ const standingsApi = '/api';
             </details>
           </div>
         </div>
+
+        <section class="sp-player-region-filter" id="sp-player-region-filter" aria-label="Filter leaderboard by player region">
+          <div class="sp-player-region-heading">
+            <span class="sp-player-region-label">PLAYER REGION</span>
+            <span class="sp-player-region-scope" id="sp-player-region-scope">Filter within global Top 10</span>
+          </div>
+          <div class="sp-player-region-options" role="group" aria-label="Player competitive region">
+            <button type="button" data-player-region="ALL" aria-pressed="true"><span>All</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="NA" aria-pressed="false"><span>NA</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="NAE" aria-pressed="false"><span>NA East</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="NAC" aria-pressed="false"><span>NA Central</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="NAW" aria-pressed="false"><span>NA West</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="EU" aria-pressed="false"><span>EU</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="BR" aria-pressed="false"><span>Brazil</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="ASIA" aria-pressed="false"><span>Asia</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="ME" aria-pressed="false"><span>Middle East</span><small data-region-count>0</small></button>
+            <button type="button" data-player-region="OCE" aria-pressed="false"><span>Oceania</span><small data-region-count>0</small></button>
+          </div>
+          <p class="sp-player-region-result" id="sp-player-region-result" aria-live="polite">Showing all player regions in the loaded snapshot.</p>
+        </section>
 
         <div class="sp-status-line" role="status" aria-live="polite">
           <span class="sp-status-dot" id="sp-status-dot"></span>
@@ -657,7 +680,9 @@ const standingsApi = '/api';
           <div class="sp-board-head" aria-hidden="true">
             <span>Move</span><span>Competitor</span><span>Points</span><span>Wins</span><span id="sp-prize-head">Prize</span><span>Next target</span>
           </div>
-          <div class="sp-rows" id="sp-rows"></div>
+          <div class="sp-crawl-window" id="sp-crawl-window">
+            <div class="sp-rows" id="sp-rows"></div>
+          </div>
           <div class="sp-empty" id="sp-empty">
             <span class="sp-empty-icon" aria-hidden="true">◎</span>
             <strong id="sp-empty-title">Select a tournament to load the board.</strong>
@@ -697,13 +722,21 @@ const standingsApi = '/api';
 <script define:vars={{ standingsApi }}>
   const API = standingsApi;
   const REGIONS = new Set(['ALL', 'NAC', 'NAW', 'EU', 'BR', 'ASIA', 'OCE', 'ME']);
+  const PLAYER_REGION_LABELS = {
+    ALL: 'All regions', NA: 'North America', NAE: 'NA East', NAC: 'NA Central', NAW: 'NA West',
+    EU: 'EU', BR: 'Brazil', ASIA: 'Asia', ME: 'Middle East', OCE: 'Oceania',
+  };
+  const PLAYER_REGION_FILTERS = new Set(Object.keys(PLAYER_REGION_LABELS));
+  const NORTH_AMERICA_REGIONS = new Set(['NA', 'NAE', 'NAC', 'NAW']);
   const $ = (id) => document.getElementById(id);
   const state = {
     region: 'ALL',
+    playerRegion: 'ALL',
     eventId: '',
     windowId: '',
     windows: [],
     limit: 5,
+    pageLimit: 5,
     pollSeconds: 90,
     timer: null,
     request: 0,
@@ -711,6 +744,8 @@ const standingsApi = '/api';
     standingsController: null,
     catalogController: null,
     hasRows: false,
+    sourceRows: [],
+    sourceTotalPlayers: null,
     previousRows: new Map(),
     selectedWindow: null,
     overlay: false,
@@ -719,6 +754,12 @@ const standingsApi = '/api';
     qualificationRank: null,
     rosterCoverage: null,
     scanLimited: false,
+    scanError: '',
+    scanLoading: false,
+    memberRegionBasis: '',
+    crawlIndex: 0,
+    crawlTimer: null,
+    crawlPaused: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   };
 
   function setStatus(message, tone = 'idle') {
@@ -728,6 +769,59 @@ const standingsApi = '/api';
 
   function formatNumber(value) {
     return Number(value || 0).toLocaleString('en-US');
+  }
+
+  function rowMatchesPlayerRegion(row, filter = state.playerRegion) {
+    if (filter === 'ALL') return true;
+    const members = Array.isArray(row?.members) ? row.members : [];
+    const knownRegions = Array.isArray(row?.memberRegions) ? row.memberRegions : [];
+    const regions = knownRegions.length ? knownRegions : members.map((member) => member?.competitiveRegion);
+    return regions.some((value) => {
+      const region = String(value || '').trim().toUpperCase();
+      if (filter === 'NA') return NORTH_AMERICA_REGIONS.has(region);
+      return region === filter;
+    });
+  }
+
+  function updatePlayerRegionChrome(matchingRows = []) {
+    const rows = Array.isArray(state.sourceRows) ? state.sourceRows : [];
+    const hasKnownRegion = (value) => /^(NAC|NAW|NAE|NA|EU|BR|ASIA|OCE|ME)$/.test(String(value || '').trim().toUpperCase());
+    const incompleteRegionCount = rows.filter((row) => {
+      const regions = Array.isArray(row?.memberRegions)
+        ? row.memberRegions
+        : Array.isArray(row?.members) ? row.members.map((member) => member?.competitiveRegion) : [];
+      return !regions.length || regions.some((region) => !hasKnownRegion(region));
+    }).length;
+    const countLabel = (count) => {
+      if (state.boardView === 'nonqualifiers') return `${count} tracked-pro ${count === 1 ? 'entry' : 'entries'}`;
+      return `${count} ${count === 1 ? 'team' : 'teams'}`;
+    };
+    const scope = state.boardView === 'nonqualifiers'
+      ? 'tracked-pro scan'
+      : state.scanLoading ? 'tournament field scan in progress'
+        : state.scanLimited ? 'scanned tournament field' : 'tournament field';
+    $('sp-player-region-scope').textContent = state.boardView === 'nonqualifiers'
+      ? 'Filter within tracked-pro scan'
+      : state.scanLoading ? 'Loading every tournament team…'
+        : state.scanLimited ? 'Filter within the scanned field'
+          : incompleteRegionCount ? `All teams · ${formatNumber(incompleteRegionCount)} region unknown` : 'Filter within all tournament teams';
+    document.querySelectorAll('button[data-player-region]').forEach((button) => {
+      const filter = button.dataset.playerRegion || 'ALL';
+      const count = rows.filter((row) => rowMatchesPlayerRegion(row, filter)).length;
+      const selected = filter === state.playerRegion;
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+      button.setAttribute('aria-label', `${PLAYER_REGION_LABELS[filter] || filter}: ${countLabel(count)} in the loaded ${scope}`);
+      const countElement = button.querySelector('[data-region-count]');
+      if (countElement) countElement.textContent = String(count);
+    });
+    const count = matchingRows.length;
+    const regionCoverageNote = incompleteRegionCount
+      ? `${formatNumber(incompleteRegionCount)} ${incompleteRegionCount === 1 ? 'team has' : 'teams have'} unresolved player-region data.`
+      : 'Every team has resolved player-region data.';
+    $('sp-player-region-result').textContent = state.playerRegion === 'ALL'
+      ? `Showing all regions across ${countLabel(rows.length)}. ${state.boardView === 'nonqualifiers' ? '' : 'Duo teams match each region represented by either player. '}${regionCoverageNote}`.trim()
+      : `${countLabel(count)} ${count === 1 ? 'matches' : 'match'} ${PLAYER_REGION_LABELS[state.playerRegion] || state.playerRegion} in the ${scope}; ${state.boardView === 'nonqualifiers' || state.scanLimited || incompleteRegionCount ? 'some player-region data may be incomplete' : 'duo teams match when either player has this region'}. ${regionCoverageNote} Original tournament ranks are preserved.`;
   }
 
   function formatSigned(value) {
@@ -860,9 +954,13 @@ const standingsApi = '/api';
   function updateUrl() {
     const url = new URL(window.location.href);
     url.searchParams.set('region', state.region);
+    if (state.playerRegion !== 'ALL') url.searchParams.set('playerRegion', state.playerRegion);
+    else url.searchParams.delete('playerRegion');
     if (state.eventId) url.searchParams.set('eventId', state.eventId); else url.searchParams.delete('eventId');
     if (state.windowId) url.searchParams.set('windowId', state.windowId); else url.searchParams.delete('windowId');
     url.searchParams.set('limit', String(state.limit));
+    if (!state.overlay && state.pageLimit === 'all') url.searchParams.set('showAll', '1');
+    else url.searchParams.delete('showAll');
     if (state.overlay) url.searchParams.set('overlay', '1'); else url.searchParams.delete('overlay');
     if (state.boardView === 'nonqualifiers') url.searchParams.set('board', 'nonqualifiers'); else url.searchParams.delete('board');
     window.history.replaceState({}, '', url);
@@ -872,6 +970,9 @@ const standingsApi = '/api';
     const url = new URL(window.location.href);
     url.searchParams.set('overlay', '1');
     url.searchParams.set('limit', String(state.limit));
+    url.searchParams.delete('showAll');
+    if (state.playerRegion !== 'ALL') url.searchParams.set('playerRegion', state.playerRegion);
+    else url.searchParams.delete('playerRegion');
     if (state.boardView === 'nonqualifiers') url.searchParams.set('board', 'nonqualifiers'); else url.searchParams.delete('board');
     return url.toString();
   }
@@ -880,6 +981,10 @@ const standingsApi = '/api';
     const url = new URL(window.location.href);
     url.searchParams.delete('overlay');
     url.searchParams.set('limit', String(state.limit));
+    if (state.pageLimit === 'all') url.searchParams.set('showAll', '1');
+    else url.searchParams.delete('showAll');
+    if (state.playerRegion !== 'ALL') url.searchParams.set('playerRegion', state.playerRegion);
+    else url.searchParams.delete('playerRegion');
     $('sp-full-board').href = url.pathname + url.search;
   }
 
@@ -1078,6 +1183,11 @@ const standingsApi = '/api';
     } else if (mode === 'no-selection') {
       title.textContent = 'Select a tournament round';
       detail.textContent = 'Choose a round above to load its standings.';
+    } else if (mode === 'no-region-match') {
+      title.textContent = `No ${PLAYER_REGION_LABELS[state.playerRegion] || state.playerRegion} entries in this snapshot`;
+      detail.textContent = state.boardView === 'nonqualifiers'
+        ? 'This filter checks tracked pros in the current scan; player regions are inferred and may be unavailable.'
+        : 'No matching resolved player regions appear in the loaded global Top 10. Region data is inferred and may be incomplete; try All regions or another round.';
     } else if (mode === 'standings-error') {
       title.textContent = 'Standings unavailable';
       detail.textContent = 'The provider did not return a snapshot for this round. Try refreshing when it is reachable.';
@@ -1351,20 +1461,104 @@ const standingsApi = '/api';
   }
 
   function renderRows(rows, totalPlayers = null) {
+    state.sourceRows = Array.isArray(rows) ? rows : [];
+    state.sourceTotalPlayers = totalPlayers;
+    renderVisibleRows();
+  }
+
+  function updateOverlayCrawlStatus(teamCount) {
+    const status = $('sp-overlay-crawl-status');
+    if (!status) return;
+    const count = Math.max(0, Number(teamCount) || 0);
+    const start = count ? Math.min(count, state.crawlIndex + 1) : 0;
+    const end = count ? Math.min(count, state.crawlIndex + state.limit) : 0;
+    const pad = (value) => String(value).padStart(Math.max(2, String(count || 0).length), '0');
+    status.textContent = `TEAMS ${pad(start)}–${pad(end)} / ${formatNumber(count)}`;
+    status.setAttribute('aria-label', count
+      ? `Showing tournament teams ${start} through ${end} of ${count}`
+      : 'Waiting for tournament teams');
+  }
+
+  function updateOverlayCrawlToggle() {
+    const button = $('sp-overlay-crawl-toggle');
+    if (!button) return;
+    button.textContent = state.crawlPaused ? 'Resume' : 'Pause';
+    button.setAttribute('aria-pressed', String(state.crawlPaused));
+    button.setAttribute('aria-label', state.crawlPaused ? 'Resume automatic standings crawl' : 'Pause automatic standings crawl');
+  }
+
+  function resetOverlayCrawl() {
+    window.clearTimeout(state.crawlTimer);
+    state.crawlTimer = null;
+    state.crawlIndex = 0;
+    $('sp-crawl-window').classList.remove('sp-crawl-resetting');
+  }
+
+  function ensureOverlayCrawl(teamCount) {
+    const shouldRun = state.overlay
+      && !state.collapsed
+      && !state.crawlPaused
+      && !state.scanLoading
+      && document.visibilityState === 'visible'
+      && teamCount > state.limit;
+    if (!shouldRun) {
+      window.clearTimeout(state.crawlTimer);
+      state.crawlTimer = null;
+      return;
+    }
+    if (state.crawlTimer !== null) return;
+    state.crawlTimer = window.setTimeout(() => {
+      state.crawlTimer = null;
+      const maxStart = Math.max(0, state.sourceRows.filter((row) => rowMatchesPlayerRegion(row)).length - state.limit);
+      if (state.crawlIndex < maxStart) {
+        state.crawlIndex += 1;
+        renderVisibleRows();
+      } else {
+        const viewport = $('sp-crawl-window');
+        viewport.classList.add('sp-crawl-resetting');
+        state.crawlTimer = window.setTimeout(() => {
+          state.crawlTimer = null;
+          state.crawlIndex = 0;
+          viewport.classList.remove('sp-crawl-resetting');
+          renderVisibleRows();
+        }, 300);
+      }
+    }, 5600);
+  }
+
+  function renderVisibleRows() {
     const container = $('sp-rows');
+    $('sp-board').setAttribute('aria-live', state.overlay ? 'off' : 'polite');
     container.replaceChildren();
-    const visible = Array.isArray(rows) ? rows.slice(0, state.limit) : [];
-    const providerTotal = Number(totalPlayers);
+    const matchingRows = state.sourceRows.filter((row) => rowMatchesPlayerRegion(row));
+    updatePlayerRegionChrome(matchingRows);
+    const pageVisible = state.overlay
+      ? matchingRows.slice(state.crawlIndex, state.crawlIndex + state.limit)
+      : state.pageLimit === 'all' ? matchingRows : matchingRows.slice(0, state.pageLimit);
+    const visible = pageVisible;
+    const providerTotal = Number(state.sourceTotalPlayers);
     const totalLabel = Number.isFinite(providerTotal) && providerTotal > 0
       ? formatNumber(providerTotal)
       : '—';
-    $('sp-count').textContent = state.boardView === 'nonqualifiers'
-      ? formatNumber(visible.length)
-      : visible.length ? visible.length + ' / ' + totalLabel : '0 / ' + totalLabel;
+    if (state.playerRegion !== 'ALL') {
+      $('sp-count-label').textContent = state.boardView === 'nonqualifiers' ? 'Shown / tracked matches' : 'Teams shown / matching teams';
+      $('sp-count').textContent = `${visible.length} / ${matchingRows.length}`;
+    } else {
+      $('sp-count-label').textContent = state.boardView === 'nonqualifiers' ? 'Tracked pros shown' : 'Teams shown / tournament';
+      $('sp-count').textContent = state.boardView === 'nonqualifiers'
+        ? formatNumber(visible.length)
+        : visible.length ? visible.length + ' / ' + totalLabel : '0 / ' + totalLabel;
+    }
+    updateOverlayCrawlStatus(matchingRows.length);
+    updateOverlayCrawlToggle();
+    container.classList.toggle('sp-rows--large', !state.overlay && visible.length > 30);
+    ensureOverlayCrawl(matchingRows.length);
     state.hasRows = visible.length > 0;
     $('sp-empty').hidden = state.hasRows;
     if (!visible.length) {
       state.previousRows = new Map();
+      $('sp-crawl-window').style.height = '';
+      if (state.sourceRows.length && state.playerRegion !== 'ALL') renderEmptyState('no-region-match');
       return;
     }
 
@@ -1378,6 +1572,7 @@ const standingsApi = '/api';
       const article = document.createElement('article');
       const rankClass = rank <= 3 ? 'sp-row--rank-' + rank : 'sp-row--standard';
       article.className = 'sp-row ' + rankClass + ' ' + (movement ? (delta > 0 ? 'sp-row--up' : 'sp-row--down') : 'sp-row--steady');
+      if (state.overlay && state.crawlIndex > 0) article.classList.add('sp-crawl-enter');
       article.style.setProperty('--row-delay', Math.min(index, 9) * 48 + 'ms');
       article.dataset.rank = String(rank);
 
@@ -1395,12 +1590,38 @@ const standingsApi = '/api';
       rankBadgeElement.innerHTML = rankBadge(rank);
       const identityCopy = document.createElement('span');
       identityCopy.className = 'sp-player-copy';
-      const name = document.createElement('strong');
-      name.textContent = row.name || 'Player unavailable';
+      const members = Array.isArray(row.members)
+        ? row.members.filter((member) => member && typeof member.name === 'string' && member.name.trim())
+        : [];
+      if (members.length) {
+        const memberRegionBasis = state.memberRegionBasis || 'Competitive region inferred from Epic competitive event history; not nationality.';
+        members.forEach((member) => {
+          const line = document.createElement('span');
+          line.className = 'sp-member-line';
+          const memberName = document.createElement('strong');
+          memberName.className = 'sp-member-name';
+          memberName.textContent = member.name;
+          line.append(memberName);
+          const competitiveRegion = String(member.competitiveRegion || '').toUpperCase();
+          if (/^(NAC|NAW|NAE|NA|EU|BR|ASIA|OCE|ME)$/.test(competitiveRegion)) {
+            const regionTag = document.createElement('span');
+            regionTag.className = 'sp-member-region';
+            regionTag.textContent = competitiveRegion;
+            regionTag.title = memberRegionBasis;
+            regionTag.setAttribute('aria-label', competitiveRegion + ' competitive region; ' + memberRegionBasis);
+            line.append(regionTag);
+          }
+          identityCopy.append(line);
+        });
+      } else {
+        const name = document.createElement('strong');
+        name.textContent = row.name || 'Player unavailable';
+        identityCopy.append(name);
+      }
       const meta = document.createElement('small');
       const selected = state.windows.find((item) => item.eventId === state.eventId && item.windowId === state.windowId);
       const region = row.region || (selected && selected.region) || (state.region !== 'ALL' ? state.region : '');
-      const regionLabel = region && state.boardView === 'nonqualifiers' ? region + ' event' : region;
+      const regionLabel = region ? region + ' event' : '';
       meta.textContent = regionLabel ? regionLabel + ' · ' + formatNullableNumber(row.games) + ' games' : formatNullableNumber(row.games) + ' games';
       const trackedPlayers = Array.isArray(row.trackedPlayers) ? row.trackedPlayers.filter(Boolean) : [];
       if (trackedPlayers.length) {
@@ -1408,9 +1629,9 @@ const standingsApi = '/api';
         tracked.className = 'sp-tracked-pro';
         tracked.textContent = 'TRACKED · ' + trackedPlayers.join(' · ');
         tracked.setAttribute('aria-label', 'Tracked pro match: ' + trackedPlayers.join(', '));
-        identityCopy.append(name, meta, tracked);
+        identityCopy.append(meta, tracked);
       } else {
-        identityCopy.append(name, meta);
+        identityCopy.append(meta);
       }
       identity.append(rankBadgeElement, identityCopy);
 
@@ -1482,6 +1703,14 @@ const standingsApi = '/api';
       nextRows.set(rowKey, { points: currentPoints });
     });
     state.previousRows = nextRows;
+    const viewport = $('sp-crawl-window');
+    if (state.overlay && visible.length) {
+      const rowHeight = container.firstElementChild?.getBoundingClientRect().height || 64;
+      const rowGap = Number.parseFloat(getComputedStyle(container).rowGap) || 7;
+      viewport.style.height = `${Math.ceil(rowHeight * visible.length + rowGap * Math.max(0, visible.length - 1))}px`;
+    } else {
+      viewport.style.height = '';
+    }
   }
 
   async function readJson(url, signal) {
@@ -1489,6 +1718,67 @@ const standingsApi = '/api';
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || `Provider returned HTTP ${response.status}`);
     return data;
+  }
+
+  const STANDINGS_PAGE_SIZE = 100;
+  const STANDINGS_MAX_PAGES = 12;
+  const STANDINGS_PAGE_CONCURRENCY = 3;
+
+  function mergeStandingsPages(pages) {
+    const ranked = [];
+    let sequence = 0;
+    [...pages.entries()].sort(([left], [right]) => left - right).forEach(([, page]) => {
+      (Array.isArray(page.rows) ? page.rows : []).forEach((row) => {
+        ranked.push({ row, sequence: sequence++ });
+      });
+    });
+    ranked.sort((left, right) => {
+      const rankDifference = (Number(left.row.rank) || 0) - (Number(right.row.rank) || 0);
+      return rankDifference || left.sequence - right.sequence;
+    });
+    return ranked.map(({ row }, index) => {
+      const previous = ranked[index - 1]?.row;
+      const priorPoints = Number(previous?.points);
+      const currentPoints = Number(row.points);
+      return {
+        ...row,
+        nextRank: previous ? Number(previous.rank) || null : null,
+        pointsToNext: previous && Number.isFinite(priorPoints) && Number.isFinite(currentPoints)
+          ? Math.max(0, priorPoints - currentPoints + 1)
+          : null,
+      };
+    });
+  }
+
+  function standingsPageCount(data) {
+    const reported = Number(data?.reportedPages);
+    if (Number.isInteger(reported) && reported > 0) return reported;
+    const total = Number(data?.totalPlayers ?? data?.totalEntries ?? data?.totalTeams);
+    if (Number.isFinite(total) && total >= 0) {
+      return Math.max(1, Math.ceil(total / (Number(data?.pageSize) || STANDINGS_PAGE_SIZE)));
+    }
+    const entriesOnPage = Number(data?.entriesOnPage);
+    if (data?.scanComplete === true || (Number.isFinite(entriesOnPage) && entriesOnPage < STANDINGS_PAGE_SIZE)) return 1;
+    return null;
+  }
+
+  function fullStandingsSnapshot(pageMap, firstPage, expectedPages, failedPages, pageLimited, terminalPage) {
+    const actualLastPage = terminalPage == null ? expectedPages - 1 : terminalPage;
+    const relevantFailures = failedPages.filter((page) => page <= actualLastPage);
+    const hasEveryPage = Array.from({ length: actualLastPage + 1 }, (_, index) => pageMap.has(index)).every(Boolean);
+    const scanLimited = pageLimited || relevantFailures.length > 0 || !hasEveryPage;
+    const rows = mergeStandingsPages(new Map([...pageMap].filter(([page]) => page <= actualLastPage)));
+    const total = firstPage.totalPlayers ?? firstPage.totalEntries ?? firstPage.totalTeams;
+    return {
+      ...firstPage,
+      rows,
+      totalPlayers: total ?? rows.length,
+      scannedPages: pageMap.size,
+      scannedRows: rows.length,
+      scanComplete: !scanLimited && (terminalPage != null || pageMap.size >= expectedPages),
+      scanLimited,
+      ...(relevantFailures.length ? { failedPages: relevantFailures } : {}),
+    };
   }
 
   function abortStandings() {
@@ -1505,6 +1795,7 @@ const standingsApi = '/api';
     window.clearTimeout(state.timer);
     const requestId = ++state.request;
     abortStandings();
+    state.scanLoading = false;
     if (!state.eventId || !state.windowId) {
       renderRows([]);
       renderEmptyState('no-selection');
@@ -1516,6 +1807,9 @@ const standingsApi = '/api';
       return;
     }
     if (reset) {
+      resetOverlayCrawl();
+      state.scanLimited = false;
+      state.scanError = '';
       renderRows([]);
       renderEmptyState(state.boardView === 'nonqualifiers' ? 'loading-nonqualifiers' : 'loading');
     } else if (!state.hasRows) {
@@ -1528,20 +1822,29 @@ const standingsApi = '/api';
     const timeoutHandler = window.setTimeout(() => {
       timedOut = true;
       controller.abort();
-    }, state.boardView === 'nonqualifiers' ? 20000 : 12000);
+    }, state.boardView === 'nonqualifiers' ? 20000 : 60000);
     if (reset || !quiet || !state.hasRows) renderPrizePool({}, 'Checking…', item);
     if (!quiet || reset) {
       const round = item?.windowName || item?.roundName || item?.windowId || 'selected round';
       setStatus(`Loading ${round}…`, 'loading');
     }
     try {
-      const url = new URL(`${API}/standings`, window.location.origin);
-      url.searchParams.set('eventId', state.eventId);
-      url.searchParams.set('windowId', state.windowId);
-      url.searchParams.set('limit', '10');
-      if (state.boardView === 'nonqualifiers') url.searchParams.set('view', 'nonqualifiers');
-      const data = await readJson(url, controller.signal);
+      const makeStandingsUrl = (page = 0) => {
+        const url = new URL(`${API}/standings`, window.location.origin);
+        url.searchParams.set('eventId', state.eventId);
+        url.searchParams.set('windowId', state.windowId);
+        url.searchParams.set('limit', state.boardView === 'nonqualifiers' ? '10' : 'all');
+        if (state.boardView === 'nonqualifiers') url.searchParams.set('view', 'nonqualifiers');
+        else url.searchParams.set('page', String(page));
+        return url;
+      };
+      let data = await readJson(makeStandingsUrl(0), controller.signal);
       if (requestId !== state.request) return;
+      state.memberRegionBasis = typeof data.memberRegionBasis === 'string' && data.memberRegionBasis.trim()
+        ? data.memberRegionBasis
+        : 'Competitive region inferred from Epic competitive event history; not nationality.';
+      state.scanLimited = false;
+      state.scanError = '';
       if (state.boardView === 'nonqualifiers') {
         state.qualificationRank = null;
         updateBoardViewChrome(data.qualification ? {
@@ -1557,8 +1860,66 @@ const standingsApi = '/api';
         } : data);
       } else {
         updateBoardViewChrome();
+        state.scanLoading = true;
       }
       renderRows(data.rows, data.totalPlayers ?? data.totalEntries ?? data.totalTeams);
+      if (state.boardView === 'standings') {
+        const pageMap = new Map([[0, data]]);
+        const failedPages = [];
+        const knownPages = standingsPageCount(data);
+        const expectedPages = Math.min(STANDINGS_MAX_PAGES, knownPages || STANDINGS_MAX_PAGES);
+        let pageLimited = Boolean(data.scanLimited) || (knownPages != null && knownPages > STANDINGS_MAX_PAGES);
+        let terminalPage = data.scanComplete === true ? 0 : null;
+        if (terminalPage == null) {
+          for (let firstPage = 1; firstPage < expectedPages; firstPage += STANDINGS_PAGE_CONCURRENCY) {
+            const pageNumbers = Array.from(
+              { length: Math.min(STANDINGS_PAGE_CONCURRENCY, expectedPages - firstPage) },
+              (_, index) => firstPage + index,
+            );
+            if (controller.signal.aborted) {
+              pageLimited = true;
+              break;
+            }
+            const results = await Promise.allSettled(pageNumbers.map((page) => readJson(makeStandingsUrl(page), controller.signal)));
+            if (requestId !== state.request) return;
+            results.forEach((result, index) => {
+              const page = pageNumbers[index];
+              if (result.status === 'fulfilled') {
+                pageMap.set(page, result.value);
+                if (result.value.scanComplete === true) {
+                  terminalPage = terminalPage == null ? page : Math.min(terminalPage, page);
+                }
+                if (result.value.scanLimited) pageLimited = true;
+              } else if (!controller.signal.aborted) {
+                failedPages.push(page);
+                state.scanError = `Page ${page + 1} unavailable`;
+              }
+            });
+            if (terminalPage != null) {
+              for (const page of [...pageMap.keys()]) if (page > terminalPage) pageMap.delete(page);
+              break;
+            }
+            if (controller.signal.aborted) {
+              pageLimited = true;
+              state.scanError = timedOut ? 'Standings scan timed out' : 'Standings scan was interrupted';
+              break;
+            }
+            const partialRows = mergeStandingsPages(pageMap);
+            renderRows(partialRows, data.totalPlayers ?? data.totalEntries ?? data.totalTeams ?? partialRows.length);
+            setStatus(`Loading full tournament field · ${pageMap.size} of ${expectedPages} pages`, 'loading');
+          }
+        }
+        if (knownPages == null && terminalPage == null && pageMap.size >= STANDINGS_MAX_PAGES) pageLimited = true;
+        data = fullStandingsSnapshot(pageMap, data, expectedPages, failedPages, pageLimited, terminalPage);
+        state.scanLoading = false;
+        state.scanLimited = data.scanLimited;
+        if (data.scanLimited && !state.scanError) {
+          state.scanError = knownPages > STANDINGS_MAX_PAGES
+            ? `Tournament exceeds the ${STANDINGS_MAX_PAGES * STANDINGS_PAGE_SIZE}-team scan cap`
+            : 'Some standings pages could not be loaded';
+        }
+        renderRows(data.rows, data.totalPlayers);
+      }
       renderRules(item, data);
       renderPrizePool(data, 'Not published', item);
       if (!state.hasRows) {
@@ -1575,17 +1936,21 @@ const standingsApi = '/api';
       $('sp-source').textContent = data.source || 'Epic leaderboard';
       $('sp-games').textContent = Number.isFinite(Number(data.maxGames)) ? Number(data.maxGames).toLocaleString('en-US') : '—';
       $('sp-delay').textContent = data.replayAware ? 'PROCESSING DELAY EXPECTED' : '';
-      const partialScan = state.boardView === 'nonqualifiers' && (data.scanComplete === false || data.scanLimited);
+      const partialScan = state.boardView === 'nonqualifiers'
+        ? data.scanComplete === false || Boolean(data.scanLimited)
+        : state.scanLimited;
       $('sp-board-status').textContent = state.hasRows
         ? data.stale
-          ? `LAST GOOD · ${state.boardView === 'nonqualifiers' ? `OUTSIDE TOP ${state.qualificationRank}` : 'STANDINGS'}${partialScan ? ' · PARTIAL SCAN' : ''} · ${formatPacificTime(data.fetched)}`
-          : state.boardView === 'nonqualifiers' ? `OUTSIDE TOP ${state.qualificationRank}${partialScan ? ' · PARTIAL SCAN' : ''} · UPDATED ${formatPacificTime(data.fetched)}` : `UPDATED ${formatPacificTime(data.fetched)}`
+          ? `LAST GOOD · ${state.boardView === 'nonqualifiers' ? `OUTSIDE TOP ${state.qualificationRank}` : 'STANDINGS'}${partialScan ? ' · INCOMPLETE FIELD' : ''} · ${formatPacificTime(data.fetched)}`
+          : state.boardView === 'nonqualifiers' ? `OUTSIDE TOP ${state.qualificationRank}${partialScan ? ' · PARTIAL SCAN' : ''} · UPDATED ${formatPacificTime(data.fetched)}` : `STANDINGS${partialScan ? ' · INCOMPLETE FIELD' : ''} · UPDATED ${formatPacificTime(data.fetched)}`
         : state.boardView === 'nonqualifiers'
           ? partialScan ? 'NO MATCHES IN SCANNED PAGES · PARTIAL SCAN' : 'NO TRACKED PROS BELOW CUT'
-          : 'NO PROCESSED ROWS';
+          : partialScan ? 'NO PROCESSED ROWS · INCOMPLETE FIELD' : 'NO PROCESSED ROWS';
       setStatus(data.stale
         ? `Provider refresh unavailable · showing last good snapshot from ${formatPacificTime(data.fetched)} · retry in ${state.pollSeconds}s`
-        : `Updated ${formatPacificTime(data.fetched)} · next check in ${state.pollSeconds}s`, data.stale || partialScan ? 'warn' : 'good');
+        : state.boardView === 'standings' && partialScan
+          ? `Showing ${formatNumber(data.rows.length)} of ${formatNumber(data.totalPlayers)} teams · ${state.scanError || 'the tournament field scan is incomplete'} · retry in ${state.pollSeconds}s`
+          : `Updated ${formatPacificTime(data.fetched)} · next check in ${state.pollSeconds}s`, data.stale || partialScan ? 'warn' : 'good');
       updateUrl();
       schedulePoll();
     } catch (error) {
@@ -1600,6 +1965,7 @@ const standingsApi = '/api';
       setStatus(state.hasRows ? `Provider update unavailable — showing the last good snapshot. ${error.message}` : `Standings unavailable: ${error.message}`, 'warn');
       schedulePoll();
     } finally {
+      state.scanLoading = false;
       window.clearTimeout(timeoutHandler);
       if (state.standingsController === controller) state.standingsController = null;
     }
@@ -1672,9 +2038,23 @@ const standingsApi = '/api';
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', String(active));
     });
+    resetOverlayCrawl();
     updateUrl();
     updateFullBoardLink();
-    if (state.eventId && state.windowId) loadStandings({ quiet: true });
+    renderVisibleRows();
+  }
+
+  function setPageLimit(limit) {
+    state.pageLimit = limit === 'all' ? 'all' : Number(limit) === 10 ? 10 : 5;
+    document.querySelectorAll('[data-page-limit]').forEach((button) => {
+      const active = String(button.dataset.pageLimit) === String(state.pageLimit);
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    resetOverlayCrawl();
+    updateUrl();
+    updateFullBoardLink();
+    renderVisibleRows();
   }
 
   function setBoardView(view) {
@@ -1682,6 +2062,7 @@ const standingsApi = '/api';
     if (state.boardView === nextView) return;
     state.boardView = nextView;
     state.qualificationRank = null;
+    resetOverlayCrawl();
     renderRows([]);
     renderEmptyState(state.eventId && state.windowId
       ? nextView === 'nonqualifiers' ? 'loading-nonqualifiers' : 'loading'
@@ -1695,6 +2076,17 @@ const standingsApi = '/api';
 
   document.querySelectorAll('button[data-board-view]').forEach((button) => {
     button.addEventListener('click', () => setBoardView(button.dataset.boardView));
+  });
+
+  document.querySelectorAll('button[data-player-region]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const nextRegion = String(button.dataset.playerRegion || 'ALL').toUpperCase();
+      state.playerRegion = PLAYER_REGION_FILTERS.has(nextRegion) ? nextRegion : 'ALL';
+      resetOverlayCrawl();
+      updateUrl();
+      updateFullBoardLink();
+      renderVisibleRows();
+    });
   });
 
   $('sp-region').addEventListener('change', (event) => {
@@ -1727,6 +2119,9 @@ const standingsApi = '/api';
   document.querySelectorAll('[data-limit]').forEach((button) => {
     button.addEventListener('click', () => setLimit(Number(button.dataset.limit)));
   });
+  document.querySelectorAll('[data-page-limit]').forEach((button) => {
+    button.addEventListener('click', () => setPageLimit(button.dataset.pageLimit));
+  });
   $('sp-refresh').addEventListener('click', () => loadStandings());
   $('sp-future-list').addEventListener('click', (event) => {
     const button = event.target.closest('button[data-event-id][data-window-id]');
@@ -1757,6 +2152,22 @@ const standingsApi = '/api';
     document.querySelector('.standings-page').classList.toggle('sp-overlay-collapsed', state.collapsed);
     $('sp-overlay-collapse').setAttribute('aria-expanded', String(!state.collapsed));
     $('sp-overlay-collapse-label').textContent = state.collapsed ? 'Expand' : 'Minimize';
+    if (state.collapsed) {
+      window.clearTimeout(state.crawlTimer);
+      state.crawlTimer = null;
+    } else {
+      ensureOverlayCrawl(state.sourceRows.filter((row) => rowMatchesPlayerRegion(row)).length);
+    }
+  });
+  $('sp-overlay-crawl-toggle').addEventListener('click', () => {
+    state.crawlPaused = !state.crawlPaused;
+    updateOverlayCrawlToggle();
+    if (state.crawlPaused) {
+      window.clearTimeout(state.crawlTimer);
+      state.crawlTimer = null;
+    } else {
+      ensureOverlayCrawl(state.sourceRows.filter((row) => rowMatchesPlayerRegion(row)).length);
+    }
   });
   $('sp-share').addEventListener('click', async () => {
     updateUrl();
@@ -1768,20 +2179,31 @@ const standingsApi = '/api';
     }
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && state.eventId) loadStandings({ quiet: true });
+    if (document.visibilityState !== 'visible') {
+      window.clearTimeout(state.crawlTimer);
+      state.crawlTimer = null;
+      return;
+    }
+    if (state.eventId) loadStandings({ quiet: true });
+    else ensureOverlayCrawl(state.sourceRows.filter((row) => rowMatchesPlayerRegion(row)).length);
   });
 
   const params = new URLSearchParams(window.location.search);
   const initialRegion = String(params.get('region') || 'ALL').toUpperCase();
   state.region = REGIONS.has(initialRegion) ? initialRegion : 'ALL';
+  const initialPlayerRegion = String(params.get('playerRegion') || 'ALL').toUpperCase();
+  state.playerRegion = PLAYER_REGION_FILTERS.has(initialPlayerRegion) ? initialPlayerRegion : 'ALL';
   state.limit = params.get('limit') === '10' ? 10 : 5;
+  state.pageLimit = params.get('showAll') === '1' ? 'all' : 5;
   state.boardView = params.get('board') === 'nonqualifiers' ? 'nonqualifiers' : 'standings';
   state.overlay = params.get('overlay') === '1' || params.get('view') === 'overlay';
   document.querySelector('.standings-page').classList.toggle('sp-overlay-mode', state.overlay);
   updateBoardViewChrome();
   if (state.overlay) document.title = 'OBS Standings Overlay — Maxxtopia';
   $('sp-region').value = state.region;
+  updatePlayerRegionChrome();
   setLimit(state.limit);
+  setPageLimit(state.pageLimit);
   updateFullBoardLink();
   loadWindows();
 </script>
@@ -2190,6 +2612,36 @@ const standingsApi = '/api';
     box-shadow: 0 0 20px rgba(107,220,255,.08);
   }
 
+  .sp-member-line {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .sp-member-line + .sp-member-line {
+    padding-top: 3px;
+    border-top: 1px solid rgba(255,255,255,.09);
+  }
+
+  .standings-page .sp-member-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sp-member-region {
+    flex: 0 0 auto;
+    padding: 2px 5px;
+    border: 1px solid rgba(107,220,255,.22);
+    border-radius: 3px;
+    color: #b9edff;
+    background: rgba(25,91,125,.22);
+    font: 700 8px/1.15 var(--font-mono);
+    letter-spacing: .04em;
+  }
+
   .standings-page .sp-player strong {
     display: block;
     font-size: 15px;
@@ -2420,6 +2872,9 @@ const standingsApi = '/api';
   .sp-overlay-tool-actions { display: flex; align-items: center; gap: 9px; }
   .sp-segmented--overlay { height: 32px; }
   .sp-segmented--overlay button { min-width: 34px; padding: 0 9px; }
+  .sp-overlay-crawl-status { color: var(--lb-muted); font: 700 8px var(--font-mono); letter-spacing: .055em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .sp-overlay-crawl-toggle { border: 1px solid var(--lb-line); border-radius: 5px; cursor: pointer; padding: 8px 9px; color: var(--lb-text); background: rgba(54,231,255,.08); font: 700 9px var(--font-mono); }
+  .sp-overlay-crawl-toggle:hover { border-color: var(--lb-cyan); color: var(--lb-cyan); }
   .sp-overlay-collapse, .sp-overlay-full { border: 1px solid var(--lb-line); border-radius: 5px; cursor: pointer; padding: 8px 9px; color: var(--lb-muted); background: rgba(255,255,255,.035); font: 600 9px var(--font-mono); text-decoration: none; }
   .sp-overlay-collapse { display: inline-flex; align-items: center; gap: 6px; }
   .sp-overlay-collapse:hover, .sp-overlay-full:hover { border-color: var(--lb-cyan); color: var(--lb-text); }
@@ -2444,8 +2899,9 @@ const standingsApi = '/api';
   .sp-overlay-mode .sp-stage-actions { display: none; }
   .sp-overlay-mode .sp-overlay-tools { display: flex; }
   .sp-overlay-mode .sp-board { padding: 0 10px 10px; }
+  .sp-overlay-mode .sp-crawl-window { overflow: hidden; transition: height 280ms cubic-bezier(.2,.7,.2,1); }
   .sp-overlay-mode .sp-board-head { display: none; }
-  .sp-overlay-mode .sp-row { grid-template-columns: 38px minmax(0, 1fr) 75px; grid-template-areas: 'move player points' 'move math math'; gap: 0 8px; min-height: 64px; padding: 8px 9px; }
+  .sp-overlay-mode .sp-row { grid-template-columns: 38px minmax(0, 1fr) 75px; grid-template-areas: 'move player points' 'move math math'; gap: 0 8px; width: 100%; height: 68px; min-height: 68px; overflow: hidden; box-sizing: border-box; padding: 8px 9px; }
   .sp-overlay-mode .sp-movement { grid-area: move; align-self: center; }
   .sp-overlay-mode .sp-player { grid-area: player; }
   .sp-overlay-mode .sp-points { grid-area: points; }
@@ -2456,9 +2912,15 @@ const standingsApi = '/api';
   .sp-overlay-mode .sp-player { gap: 7px; }
   .sp-overlay-mode .sp-player strong { font-size: 12px; }
   .sp-overlay-mode .sp-player-copy small { font-size: 8px; }
+  .sp-overlay-mode .sp-member-line { gap: 5px; }
+  .sp-overlay-mode .sp-member-line + .sp-member-line { padding-top: 2px; }
+  .sp-overlay-mode .sp-member-region { padding: 1px 4px; font-size: 7px; }
   .sp-overlay-mode .sp-points strong { font-size: 16px; }
   .sp-overlay-mode .sp-points span { font-size: 7px; }
   .sp-overlay-mode .sp-gap, .sp-overlay-mode .sp-last { font-size: 8px; }
+  .sp-overlay-mode .sp-row.sp-crawl-enter { animation: sp-overlay-crawl-in 440ms cubic-bezier(.2,.75,.25,1) both; animation-delay: var(--row-delay); }
+  .sp-crawl-window.sp-crawl-resetting { opacity: 0; transform: translateY(-7px); transition: opacity 240ms ease, transform 240ms ease; }
+  .sp-rows--large .sp-row { animation: none; transition: none; }
   .sp-overlay-mode.sp-overlay-collapsed .sp-board { display: none; }
   .sp-overlay-mode.sp-overlay-collapsed .sp-stage-topline { border-bottom: 0; }
   .sp-overlay-mode.sp-overlay-collapsed .sp-overlay-collapse > span:last-child { transform: rotate(180deg); }
@@ -2476,6 +2938,12 @@ const standingsApi = '/api';
     .sp-kicker-dot, .sp-status-dot--loading, .sp-row, .sp-points-flash, .sp-points-flash-red, .sp-row--rank-1 .sp-points strong, .sp-row--rank-1 .sp-rank::before, .sp-row--rank-1 .sp-rank::after, .sp-row--rank-1 .sp-points::before, .sp-row--rank-1 .sp-points::after { animation: none; }
     .sp-row--rank-1 .sp-rank::before, .sp-row--rank-1 .sp-rank::after, .sp-row--rank-1 .sp-points::before, .sp-row--rank-1 .sp-points::after { opacity: .72; transform: scale(.72); }
     .sp-quiet-button, .sp-refresh-button, .sp-segmented button, .sp-row { transition: none; }
+    .sp-overlay-mode .sp-crawl-window, .sp-crawl-window.sp-crawl-resetting { transition: none; }
+  }
+
+  @keyframes sp-overlay-crawl-in {
+    from { opacity: .15; transform: translateY(10px); filter: blur(1.5px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
 
   @media (max-width: 980px) {
@@ -2538,6 +3006,43 @@ const standingsApi = '/api';
     .sp-overlay-mode .sp-overlay-full { display: none; }
   }
 
+  .sp-player-region-filter {
+    display: grid;
+    grid-template-columns: minmax(145px, .24fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 9px 18px;
+    padding: 13px 34px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(90deg, rgba(54,231,255,.025), rgba(5,7,17,.08) 54%, rgba(102,246,163,.018));
+  }
+  .sp-player-region-heading { display: grid; gap: 5px; min-width: 0; }
+  .sp-player-region-label { color: var(--lb-subtle); font: 700 8px var(--font-mono); letter-spacing: .14em; }
+  .sp-player-region-scope { color: #8d9bad; font: 500 8px/1.4 var(--font-mono); }
+  .sp-player-region-options { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+  .sp-player-region-options button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 30px;
+    padding: 0 9px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 5px;
+    background: rgba(255,255,255,.035);
+    color: #a8a4b8;
+    cursor: pointer;
+    font: 700 8px var(--font-mono);
+    letter-spacing: .035em;
+    transition: border-color 140ms ease, background 140ms ease, color 140ms ease;
+  }
+  .sp-player-region-options button:hover { border-color: rgba(54,231,255,.45); background: rgba(54,231,255,.08); color: #e2fbff; }
+  .sp-player-region-options button.is-active { border-color: rgba(54,231,255,.72); background: linear-gradient(115deg, rgba(54,231,255,.16), rgba(102,246,163,.06)); color: #d9faff; box-shadow: inset 0 0 16px rgba(54,231,255,.08), 0 0 12px rgba(54,231,255,.05); }
+  .sp-player-region-options button:focus-visible { outline: 2px solid var(--lb-cyan); outline-offset: 2px; }
+  .sp-player-region-options small { min-width: 14px; padding: 2px 4px; border-radius: 3px; background: rgba(255,255,255,.07); color: #9ba9b8; font: 600 7px/1 var(--font-mono); text-align: center; }
+  .sp-player-region-options button.is-active small { background: rgba(54,231,255,.13); color: #a6f0fb; }
+  .sp-player-region-result { grid-column: 2; margin: 0; color: #78879a; font: 500 8px/1.5 var(--font-mono); }
+  @media (prefers-reduced-motion: reduce) { .sp-player-region-options button { transition: none; } }
+
   .sp-board-switch {
     display: flex;
     align-items: center;
@@ -2596,14 +3101,19 @@ const standingsApi = '/api';
   .sp-prize--cut strong { color: var(--lb-green); text-shadow: 0 0 16px rgba(102,246,163,.19); }
   .sp-prize--cut span { color: #78b995; }
   .sp-overlay-mode .sp-board-switch { display: none; }
+  .sp-overlay-mode .sp-player-region-filter { display: none; }
 
   @media (max-width: 820px) {
+    .sp-player-region-filter { grid-template-columns: 1fr; gap: 9px; padding: 12px 20px 14px; }
+    .sp-player-region-result { grid-column: 1; }
     .sp-board-switch { align-items: flex-start; flex-direction: column; gap: 9px; padding: 13px 20px 15px; }
     .sp-view-context-wrap { justify-items: start; }
     .sp-view-context { text-align: left; }
   }
 
   @media (max-width: 560px) {
+    .sp-player-region-options { gap: 5px; }
+    .sp-player-region-options button { min-height: 29px; padding: 0 8px; font-size: 7px; }
     .sp-board-switch-controls { align-items: flex-start; flex-direction: column; gap: 8px; width: 100%; }
     .sp-segmented--views { display: grid; grid-template-columns: .9fr 1.2fr; width: 100%; }
     .sp-segmented--views button { min-width: 0; padding: 0 9px; }
