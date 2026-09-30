@@ -18,7 +18,8 @@ import { products } from '../../data/products';
  * no swipe queue / matchmaker, no visible competitor callouts.
  */
 const product = products.find((p) => p.slug === 'clipmaxxer')!;
-const APPLY_HREF = '/clipmaxxer/apply';
+const APPLY_HREF = '/clipmaxxer/apply/';
+const DASHBOARD_HREF = 'https://app.maxxtopia.com/';
 
 // Sample readout lines for the hero "YOU ENDED …" ticker. Illustrative only —
 // invented gamertags, tagged "sample" in the UI so it never reads as a real
@@ -123,10 +124,11 @@ const reels = [
             Apply — done-for-you
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
+          <a href={DASHBOARD_HREF} class="cx-btn cx-btn--ghost">Open dashboard</a>
           <a href="#work" class="cx-btn cx-btn--ghost">See real cuts</a>
         </div>
 
-        <p class="cx-microtrust">Drafts only &middot; we never post for you &middot; Fortnite &amp; Valorant live</p>
+        <p class="cx-microtrust">Already set up? Open the dashboard &middot; drafts only &middot; we never post for you</p>
       </div>
 
       <a href="#signal" class="cx-scroll" aria-label="Scroll down">
@@ -272,10 +274,13 @@ const reels = [
           Managed, flat monthly, cancel anytime. Built for streamers with an
           audience already rolling. Tell us your channel — we'll take it from there.
         </p>
-        <a href={APPLY_HREF} class="cx-btn cx-btn--primary cx-btn--big">
-          Apply — done-for-you
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </a>
+        <div class="cx-cta cx-final__cta">
+          <a href={APPLY_HREF} class="cx-btn cx-btn--primary cx-btn--big">
+            Apply — done-for-you
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href={DASHBOARD_HREF} class="cx-btn cx-btn--ghost cx-btn--big">Open dashboard</a>
+        </div>
         <p class="cx-microtrust">You tap publish · we never auto-post · limited beta spots</p>
       </div>
     </section>
