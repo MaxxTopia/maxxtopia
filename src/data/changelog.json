@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-10-06",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.24",
+    "title": "AdBlock-Maxxer makes live YouTube Reclaim reconnects less disruptive.",
+    "body": "A transient live HLS hiccup now gets one bounded in-place recovery before Reclaim falls back to a full reconnect, reducing short interruptions that showed \"Reconnecting ad-free stream...\".",
+    "items": [
+      "Retries the current live HLS session once before tearing it down.",
+      "Waits for presented video frames before clearing the recovery state.",
+      "Keeps the existing full fresh-resolve path for persistent HLS failures."
+    ]
+  },
+  {
+    "date": "2026-10-06",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
     "version": "v0.4.16",
