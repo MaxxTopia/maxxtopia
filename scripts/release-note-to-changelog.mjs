@@ -131,7 +131,7 @@ const entry = {
   ...(items.length ? { items } : {}),
 };
 
-// --- Load, dedupe by slug+version, prepend, write ---------------------------
+// --- Load, dedupe by slug+version/content, prepend, write -------------------
 let changelog;
 try {
   changelog = JSON.parse(readFileSync(CHANGELOG, 'utf8'));
@@ -139,8 +139,21 @@ try {
   fail(`could not read changelog.json: ${e.message}`);
 }
 
+const normalizeText = (value) => String(value ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
+const contentKey = (e) => {
+  const body = normalizeText(e.body);
+  const items = Array.isArray(e.items) ? e.items.map(normalizeText) : [];
+  if (!body && items.length === 0) return '';
+  return `${e.productSlug}|${JSON.stringify({ body, items })}`;
+};
+
 if (changelog.some((e) => e.productSlug === slug && e.version === version)) {
   fail(`${product} ${version} already in changelog (idempotent)`);
+}
+
+const entryContentKey = contentKey(entry);
+if (entryContentKey && changelog.some((e) => contentKey(e) === entryContentKey)) {
+  fail(`${product} ${version} duplicates existing changelog content (idempotent)`);
 }
 
 changelog.unshift(entry);
