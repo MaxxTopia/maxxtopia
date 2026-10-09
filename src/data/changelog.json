@@ -1,5 +1,33 @@
 [
   {
+    "date": "2026-10-09",
+    "product": "Snipemaxxer",
+    "productSlug": "snipemaxxer",
+    "version": "v0.3.14 + companion v0.1.6",
+    "title": "Snipemaxxer brings the lobby report to your phone.",
+    "body": "The paired companion flow now carries the live Valorant lobby report to a phone while the desktop release keeps the source-PC and Riot Client boundary explicit.",
+    "items": [
+      "Adds Install / Pair / Play guidance with direct companion and mobile links on the Snipemaxxer page.",
+      "Publishes companion v0.1.6 with roster identity, team and streak context, last-seen signals, and weapon-aware skin rows.",
+      "Publishes desktop v0.3.14 alongside the companion release with the current Valorant data path and updater packaging repair carried forward.",
+      "Keeps the source PC and Riot Client requirement visible instead of implying that the phone view is cloud-only."
+    ]
+  },
+  {
+    "date": "2026-10-08",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "SoundCloud recovery + popout pause",
+    "title": "Playlistmaxxing makes playback recovery easier to trust.",
+    "body": "SoundCloud starts and pause edges now stay inside bounded recovery paths, while popout and light-mode surfaces keep the current track easier to follow.",
+    "items": [
+      "Gives slow SoundCloud starts time to prove readiness before spending retries.",
+      "Treats a real pause gesture as authoritative and fences stale provider callbacks.",
+      "Guards Spotify handoffs against unintended loops and keeps queue advancement forward-only.",
+      "Improves light-mode karaoke readability and keeps popout pause state aligned with playback."
+    ]
+  },
+  {
     "date": "2026-10-08",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
@@ -94,6 +122,20 @@
       "Pinnacle Asta previews live values for the rig-matched Fortnite catalog, lets you select exact rows, and keeps higher-risk review actions separately confirmed; firmware stays manual.",
       "Asta rechecks selected settings immediately before applying and pauses for review if a setting changed while you were reviewing the plan.",
       "Tune Now and Your Tune report mismatches without guessing what caused them; Optimization Lab distinguishes local proxy evidence from real Fortnite capture."
+    ]
+  },
+  {
+    "date": "2026-10-05",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.63",
+    "title": "Streammaxxing keeps tournament tracking moving.",
+    "body": "Once you select the event and show it on stream, tournament points and cutoff refresh in the background while the overlay stays responsive.",
+    "items": [
+      "Refreshes the selected Epic event's cutoff and current-day points about every 75 seconds.",
+      "Retries an unavailable tournament list and bounded API failures instead of leaving the card stuck.",
+      "Prevents overlapping standings requests and aborts hung public-board calls after 15 seconds.",
+      "Ships the signed v0.1.63 updater release."
     ]
   },
   {
