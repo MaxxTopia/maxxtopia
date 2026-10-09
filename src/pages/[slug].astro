@@ -25,6 +25,7 @@ import SnipeMaxxerHero from '../components/SnipeMaxxerHero.astro';
 import StreammaxxingBroadcastHero from '../components/StreammaxxingBroadcastHero.astro';
 import AimDiagnosticHero from '../components/AimDiagnosticHero.astro';
 import DropmaxxerHero from '../components/DropmaxxerHero.astro';
+import SnipemaxxerCompanion from '../components/SnipemaxxerCompanion.astro';
 import { releaseFor, releaseVersion } from '../data/release-registry';
 import { products } from '../data/products';
 
@@ -528,6 +529,13 @@ const faqSchema = product.heroStat && faqEntry && faqEntry.faqs.length
         />
       </div>
     </section>
+  )}
+  {isSnipe && product.mobileCompanion && (
+    <SnipemaxxerCompanion
+      installerUrl={product.mobileCompanion.installerUrl}
+      mobileUrl={product.mobileCompanion.mobileUrl}
+      accentHex={product.accentHex}
+    />
   )}
   {isStream && <StreammaxxingBroadcastHero product={product} />}
   {isAim && <AimDiagnosticHero product={product} />}

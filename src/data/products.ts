@@ -62,6 +62,8 @@ export type Product = {
   secondaryCta?: { label: string; href: string; external?: boolean; note?: string };
   /** Optional third download, rendered as a subtle link + note under the buttons. */
   tertiaryCta?: { label: string; href: string; external?: boolean; note?: string };
+  /** Optional companion surface promoted on the product page. */
+  mobileCompanion?: { installerUrl: string; mobileUrl: string };
   glyph: string;
   /** SVG mark path under /logos/. If absent, ProductCard falls back to wordmark-only. */
   logo?: string;
@@ -1267,6 +1269,10 @@ export const products: Product[] = [
     ],
     primaryCta: { label: 'Download for Windows', href: installerUrlFor('snipemaxxer'), external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
+    mobileCompanion: {
+      installerUrl: 'https://dl.maxxtopia.com/maxxtopia-companion/Maxxtopia-Companion-Setup-0.1.6.exe',
+      mobileUrl: 'https://mobile.maxxtopia.com/',
+    },
     glyph: '⌖',
     logo: '/logos/snipemaxxer.svg',
     accentHex: '#ffb547',

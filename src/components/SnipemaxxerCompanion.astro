@@ -1,0 +1,64 @@
+---
+interface Props {
+  installerUrl: string;
+  mobileUrl: string;
+  accentHex: string;
+}
+
+const { installerUrl, mobileUrl, accentHex } = Astro.props;
+---
+
+<section id="mobile-companion" class="relative overflow-hidden border-y border-[var(--color-line)]" aria-labelledby="mobile-companion-heading">
+  <div class="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
+    <div
+      class="relative overflow-hidden rounded-2xl border p-5 sm:p-8"
+      style={`border-color: ${accentHex}66; background: linear-gradient(120deg, ${accentHex}13, rgba(0, 212, 255, .045) 55%, rgba(147, 104, 201, .08)); box-shadow: 0 18px 52px rgba(0,0,0,.22), 0 0 0 1px rgba(255,255,255,.025) inset;`}
+    >
+      <div class="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full blur-3xl" style={`background: ${accentHex}1c;`} aria-hidden="true"></div>
+      <div class="relative grid gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-end">
+        <div class="max-w-2xl">
+          <p class="font-mono text-[10.5px] uppercase tracking-[0.14em]" style={`color: ${accentHex}`}>Snipemaxxer · optional mobile companion</p>
+          <h2 id="mobile-companion-heading" class="mt-3 text-[30px] font-semibold leading-[.98] tracking-[-.04em] sm:text-[44px]">
+            Keep the lobby report <span class="serif-accent gradient-suite">in your hand.</span>
+          </h2>
+          <p class="mt-4 max-w-xl text-[14px] leading-6 text-[var(--color-text-mid)]">
+            Install Maxxtopia Companion on the PC where Riot Client is running, then open the phone view it creates. Your phone gets the same read-only lobby context without replacing the full Snipemaxxer desktop app.
+          </p>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          <div class="rounded-xl border border-white/10 bg-black/20 p-3.5">
+            <p class="font-mono text-[10px] uppercase tracking-[0.12em]" style={`color: ${accentHex}`}>01 · Install</p>
+            <p class="mt-1.5 text-[12.5px] leading-5 text-[var(--color-text-mid)]">Download the small PC companion and open it once.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-black/20 p-3.5">
+            <p class="font-mono text-[10px] uppercase tracking-[0.12em]" style={`color: ${accentHex}`}>02 · Pair</p>
+            <p class="mt-1.5 text-[12.5px] leading-5 text-[var(--color-text-mid)]">Use its one-time Phone link on your phone.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-black/20 p-3.5">
+            <p class="font-mono text-[10px] uppercase tracking-[0.12em]" style={`color: ${accentHex}`}>03 · Play</p>
+            <p class="mt-1.5 text-[12.5px] leading-5 text-[var(--color-text-mid)]">Keep the source PC and Riot Client on for fresh data.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative mt-7 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
+        <a
+          href={installerUrl}
+          target="_blank"
+          rel="noopener"
+          class="group inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-[12px] font-mono font-semibold uppercase tracking-[0.08em] text-white transition-all hover:-translate-y-0.5"
+          style={`border-color: ${accentHex}aa; background: linear-gradient(110deg, ${accentHex}45, rgba(0, 212, 255, .13)); box-shadow: 0 0 0 1px ${accentHex}22 inset, 0 8px 20px rgba(0,0,0,.2);`}
+        >
+          Download PC companion
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></svg>
+        </a>
+        <a href={mobileUrl} target="_blank" rel="noopener" class="btn-secondary inline-flex items-center gap-2">
+          Open mobile view
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+        </a>
+        <p class="basis-full text-[11.5px] leading-5 text-[var(--color-subtle)]">This is a companion to the Windows app, not a Riot sign-in page. Pairing never asks for your Riot password.</p>
+      </div>
+    </div>
+  </div>
+</section>
