@@ -865,3 +865,9 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - Existing unrelated tracked and untracked work remains preserved. No Diggy-
   owed field test is required. Best next action: use an explicit
   `publicVersion` only when a real product milestone warrants `v2` or later.
+
+## Snipemaxxer companion CTA refresh -- 2026-10-09
+
+- Updated only `src/data/products.ts` so the already-published Snipemaxxer mobile companion section links to the live 0.1.8 installer instead of retired 0.1.6.
+- `npm run build` passed release-truth, sitemap, and Astro checks. The local `/snipemaxxer/` route rendered the companion section at desktop and mobile sizes with the install, pair, play, download, and mobile-view actions visible.
+- This is a site-only CTA refresh; the companion and mobile Worker were released separately. The remaining field gate is a real gaming-PC, Riot Client, phone, and lobby test.

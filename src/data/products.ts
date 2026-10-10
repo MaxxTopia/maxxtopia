@@ -1270,7 +1270,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Download for Windows', href: installerUrlFor('snipemaxxer'), external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     mobileCompanion: {
-      installerUrl: 'https://dl.maxxtopia.com/maxxtopia-companion/Maxxtopia-Companion-Setup-0.1.6.exe',
+      installerUrl: 'https://dl.maxxtopia.com/maxxtopia-companion/Maxxtopia-Companion-Setup-0.1.8.exe',
       mobileUrl: 'https://mobile.maxxtopia.com/',
     },
     glyph: '⌖',
