@@ -8,7 +8,9 @@ import Aurora from '../../components/Aurora.astro';
  * to the Maxxtopia Discord, where the Maxx bot's ticket-panel buttons spawn
  * a private thread per buyer (per-tier handler in tickets-worker/worker.js).
  *
- * Pricing locked 2026-05-09 (project_discordmaxxer.md "Option A pricing").
+ * Pricing and benefits are kept aligned with the currently supported checkout
+ * terms. Proposed Founder changes stay out of the public page until checkout
+ * and fulfillment are updated together.
  */
 
 const DISCORD_INVITE = 'https://discord.gg/S78eecbWdx';
@@ -33,15 +35,17 @@ const TIERS: Tier[] = [
     bracketColor: '#9aa1ad',
     monthly: '$0',
     annual: 'Free forever',
-    pitch: 'The whole client. Every plugin, every theme, Tournament Mode, the Hub. Nothing crippled, nothing nagware.',
+    pitch: 'The whole client. Every plugin, every theme, Tournament Mode, the Hub, and free video playback. Nothing crippled, nothing nagware.',
     perks: [
-      'All ~30 default-on Vencord plugins',
+      '55 curated plugins enabled by default (31 Vencord + 24 Discordmaxxer)',
       '5 free themes (maxxer · val · sonic · dmc · bo3)',
       'Tournament Mode (perf-only, screenshare-friendly)',
       'CompactView · MassDelete · GIF favorites tab',
-      '1 saved video-background slot',
+      'Custom video background playback (URL or upload) · 1 saved URL slot',
+      'Display Name Styles — 30 local looks (fonts, colors, finishes, motion presets)',
+      'Custom Rich Presence text + optional Widget Mode for your own activity card',
+      'Right-click message translate — standalone direct translation',
       'Dragon Sword animated cursor',
-      'Founder badges visible on others\' popouts',
     ],
     ctaLabel: 'Download the client',
     ctaHref: 'https://github.com/MaxxTopia/discordmaxxer/releases/latest',
@@ -56,7 +60,8 @@ const TIERS: Tier[] = [
       'Typing prefix — [VIP] in the indicator',
       'Avatar tier ring · 1px outline + glow',
       '5 animated cursor skins (Sharingan · Rinnegan · Rasengan · Chidori · Stiiizy smoke trail)',
-      '5 saved video-background slots',
+      '5 saved video-URL slots for playable backgrounds',
+      'Custom profile banner flair in Discordmaxxer popouts',
     ],
     ctaLabel: 'Open Discord ticket →',
     ctaHref: DISCORD_INVITE,
@@ -67,14 +72,14 @@ const TIERS: Tier[] = [
     bracketColor: '#55FFFF',
     monthly: '$9 / mo',
     annual: '$86 / yr · save 20%',
-    pitch: 'The everyday Discord upgrade. Video backgrounds, an aqua glow on your name in member lists, three exclusive anime themes — the stuff people DM you about.',
+    pitch: 'The everyday Discord upgrade. More saved backgrounds, an aqua glow on your name in member lists, three exclusive anime themes, and animated profile flair.',
     perks: [
       'Everything in MAXXER',
-      'Custom video backgrounds (URL or upload)',
       '3 exclusive themes — Akatsuki · DMC: Devil Trigger · Eminence in Shadow',
       'Member-list name tint with aqua glow-glimmer pulse',
-      'Profile popout banner stripe',
-      '20 saved video-background slots',
+      'Animated avatar flair in Discordmaxxer popouts',
+      'Custom profile theme colors in Discordmaxxer popouts',
+      '20 saved video-URL slots for playable backgrounds',
     ],
     ctaLabel: 'Open Discord ticket →',
     ctaHref: DISCORD_INVITE,
@@ -87,16 +92,16 @@ const TIERS: Tier[] = [
     plusColor: '#FF5555',
     monthly: '$17 / mo',
     annual: '$163 / yr · save 20%',
-    pitch: 'The full flex. Vanilla-visible custom presence text, voice-channel name color, beta builds, plugin votes. Friends on stock Discord see your status.',
+    pitch: 'The full flex. A real animated MAXXER++ badge, name shimmer, voice-channel color, beta builds, and unlimited background slots.',
     perks: [
       'Everything in MAXXER+',
-      'Animated tier badge (gold→red shimmer)',
-      'Custom presence text — vanilla-visible flex on every friend\'s list',
-      'Voice channel name color (gold tint while in VC)',
-      'Beta-channel auto-updates (early-access features)',
-      'Plugin votes — vote on what ships next via #vip-chat polls',
+      'Animated MAXXER++ tier badge with selectable Gold, Sunset, or Aurora finish',
+      'Animated MAXXER++ name shimmer (gold→red→gold)',
+      'Discordmaxxer-only voice channel name color (gold tint while in VC)',
+      'Opt-in beta-channel builds when early-access releases are published',
+      'Help prioritize upcoming plugin features through in-client votes',
       '"Discordmaxxer++ supporter" credit strip on your profile popout',
-      'Unlimited saved video-background slots',
+      'Unlimited saved video-URL slots for playable backgrounds',
     ],
     ctaLabel: 'Open Discord ticket →',
     ctaHref: DISCORD_INVITE,
@@ -151,11 +156,14 @@ const breadcrumbSchema = {
         <span class="serif-accent gradient-suite block">The flex is paid.</span>
       </h1>
       <p class="reveal reveal-3 mt-7 text-[18px] sm:text-[20px] leading-[1.4] text-[var(--color-text-mid)] max-w-2xl">
-        Four paid tiers + a 33-slot Founder loop. Every paying tier is cosmetic + cross-user status surfacing — paid subscribers <em>see each other</em> light up across every server. The client itself stays 100% free, forever.
+        A free tier, three paid tiers, and a 33-slot Founder loop. The client stays 100% free, including video playback; paid tiers add larger personal limits and cross-user status flair — paid subscribers <em>see each other</em> light up across every server.
       </p>
+      <a href="#founder" class="reveal reveal-3 inline-flex mt-5 text-[13px] font-mono text-[var(--color-cyan)] hover:underline">
+        Want the lowest MAXXER++ rate forever? Meet the 33-slot Founder Pass →
+      </a>
     </section>
 
-    <!-- 4 tier cards -->
+    <!-- Free + 3 paid tier cards -->
     <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-14">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         {TIERS.map((tier) => (
@@ -178,7 +186,7 @@ const breadcrumbSchema = {
                 class="absolute z-20 -top-3 left-7 whitespace-nowrap rounded-full border px-2.5 py-1 text-[10.5px] font-mono uppercase tracking-[0.12em] font-semibold"
                 style={`background: ${tier.bracketColor}; border-color: ${tier.bracketColor}; color: #08050f; box-shadow: 0 0 16px ${tier.bracketColor}77, 0 0 30px ${tier.bracketColor}2f;`}
               >
-                Most-picked
+                Best value
               </div>
             )}
 
@@ -256,13 +264,13 @@ const breadcrumbSchema = {
 
           <div class="flex-1 min-w-[280px]">
             <p class="text-[11px] uppercase tracking-[0.14em] font-mono mb-2" style="color: #FFD27A;">
-              ◇ Scarcity slot · 33 ever
+              ◇ 33 lifetime spots · never reissued
             </p>
             <h2
               class="font-display leading-[0.9] tracking-[-0.01em] mb-4"
               style="font-size: clamp(48px, 8vw, 88px); color: #FFD580;"
             >
-              Founder #(x)
+              Founder Pass
             </h2>
             <p class="text-[13.5px] sm:text-[14.5px] leading-[1.6] text-[var(--color-text-mid)] max-w-2xl mb-6">
               {FOUNDER_DESCRIPTION}
@@ -270,15 +278,17 @@ const breadcrumbSchema = {
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-7">
               <div class="rounded-xl p-4 border" style="border-color: rgba(243,175,25,0.25); background: rgba(0,0,0,0.18);">
-                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">One-time price</p>
+                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Pay once</p>
                 <p class="text-[28px] font-bold" style="color: #FFD27A;">$67</p>
+                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">no auto-renewal</p>
               </div>
               <div class="rounded-xl p-4 border" style="border-color: rgba(243,175,25,0.25); background: rgba(0,0,0,0.18);">
-                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Slots remaining</p>
-                <p class="text-[28px] font-bold" style="color: #FFD27A;">33 / 33</p>
+                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Included</p>
+                <p class="text-[28px] font-bold" style="color: #FFD27A;">1 + 1 gift</p>
+                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">MAXXER++ month (1 for you + 1 friend)</p>
               </div>
               <div class="rounded-xl p-4 border" style="border-color: rgba(243,175,25,0.25); background: rgba(0,0,0,0.18);">
-                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Price-locked at</p>
+                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">After month one</p>
                 <p class="text-[28px] font-bold" style="color: #FFD27A;">$12 / mo</p>
                 <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">forever</p>
               </div>
