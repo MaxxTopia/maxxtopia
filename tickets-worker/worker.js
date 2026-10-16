@@ -662,8 +662,8 @@ async function handle33(env, interaction) {
     return
   }
 
-  // Founder codes: MAXXER++ tier, lifetime, scope=both (founders get
-  // every product). Vip-worker's atomic counter assigns the actual
+  // Founder codes: lifetime MAXXER+ tier, scope=both (founders get
+  // every product). MAXXER++ remains an optional upgrade. Vip-worker's atomic counter assigns the actual
   // 1-33 number at claim time.
   await writeCodeMeta(env, code, {
     tier: 'founder',
@@ -676,7 +676,7 @@ async function handle33(env, interaction) {
   const dmText =
     `👑 Your **Founder** Maxxer code — one of 33, never reissued:\n\n` +
     '```\n' + formatted + '\n```\n' +
-    '**Tier:** MAXXER++ (Founder #X assigned at claim)\n' +
+    '**Tier:** lifetime MAXXER+ (Founder #X assigned at claim)\n' +
     '**Scope:** all products (Optmaxxing + Discordmaxxer)\n' +
     '**Term:** lifetime\n\n' +
     'Paste it into **Optimizationmaxxing → VIP** or **Discordmaxxer → DMVipClaim** to claim. ' +
@@ -852,7 +852,7 @@ const DM_TIER_COPY = {
   'dm-maxxer':            { price: '$4 / month',        annual: '$38 / yr · save 20%',     bracket: '[VIP]',    perks: 'typing prefix · avatar ring · 5 cursor skins · 5 saved video bg slots' },
   'dm-maxxer-plus':       { price: '$9 / month',        annual: '$86 / yr · save 20%',     bracket: '[VIP+]',   perks: 'video backgrounds · 3 exclusive themes · member-list name glow · profile popout banner · 20 saved video bg slots' },
   'dm-maxxer-plus-plus':  { price: '$17 / month',       annual: '$163 / yr · save 20%',    bracket: '[MVP++]',  perks: 'animated badge · custom presence text · voice-channel name color · beta builds · plugin votes · About credit · unlimited slots' },
-  'dm-founder':           { price: '$67 one-time',      annual: '33 ever, never reissued', bracket: 'Founder #(x)', perks: 'your numbered gem badge (one of #1–#33) · 1 month MAXXER++ free · 1-month gift code · MAXXER++ price-locked at $12/mo for life' },
+  'dm-founder':           { price: '$67 once',           annual: '33 ever, never reissued', bracket: 'Founder #(x)', perks: 'lifetime MAXXER+ · your permanent numbered Founder badge (one of #1–#33) · no subscription required · MAXXER++ optional' },
 }
 
 function buildWelcomeMessage(product, productLabel, userId, diggyId) {
@@ -895,7 +895,7 @@ function buildWelcomeMessage(product, productLabel, userId, diggyId) {
       '5. Diggy clicks `Grant VIP` below — your `@VIP` role lands in the Maxxtopia Discord, unlocking #vip-chat + #early-access.',
       '',
       isFounder
-        ? '*Founder slots: 33 ever, never reissued. The numbered gem badge appears on your popout for every Discordmaxxer user. MAXXER++ price-locked at $12/mo for life — immune to future raises.*'
+        ? '*Founder slots: 33 ever, never reissued. Pay once for lifetime MAXXER+ and a permanent numbered Founder badge on your Discordmaxxer profile. No subscription is required; MAXXER++ is optional.*'
         : '*Pricing details: <https://maxxtopia.com/discordmaxxer/vip>*',
       '',
       '**When you\'re done**: hit `🔒 Close ticket` below. The thread archives and a transcript is saved for our records.',
