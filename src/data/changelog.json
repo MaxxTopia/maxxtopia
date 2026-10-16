@@ -1,5 +1,20 @@
 [
   {
+    "date": "2026-10-16",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.92",
+    "title": "Discordmaxxer v0.7.92",
+    "items": [
+      "Owner-published widget skins now take priority over the viewer's local skin",
+      "Foreign profile banners get one bounded roster refresh when a stale shared",
+      "The Fortnite hero preset now uses the two-style Catwoman artwork, while",
+      "DMHub now opens the Video Background editor directly; playback is free and",
+      "Founder claims now mean $67 once for lifetime MAXXER+, a permanent numbered",
+      "Release notes are attached to the GitHub release so the in-app updater shows"
+    ]
+  },
+  {
     "date": "2026-10-09",
     "product": "Snipemaxxer",
     "productSlug": "snipemaxxer",
