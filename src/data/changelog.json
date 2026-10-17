@@ -1,5 +1,22 @@
 [
   {
+    "date": "2026-10-17",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.95",
+    "title": "Discordmaxxer v0.7.95",
+    "items": [
+      "**Free profile showcase:** a claimed free account can use one active",
+      "**Cross-install profile rendering:** shared profile data is resolved for the",
+      "**DMProfileFlair:** banner and avatar previews stay beside their inputs;",
+      "**Widget and Fortnite polish:** widget previews remain visible, the curated",
+      "**Plugin usability:** DMHub shortcuts and setup guidance, DMTheme controls,",
+      "**Free video backgrounds:** video playback remains available on the free",
+      "**Founder Pass:** the first 33 numbered Founder slots are `$67 once`, with",
+      "**Readable release notes:** the release workflow now attaches this file to"
+    ]
+  },
+  {
     "date": "2026-10-16",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
