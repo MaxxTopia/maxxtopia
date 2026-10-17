@@ -8,9 +8,7 @@ import Aurora from '../../components/Aurora.astro';
  * to the Maxxtopia Discord, where the Maxx bot's ticket-panel buttons spawn
  * a private thread per buyer (per-tier handler in tickets-worker/worker.js).
  *
- * Pricing and benefits are kept aligned with the supported checkout and
- * fulfillment terms. Founder is a one-time lifetime MAXXER+ pass; MAXXER++
- * remains an optional upgrade.
+ * Pricing is intentionally fixed in this source until the owner reviews it.
  */
 
 const DISCORD_INVITE = 'https://discord.gg/S78eecbWdx';
@@ -35,16 +33,16 @@ const TIERS: Tier[] = [
     bracketColor: '#9aa1ad',
     monthly: '$0',
     annual: 'Free forever',
-    pitch: 'The whole client. Every plugin, every theme, Tournament Mode, the Hub, and free video playback. Nothing crippled, nothing nagware.',
+    pitch: 'The whole client. Every plugin, every theme, Tournament Mode, the Hub, free video playback, and the profile showcase. Nothing crippled, nothing nagware.',
     perks: [
-      '55 curated plugins enabled by default (31 Vencord + 24 Discordmaxxer)',
+      '57 curated plugins enabled by default (35 Vencord + 22 Discordmaxxer)',
       '5 free themes (maxxer · val · sonic · dmc · bo3)',
       'Tournament Mode (perf-only, screenshare-friendly)',
       'CompactView · MassDelete · GIF favorites tab',
       'Custom video background playback (URL or upload) · 1 saved URL slot',
+      'One full-quality animated banner + one full-quality animated avatar + custom profile colors in Discordmaxxer popouts (free is not downgraded)',
       'Display Name Styles — 30 local looks (fonts, colors, finishes, motion presets)',
       'Custom Rich Presence text + optional Widget Mode for your own activity card',
-      'Right-click message translate — standalone direct translation',
       'Dragon Sword animated cursor',
     ],
     ctaLabel: 'Download the client',
@@ -61,7 +59,8 @@ const TIERS: Tier[] = [
       'Avatar tier ring · 1px outline + glow',
       '5 animated cursor skins (Sharingan · Rinnegan · Rasengan · Chidori · Stiiizy smoke trail)',
       '5 saved video-URL slots for playable backgrounds',
-      'Custom profile banner flair in Discordmaxxer popouts',
+      'Premium status cosmetics',
+      'Cross-PC banner/avatar crop anchor — center · top · bottom',
     ],
     ctaLabel: 'Open Discord ticket →',
     ctaHref: DISCORD_INVITE,
@@ -72,14 +71,13 @@ const TIERS: Tier[] = [
     bracketColor: '#55FFFF',
     monthly: '$9 / mo',
     annual: '$86 / yr · save 20%',
-    pitch: 'The everyday Discord upgrade. More saved backgrounds, an aqua glow on your name in member lists, three exclusive anime themes, and animated profile flair.',
+    pitch: 'The everyday Discord upgrade. More saved backgrounds, an aqua glow on your name in member lists, and three exclusive anime themes.',
     perks: [
       'Everything in MAXXER',
       '3 exclusive themes — Akatsuki · DMC: Devil Trigger · Eminence in Shadow',
       'Member-list name tint with aqua glow-glimmer pulse',
-      'Animated avatar flair in Discordmaxxer popouts',
-      'Custom profile theme colors in Discordmaxxer popouts',
       '20 saved video-URL slots for playable backgrounds',
+      'Show-whole-image fit + avatar scale controls (90% · 100% · 110%)',
     ],
     ctaLabel: 'Open Discord ticket →',
     ctaHref: DISCORD_INVITE,
@@ -99,9 +97,9 @@ const TIERS: Tier[] = [
       'Animated MAXXER++ name shimmer (gold→red→gold)',
       'Discordmaxxer-only voice channel name color (gold tint while in VC)',
       'Opt-in beta-channel builds when early-access releases are published',
-      'Help prioritize upcoming plugin features through in-client votes',
       '"Discordmaxxer++ supporter" credit strip on your profile popout',
       'Unlimited saved video-URL slots for playable backgrounds',
+      'Cross-PC profile-media finishes — soft glow or scanline tint',
     ],
     ctaLabel: 'Open Discord ticket →',
     ctaHref: DISCORD_INVITE,
@@ -109,9 +107,9 @@ const TIERS: Tier[] = [
   },
 ];
 
-const FOUNDER_DESCRIPTION = `Only 33 exist, and they are never reissued. Pay $67 once to claim one numbered Founder slot for life. ` +
-  `You receive lifetime MAXXER+ access plus a permanent Founder badge on your Discordmaxxer profile. ` +
-  `There is no subscription and no auto-renewal; MAXXER++ remains an optional upgrade.`;
+const FOUNDER_DESCRIPTION = `Claim one of the first 33 numbered Founder slots with a single $67 payment. ` +
+  `Your claimed account receives lifetime MAXXER+ and a unique Founder badge; slots are never reissued. ` +
+  `There is no monthly charge, auto-renewal, gift-month condition, or future price lock to decipher.`;
 
 // BreadcrumbList JSON-LD — Home › Discordmaxxer › Pricing for the nested route.
 const breadcrumbSchema = {
@@ -127,7 +125,7 @@ const breadcrumbSchema = {
 
 <Layout
   title="Discordmaxxer Pricing — MAXXER through MAXXER++ + Founder slots"
-  description="MAXXER $4/mo · MAXXER+ $9/mo · MAXXER++ $17/mo · Founder $67-one-time (33 ever). Open a Discord ticket to subscribe — checkout walks you through PayPal/BTC/Venmo, and Diggy DMs your activation code."
+  description="MAXXER $4/mo · MAXXER+ $9/mo · MAXXER++ $17/mo · Founder $67 one-time for lifetime MAXXER+ (first 33 slots). Open a Discord ticket to subscribe — checkout walks you through PayPal/BTC/Venmo, and Diggy DMs your activation code."
 >
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <article class="relative">
@@ -137,7 +135,7 @@ const breadcrumbSchema = {
     <!-- Hero -->
     <section class="relative mx-auto max-w-5xl px-5 sm:px-8 pt-20 sm:pt-24 pb-10">
       <a
-        href="/discordmaxxer"
+        href="/discordmaxxer/"
         class="inline-flex items-center gap-1.5 text-[13px] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors mb-10"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -154,10 +152,10 @@ const breadcrumbSchema = {
         <span class="serif-accent gradient-suite block">The flex is paid.</span>
       </h1>
       <p class="reveal reveal-3 mt-7 text-[18px] sm:text-[20px] leading-[1.4] text-[var(--color-text-mid)] max-w-2xl">
-        A free tier, three paid tiers, and a 33-slot Founder Pass. The client stays 100% free, including video playback; paid tiers add larger personal limits and cross-user status flair — paid subscribers <em>see each other</em> light up across every server.
+        A free tier, three paid tiers, and a 33-slot Founder loop. The client stays 100% free, including video playback and a one-of-each profile showcase; paid tiers add larger personal limits and premium status cosmetics.
       </p>
       <a href="#founder" class="reveal reveal-3 inline-flex mt-5 text-[13px] font-mono text-[var(--color-cyan)] hover:underline">
-        Want lifetime MAXXER+ without a subscription? Meet the 33-slot Founder Pass →
+        Want lifetime MAXXER+ with one payment? Meet the 33-slot Founder Pass →
       </a>
     </section>
 
@@ -173,7 +171,7 @@ const breadcrumbSchema = {
             ></div>
 
             <div
-              class="vip-tier-card relative isolate flex h-full flex-col overflow-visible rounded-2xl border p-7 sm:p-8 transition-all"
+              class="vip-tier-card relative isolate overflow-visible rounded-2xl border p-7 sm:p-8 transition-all h-full flex flex-col"
               style={`--tier-color: ${tier.bracketColor}; color: color-mix(in srgb, ${tier.bracketColor} 62%, var(--color-text-mid)); border-color: ${tier.bracketColor}; background: var(--color-bg-card); box-shadow: ${tier.highlight
                 ? `0 0 0 1px ${tier.bracketColor}88, 0 0 26px ${tier.bracketColor}55, inset 0 0 42px ${tier.bracketColor}18, 0 10px 28px rgba(0,0,0,0.34);`
                 : `0 0 0 1px ${tier.bracketColor}60, 0 0 20px ${tier.bracketColor}42, inset 0 0 34px ${tier.bracketColor}12, 0 10px 26px rgba(0,0,0,0.32);`}`}
@@ -243,30 +241,30 @@ const breadcrumbSchema = {
     <section id="founder" class="relative mx-auto max-w-5xl px-5 sm:px-8 pb-20">
       <div
         class="relative rounded-2xl p-8 sm:p-10 border overflow-hidden"
-        style="border-color: rgba(127,236,255,0.55); background: linear-gradient(135deg, rgba(0,245,255,0.10) 0%, rgba(184,92,255,0.12) 48%, rgba(255,62,168,0.08) 100%); box-shadow: 0 0 0 1px rgba(255,88,201,0.18) inset, 0 8px 28px rgba(147,77,255,0.20);"
+        style="border-color: rgba(226,91,255,0.48); background: linear-gradient(135deg, rgba(226,91,255,0.10) 0%, rgba(0,212,255,0.07) 100%); box-shadow: 0 0 0 1px rgba(0,212,255,0.12) inset, 0 8px 28px rgba(226,91,255,0.18);"
       >
         <div
           class="absolute top-0 left-0 right-0 h-[3px] opacity-70"
-          style="background: linear-gradient(90deg, transparent, #6df7ff, #ff5bbd, transparent);"
+          style="background: linear-gradient(90deg, transparent, #e25bff, #00d4ff, transparent);"
         ></div>
 
         <div class="flex items-start gap-5 sm:gap-7 flex-wrap">
           <!-- Gem icon -->
           <span
             class="inline-flex items-center justify-center flex-shrink-0"
-            style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #6df7ff, #9c6cff 48%, #ff5bbd); box-shadow: 0 0 18px rgba(142,123,255,0.6), inset 0 0 8px rgba(255,255,255,0.35); font-family: 'Tungsten Bold', 'Bebas Neue', 'Oswald', 'Arial Black', sans-serif; font-size: 30px; font-weight: 800; color: #0e1330; letter-spacing: 0.02em;"
+            style="width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #f4d4ff, #e25bff 60%, #4a1671 100%); box-shadow: 0 0 18px rgba(226,91,255,0.65), 0 0 28px rgba(0,212,255,0.22), inset 0 0 8px rgba(255,255,255,0.35); font-family: 'Tungsten Bold', 'Bebas Neue', 'Oswald', 'Arial Black', sans-serif; font-size: 30px; font-weight: 800; color: #190b2e; letter-spacing: 0.02em;"
             title="Founder badge"
           >
             #
           </span>
 
           <div class="flex-1 min-w-[280px]">
-            <p class="text-[11px] uppercase tracking-[0.14em] font-mono mb-2" style="color: #8ef8ff;">
+            <p class="text-[11px] uppercase tracking-[0.14em] font-mono mb-2" style="color: #8feaff;">
               ◇ 33 lifetime spots · never reissued
             </p>
             <h2
               class="font-display leading-[0.9] tracking-[-0.01em] mb-4"
-              style="font-size: clamp(48px, 8vw, 88px); color: #f1d8ff;"
+              style="font-size: clamp(48px, 8vw, 88px); color: #f4d4ff;"
             >
               Founder Pass
             </h2>
@@ -275,20 +273,20 @@ const breadcrumbSchema = {
             </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-7">
-              <div class="rounded-xl p-4 border" style="border-color: rgba(127,236,255,0.25); background: rgba(0,0,0,0.18);">
+              <div class="rounded-xl p-4 border" style="border-color: rgba(226,91,255,0.28); background: rgba(0,0,0,0.18);">
                 <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Pay once</p>
-                <p class="text-[28px] font-bold" style="color: #8ef8ff;">$67</p>
-                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">one-time purchase</p>
+                <p class="text-[28px] font-bold" style="color: #eab6ff;">$67</p>
+                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">one payment</p>
               </div>
-              <div class="rounded-xl p-4 border" style="border-color: rgba(127,236,255,0.25); background: rgba(0,0,0,0.18);">
+              <div class="rounded-xl p-4 border" style="border-color: rgba(226,91,255,0.28); background: rgba(0,0,0,0.18);">
                 <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Included</p>
-                <p class="text-[28px] font-bold" style="color: #ff9bd8;">MAXXER+</p>
-                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">lifetime access for your account</p>
+                <p class="text-[28px] font-bold" style="color: #eab6ff;">MAXXER+</p>
+                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">lifetime on the claimed account</p>
               </div>
-              <div class="rounded-xl p-4 border" style="border-color: rgba(127,236,255,0.25); background: rgba(0,0,0,0.18);">
-                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Founder slot</p>
-                <p class="text-[28px] font-bold" style="color: #c7b3ff;">#1–#33</p>
-                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">permanent badge</p>
+              <div class="rounded-xl p-4 border" style="border-color: rgba(0,212,255,0.28); background: rgba(0,0,0,0.18);">
+                <p class="text-[11px] uppercase tracking-[0.1em] font-mono text-[var(--color-muted)] mb-1.5">Founder identity</p>
+                <p class="text-[28px] font-bold" style="color: #8feaff;">#1–#33</p>
+                <p class="text-[10.5px] text-[var(--color-muted)] font-mono mt-0.5">numbered badge · never reissued</p>
               </div>
             </div>
 
@@ -298,12 +296,12 @@ const breadcrumbSchema = {
                 target="_blank"
                 rel="noopener noreferrer"
                 class="inline-block px-6 py-3 rounded-lg text-[14px] font-bold uppercase tracking-[0.04em]"
-                style="background: linear-gradient(135deg, #6df7ff, #ff5bbd); color: #0e1330; box-shadow: 0 0 22px rgba(255,91,189,0.40);"
+                style="background: linear-gradient(135deg, #e25bff, #00d4ff); color: #190b2e; box-shadow: 0 0 22px rgba(226,91,255,0.45);"
               >
                 Claim a Founder slot →
               </a>
               <span class="text-[11.5px] text-[var(--color-muted)] font-mono">
-                Click "Buy Founder #(x) — $67 once" in #open-ticket on the Maxxtopia Discord.
+                One payment. No monthly charge. Click "Buy Founder Pass — $67" in #open-ticket.
               </span>
             </div>
           </div>
@@ -394,7 +392,7 @@ const breadcrumbSchema = {
                 </div>
                 <h3 class="checkout-step__title">Activate your rig</h3>
                 <p class="checkout-step__copy">
-                  In Discordmaxxer: open the Hub panel → VIP claim → paste code. First-claim-wins — your tier locks to your rig forever, even offline. The Maxx bot grants your <code class="checkout-inline-code">@VIP</code> role in the Discord with one click.
+                  Free profile flair does not require payment: open DMHub → <strong>Activate free profile</strong> and authorize your Discord account once. Paid buyers open DMVipClaim and paste their code. First-claim-wins — paid tiers lock to your rig forever, even offline. The Maxx bot grants your <code class="checkout-inline-code">@VIP</code> role in the Discord with one click.
                 </p>
               </li>
             </ol>
@@ -405,7 +403,7 @@ const breadcrumbSchema = {
                 <div>
                   <p class="checkout-reassurance__title">No surprise renewal loop.</p>
                   <p class="checkout-reassurance__copy">
-                    We don't run Stripe yet — every paid tier flows through Discord tickets. Codes are product-specific and HWID-bound: Discordmaxxer codes work in Discordmaxxer, while Optimizationmaxxing codes work in Optimizationmaxxing. Founder codes unlock both products for life. Founder is a one-time purchase; monthly tiers are never auto-charged and require an intentional renewal.
+                    We don't run Stripe yet — every paying tier flows through Discord tickets. Codes are product-specific and HWID-bound: Discordmaxxer codes work in Discordmaxxer, while Optimizationmaxxing codes work in Optimizationmaxxing. Founder codes unlock both products. No subscriptions get auto-charged. No "trial → silent renewal" traps. We send a manual reminder when your month is up.
                   </p>
                 </div>
               </div>
