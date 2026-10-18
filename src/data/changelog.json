@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-10-18",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.96",
+    "title": "Discordmaxxer v0.7.96",
+    "items": [
+      "Fixed cross-PC profile banners being attached to the wrong recycled Discord",
+      "Extensionless Worker-hosted animated banners are now rendered as real image",
+      "Animated profile media resumes when it becomes visible again or the client",
+      "Playlistmaxxing Presence now catches up to the current track at startup and"
+    ]
+  },
+  {
     "date": "2026-10-17",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
