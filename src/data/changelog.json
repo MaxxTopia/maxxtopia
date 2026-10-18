@@ -3,6 +3,20 @@
     "date": "2026-10-18",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.99",
+    "title": "This release finishes the cross-account profile presentation pass and restores the display-name styling surface that was missing from the previous public build. It also makes the first-run DM Hub easier to understand without changing the free profile customization or the media playback safeguards.",
+    "items": [
+      "Fixed display-name styles so the selected style can apply to visible message",
+      "Fixed cross-account widget-skin isolation. A profile card no longer borrows",
+      "Kept the last known good profile roster/media state during refresh, and kept",
+      "Added a small DM Hub scroll cue after the identity controls so the profile",
+      "Kept the real Discordmaxxer badge artwork in the DM Hub welcome card instead"
+    ]
+  },
+  {
+    "date": "2026-10-18",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.98",
     "title": "This release keeps cross-PC profile presentation stable while the shared profile state is loading and makes owner-published widget styles authoritative.",
     "items": [
