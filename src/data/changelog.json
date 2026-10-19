@@ -3,6 +3,20 @@
     "date": "2026-10-19",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.103",
+    "title": "This release fixes profile media crossing between Discord accounts on the same computer.",
+    "items": [
+      "Fixed a shared local profile slot that could make DiggyT display or publish",
+      "Profile media is now cached and edited per Discord account, while the shared",
+      "The client waits for the current account's roster record before adopting",
+      "Save, clear, recent-media, color, and presentation controls now use the",
+      "Preserved the existing Worker-hosted banner and avatar files; no re-upload is"
+    ]
+  },
+  {
+    "date": "2026-10-19",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.102",
     "title": "This patch restores stable animated-avatar rendering while a shared profile roster is loading or refreshing.",
     "items": [
