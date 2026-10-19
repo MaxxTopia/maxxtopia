@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-10-19",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.100",
+    "title": "This release hardens cross-account profile rendering so Discordmaxxer users see the owner's saved presentation instead of a temporary native card or the viewer's local styling.",
+    "items": [
+      "Fixed widget-skin ownership hydration so Valorant, Fortnite, and other",
+      "Preserved the last confirmed widget skin while Discord profile data is still",
+      "Added a bounded migration for older locally-selected widget skins so the",
+      "Kept stale or incomplete roster responses from clearing the last-known-good",
+      "Improved display-name style discovery in profile popouts and other profile"
+    ]
+  },
+  {
     "date": "2026-10-18",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
