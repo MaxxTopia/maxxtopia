@@ -3,6 +3,20 @@
     "date": "2026-10-19",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.101",
+    "title": "This release fixes cross-install profile media and widget presentation, and restores the branded Windows taskbar icon.",
+    "items": [
+      "Fixed animated profile banners and avatars becoming stale, missing, or",
+      "Added automatic, throttled owner-media reconciliation so a client that can",
+      "Fixed profile updates that clear media from being replaced later by an old",
+      "Fixed Valorant, Fortnite, Now Playing, and other widget skins resolving from",
+      "Prevented widget skins and profile styling from briefly disappearing while a"
+    ]
+  },
+  {
+    "date": "2026-10-19",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.100",
     "title": "This release hardens cross-account profile rendering so Discordmaxxer users see the owner's saved presentation instead of a temporary native card or the viewer's local styling.",
     "items": [
