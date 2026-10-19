@@ -1,6 +1,20 @@
 [
   {
     "date": "2026-10-19",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.102",
+    "title": "This patch restores stable animated-avatar rendering while a shared profile roster is loading or refreshing.",
+    "items": [
+      "Fixed a startup and refresh regression that could replace an owner's saved",
+      "Kept the last known good owner avatar visible during roster hydration, while",
+      "Kept the repair scoped to avatar rendering; banners, widget skins, profile",
+      "This release fixes the Discordmaxxer client-side avatar regression. It does",
+      "After installing, fully quit and relaunch Discordmaxxer before testing an"
+    ]
+  },
+  {
+    "date": "2026-10-19",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
     "version": "v0.4.32",
