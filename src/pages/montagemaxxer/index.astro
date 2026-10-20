@@ -1,12 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-const editorUrl = 'https://montage.maxxtopia.com/';
+const downloadUrl = 'https://dl.maxxtopia.com/montagemaxxer/MontageMaxxer-Local-Windows-v2.zip?v=2026-10-20';
 const showcaseVideo = '/screenshots/montagemaxxer/redrum-showcase.mp4';
 const showcasePoster = '/screenshots/montagemaxxer/redrum-showcase-poster.webp';
-const pageTitle = 'MontageMaxxer — Build Your Montage, Your Way';
+const pageTitle = 'MontageMaxxer — Free Local Windows Beta';
 const pageDescription =
-  'A local-first montage editor for Fortnite, Valorant, and serious gameplay edits. Tune titles, songs, clip volume, pacing, and the final render in one place.';
+  'A free local Windows beta for Fortnite, Valorant, and serious gameplay edits. Tune titles, songs, clip volume, pacing, and the final render on your own PC.';
 
 const softwareSchema = {
   '@context': 'https://schema.org',
@@ -45,20 +45,20 @@ const breadcrumbSchema = {
       <div class="mmx-wrap mmx-hero-grid">
         <div class="mmx-copy">
           <a href="/#apps" class="mmx-back">&larr; All products</a>
-          <p class="mmx-eyebrow"><span class="mmx-live-dot"></span> Local-first montage editor &middot; Fortnite + Valorant</p>
+          <p class="mmx-eyebrow"><span class="mmx-live-dot"></span> Free local Windows beta &middot; Fortnite + Valorant</p>
           <h1>Your montage.<br /><em>Your timing.</em></h1>
           <p class="mmx-lead">
             Build the cut you actually hear in your head. Tune the title, the outro,
             the song, the clip mix, and the pacing — then render it on your own machine.
           </p>
           <div class="mmx-actions">
-            <a href={editorUrl} class="mmx-button mmx-button--primary" target="_blank" rel="noopener noreferrer">
-              Open MontageMaxxer
+            <a href={downloadUrl} class="mmx-button mmx-button--primary">
+              Download the Windows beta
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
             </a>
             <a href="#controls" class="mmx-button mmx-button--ghost">See the controls</a>
           </div>
-          <p class="mmx-note">Private editor host &middot; render stays with the machine that has your clips</p>
+          <p class="mmx-note">Free ZIP download &middot; extract it and run it on your own Windows PC</p>
         </div>
 
         <div class="mmx-stage mmx-showcase" aria-label="A real MontageMaxxer export showcase">
@@ -140,7 +140,7 @@ const breadcrumbSchema = {
           <p class="mmx-tag">02 &middot; The workflow</p>
           <h2>From raw clips<br /><em>to your signature.</em></h2>
           <p class="mmx-body">Pick a lane that fits the footage, keep the song honest, and make the last frame feel intentional. The editor gives you the decisions without burying them in a wall of controls.</p>
-          <a href={editorUrl} class="mmx-inline-link" target="_blank" rel="noopener noreferrer">Open the editor <span>&rarr;</span></a>
+          <a href={downloadUrl} class="mmx-inline-link">Download the local beta <span>&rarr;</span></a>
         </div>
         <ol class="mmx-steps">
           <li><span>01</span><div><b>Load your clips</b><p>See the whole timeline before committing to the order.</p></div></li>
@@ -157,7 +157,7 @@ const breadcrumbSchema = {
         <h2>Make the edit feel<br /><em>like you.</em></h2>
         <p>MontageMaxxer is for the player who wants the final say — without rebuilding the same title, mix, and outro every time.</p>
         <div class="mmx-actions">
-          <a href={editorUrl} class="mmx-button mmx-button--primary" target="_blank" rel="noopener noreferrer">Open MontageMaxxer <span>&rarr;</span></a>
+          <a href={downloadUrl} class="mmx-button mmx-button--primary">Download the Windows beta <span>&rarr;</span></a>
           <a href="/clipmaxxer/apply" class="mmx-button mmx-button--ghost">Want it done for you?</a>
         </div>
       </div>
