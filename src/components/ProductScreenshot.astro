@@ -45,7 +45,7 @@ const hasAudio = initialVideo?.hasAudio !== false;
         muted
         loop
         playsinline
-        preload="metadata"
+        preload="none"
         aria-label={alt}
         data-variants={variantsJson}
         data-has-audio={String(hasAudio)}
@@ -161,10 +161,10 @@ const hasAudio = initialVideo?.hasAudio !== false;
         fallback.alt = v.getAttribute('aria-label') || '';
         fallback.className = 'product-screenshot__img';
         v.appendChild(fallback);
-        v.load();
-        // Stay frozen on the poster until the visitor clicks "Play with
-        // sound" — muted = paused rule, applied uniformly to every hero
-        // (single- and multi-variant) so they behave identically.
+        // Keep the chosen variant frozen on its poster until the visitor
+        // clicks "Play with sound". With preload="none", calling load() here
+        // would defeat the deferred-media behavior; the explicit play path
+        // below will load the selected source on demand.
       } catch (_e) {
         // Bad JSON — leave server-rendered first variant in place.
       }
