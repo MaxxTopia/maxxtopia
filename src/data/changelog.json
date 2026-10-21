@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-10-21",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.104",
+    "title": "This release revamps DMProfileFlair controls, brings native Playing activity card widget skin support, improves Tournament Mode feedback, enhances theme and tier flair options, and adds animated recent pick circles.",
+    "items": [
+      "Fixed cursor jumping and right-click text selection issues in banner and avatar fields.",
+      "Replaced raw recent picks JSON with animated circular preview thumbnails.",
+      "Added clickable empty preview windows, file picker, and drag-and-drop file upload.",
+      "Direct upload & save pipeline through the VIP worker with automated validation.",
+      "Added inline media preflight showing file size, dimensions, duration, and limit feedback."
+    ]
+  },
+  {
     "date": "2026-10-19",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
