@@ -3,6 +3,36 @@
     "date": "2026-10-22",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.111",
+    "title": "Restored anime cursor animations, decoupled high-frequency mouse tracking, and GPU rendering optimizations.",
+    "body": "DMCursor brings back full animations across all anime skins while decoupling mouse tracking to eliminate CPU and GPU overhead.",
+    "items": [
+      "Restored animations across all anime cursor skins: Sharingan 3-tomoe rotation, Rinnegan phased rippling rings and orbiting chakra dots, Rasengan multi-layered swirling chakra storm, Chidori crackling lightning, and Stiiizy smoke trails.",
+      "Buffered mouse movement to requestAnimationFrame, eliminating main-thread stutter and CPU spikes from 1000Hz+ high polling rate gaming mice.",
+      "Isolated Stiiizy smoke particle elements in a dedicated container to prevent waking Discord and plugin MutationObservers.",
+      "Replaced universal root selector with targeted interactive element selectors, eliminating style recalculation overhead across Discord DOM.",
+      "Optimized GPU drop-shadow filters into single-pass hardware glows to reduce compositor workload."
+    ]
+  },
+  {
+    "date": "2026-10-22",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "COTE S4 + 2024 blockbusters",
+    "title": "Viewmaxxing brings 2024 blockbusters, anime continuations, and prestige TV to the theater.",
+    "body": "The theater catalog expands with Classroom of the Elite Season 4, hit 2024 movies, prestige TV series, and official theatrical artwork.",
+    "items": [
+      "Admits Classroom of the Elite Season 4 with verified English Dub and Japanese Sub native playback.",
+      "Adds 6 hit 2024 blockbuster films: Sonic the Hedgehog 3, Bad Boys: Ride or Die, A Quiet Place: Day One, Smile 2, Nosferatu, and Joker: Folie à Deux.",
+      "Admits 5 prestige TV series: The Office (S1–S9), The Wire (S1–S5), Succession (S1–S4), Ozark (S1–S4), and Black Mirror (S1–S7).",
+      "Updates A Minecraft Movie with official theatrical TMDB poster and Overworld backdrop artwork.",
+      "Hardens AniList to MAL bridge overrides for Dragon Ball Super, Jujutsu Kaisen, and One-Punch Man to protect against upstream outages."
+    ]
+  },
+  {
+    "date": "2026-10-22",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.110",
     "title": "Comprehensive fix and overhaul of conversation header widget skins in `DMWidget`, ensuring seamless, unified avatar and username capsule wrapping on 1-on-1 direct messages across all name lengths, fixing clipping on medium-length names, and resolving detection failures on short names.",
     "items": [
@@ -57,6 +87,50 @@
   },
   {
     "date": "2026-10-21",
+    "product": "Optimizationmaxxing",
+    "productSlug": "optimizationmaxxing",
+    "version": "v0.4.34",
+    "title": "Route-level code splitting, active tier visibility, and guided optimization workflows.",
+    "body": "Initial bundle size drops by over 68% while clear Free versus VIP pathways and Asta execution indicators guide your tune.",
+    "items": [
+      "Implemented route-level lazy loading and vendor bundle splitting, reducing initial JavaScript payload from 1.5 MB to 486 KB.",
+      "Added a persistent tier status pill in the header showing active Free or VIP status with one-click access to pricing.",
+      "Introduced a 3-step optimization pathway on the Dashboard guiding Free users from baseline scan to game proof.",
+      "Added a prominent VIP code redemption entry and side-by-side comparison on the Pricing page.",
+      "Added a 4-step process guide to Asta Mode: Rig Audit, 1-Click Apply, Reboot Check, and Game Proof."
+    ]
+  },
+  {
+    "date": "2026-10-21",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "Tulsa King S4 + dub recovery",
+    "title": "Viewmaxxing aligns newest release ordering and hardens native anime playback.",
+    "body": "Newest Release sort now enforces strict chronological ordering, while Tulsa King S4 airs and anime dubs recover from upstream outages.",
+    "items": [
+      "Admitted Tulsa King with Season 4 airing episode support and search alias matching.",
+      "Decoupled franchise clustering from Newest Release sort so movies and series order strictly by release year and part without chronological inversions.",
+      "Fixed Black Clover S1–S5 English dub streams, injected required MegaVid CDN Origin headers, and bypassed AniList API edge outages.",
+      "Admitted The Future Diary (Mirai Nikki) with all 26 episodes verified in English Dub and Japanese Sub.",
+      "Updated Black Clover catalog release year to 2026 to reflect its active airing season."
+    ]
+  },
+  {
+    "date": "2026-10-21",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Transport reactivity + popout recovery",
+    "title": "Playlistmaxxing makes transport controls and queue transitions instant.",
+    "body": "Play and pause toggles now respond immediately across all providers while popout animations and background queue handoffs stay smooth.",
+    "items": [
+      "Immediate play/pause toggle reactivity across SoundCloud, YouTube, and Spotify without race conditions or button state desync.",
+      "Fixed popout spinning vinyl disc animation freezing when tracks conclude, transitioning cleanly to the next song.",
+      "Guarded natural-end queue advancement when the browser tab is hidden or backgrounded.",
+      "Refined unexpected pause and stall recovery so active playback resumes reliably."
+    ]
+  },
+  {
+    "date": "2026-10-21",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.104",
@@ -67,6 +141,35 @@
       "Added clickable empty preview windows, file picker, and drag-and-drop file upload.",
       "Direct upload & save pipeline through the VIP worker with automated validation.",
       "Added inline media preflight showing file size, dimensions, duration, and limit feedback."
+    ]
+  },
+  {
+    "date": "2026-10-20",
+    "product": "Optimizationmaxxing",
+    "productSlug": "optimizationmaxxing",
+    "version": "v0.4.33",
+    "title": "Hardened physical network adapter detection and elevated batch rollback mapping.",
+    "body": "Asta network apply and rollback now reliably identify physical hardware while elevated commands report per-tweak results.",
+    "items": [
+      "Enumerates IPv4 and IPv6 default routes to select active physical adapters while rejecting virtual and VPN interfaces.",
+      "Preserves hardware PNP, interface GUID, and device identity for reliable NIC setting rollback.",
+      "Elevated command batches now return individual per-tweak results within a single UAC consent boundary.",
+      "Asta receipt rollback maps elevated results back to individual actions, preserving accurate committed and reverted states."
+    ]
+  },
+  {
+    "date": "2026-10-20",
+    "product": "MontageMaxxer",
+    "productSlug": "montagemaxxer",
+    "version": "Local beta + editor parity",
+    "title": "MontageMaxxer ships local beta downloads and editor parity.",
+    "body": "MontageMaxxer is now available as a local Windows beta download, featuring safe montage shortcuts and expanded canvas backgrounds.",
+    "items": [
+      "Published the local MontageMaxxer Windows beta download on Maxxtopia with full setup documentation.",
+      "Added Montage Shortcuts rail with Beat Accents, Snap Overlays to Beat, and Montage Preflight checks.",
+      "Expanded canvas background modes with original, blur, solid color, and deterministic pattern previews.",
+      "Hardened timeline editor with live 18-clip playback, fullscreen preview, and keyframe controls.",
+      "Kept video tray and clip cuts authoritative so overlay automation remains additive and reversible with one-click undo."
     ]
   },
   {
@@ -140,6 +243,34 @@
   },
   {
     "date": "2026-10-18",
+    "product": "Optimizationmaxxing",
+    "productSlug": "optimizationmaxxing",
+    "version": "v0.4.30",
+    "title": "Catalog-driven Pinnacle Asta plan and single-consent elevated execution.",
+    "body": "Asta Mode selects verified catalog-driven settings and unifies verified and explicit actions into a single apply batch.",
+    "items": [
+      "Asta's verified and explicit lanes now use one native apply batch, reducing the apply path to a single Windows UAC prompt.",
+      "Asta receipt recovery counts only newly changed receipts, preventing historical records from skewing current batch results.",
+      "Selected catalog-backed Pinnacle defaults based on measured hardware mechanisms and verified transaction contracts.",
+      "Excluded ping from improved/regressed metric counts when jitter data is unavailable to maintain honest benchmark scores."
+    ]
+  },
+  {
+    "date": "2026-10-18",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.26",
+    "title": "AdBlock-Maxxer fixes YouTube VOD quality races and refreshes Twitch filters.",
+    "body": "YouTube Reclaim now prevents stale quality selections from forcing low-res fallbacks while Twitch live filters stay current.",
+    "items": [
+      "Added generation tokens to YouTube Reclaim format selection, preventing stale HD requests from triggering 360p progressive fallbacks.",
+      "Ignored late playing events from abandoned media source feeds to prevent quality badge flickering.",
+      "Refreshed Twitch live latency and ad-swap rules for stream playback stability.",
+      "Maintained full compatibility with the YouTube Companion v0.4.13 background worker."
+    ]
+  },
+  {
+    "date": "2026-10-18",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.99",
@@ -189,6 +320,20 @@
       "Extensionless Worker-hosted animated banners are now rendered as real image",
       "Animated profile media resumes when it becomes visible again or the client",
       "Playlistmaxxing Presence now catches up to the current track at startup and"
+    ]
+  },
+  {
+    "date": "2026-10-17",
+    "product": "Betmaxxing",
+    "productSlug": "betmaxxing",
+    "version": "Feed-state safety + UI resilience",
+    "title": "Betmaxxing hardens live board feed states and interface resilience.",
+    "body": "Sports board feed handling now protects against stale provider snapshots while compact mobile navigation stays responsive.",
+    "items": [
+      "Isolated live market feed state so stale provider snapshots cannot corrupt active board questions or odds.",
+      "Improved multi-game search disambiguation when queries match multiple teams or start times.",
+      "Optimized compact mobile navigation layout and responsive touch drawer controls.",
+      "Enhanced slip and parlay desk summary calculations across verified legs."
     ]
   },
   {
@@ -245,6 +390,19 @@
       "DMHub now opens the Video Background editor directly; playback is free and",
       "Founder claims now mean $67 once for lifetime MAXXER+, a permanent numbered",
       "Release notes are attached to the GitHub release so the in-app updater shows"
+    ]
+  },
+  {
+    "date": "2026-10-15",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "Blue VOD clean route + catalog additions",
+    "title": "Viewmaxxing adds clean VOD routes and autumn catalog releases.",
+    "body": "A new clean Web-DL stream server provides seamless fallback while autumn releases join the catalog.",
+    "items": [
+      "Exposed Blue VOD clean route as a selectable server and automatic failover in the native player.",
+      "Routed Buddy (2026) to clean 1080p Web-DL streams and added recurrence playback safeguards.",
+      "Admitted Matchbox (2026) and initial Black Clover Season 5 endpoints with dual audio verification."
     ]
   },
   {
