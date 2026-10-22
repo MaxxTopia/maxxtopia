@@ -3,6 +3,20 @@
     "date": "2026-10-22",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.109",
+    "title": "Comprehensive rewrite and overhaul of DMTranslate with universal language auto-detection (Japanese, Spanish, Russian, Chinese, German, Korean, Arabic, etc.), multi-engine fallback architecture (Google Translate Single, Google PA, MyMemory, and DeepL API), inline message accessories with quick copy/dismiss, and modern stable modal translation dialogs.",
+    "items": [
+      "Automatically detects any source language from right-clicked messages and translates it into English (or user-chosen target language).",
+      "Integrated resilient multi-engine translation chain: primary Google Translate single endpoint with automatic failover to Google PA, MyMemory, and optional DeepL API.",
+      "Zero external Python, server helper, or API key requirement for standard instant translations.",
+      "Replaced broken `Alerts.show` with Discordmaxxer's stable `ModalRoot` / `ModalHeader` / `ModalContent` / `ModalCloseButton` modal architecture wrapped in an `ErrorBoundary`.",
+      "Added native inline translation accessories (`renderMessageAccessory`) underneath messages displaying source language, translated text, and quick `Copy` / `Dismiss` buttons."
+    ]
+  },
+  {
+    "date": "2026-10-22",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.108",
     "title": "Fixed client crash when opening DMEmoji from the chat bar, modernized DMEmoji to use Discordmaxxer's stable modal architecture with error boundary isolation, improved emoji storage and retrieval reliability, and added DMEmoji to default-enabled seed configuration and build verification.",
     "items": [
