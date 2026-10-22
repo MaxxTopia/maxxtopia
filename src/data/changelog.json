@@ -3,6 +3,20 @@
     "date": "2026-10-22",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.108",
+    "title": "Fixed client crash when opening DMEmoji from the chat bar, modernized DMEmoji to use Discordmaxxer's stable modal architecture with error boundary isolation, improved emoji storage and retrieval reliability, and added DMEmoji to default-enabled seed configuration and build verification.",
+    "items": [
+      "Replaced Discord's broken mangled `Modal` import from `@webpack/common` with Discordmaxxer's stable `ModalRoot`, `ModalHeader`, `ModalContent`, and `ModalCloseButton` primitives.",
+      "Wrapped modal mounting in an `ErrorBoundary` and guarded chat bar button click handlers with `try / catch` so runtime modal errors can never crash the Discord client or trigger the reload screen.",
+      "Provided a resilient standalone modal fallback shell with keyboard (`Escape`) and backdrop-click dismiss handlers in case Discord modal primitives fail to resolve.",
+      "Enhanced `getEmojiFile()` to safely deserialize `Blob`, `File`, `ArrayBuffer`, or `ArrayBufferView` data from IndexedDB without throwing.",
+      "Added channel validation and error toasts to `sendEmojiAsImage()` to ensure graceful feedback if an emoji cannot be attached."
+    ]
+  },
+  {
+    "date": "2026-10-22",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.107",
     "title": "Major performance overhaul eliminating lag and frame drops in Settings and the Plugins tab, crash prevention and memory leak fixes for external media streaming, DMCursor fluid hardware-accelerated tracking, full avatar-and-name wrapping for conversation header widget skins, and synchronized Playlistmaxxing rich presence.",
     "items": [
