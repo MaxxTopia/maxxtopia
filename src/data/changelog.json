@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-10-24",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.113",
+    "title": "This release delivers major resource-efficiency and background performance upgrades across Discordmaxxer. Custom anime cursors and profile widgets are now hardware-accelerated directly on the GPU compositor, background animations freeze to 0% CPU when unfocused or stationary, and voice-aware background throttling drops idle resource usage to match or beat stock Discord without compromising voice calls or gaming streams.",
+    "items": [
+      "Replaced CPU-heavy SMIL `<animateTransform>` tags in Sharingan, Rinnegan, and Rasengan SVG skins with hardware-accelerated CSS compositor `@keyframes`.",
+      "SVG layout tree geometry is no longer recalculated synchronously on the V8 main thread on every frame, eliminating CPU spikes and software rasterization stalls.",
+      "Cursor animations automatically sleep when the pointer is stationary for more than 2.5 seconds, instantly re-engaging the moment the mouse moves.",
+      "Animations immediately freeze when Discord is blurred or the cursor leaves the window, guaranteeing 0% cursor CPU while reading chat, typing, or playing a game on another monitor.",
+      "Promoted `[data-dm-widget-skin]::before` and `::after` layers to dedicated GPU surfaces with `will-change: transform, opacity; transform: translateZ(0);`."
+    ]
+  },
+  {
     "date": "2026-10-22",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
