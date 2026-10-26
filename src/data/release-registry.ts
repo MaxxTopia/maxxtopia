@@ -55,10 +55,11 @@ export const releaseRegistry = {
   },
 
   streammaxxing: {
-    version: '0.1.59',
-    installerUrl: 'https://dl.maxxtopia.com/streammaxxing/streammaxxing-latest-x64-setup.exe',
+    version: '0.1.70',
+    installerUrl:
+      'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.70_x64-setup.exe?sha256=cac041ce63c0a5586144bcfd792de5304dd5ca21f251257924dc274955eb1739',
     releasePageUrl: null,
-    publishedAt: '2026-09-01T21:57:47Z',
+    publishedAt: '2026-10-26T11:33:41Z',
     source: 'public-manifest',
   },
 
