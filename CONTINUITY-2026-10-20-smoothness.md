@@ -44,5 +44,6 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 
 - `src/components/OMDiagnosticHero.astro` now explains the DPC-latency paragraph in plain language: it describes small responsiveness delays, heat, driver health, hardware connections, sourced tweaks, and saved-snapshot undo without assuming the reader knows DPC or PCIe terminology.
 - `npm run build` passed, including release-truth and sitemap checks. The local preview showed the changed copy at desktop (1440px) and mobile (390px) widths with clean wrapping and no visible overflow in the changed section.
-- This copy edit is local-only and uncommitted. No push or deployment was performed; the live site remains unchanged by this follow-up. `origin/main` is now `c3eace8` after later automated release-sync commits, so any future release must reconcile against that current remote tip first.
-- Next action: user review of the wording; if approved, integrate the copy change onto current `origin/main` and use the normal Maxxtopia ship gate.
+- The copy edit was committed as `51631fe` after rebasing onto the current remote tip, pushed to `main`, and deployed by Pages run `40300067444` (success, 50 seconds). The canonical dirty checkout was not edited.
+- Live verification returned HTTP 200 with the expected security headers, and the cache-busted `/optimizationmaxxing/` route rendered the new wording and the current v0.4.34 release data. Local desktop/mobile wrapping and the production browser render both pass.
+- Remaining user gate: Diggy should read the live paragraph and confirm the tone is clear. If the site still feels laggy, measure the hero's Starfield canvas, blurred auroras, and 3D PC-rig work separately rather than stacking an unmeasured optimization.
