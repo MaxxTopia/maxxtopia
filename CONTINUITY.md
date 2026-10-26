@@ -871,3 +871,15 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - Updated only `src/data/products.ts` so the already-published Snipemaxxer mobile companion section links to the live 0.1.8 installer instead of retired 0.1.6.
 - `npm run build` passed release-truth, sitemap, and Astro checks. The local `/snipemaxxer/` route rendered the companion section at desktop and mobile sizes with the install, pair, play, download, and mobile-view actions visible.
 - This is a site-only CTA refresh; the companion and mobile Worker were released separately. The remaining field gate is a real gaming-PC, Riot Client, phone, and lobby test.
+
+## Snipemaxxer companion CTA refresh -- 2026-10-26
+
+- Updated only `src/data/products.ts` so the public Snipemaxxer mobile companion
+  section links to the live 0.1.9 installer. The previous 0.1.8 artifact was
+  retired after the 0.1.9 release, so keeping the older link would have made
+  the site's download button return 404.
+- Verification target: `npm run build`, then the live `/snipemaxxer/` page must
+  show `Maxxtopia-Companion-Setup-0.1.9.exe` and no retired 0.1.8 CTA.
+- The companion and mobile Worker remain separately released. The remaining
+  field gate is still a real gaming-PC, Riot Client, phone, and known-history
+  lobby test after the companion updates.
