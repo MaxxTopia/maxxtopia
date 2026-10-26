@@ -26,8 +26,23 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Local OptimizationMaxxing fresh load: all six videos reported `preload="none"`, paused, `readyState=0`.
 - Local explicit Play with sound: main demo reached `readyState=4`, advanced its playhead, was unmuted/playing, and hid the overlay.
 
-## State and next gate
+## Final release state
 
-- Diggy authorized the normal Maxxtopia release gate. The rebased build, focused tests, desktop/mobile route smoke test, deferred-load state, explicit playback, and console check pass; the patch is not yet committed, pushed, or deployed at this checkpoint update.
-- Next release action: stage only the two component changes plus this continuity note, commit without co-authorship trailers, push the isolated HEAD to remote `main` without touching the canonical dirty checkout, watch the GitHub Actions deployment, and re-check the live page.
-- After deployment, the remaining user gate is a fresh browser test of OptimizationMaxxing scrolling, nav clicks, and explicit demo playback. If it still feels laggy, measure the hero's Starfield/blur/3D work separately and make one controlled follow-up change.
+- Diggy authorized publishing. Commit `330f04f` (`perf: defer product page video loading`) contains only this checkpoint plus the two intended component changes and has no co-author trailer.
+- The commit was pushed from the isolated branch to remote `main`; isolated `HEAD` and `origin/main` both resolve to `330f04f`. The canonical checkout was not edited and remains broadly dirty (`main` is ahead 2 and behind 90).
+- GitHub Actions deploy run `39519245278` completed successfully in 52 seconds. Its `npm ci`, `npm run build`, and Cloudflare Pages production deploy all passed. GitHub emitted only runner/action Node 20 and Ubuntu image migration notices.
+- Live root and canonical `/snipemaxxer/` returned HTTP 200 with HSTS, CSP, `x-content-type-options: nosniff`, `x-frame-options: SAMEORIGIN`, and the expected referrer/permissions policies. Bare `/snipemaxxer` correctly redirects 308 to the slash route.
+- Cache-busted live OptimizationMaxxing HTML returned 200 with six `preload="none"` videos and no eager random-variant `v.load()` call. Live desktop and 390px mobile checks showed all six paused at `readyState=0`; explicit Play with sound reached `readyState=4`, advanced the playhead, and played unmuted. No console warnings/errors were observed.
+- Live route audit covered home, all product routes, Guides, and Updates: no 404 markers, no horizontal overflow at the desktop test viewport, and no console warnings/errors. Shared deferred-media routes reported `preload="none"`; AdBlock-Maxxer retains one separate intentional autoplay decorative feed with `preload="metadata"`.
+
+## Remaining user gate and follow-up
+
+- Diggy should make a fresh subjective test of OptimizationMaxxing scrolling, nav clicks, and explicit demo playback. This release proves deferred media behavior, not a universal physical 60-FPS guarantee.
+- If it still feels laggy, the next controlled measurement is the hero's Starfield canvas, blurred auroras, and 3D PC-rig work; do not stack another unmeasured optimization on this patch.
+
+## Follow-up copy edit — 2026-10-26
+
+- `src/components/OMDiagnosticHero.astro` now explains the DPC-latency paragraph in plain language: it describes small responsiveness delays, heat, driver health, hardware connections, sourced tweaks, and saved-snapshot undo without assuming the reader knows DPC or PCIe terminology.
+- `npm run build` passed, including release-truth and sitemap checks. The local preview showed the changed copy at desktop (1440px) and mobile (390px) widths with clean wrapping and no visible overflow in the changed section.
+- This copy edit is local-only and uncommitted. No push or deployment was performed; the live site remains unchanged by this follow-up. `origin/main` is now `c3eace8` after later automated release-sync commits, so any future release must reconcile against that current remote tip first.
+- Next action: user review of the wording; if approved, integrate the copy change onto current `origin/main` and use the normal Maxxtopia ship gate.
