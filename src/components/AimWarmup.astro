@@ -24,6 +24,7 @@ type Routine = { name: string; code: string; subs: number };
 type Game = {
   game: string;
   style: 'Clicking' | 'Tracking' | 'Mixed';
+  map: 'storm' | 'range' | 'dust' | 'ring' | 'neon' | 'nightops';
   why: string;
   routine: Routine;
 };
@@ -33,36 +34,42 @@ const games: Game[] = [
   {
     game: 'Fortnite',
     style: 'Mixed',
+    map: 'storm',
     why: 'Box-fight shotgun flicks, 180s, and air tracking.',
     routine: { name: 'COLD SHOTGUN GOD', code: 'KovaaKsPullingChestnutMap', subs: 70 },
   },
   {
     game: 'Valorant',
     style: 'Clicking',
+    map: 'range',
     why: 'One-taps, micro-adjust, crosshair placement.',
     routine: { name: 'Shah · RADIANT Warm Up', code: 'KovaaKsBuyingStaticInitiator', subs: 522 },
   },
   {
     game: 'CS2',
     style: 'Clicking',
+    map: 'dust',
     why: 'Static precision and wide peek flicks.',
     routine: { name: 'm0narcS · TacFPS Euphoria', code: 'KovaaKsBouncingFedSuper', subs: 1474 },
   },
   {
     game: 'Apex Legends',
     style: 'Tracking',
+    map: 'ring',
     why: 'Hold the beam — long and mid-air tracking.',
     routine: { name: 'higheuphoria · air', code: 'KovaaKsBloomingFastPerk', subs: 191 },
   },
   {
     game: 'Overwatch 2',
     style: 'Tracking',
+    map: 'neon',
     why: 'Close hitscan tracking and flanker duels.',
     routine: { name: 'higheuphoria · control', code: 'KovaaKsBlinkingFastAce', subs: 228 },
   },
   {
     game: 'Call of Duty',
     style: 'Mixed',
+    map: 'nightops',
     why: 'Close beams and quick flicks — an all-round daily.',
     routine: { name: 'Andrew · Daily Mix', code: 'KovaaKsPeekingFastQuaker', subs: 370 },
   },
@@ -125,7 +132,7 @@ const skates = [
 ];
 ---
 
-<section class="aim-warmup" style={`--aim-accent: ${accentHex};`} aria-labelledby="aim-warmup-heading">
+<section class="aim-warmup" style={`--aim-accent: ${accentHex}; --aim-click: var(--color-magenta); --aim-track: var(--color-cyan); --aim-switch: #ff6b8b;`} aria-labelledby="aim-warmup-heading">
   <div class="aim-warmup__inner">
     <header class="aim-warmup__header reveal-on-scroll">
       <p class="aim-warmup__eyebrow">Warm up right</p>
@@ -139,9 +146,27 @@ const skates = [
       </p>
     </header>
 
+    <div class="aim-warmup__map reveal-on-scroll" aria-label="Aimmaxxer training map">
+      <div class="aim-warmup__map-head">
+        <span>Training map</span>
+        <small>Match the weakness to the warm-up</small>
+      </div>
+      <div class="aim-warmup__map-grid">
+        <div class="aim-warmup__map-item aim-warmup__map-item--clicking">
+          <i></i><strong>Click</strong><span>Flick + confirm</span>
+        </div>
+        <div class="aim-warmup__map-item aim-warmup__map-item--tracking">
+          <i></i><strong>Track</strong><span>Hold the line</span>
+        </div>
+        <div class="aim-warmup__map-item aim-warmup__map-item--switching">
+          <i></i><strong>Switch</strong><span>Acquire the next</span>
+        </div>
+      </div>
+    </div>
+
     <div class="aim-warmup__grid">
       {games.map((g) => (
-        <article class="aim-warmup__card reveal-on-scroll">
+        <article class:list={['aim-warmup__card', `aim-warmup__card--${g.style.toLowerCase()}`, `aim-warmup__card--map-${g.map}`, 'reveal-on-scroll']}>
           <div class="aim-warmup__card-head">
             <h3 class="aim-warmup__game">{g.game}</h3>
             <span class:list={['aim-warmup__tag', `aim-warmup__tag--${g.style.toLowerCase()}`]}>{g.style}</span>
@@ -207,7 +232,7 @@ const skates = [
       </header>
       <div class="aim-warmup__grid aim-warmup__grid--skill">
         {skillRoutines.map((s) => (
-          <article class="aim-warmup__card reveal-on-scroll">
+          <article class:list={['aim-warmup__card', `aim-warmup__card--${s.tag.toLowerCase()}`, 'reveal-on-scroll']}>
             <div class="aim-warmup__card-head">
               <h4 class="aim-warmup__routine-name aim-warmup__routine-name--lg">{s.name}</h4>
               <span class:list={['aim-warmup__tag', `aim-warmup__tag--${s.tag.toLowerCase()}`]}>{s.tag}</span>
@@ -270,7 +295,7 @@ const skates = [
     </div>
 
     <!-- v2 teaser — Dante red, paid, Discord-to-purchase -->
-    <div class="aim-warmup__v2 reveal-on-scroll" style="--aim-accent: #e11d2b;">
+    <div class="aim-warmup__v2 reveal-on-scroll" style="--aim-accent: var(--color-magenta);">
       <p class="aim-warmup__v2-eyebrow">What's coming</p>
       <h3 class="aim-warmup__v2-title">Aimmaxxer <span class="aim-warmup__accent">v2.</span> The real deal.</h3>
       <p class="aim-warmup__v2-body">Real training happens in the lab. Use the routines above to improve — that's V1. Only go to V2 if you want an AI that drills the aim that's actually holding you back.</p>
@@ -314,9 +339,13 @@ const skates = [
 
 <style>
   .aim-warmup {
+    --aim-click: var(--color-magenta);
+    --aim-track: var(--color-cyan);
+    --aim-switch: #ff6b8b;
     position: relative;
     padding: 88px 0 32px;
     border-top: 1px solid var(--color-line);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--aim-accent) 4%, transparent), transparent 240px);
   }
   .aim-warmup__inner {
     max-width: 1100px;
@@ -329,7 +358,7 @@ const skates = [
 
   .aim-warmup__header {
     max-width: 680px;
-    margin: 0 0 40px;
+    margin: 0 0 26px;
   }
   .aim-warmup__eyebrow {
     font-family: var(--font-mono);
@@ -357,25 +386,133 @@ const skates = [
     margin: 0;
   }
 
+  .aim-warmup__map {
+    margin: 0 0 30px;
+    padding: 14px 16px 16px;
+    border: 1px solid var(--color-line);
+    border-radius: 13px;
+    background: color-mix(in srgb, var(--color-bg-card) 82%, var(--aim-accent));
+  }
+  .aim-warmup__map-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 12px;
+  }
+  .aim-warmup__map-head span {
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+  .aim-warmup__map-head small {
+    color: var(--color-subtle);
+    font-size: 12px;
+  }
+  .aim-warmup__map-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .aim-warmup__map-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 8px;
+    align-items: center;
+    padding: 10px 11px;
+    border-left: 2px solid var(--aim-map-color);
+    background: color-mix(in srgb, var(--aim-map-color) 6%, transparent);
+  }
+  .aim-warmup__map-item--clicking { --aim-map-color: var(--aim-click); }
+  .aim-warmup__map-item--tracking { --aim-map-color: var(--aim-track); }
+  .aim-warmup__map-item--switching { --aim-map-color: var(--aim-switch); }
+  .aim-warmup__map-item i {
+    grid-row: span 2;
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--aim-map-color);
+    border-radius: 50%;
+    box-shadow: 0 0 9px color-mix(in srgb, var(--aim-map-color) 50%, transparent);
+  }
+  .aim-warmup__map-item strong {
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .aim-warmup__map-item span {
+    color: var(--color-subtle);
+    font-size: 12px;
+  }
+
   .aim-warmup__grid {
     display: grid;
     gap: 14px;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
   .aim-warmup__card {
+    --aim-card-accent: var(--aim-accent);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--color-line);
-    background: var(--color-bg-card);
+    border-top: 2px solid color-mix(in srgb, var(--aim-card-accent) 65%, transparent);
+    background-color: var(--color-bg-card);
     border-radius: 16px;
     padding: 20px;
-    transition: border-color 200ms ease, transform 200ms ease, background 200ms ease;
+    transition: border-color 200ms ease, transform 200ms ease, background-color 200ms ease;
+  }
+  .aim-warmup__card > * { position: relative; z-index: 1; }
+  .aim-warmup__card::before,
+  .aim-warmup__card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.82;
+  }
+  .aim-warmup__card::before { background: var(--aim-map-glow, none); mix-blend-mode: screen; }
+  .aim-warmup__card::after { background: var(--aim-map-grid, none); opacity: 0.32; }
+  .aim-warmup__card--map-storm {
+    --aim-map-glow: radial-gradient(ellipse at 82% -10%, rgba(0, 212, 255, 0.2), transparent 58%), radial-gradient(circle at 18% 92%, rgba(255, 107, 139, 0.12), transparent 48%);
+    --aim-map-grid: repeating-linear-gradient(135deg, transparent 0 24px, rgba(0, 212, 255, 0.08) 25px 26px);
+  }
+  .aim-warmup__card--map-range {
+    --aim-map-glow: radial-gradient(circle at 67% 8%, rgba(226, 91, 255, 0.2), transparent 34%), linear-gradient(180deg, rgba(226, 91, 255, 0.08), transparent 68%);
+    --aim-map-grid: repeating-linear-gradient(90deg, transparent 0 30px, rgba(226, 91, 255, 0.07) 31px 32px), repeating-linear-gradient(0deg, transparent 0 30px, rgba(226, 91, 255, 0.045) 31px 32px);
+  }
+  .aim-warmup__card--map-dust {
+    --aim-map-glow: radial-gradient(circle at 12% 88%, rgba(255, 107, 139, 0.19), transparent 48%), linear-gradient(145deg, rgba(226, 91, 255, 0.07), transparent 58%);
+    --aim-map-grid: repeating-linear-gradient(135deg, transparent 0 20px, rgba(255, 107, 139, 0.07) 21px 22px);
+  }
+  .aim-warmup__card--map-ring {
+    --aim-map-glow: radial-gradient(circle at 82% 14%, rgba(0, 212, 255, 0.2), transparent 42%), radial-gradient(circle at 18% 80%, rgba(226, 91, 255, 0.09), transparent 44%);
+    --aim-map-grid: repeating-radial-gradient(circle at 82% 14%, transparent 0 15px, rgba(0, 212, 255, 0.08) 16px 17px);
+  }
+  .aim-warmup__card--map-neon {
+    --aim-map-glow: radial-gradient(circle at 16% 10%, rgba(255, 107, 139, 0.21), transparent 38%), radial-gradient(circle at 92% 86%, rgba(0, 212, 255, 0.14), transparent 44%);
+    --aim-map-grid: repeating-linear-gradient(155deg, transparent 0 26px, rgba(255, 107, 139, 0.08) 27px 28px);
+  }
+  .aim-warmup__card--map-nightops {
+    --aim-map-glow: radial-gradient(circle at 84% 82%, rgba(0, 212, 255, 0.18), transparent 48%), linear-gradient(155deg, rgba(25, 12, 48, 0.84), transparent 66%);
+    --aim-map-grid: repeating-linear-gradient(0deg, transparent 0 13px, rgba(0, 212, 255, 0.06) 14px 15px);
   }
   .aim-warmup__card:hover {
-    border-color: color-mix(in srgb, var(--aim-accent) 45%, transparent);
+    border-color: color-mix(in srgb, var(--aim-card-accent) 45%, transparent);
     transform: translateY(-2px);
-    background: var(--color-bg-card-hover);
+    background-color: var(--color-bg-card-hover);
   }
+  .aim-warmup__card--clicking { --aim-card-accent: var(--aim-click); }
+  .aim-warmup__card--tracking { --aim-card-accent: var(--aim-track); }
+  .aim-warmup__card--mixed,
+  .aim-warmup__card--switching { --aim-card-accent: var(--aim-switch); }
   .aim-warmup__card-head {
     display: flex;
     align-items: center;
@@ -391,6 +528,7 @@ const skates = [
     margin: 0;
   }
   .aim-warmup__tag {
+    --aim-tag-color: var(--aim-card-accent, var(--aim-accent));
     font-family: var(--font-mono);
     font-size: 10.5px;
     letter-spacing: 0.08em;
@@ -400,22 +538,11 @@ const skates = [
     border: 1px solid transparent;
     white-space: nowrap;
   }
-  .aim-warmup__tag--clicking {
-    color: #f3af19;
-    border-color: rgba(243, 175, 25, 0.32);
-    background: rgba(243, 175, 25, 0.08);
-  }
-  .aim-warmup__tag--tracking {
-    color: #00d4ff;
-    border-color: rgba(0, 212, 255, 0.32);
-    background: rgba(0, 212, 255, 0.08);
-  }
+  .aim-warmup__tag--clicking { --aim-tag-color: var(--aim-click); }
+  .aim-warmup__tag--tracking { --aim-tag-color: var(--aim-track); }
   .aim-warmup__tag--mixed,
-  .aim-warmup__tag--switching {
-    color: #e25bff;
-    border-color: rgba(226, 91, 255, 0.32);
-    background: rgba(226, 91, 255, 0.08);
-  }
+  .aim-warmup__tag--switching { --aim-tag-color: var(--aim-switch); }
+  .aim-warmup__tag { color: var(--aim-tag-color); border-color: color-mix(in srgb, var(--aim-tag-color) 32%, transparent); background: color-mix(in srgb, var(--aim-tag-color) 8%, transparent); }
   .aim-warmup__why {
     color: var(--color-muted);
     font-size: 13px;
@@ -473,7 +600,7 @@ const skates = [
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--color-text);
-    background: color-mix(in srgb, var(--aim-accent) 8%, var(--color-bg));
+    background: color-mix(in srgb, var(--aim-card-accent, var(--aim-accent)) 8%, var(--color-bg));
     border: 1px solid var(--color-line);
     border-radius: 8px;
     padding: 7px 10px;
@@ -490,16 +617,16 @@ const skates = [
     font-size: 11px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--aim-accent);
+    color: var(--aim-card-accent, var(--aim-accent));
     cursor: pointer;
-    border: 1px solid color-mix(in srgb, var(--aim-accent) 45%, transparent);
-    background: color-mix(in srgb, var(--aim-accent) 6%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aim-card-accent, var(--aim-accent)) 45%, transparent);
+    background: color-mix(in srgb, var(--aim-card-accent, var(--aim-accent)) 6%, transparent);
     border-radius: 999px;
     padding: 7px 12px;
     white-space: nowrap;
     transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
   }
-  .aim-warmup__copy:hover { background: color-mix(in srgb, var(--aim-accent) 16%, transparent); }
+  .aim-warmup__copy:hover { background: color-mix(in srgb, var(--aim-card-accent, var(--aim-accent)) 16%, transparent); }
   .aim-warmup__copy:active { transform: scale(0.97); }
   .aim-warmup__copy.is-copied {
     color: var(--color-success, #4ade80);
@@ -737,4 +864,15 @@ const skates = [
     box-shadow: 0 12px 40px color-mix(in srgb, var(--aim-accent) 45%, transparent);
   }
   .aim-warmup__v2-cta:active { transform: scale(0.98); }
+  .aim-warmup__copy:focus-visible,
+  .aim-warmup__v2-cta:focus-visible,
+  .aim-warmup__import-foot a:focus-visible { outline: 2px solid var(--aim-accent); outline-offset: 3px; }
+
+  @media (max-width: 620px) {
+    .aim-warmup { padding-top: 68px; }
+    .aim-warmup__map-head { align-items: flex-start; flex-direction: column; gap: 5px; }
+    .aim-warmup__map-grid { grid-template-columns: 1fr; gap: 6px; }
+    .aim-warmup__map-item { min-height: 42px; }
+    .aim-warmup__card { padding: 18px; }
+  }
 </style>
