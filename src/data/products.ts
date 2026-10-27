@@ -630,7 +630,7 @@ export const products: Product[] = [
     glyph: '◎',
     logo: '/logos/aimmaxxer.png',
     icon: '/logos/aimmaxxer-icon.png',
-    accentHex: '#d65cff',
+    accentHex: '#d11820',
     heroStat: { value: '6', label: 'games · a warmup for each' },
     zones: [
       {
