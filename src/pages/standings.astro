@@ -228,7 +228,7 @@ const standingsApi = '/api';
 .standings-page .sp-footnote{border-color:rgba(36,221,255,.45);background:#0d1b2b;box-shadow:none}
 </style>
 
-<style is="global">
+<style is:global>
   .standings-page .sp-rules {
     margin: 0 29px 24px;
     overflow: hidden;
@@ -611,6 +611,22 @@ const standingsApi = '/api';
             <button class="sp-quiet-button" id="sp-copy-overlay" type="button">Copy OBS URL</button>
             <button class="sp-refresh-button" id="sp-open-overlay" type="button">Open overlay <span aria-hidden="true">↗</span></button>
             <button class="sp-refresh-button" id="sp-refresh" type="button"><span aria-hidden="true">↻</span> Refresh</button>
+            <details class="sp-rules" id="sp-rules">
+              <summary>
+                <span class="sp-rules-title">Format &amp; scoring</span>
+                <span class="sp-rules-summary" id="sp-rules-summary">Provider details</span>
+                <span class="sp-rules-chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <div class="sp-rules-popover">
+                <div class="sp-rules-grid">
+                  <div class="sp-rule"><span>Format</span><strong id="sp-rule-format">Not published</strong></div>
+                  <div class="sp-rule"><span>Kill points</span><strong id="sp-rule-kills">Not published</strong></div>
+                  <div class="sp-rule"><span>Placement points</span><strong id="sp-rule-placement">Not published</strong></div>
+                  <div class="sp-rule"><span>Payout model</span><strong id="sp-rule-payout">Not published</strong></div>
+                </div>
+                <p class="sp-rules-note" id="sp-rules-note">The provider has not published format or scoring details for this round.</p>
+              </div>
+            </details>
           </div>
         </div>
 
@@ -688,21 +704,6 @@ const standingsApi = '/api';
           <div class="sp-summary-item sp-summary-item--prize"><span class="sp-summary-label" id="sp-prize-label">Prize pool</span><strong id="sp-prizepool" class="is-unpublished">Not published</strong><a id="sp-prize-source" class="sp-prize-source" href="#" target="_blank" rel="noreferrer" hidden>Official source ↗</a></div>
           <div class="sp-summary-item sp-summary-item--source"><span class="sp-summary-label">Source</span><strong id="sp-source">Epic leaderboard</strong></div>
         </div>
-
-        <details class="sp-rules" id="sp-rules">
-          <summary>
-            <span class="sp-rules-title">Format &amp; scoring</span>
-            <span class="sp-rules-summary" id="sp-rules-summary">Provider details</span>
-            <span class="sp-rules-chevron" aria-hidden="true">⌄</span>
-          </summary>
-          <div class="sp-rules-grid">
-            <div class="sp-rule"><span>Format</span><strong id="sp-rule-format">Not published</strong></div>
-            <div class="sp-rule"><span>Kill points</span><strong id="sp-rule-kills">Not published</strong></div>
-            <div class="sp-rule"><span>Placement points</span><strong id="sp-rule-placement">Not published</strong></div>
-            <div class="sp-rule"><span>Payout model</span><strong id="sp-rule-payout">Not published</strong></div>
-          </div>
-          <p class="sp-rules-note" id="sp-rules-note">The provider has not published format or scoring details for this round.</p>
-        </details>
 
         <div class="sp-board" id="sp-board" aria-live="polite">
           <div class="sp-board-head" aria-hidden="true">
@@ -2498,7 +2499,7 @@ const standingsApi = '/api';
   }
 </style>
 
-<style is:global>
+<style>
   .standings-page .sp-hero {
     gap: 18px;
   }
@@ -3215,5 +3216,153 @@ const standingsApi = '/api';
   .standings-page .sp-prize strong,
   .standings-page .sp-movement-arrow {
     text-shadow: none;
+  }
+
+  /* Keep format and scoring available without taking a full leaderboard row. */
+  .standings-page .sp-rules {
+    position: relative;
+    z-index: 4;
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .standings-page .sp-rules summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 32px;
+    padding: 7px 9px;
+    border: 1px solid rgba(107, 220, 255, .35);
+    border-radius: 6px;
+    background: rgba(36, 221, 255, .08);
+    color: #d8faff;
+    cursor: pointer;
+    list-style: none;
+    font: 700 9px/1 var(--font-mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .standings-page .sp-rules summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .standings-page .sp-rules summary::before {
+    width: 5px;
+    height: 5px;
+    flex: 0 0 5px;
+    border-radius: 50%;
+    background: var(--lb-cyan);
+    box-shadow: 0 0 10px rgba(36, 221, 255, .75);
+    content: '';
+  }
+
+  .standings-page .sp-rules summary:hover,
+  .standings-page .sp-rules summary:focus-visible {
+    border-color: #7ceaff;
+    background: rgba(36, 221, 255, .15);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(36, 221, 255, .12);
+  }
+
+  .standings-page .sp-rules-summary {
+    display: none;
+  }
+
+  .standings-page .sp-rules-chevron {
+    font-size: 14px;
+    transform: translateY(-1px);
+  }
+
+  .standings-page .sp-rules[open] summary {
+    border-color: #7ceaff;
+    border-bottom-color: #7ceaff;
+    background: #123047;
+  }
+
+  .standings-page .sp-rules[open] .sp-rules-chevron {
+    transform: rotate(180deg) translateY(1px);
+  }
+
+  .standings-page .sp-stage-topline:has(.sp-rules[open]) {
+    z-index: 3;
+  }
+
+  .standings-page .sp-rules-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    width: min(520px, calc(100vw - 48px));
+    padding: 12px;
+    border: 1px solid rgba(107, 220, 255, .42);
+    border-radius: 11px;
+    background: #0d1b2b;
+    box-shadow: 0 18px 38px rgba(0, 0, 0, .48), 0 0 0 1px rgba(36, 221, 255, .08);
+  }
+
+  .standings-page .sp-rules-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    padding: 0;
+  }
+
+  .standings-page .sp-rule {
+    padding: 10px 11px;
+    border-radius: 8px;
+    background: #111f35;
+  }
+
+  .standings-page .sp-rule span {
+    margin-bottom: 5px;
+    font-size: 8px;
+  }
+
+  .standings-page .sp-rule strong {
+    font-size: 10px;
+  }
+
+  .standings-page .sp-rules-note {
+    margin: 11px 0 0;
+    padding-top: 10px;
+    font-size: 9px;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 820px) {
+    .standings-page .sp-rules-popover {
+      right: auto;
+      left: 0;
+      width: min(520px, calc(100vw - 40px));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .standings-page .sp-rules summary {
+      min-height: 31px;
+      padding: 7px 8px;
+      font-size: 8px;
+    }
+
+    .standings-page .sp-rules-popover {
+      width: min(360px, calc(100vw - 40px));
+    }
+
+    .standings-page .sp-rules-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 360px) {
+    .standings-page .sp-rules-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
