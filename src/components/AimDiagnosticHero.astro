@@ -16,6 +16,10 @@ const { product } = Astro.props;
 <section class="aim-diagnostic" data-aim-diagnostic data-state="idle" aria-label="Aimmaxxer interactive aim diagnostic">
   <div class="aim-diag__noise" aria-hidden="true"></div>
   <div class="aim-diag__shell">
+    <button type="button" class="aim-diag__exit" data-aim-exit aria-keyshortcuts="Escape" aria-label="Exit the aim diagnostic">
+      <span>Exit diagnostic</span>
+      <kbd>Esc</kbd>
+    </button>
     <a href="/#apps" class="aim-diag__back">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       All products
@@ -34,6 +38,7 @@ const { product } = Astro.props;
           Flick. Track. Switch. Aimmaxxer finds the weakest link, then hands you
           a verified KovaaK’s warm-up for the game you actually play.
         </p>
+        <p class="aim-diag__method">Local browser check · best with a mouse or trackpad · no data leaves this tab</p>
         <div class="aim-diag__actions">
           <button type="button" class="aim-diag__start" data-aim-start>
             Run the diagnostic
@@ -102,7 +107,7 @@ const { product } = Astro.props;
         </div>
         <div class="aim-diag__machine-bottom">
           <span><i></i>POINTER READY</span>
-          <span data-aim-status>AUTO CALIBRATION</span>
+          <span data-aim-status aria-live="polite">AUTO CALIBRATION</span>
           <button type="button" data-aim-replay>RESTART</button>
         </div>
       </div>
@@ -127,11 +132,12 @@ const { product } = Astro.props;
   .aim-diag__copy{position:relative}.aim-diag__brand{display:flex;align-items:center;gap:9px;margin-bottom:31px;color:#a59b8b;font:650 9px/1 var(--font-mono),monospace;letter-spacing:.11em}.aim-diag__brand img{width:34px;height:34px;border-radius:8px}.aim-diag__brand i{margin-left:auto;padding:6px 8px;border:1px solid rgba(243,175,25,.25);border-radius:4px;color:var(--ad-ember);font-style:normal;font-size:8px}
   .aim-diag__eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 18px;color:var(--ad-ember);font:650 10px/1 var(--font-mono),monospace;letter-spacing:.15em;text-transform:uppercase}.aim-diag__eyebrow span{width:7px;height:7px;border:1px solid var(--ad-ember);border-radius:50%;box-shadow:0 0 13px var(--ad-ember);animation:ad-ready 1.5s ease-in-out infinite}@keyframes ad-ready{50%{background:var(--ad-ember);box-shadow:0 0 4px var(--ad-ember)}}
   .aim-diag__copy h1{max-width:630px;margin:0;font-size:clamp(54px,5.6vw,88px);font-weight:780;line-height:.9;letter-spacing:-.06em}.aim-diag__copy h1 em{color:var(--ad-ember);font-style:normal;text-shadow:0 0 35px rgba(243,175,25,.17)}
-  .aim-diag__lede{max-width:540px;margin:27px 0 0;color:#b3aa9c;font-size:clamp(15px,1.15vw,18px);line-height:1.62}.aim-diag__actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:30px}
+  .aim-diag__lede{max-width:540px;margin:27px 0 0;color:#b3aa9c;font-size:clamp(15px,1.15vw,18px);line-height:1.62}.aim-diag__method{max-width:540px;margin:13px 0 0;color:#7d7468;font:650 8px/1.5 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}.aim-diag__actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:30px}
   .aim-diag__start,.aim-diag__notify{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:49px;padding:0 20px;border-radius:6px;font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}.aim-diag__start{border:1px solid var(--ad-ember);background:var(--ad-ember);color:#171007;box-shadow:0 14px 35px rgba(243,175,25,.17);transition:transform .2s,box-shadow .2s}.aim-diag__start:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(243,175,25,.3)}.aim-diag__start svg{width:14px;fill:none;stroke:currentColor;stroke-width:2.5}.aim-diag__notify{border:1px solid #3a3329;background:#0c0a07;color:#a89f91;transition:border-color .2s,color .2s}.aim-diag__notify:hover{border-color:#73634a;color:#fff}
   .aim-diag__proof{display:grid;grid-template-columns:repeat(3,1fr);max-width:470px;margin-top:36px;border-top:1px solid #31281d}.aim-diag__proof span{padding:15px 14px 0 0;color:#7d7468;font:9px/1 var(--font-mono),monospace;letter-spacing:.1em;text-transform:uppercase}.aim-diag__proof span+span{padding-left:17px;border-left:1px solid #31281d}.aim-diag__proof b{display:block;margin-bottom:7px;color:#f7e8ce;font:700 23px/1 var(--font-display),sans-serif}
 
   .aim-diag__machine{position:relative;min-width:0;border:1px solid #433622;border-radius:13px;overflow:hidden;background:#090806;box-shadow:0 35px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.025) inset,0 0 75px rgba(243,175,25,.08)}
+  .aim-diag__exit{display:none;align-items:center;gap:9px;padding:8px 11px;border:1px solid #4b3c26;border-radius:6px;background:rgba(10,8,5,.82);color:#d5c7b0;font:700 9px var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.aim-diag__exit:hover{border-color:var(--ad-ember);color:#fff4de}.aim-diag__exit kbd{padding:3px 5px;border:1px solid #665438;border-radius:3px;color:var(--ad-ember);font:700 8px var(--font-mono),monospace}
   .aim-diag__machine::after{content:"";position:absolute;inset:0;z-index:20;pointer-events:none;box-shadow:inset 0 0 28px rgba(0,0,0,.58)}
   .aim-diag__machine-top,.aim-diag__machine-bottom{display:flex;align-items:center;justify-content:space-between;height:39px;padding:0 13px;background:linear-gradient(180deg,#19150f,#0d0b08);color:#887e6f;font:700 8px/1 var(--font-mono),monospace;letter-spacing:.11em}.aim-diag__machine-top>span,.aim-diag__machine-bottom>span{display:flex;align-items:center;gap:6px}.aim-diag__machine-top i,.aim-diag__machine-bottom i{width:5px;height:5px;border-radius:50%;background:var(--ad-ember);box-shadow:0 0 8px var(--ad-ember)}
   .aim-diag__machine-top label{display:flex;align-items:center;gap:7px}.aim-diag__machine-top select{height:25px;padding:0 23px 0 8px;border:1px solid #453824;border-radius:4px;outline:none;background:#110e09;color:#d5c7b0;font:700 8px var(--font-mono),monospace;text-transform:uppercase;cursor:pointer}
@@ -153,9 +159,17 @@ const { product } = Astro.props;
   .aim-diag__result{position:absolute;z-index:12;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;opacity:0;pointer-events:none;background:radial-gradient(circle,rgba(28,21,11,.84),rgba(7,6,4,.97) 72%);transform:scale(1.03);transition:opacity .35s,transform .5s}.aim-diag__result p{margin:0 0 8px;color:var(--ad-ember);font:700 8px var(--font-mono),monospace;letter-spacing:.18em}.aim-diag__result>strong{color:#fff4de;font:750 clamp(22px,2.7vw,35px)/1 var(--font-display),sans-serif;letter-spacing:.01em}.aim-diag__result>span{margin-top:7px;color:#a99e8e;font-size:11px}.aim-diag__breakdown{display:grid;grid-template-columns:repeat(3,1fr);width:min(480px,100%);margin-top:13px;border:1px solid #382d1d;border-radius:5px;background:rgba(10,8,5,.66)}.aim-diag__breakdown span{padding:7px 8px}.aim-diag__breakdown span+span{border-left:1px solid #382d1d}.aim-diag__breakdown b,.aim-diag__breakdown i{display:block;font-family:var(--font-mono),monospace}.aim-diag__breakdown b{color:var(--ad-ember);font-size:7px;letter-spacing:.12em}.aim-diag__breakdown i{margin-top:4px;color:#a99e8e;font-size:7px;font-style:normal;white-space:nowrap}.aim-diag__result>small{margin-top:7px;color:#71695e;font:6px var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__result-action{display:flex;align-items:center;gap:7px;margin-top:12px}.aim-diag__result code{padding:8px 10px;border:1px solid #463923;border-radius:5px;background:#0c0a07;color:#e7d6b8;font:10px var(--font-mono),monospace}.aim-diag__result button{padding:9px 11px;border:1px solid var(--ad-ember);border-radius:5px;background:var(--ad-ember);color:#171007;font:800 9px var(--font-mono),monospace;cursor:pointer}.aim-diag__result button.is-copied{background:#73d89f;border-color:#73d89f}
   [data-state="result"] .aim-diag__result{opacity:1;pointer-events:auto;transform:scale(1)}[data-state="running"] .aim-diag__crosshair,[data-state="calibration"] .aim-diag__crosshair,[data-state="result"] .aim-diag__crosshair{display:none}[data-state="result"] .aim-diag__target{display:none!important}
   [data-phase="switch"] .aim-diag__target--b{display:grid}[data-phase="switch"][data-active-target="a"] .aim-diag__target--a,[data-phase="switch"][data-active-target="b"] .aim-diag__target--b{z-index:8}[data-phase="switch"][data-active-target="a"] .aim-diag__target--b,[data-phase="switch"][data-active-target="b"] .aim-diag__target--a{z-index:5;opacity:.25;filter:grayscale(.7);transform:scale(.75);pointer-events:none}
+  html.aim-diagnostic-active,html.aim-diagnostic-active body{cursor:auto!important}html.aim-diagnostic-active body{overflow:hidden}html.aim-diagnostic-active .custom-cursor{display:none!important}html.aim-diagnostic-active a,html.aim-diagnostic-active button,html.aim-diagnostic-active select{cursor:pointer!important}html.aim-diagnostic-active .aim-diag__arena,html.aim-diagnostic-active .aim-diag__target{cursor:default!important}
+  .aim-diagnostic.is-immersive{position:fixed;inset:0;z-index:2147483000;width:100%;height:100svh;min-height:100svh;max-height:none;overflow:auto;border-bottom:0}
+  .aim-diagnostic.is-immersive .aim-diag__shell{display:flex;flex-direction:column;justify-content:center;min-height:100%;padding-block:clamp(58px,7vh,78px)}
+  .aim-diagnostic.is-immersive .aim-diag__back{display:none}
+  .aim-diagnostic.is-immersive .aim-diag__exit{display:inline-flex;position:fixed;top:max(16px,env(safe-area-inset-top));right:clamp(18px,4vw,54px);z-index:30}
+  .aim-diagnostic.is-immersive .aim-diag__copy{display:none}
+  .aim-diagnostic.is-immersive .aim-diag__grid{display:block;width:100%;margin:auto}
+  .aim-diagnostic.is-immersive .aim-diag__machine{width:min(1180px,100%);margin:auto}
 
   @media(max-width:1060px){.aim-diag__grid{grid-template-columns:1fr;gap:45px}.aim-diag__copy{max-width:760px}.aim-diag__machine{width:min(820px,100%);margin:auto}.aim-diag__copy h1{font-size:clamp(58px,10vw,88px)}}
-  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{width:52px;height:52px;margin:-26px 0 0 -26px}.aim-diag__instruction{font-size:6px}.aim-diag__result{padding:13px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #382d1d;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column}.aim-diag__result code{font-size:8px}.aim-diag__proof{margin-top:29px}}
+  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{width:52px;height:52px;margin:-26px 0 0 -26px}.aim-diag__instruction{font-size:6px}.aim-diag__result{padding:13px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #382d1d;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column}.aim-diag__result code{font-size:8px}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
 </style>
 
 <script>
@@ -189,6 +203,7 @@ const { product } = Astro.props;
     const arena = root.querySelector<HTMLElement>('[data-aim-arena]')!;
     const targets = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-aim-target]'));
     const startButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-aim-start],[data-aim-replay]'));
+    const exitButton = root.querySelector<HTMLButtonElement>('[data-aim-exit]')!;
     const game = root.querySelector<HTMLSelectElement>('[data-aim-game]')!;
     const phaseEl = root.querySelector<HTMLElement>('[data-aim-phase]')!;
     const timeEl = root.querySelector<HTMLElement>('[data-aim-time]')!;
@@ -208,6 +223,7 @@ const { product } = Astro.props;
     let flickMisses = 0, switchMisses = 0;
     let trackTotalMs = 0, trackInsideMs = 0, trackErrorPxMs = 0, trackClosenessMs = 0;
     let flickTimes: number[] = [], switchTimes: number[] = [];
+    let immersive = false, previousFocus: HTMLElement | null = null, pauseStarted = 0, pausedMs = 0;
 
     const clamp = (n: number) => Math.max(0, Math.min(99, Math.round(n)));
     const median = (values: number[]) => {
@@ -233,6 +249,74 @@ const { product } = Astro.props;
     };
     const routineFor = (skill: SkillKey) =>
       weaknessRoutines[skill][game.value] || weaknessRoutines[skill].default;
+
+    const resetScores = () => {
+      keys.forEach(key => {
+        scoreEls[key].textContent = '--';
+        fillEls[key].style.width = '0';
+        detailEls[key].textContent = '--';
+      });
+    };
+
+    const resetSurface = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      pauseStarted = 0;
+      pausedMs = 0;
+      root.dataset.state = 'idle';
+      root.removeAttribute('data-phase');
+      root.removeAttribute('data-active-target');
+      phaseEl.textContent = 'READY';
+      timeEl.textContent = '12.0';
+      instruction.textContent = 'Press start — or watch the calibration run';
+      status.textContent = 'AUTO CALIBRATION';
+      resetScores();
+      targets.forEach(target => {
+        target.style.display = '';
+        target.style.opacity = '';
+        target.style.transform = '';
+        target.style.removeProperty('left');
+        target.style.removeProperty('top');
+      });
+    };
+
+    const focusCalibrationTarget = () => {
+      window.setTimeout(() => {
+        if (root.dataset.state === 'calibration') targets[0].focus({ preventScroll: true });
+      }, 0);
+    };
+
+    const exitImmersive = () => {
+      if (!immersive && !root.classList.contains('is-immersive')) return;
+      immersive = false;
+      resetSurface();
+      root.classList.remove('is-immersive');
+      root.removeAttribute('role');
+      root.removeAttribute('aria-modal');
+      document.documentElement.classList.remove('aim-diagnostic-active');
+      const focusTarget = previousFocus;
+      previousFocus = null;
+      focusTarget?.focus({ preventScroll: true });
+    };
+
+    const enterImmersive = () => {
+      if (!immersive) {
+        previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        immersive = true;
+        root.classList.add('is-immersive');
+        root.setAttribute('role', 'dialog');
+        root.setAttribute('aria-modal', 'true');
+        document.documentElement.classList.add('aim-diagnostic-active');
+      }
+    };
+
+    const setPhaseInstruction = (phase: SkillKey) => {
+      instruction.textContent = phase === 'flick'
+        ? 'Click each target · misses reduce precision'
+        : phase === 'track'
+          ? 'Keep your pointer centered on the moving target'
+          : 'Alternate between the lit targets · misses count';
+    };
 
     const finish = () => {
       cancelAnimationFrame(frame);
@@ -274,18 +358,14 @@ const { product } = Astro.props;
     };
 
     const loop = (now: number) => {
-      const elapsed = now - started;
+      const elapsed = now - started - pausedMs;
       const dt = Math.min(50, Math.max(0, now - lastFrame));
       lastFrame = now;
       const phase: SkillKey = elapsed < 4000 ? 'flick' : elapsed < 8000 ? 'track' : 'switch';
       root.dataset.phase = phase;
       phaseEl.textContent = phase.toUpperCase();
       timeEl.textContent = Math.max(0, (12000 - elapsed) / 1000).toFixed(1);
-      instruction.textContent = phase === 'flick'
-        ? 'Click each target · misses reduce precision'
-        : phase === 'track'
-          ? 'Keep your pointer centered on the moving target'
-          : 'Alternate between the lit targets · misses count';
+      setPhaseInstruction(phase);
       const phaseIndex = phase === 'flick' ? 1 : phase === 'track' ? 2 : 3;
       if (phaseStarted !== phaseIndex) {
         phaseStarted = phaseIndex;
@@ -319,6 +399,8 @@ const { product } = Astro.props;
       root.dataset.phase = 'flick';
       root.dataset.activeTarget = 'a';
       phaseStarted = 0; active = 'a';
+      pauseStarted = 0;
+      pausedMs = 0;
       targets[1].style.display = 'none';
       place(targets[0]);
       started = lastFrame = performance.now();
@@ -328,6 +410,9 @@ const { product } = Astro.props;
 
     const prepare = () => {
       cancelAnimationFrame(frame);
+      frame = 0;
+      pauseStarted = 0;
+      pausedMs = 0;
       document.getElementById('daily-quote-close')?.click();
       root.dataset.state = 'calibration';
       root.dataset.phase = 'calibration';
@@ -336,7 +421,7 @@ const { product } = Astro.props;
       flickMisses = switchMisses = 0;
       trackTotalMs = trackInsideMs = trackErrorPxMs = trackClosenessMs = 0;
       pointerX = pointerY = -999;
-      keys.forEach(key => { scoreEls[key].textContent = '--'; fillEls[key].style.width = '0'; detailEls[key].textContent = '--'; });
+      resetScores();
       targets.forEach(t => { t.style.display = ''; t.style.opacity = ''; t.style.transform = ''; });
       targets[1].style.display = 'none';
       targets[0].style.left = '50%'; targets[0].style.top = '50%';
@@ -344,6 +429,7 @@ const { product } = Astro.props;
       timeEl.textContent = '12.0';
       instruction.textContent = 'Click the center target when your pointer is ready';
       status.textContent = matchMedia('(pointer: coarse)').matches ? 'TOUCH PREVIEW' : 'MOUSE CALIBRATION';
+      focusCalibrationTarget();
     };
 
     targets.forEach((target) => target.addEventListener('click', () => {
@@ -368,7 +454,40 @@ const { product } = Astro.props;
       if (root.dataset.phase === 'flick') flickMisses++;
       if (root.dataset.phase === 'switch') switchMisses++;
     });
-    startButtons.forEach(button => button.addEventListener('click', prepare));
+    arena.addEventListener('pointerleave', () => { pointerX = pointerY = -999; });
+    const onVisibilityChange = () => {
+      if (!immersive || root.dataset.state !== 'running') return;
+      if (document.hidden) {
+        if (pauseStarted) return;
+        pauseStarted = performance.now();
+        cancelAnimationFrame(frame);
+        frame = 0;
+        phaseEl.textContent = 'PAUSED';
+        status.textContent = 'RETURN TO RESUME';
+        instruction.textContent = 'Return to this tab to continue the diagnostic';
+        return;
+      }
+      if (!pauseStarted) return;
+      pausedMs += performance.now() - pauseStarted;
+      pauseStarted = 0;
+      lastFrame = performance.now();
+      phaseEl.textContent = (root.dataset.phase || 'flick').toUpperCase();
+      status.textContent = 'TEST RUNNING';
+      frame = requestAnimationFrame(loop);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (!immersive || event.key !== 'Escape') return;
+      event.preventDefault();
+      exitImmersive();
+    };
+    exitButton.addEventListener('click', exitImmersive);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.addEventListener('keydown', onKeyDown);
+    startButtons.forEach(button => button.addEventListener('click', () => {
+      if (root.dataset.state === 'running' || root.dataset.state === 'calibration') return;
+      enterImmersive();
+      prepare();
+    }));
     copyButton.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(codeEl.textContent || ''); } catch {}
       copyButton.textContent = 'Copied'; copyButton.classList.add('is-copied');
