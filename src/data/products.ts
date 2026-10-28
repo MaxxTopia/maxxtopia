@@ -608,9 +608,9 @@ export const products: Product[] = [
     version: releaseRegistry.aimmaxxer.version ?? undefined,
     tagline: 'Find your limiter. Warm up with purpose.',
     description:
-      "A 12-second browser read that points you to a focused KovaaK's warm-up for the game you play. Aimmaxxer V2 adaptive training is in development.",
+      "A roughly 28-second browser read that points you to a focused KovaaK's warm-up for the game you play. Aimmaxxer V2 adaptive training is in development.",
     longDescription:
-      "Run a local, no-account check of flicking, tracking, and switching. Then copy a game-specific KovaaK's routine and retest after your block. Aimmaxxer V2 adaptive training is in development.",
+      "Run a local, no-account check of flicking, tracking, and switching with enough time for a useful sample. Then copy a game-specific KovaaK's routine and retest after your block. Aimmaxxer V2 adaptive training is in development.",
     features: [
       {
         title: '3 aim signals. One next step.',

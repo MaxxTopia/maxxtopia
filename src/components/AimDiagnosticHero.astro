@@ -1,6 +1,6 @@
 ---
 /**
- * AimDiagnosticHero — a real, playable 12-second warm-up diagnostic.
+ * AimDiagnosticHero — a real, playable browser warm-up diagnostic.
  *
  * The test measures three public training skills (flicking, tracking and
  * switching), then recommends one of the verified KovaaK's routines already
@@ -32,16 +32,16 @@ const { product } = Astro.props;
           <span>TRAINING / AIMMAXXER</span>
           <i>V1 · BROWSER PREVIEW</i>
         </div>
-        <p class="aim-diag__eyebrow"><span></span>12-second browser diagnostic <b>HARDENED RUN</b></p>
+        <p class="aim-diag__eyebrow"><span></span>~28-second browser diagnostic <b>EVIDENCE RUN</b></p>
         <h1>Don’t guess what<br />your aim <em>needs.</em></h1>
         <p class="aim-diag__lede">
           Flick. Track. Switch. Aimmaxxer finds the weakest link, then hands you
           a verified KovaaK’s warm-up for the game you actually play.
         </p>
-        <p class="aim-diag__method">12 seconds · mouse recommended · local only · no account required</p>
+        <p class="aim-diag__method">~28 seconds · mouse recommended · local only · no account required</p>
         <div class="aim-diag__expectation">
           <strong>How the read works</strong>
-          <span>Click the center target, then follow three short stages. A routine is only recommended after enough confirmed flicks and transfers.</span>
+          <span>Click the center target, then follow three short stages. The timer keeps each stage open long enough to collect a useful sample before a routine is recommended.</span>
         </div>
         <div class="aim-diag__skill-key" aria-label="Diagnostic stages">
           <span data-skill-key="flick"><i></i><b>Flick</b><small>precision</small></span>
@@ -67,7 +67,7 @@ const { product } = Astro.props;
 
       <div class="aim-diag__machine">
         <div class="aim-diag__machine-top">
-          <span class="aim-diag__machine-label"><i></i>AIM DIAGNOSTIC <small data-aim-mode>HARDENED RUN</small></span>
+          <span class="aim-diag__machine-label"><i></i>AIM DIAGNOSTIC <small data-aim-mode>EVIDENCE RUN</small></span>
           <div class="aim-diag__selectors">
             <label>
               GAME
@@ -101,8 +101,9 @@ const { product } = Astro.props;
           <div class="aim-diag__gridlines" aria-hidden="true"></div>
           <div class="aim-diag__range-mark" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="aim-diag__course" aria-hidden="true">
-            <b>TRANSFER COURSE</b>
-            <span data-aim-switch-step>01 / 10</span>
+            <b>TRANSFER SAMPLE</b>
+            <span data-aim-switch-step>00 / 10</span>
+            <small data-aim-switch-state>WARMING UP</small>
             <div>
               <i data-switch-gate="0"></i><i data-switch-gate="1"></i><i data-switch-gate="2"></i>
               <i data-switch-gate="3"></i><i data-switch-gate="4"></i><i data-switch-gate="5"></i>
@@ -112,7 +113,7 @@ const { product } = Astro.props;
           </div>
           <div class="aim-diag__hud">
             <span data-aim-phase>READY</span>
-            <b data-aim-time>12.0</b>
+            <b data-aim-time>28.0</b>
           </div>
           <button type="button" class="aim-diag__target aim-diag__target--a" data-aim-target="a" aria-label="Aim target"><i></i><span>A</span></button>
           <button type="button" class="aim-diag__target aim-diag__target--b" data-aim-target="b" aria-label="Second aim target"><i></i><span>B</span></button>
@@ -122,7 +123,7 @@ const { product } = Astro.props;
           <div class="aim-diag__result" data-aim-result aria-live="polite" aria-atomic="true">
             <p data-aim-result-kicker>AWAITING RUN</p>
             <strong data-aim-result-title>YOUR READ WILL LAND HERE</strong>
-            <span data-aim-result-copy>Complete the 12-second run to unlock a game-specific warm-up.</span>
+            <span data-aim-result-copy>Complete the ~28-second run to unlock a game-specific warm-up.</span>
             <div class="aim-diag__result-rating">
               <span data-aim-stars aria-label="No result yet">☆☆☆☆☆</span>
               <b data-aim-priority>AWAITING INPUT</b>
@@ -130,7 +131,7 @@ const { product } = Astro.props;
             <div class="aim-diag__result-plan">
               <span>NEXT BLOCK</span>
               <strong data-aim-plan-title>Run the diagnostic first</strong>
-              <small data-aim-plan-meta>10 min · a focused routine appears here after a clean read</small>
+              <small data-aim-plan-meta>10 min · a focused routine appears here after enough confirmed input</small>
             </div>
             <div class="aim-diag__breakdown">
               <span><b>FLICK</b><i data-aim-detail="flick">-- ms · --% accurate</i></span>
@@ -202,7 +203,7 @@ const { product } = Astro.props;
   .aim-diag__gridlines{position:absolute;inset:0;background:linear-gradient(90deg,transparent 49.8%,rgba(var(--ad-phase-rgb),.1) 50%,transparent 50.2%),linear-gradient(0deg,transparent 49.8%,rgba(var(--ad-phase-rgb),.08) 50%,transparent 50.2%)}
   .aim-diag__range-mark{position:absolute;inset:0;pointer-events:none}.aim-diag__range-mark i{position:absolute;left:50%;top:50%;border:1px solid rgba(var(--ad-phase-rgb),.09);border-radius:50%;transform:translate(-50%,-50%)}.aim-diag__range-mark i:nth-child(1){width:24%;aspect-ratio:1}.aim-diag__range-mark i:nth-child(2){width:48%;aspect-ratio:1}.aim-diag__range-mark i:nth-child(3){width:76%;aspect-ratio:1}
   .aim-diag__hud{position:absolute;z-index:8;left:12px;right:12px;top:10px;display:flex;justify-content:space-between;color:var(--color-text-mid);font:700 8px/1 var(--font-mono),monospace;letter-spacing:.13em}.aim-diag__hud span{padding:5px 7px;border-left:2px solid var(--ad-phase);background:rgba(12,4,6,.72)}.aim-diag__hud b{color:var(--ad-phase);font-size:12px}
-  .aim-diag__course{position:absolute;z-index:8;right:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid rgba(255,75,62,.18);background:rgba(12,4,6,.72);color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.1em}.aim-diag__course>b{color:var(--ad-cream);font-size:6px}.aim-diag__course>span{color:var(--ad-phase)}.aim-diag__course>div{display:flex;gap:3px}.aim-diag__course i{width:5px;height:5px;border:1px solid var(--ad-red);border-radius:50%;background:transparent}.aim-diag__course i[data-state="done"]{border-color:var(--ad-ember);background:var(--ad-ember)}.aim-diag__course i[data-state="current"]{border-color:var(--ad-cream);background:var(--ad-switch);box-shadow:0 0 8px var(--ad-switch)}
+  .aim-diag__course{position:absolute;z-index:8;right:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid rgba(255,75,62,.18);background:rgba(12,4,6,.72);color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.1em}.aim-diag__course>b{color:var(--ad-cream);font-size:6px}.aim-diag__course>span{color:var(--ad-phase)}.aim-diag__course small{color:var(--color-muted);font:700 6px/1 var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__course>div{display:flex;gap:3px}.aim-diag__course i{width:5px;height:5px;border:1px solid var(--ad-red);border-radius:50%;background:transparent}.aim-diag__course i[data-state="done"]{border-color:var(--ad-ember);background:var(--ad-ember)}.aim-diag__course i[data-state="current"]{border-color:var(--ad-cream);background:var(--ad-switch);box-shadow:0 0 8px var(--ad-switch)}
   .aim-diag__target{position:absolute;z-index:6;left:50%;top:50%;display:grid;place-items:center;width:var(--ad-target-size,58px);height:var(--ad-target-size,58px);margin:0;padding:0;border:2px solid color-mix(in srgb,var(--ad-phase) 85%,var(--ad-red));border-radius:50%;background:radial-gradient(circle,#fff4f2 0 10%,var(--ad-switch) 11% 25%,#0c0406 26% 43%,var(--ad-ember) 44% 57%,#0c0406 58%);box-shadow:0 0 0 5px rgba(var(--ad-phase-rgb),.1),0 0 24px rgba(255,75,62,.28);cursor:crosshair;transform:translate(-50%,-50%);transition:left .12s ease,top .12s ease,transform .12s}.aim-diag__target::before,.aim-diag__target::after{content:"";position:absolute;background:rgba(255,244,242,.55)}.aim-diag__target::before{left:-8px;right:-8px;top:50%;height:1px}.aim-diag__target::after{top:-8px;bottom:-8px;left:50%;width:1px}.aim-diag__target i{width:7px;height:7px;border:1px solid #fff;border-radius:50%}.aim-diag__target span{position:absolute;color:#fff4f2;font:800 8px/1 var(--font-mono),monospace;letter-spacing:.04em;text-shadow:0 1px 4px #0c0406}.aim-diag__target--b{display:none}[data-state="running"] .aim-diag__target{transition:none}[data-state="calibration"] .aim-diag__target--a{animation:ad-calibrate 1.25s ease-in-out infinite}@keyframes ad-calibrate{50%{box-shadow:0 0 0 12px rgba(var(--ad-phase-rgb),.05),0 0 32px rgba(255,75,62,.44);transform:translate(-50%,-50%) scale(1.06)}}
   .aim-diag__crosshair{position:absolute;z-index:7;left:50%;top:50%;width:34px;height:34px;margin:-17px;pointer-events:none}.aim-diag__crosshair::before,.aim-diag__crosshair::after,.aim-diag__crosshair i::before,.aim-diag__crosshair i::after{content:"";position:absolute;background:#fff;box-shadow:0 0 4px #000}.aim-diag__crosshair::before{left:0;top:16px;width:11px;height:2px}.aim-diag__crosshair::after{right:0;top:16px;width:11px;height:2px}.aim-diag__crosshair i::before{left:16px;top:0;width:2px;height:11px}.aim-diag__crosshair i::after{left:16px;bottom:0;width:2px;height:11px}
   [data-state="idle"] .aim-diag__target--a{animation:ad-target-demo 6s cubic-bezier(.4,0,.2,1) infinite}[data-state="idle"] .aim-diag__crosshair{animation:ad-cross-demo 6s cubic-bezier(.2,.8,.2,1) infinite}
@@ -226,7 +227,7 @@ const { product } = Astro.props;
 
   @media(max-width:1060px){.aim-diag__grid{grid-template-columns:1fr;gap:45px}.aim-diag__copy{max-width:760px}.aim-diag__machine{width:min(820px,100%);margin:auto}.aim-diag__copy h1{font-size:clamp(58px,10vw,88px)}}
   .aim-diag__start:focus-visible,.aim-diag__notify:focus-visible,.aim-diag__browse:focus-visible,.aim-diag__result button:focus-visible,.aim-diag__result-action a:focus-visible,.aim-diag__machine-top select:focus-visible,.aim-diag__machine-bottom button:focus-visible,.aim-diag__exit:focus-visible{outline:2px solid var(--ad-cream);outline-offset:3px}
-  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__expectation{margin-top:13px}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{--ad-target-size:52px}.aim-diag__skill-key{margin-top:18px}.aim-diag__skill-key span{padding-inline:7px}.aim-diag__skill-key b{font-size:7px}.aim-diag__skill-key small{font-size:6px}.aim-diag__instruction{font-size:6px}.aim-diag__selectors{gap:5px}.aim-diag__machine-top{height:auto;min-height:39px;gap:8px;padding-block:7px}.aim-diag__machine-top>span{flex-shrink:0}.aim-diag__machine-label small{display:none}.aim-diag__machine-top label{gap:4px;font-size:6px}.aim-diag__machine-top select{max-width:88px;height:23px;padding-left:5px;font-size:7px}.aim-diag__loadout{font-size:6px}.aim-diag__course{right:8px;bottom:8px;gap:5px;padding:5px}.aim-diag__course>b{display:none}.aim-diag__result{justify-content:flex-start;padding:13px 11px 15px}.aim-diag__result-rating{margin-top:8px}.aim-diag__result-plan{margin-top:9px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #5a0b10;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column;width:min(240px,100%)}.aim-diag__result code{max-width:100%;font-size:8px}.aim-diag__result button,.aim-diag__result-action a{width:100%}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
+  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__expectation{margin-top:13px}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{--ad-target-size:52px}.aim-diag__skill-key{margin-top:18px}.aim-diag__skill-key span{padding-inline:7px}.aim-diag__skill-key b{font-size:7px}.aim-diag__skill-key small{font-size:6px}.aim-diag__instruction{font-size:6px}.aim-diag__selectors{gap:5px}.aim-diag__machine-top{height:auto;min-height:39px;gap:8px;padding-block:7px}.aim-diag__machine-top>span{flex-shrink:0}.aim-diag__machine-label small{display:none}.aim-diag__machine-top label{gap:4px;font-size:6px}.aim-diag__machine-top select{max-width:88px;height:23px;padding-left:5px;font-size:7px}.aim-diag__loadout{font-size:6px}.aim-diag__course{right:8px;bottom:8px;gap:5px;padding:5px}.aim-diag__course>b,.aim-diag__course small{display:none}.aim-diag__result{justify-content:flex-start;padding:13px 11px 15px}.aim-diag__result-rating{margin-top:8px}.aim-diag__result-plan{margin-top:9px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #5a0b10;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column;width:min(240px,100%)}.aim-diag__result code{max-width:100%;font-size:8px}.aim-diag__result button,.aim-diag__result-action a{width:100%}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
 </style>
 
 <script>
@@ -324,11 +325,20 @@ const { product } = Astro.props;
     const retestButton = root.querySelector<HTMLButtonElement>('[data-aim-retest]')!;
     const courseGates = Array.from(root.querySelectorAll<HTMLElement>('[data-switch-gate]'));
     const switchStepEl = root.querySelector<HTMLElement>('[data-aim-switch-step]')!;
+    const switchStateEl = root.querySelector<HTMLElement>('[data-aim-switch-state]')!;
     const scoreEls = Object.fromEntries(keys.map(k => [k, root.querySelector<HTMLElement>(`[data-aim-score="${k}"]`)!])) as Record<SkillKey, HTMLElement>;
     const fillEls = Object.fromEntries(keys.map(k => [k, root.querySelector<HTMLElement>(`[data-aim-fill="${k}"]`)!])) as Record<SkillKey, HTMLElement>;
     const detailEls = Object.fromEntries(keys.map(k => [k, root.querySelector<HTMLElement>(`[data-aim-detail="${k}"]`)!])) as Record<SkillKey, HTMLElement>;
 
     const hardened = { flickSize: 48, trackSize: 44 } as const;
+    const readPlan = {
+      totalMs: 28000,
+      flickEndsAt: 8000,
+      trackEndsAt: 18000,
+      minFlickHits: 5,
+      minSwitchHits: 6,
+      minTrackMs: 8000,
+    } as const;
     const switchLayouts = [
       { x: 17, y: 29, size: 44 },
       { x: 83, y: 71, size: 42 },
@@ -358,9 +368,14 @@ const { product } = Astro.props;
     };
     const accuracy = (hits: number, misses: number) => Math.round((hits / Math.max(1, hits + misses)) * 100);
     const clickScore = (times: number[], misses: number) => {
+      if (!times.length) return 0;
       const speed = clamp(100 - Math.max(0, median(times) - 180) / 5.2);
       const acc = accuracy(times.length, misses);
-      return Math.min(clamp(speed * .72 + acc * .28), times.length * 24);
+      const raw = clamp(speed * .72 + acc * .28);
+      // A tiny sample should not be able to look like a perfect read. Once the
+      // minimum sample is reached, the measured score is allowed through.
+      const sampleWeight = Math.min(1, times.length / readPlan.minSwitchHits);
+      return clamp(50 + (raw - 50) * sampleWeight);
     };
     const setTargetSize = (target: HTMLElement, size: number) => {
       target.style.setProperty('--ad-target-size', `${size}px`);
@@ -403,9 +418,18 @@ const { product } = Astro.props;
     };
     const updateSwitchCourse = () => {
       const total = courseGates.length || switchLayouts.length;
+      const completed = Math.min(switchStep, total);
       const current = Math.min(switchStep, total - 1);
-      const displayStep = Math.min(switchStep + 1, total);
-      switchStepEl.textContent = `${String(displayStep).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      switchStepEl.textContent = `${String(completed).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      if (root.dataset.state !== 'running' || root.dataset.phase !== 'switch') {
+        switchStateEl.textContent = 'WARMING UP';
+      } else if (switchStep >= total) {
+        switchStateEl.textContent = 'KEEP GOING';
+      } else if (switchStep >= readPlan.minSwitchHits) {
+        switchStateEl.textContent = 'ENOUGH · KEEP GOING';
+      } else {
+        switchStateEl.textContent = `${readPlan.minSwitchHits - switchStep} MORE NEEDED`;
+      }
       courseGates.forEach((gate, index) => {
         gate.dataset.state = index < switchStep ? 'done' : index === current && switchStep < total ? 'current' : 'upcoming';
       });
@@ -422,17 +446,18 @@ const { product } = Astro.props;
         .find((candidate) => candidate.dataset.aimRoutineCode === routine.code);
       return card?.id ? `#${card.id}` : '#aim-warmup-heading';
     };
+    type StoredRead = { game?: string; skill?: SkillKey; score?: number; mode?: 'limiter' | 'balanced' };
     const readLastRun = () => {
       try {
         const raw = window.localStorage.getItem('aimmaxxer:last-read');
-        return raw ? JSON.parse(raw) as { game?: string; skill?: SkillKey; score?: number } : null;
+        return raw ? JSON.parse(raw) as StoredRead : null;
       } catch {
         return null;
       }
     };
-    const rememberRun = (skill: SkillKey, score: number) => {
+    const rememberRun = (skill: SkillKey, score: number, mode: StoredRead['mode'] = 'limiter') => {
       try {
-        window.localStorage.setItem('aimmaxxer:last-read', JSON.stringify({ game: game.value, skill, score }));
+        window.localStorage.setItem('aimmaxxer:last-read', JSON.stringify({ game: game.value, skill, score, mode }));
       } catch {
         // Private browsing and blocked storage should not interrupt a read.
       }
@@ -444,7 +469,9 @@ const { product } = Astro.props;
         return;
       }
       const previousGame = gameNames[previous.game as keyof typeof gameNames] || 'Previous game';
-      const previousSkill = skillPlans[previous.skill]?.label || 'Previous limiter';
+      const previousSkill = previous.mode === 'balanced'
+        ? 'Balanced starting point'
+        : skillPlans[previous.skill as SkillKey]?.label || 'Previous limiter';
       historyEl.textContent = `Previous local read: ${previousGame} · ${previousSkill} ${previous.score ?? '--'}/100. Retest after your block to compare.`;
     };
 
@@ -466,7 +493,7 @@ const { product } = Astro.props;
       root.removeAttribute('data-active-target');
       switchStep = 0;
       phaseEl.textContent = 'READY';
-      timeEl.textContent = '12.0';
+      timeEl.textContent = (readPlan.totalMs / 1000).toFixed(1);
       instruction.textContent = 'Press start — or watch the calibration run';
       status.textContent = 'AUTO CALIBRATION';
       updateSwitchCourse();
@@ -474,12 +501,12 @@ const { product } = Astro.props;
       resetScores();
       resultKicker.textContent = 'AWAITING RUN';
       resultTitle.textContent = 'YOUR READ WILL LAND HERE';
-      resultCopy.textContent = 'Complete the 12-second run to unlock a game-specific warm-up.';
+      resultCopy.textContent = `Complete the ~${readPlan.totalMs / 1000}-second run to unlock a game-specific warm-up.`;
       starsEl.textContent = '☆☆☆☆☆';
       starsEl.setAttribute('aria-label', 'No result yet');
       priorityEl.textContent = 'AWAITING INPUT';
       planTitle.textContent = 'Run the diagnostic first';
-      planMeta.textContent = '10 min · a focused routine appears here after a clean read';
+      planMeta.textContent = '10 min · a focused routine appears here after enough confirmed input';
       nextStepEl.textContent = 'Click start, then follow the lit target through each stage.';
       resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
       confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
@@ -538,10 +565,14 @@ const { product } = Astro.props;
 
     const setPhaseInstruction = (phase: SkillKey) => {
       instruction.textContent = phase === 'flick'
-        ? 'Click each target · misses reduce precision'
+        ? flickTimes.length >= readPlan.minFlickHits
+          ? 'Sample target met · keep clicking for a stronger read'
+          : `Click each target · ${readPlan.minFlickHits - flickTimes.length} more clean hits needed`
         : phase === 'track'
           ? 'Keep your pointer centered on the moving target'
-          : 'Hit the lit target · each move gets smaller';
+          : switchStep >= readPlan.minSwitchHits
+            ? 'Sample target met · keep transferring for a stronger read'
+            : `Hit the lit target · ${readPlan.minSwitchHits - switchStep} more clean transfers needed`;
     };
 
     const finish = () => {
@@ -553,6 +584,7 @@ const { product } = Astro.props;
       const trackContact = Math.round((trackInsideMs / Math.max(1, trackTotalMs)) * 100);
       const trackError = Math.round(trackErrorPxMs / Math.max(1, trackTotalMs));
       const trackCloseness = (trackClosenessMs / Math.max(1, trackTotalMs)) * 100;
+      const trackSeconds = Math.round(trackTotalMs / 1000);
       const scores: Record<SkillKey, number> = {
         flick: clickScore(flickTimes, flickMisses),
         track: clamp(trackContact * .62 + trackCloseness * .38),
@@ -562,20 +594,26 @@ const { product } = Astro.props;
       detailEls.flick.textContent = `${flickTimes.length ? flickMedian : '--'} ms · ${flickAccuracy}% accurate`;
       detailEls.track.textContent = `${trackContact}% contact · ${trackError} px error`;
       detailEls.switch.textContent = `${switchTimes.length ? switchMedian : '--'} ms · ${switchAccuracy}% accurate`;
-      const hasEnoughInput = flickTimes.length >= 2 && switchTimes.length >= 2;
+      const evidenceGaps: string[] = [];
+      if (flickTimes.length < readPlan.minFlickHits) evidenceGaps.push(`${readPlan.minFlickHits - flickTimes.length} more flick hits`);
+      if (switchTimes.length < readPlan.minSwitchHits) evidenceGaps.push(`${readPlan.minSwitchHits - switchTimes.length} more transfers`);
+      if (trackTotalMs < readPlan.minTrackMs) evidenceGaps.push(`${Math.ceil((readPlan.minTrackMs - trackTotalMs) / 1000)} more seconds tracking`);
+      const hasEnoughInput = evidenceGaps.length === 0;
       if (!hasEnoughInput) {
+        instruction.textContent = 'Not enough confirmed input — retest with the full timer';
         resultKicker.textContent = 'DIAGNOSTIC COMPLETE';
         resultTitle.textContent = 'RUN IT AGAIN FOR A CLEAN READ';
-        resultCopy.textContent = 'The diagnostic needs a few confirmed flicks and transfers before it can pick the right routine.';
+        resultCopy.textContent = 'This run ended before we had enough confirmed input to choose a useful focus.';
         starsEl.textContent = '☆☆☆☆☆';
         starsEl.setAttribute('aria-label', 'No confidence yet');
         priorityEl.textContent = 'RETRY FOR A READ';
         planTitle.textContent = 'No routine selected yet';
-        planMeta.textContent = 'A clean read needs at least two flicks and two transfers.';
-        nextStepEl.textContent = 'Click at least two flick targets and two lit transfer targets, then use the result to choose your ten-minute block.';
+        planMeta.textContent = `Need ${readPlan.minFlickHits} flicks · ${readPlan.minSwitchHits} transfers · ${readPlan.minTrackMs / 1000}s tracking.`;
+        nextStepEl.textContent = `Run it again and keep interacting through the full timer. Still needed: ${evidenceGaps.join(' · ')}.`;
         resultWhy.textContent = 'This result is intentionally inconclusive. Picking a weakness from too little input would be misleading.';
-        confidenceEl.textContent = `Confirmed input: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${Math.round(trackTotalMs / 1000)}s tracking.`;
+        confidenceEl.textContent = `Evidence collected: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${trackSeconds}s tracking. Missing: ${evidenceGaps.join(' · ')}.`;
         inputNote.textContent = 'Not enough target confirmations · no routine selected.';
+        historyEl.textContent = 'No local history saved from an inconclusive read. Complete the next run to compare later.';
         codeEl.textContent = 'Run again to unlock a routine';
         copyButton.disabled = true;
         resultLink.textContent = 'Browse routines';
@@ -600,37 +638,53 @@ const { product } = Astro.props;
         const difference = scores[a] - scores[b];
         return Math.abs(difference) <= 7 ? tieOrder.indexOf(a) - tieOrder.indexOf(b) : difference;
       })[0] || 'track';
-      const routine = routineFor(weak);
+      const ordered = [...keys].sort((a, b) => scores[a] - scores[b]);
+      const runnerUp = ordered[1] || weak;
+      const gap = Math.max(0, scores[runnerUp] - scores[weak]);
+      const balancedRead = gap <= 8;
+      const balancedSkill: SkillKey = goalKey === 'speed' ? 'switch' : goalKey === 'control' ? 'track' : 'flick';
+      const focusSkill = balancedRead ? balancedSkill : weak;
+      const routine = routineFor(focusSkill);
       const selectedGame = gameNames[game.value as keyof typeof gameNames] || 'your game';
-      const plan = skillPlans[weak];
+      const plan = skillPlans[focusSkill];
       const titles: Record<SkillKey, string> = {
         flick: 'FLICK SPEED IS THE LIMIT',
         track: 'TRACKING IS THE LIMIT',
         switch: 'SWITCHING IS THE LIMIT',
       };
-      const focusLevel = Math.max(1, Math.min(5, Math.ceil((100 - scores[weak]) / 20)));
+      const focusLevel = balancedRead ? 2 : Math.max(1, Math.min(5, Math.ceil((100 - scores[weak]) / 20)));
       const nextSteps: Record<SkillKey, string> = {
         flick: 'Run one controlled block. Keep the target small and stop adding speed until your hit rate stays clean.',
         track: 'Run one control block. Stay smooth first; add speed only after the cursor stays connected.',
         switch: 'Run one transfer block. Confirm the lit target first, then chase faster hand-offs between targets.',
       };
       const goalAdvice: Record<TrainingGoal, string> = {
-        balanced: 'Start with the measured limiter, then retest after the block.',
+        balanced: 'Use this balanced block first, then retest to see if a clearer limiter appears.',
         speed: 'Push pace only after the first clean set; speed without confirmation just adds misses.',
         control: 'Use the routine at a calm pace and protect smoothness before chasing a faster score.',
         consistency: 'Prioritize clean contacts and repeatable stops before increasing difficulty.',
       };
+      const metricWhy: Record<SkillKey, string> = {
+        flick: `${flickMedian} ms median and ${flickAccuracy}% clean clicks`,
+        track: `${trackContact}% target contact and ${trackError}px average distance`,
+        switch: `${switchMedian} ms median and ${switchAccuracy}% clean transfers`,
+      };
+      instruction.textContent = 'Read complete — review your recommended warm-up below';
       resultKicker.textContent = 'DIAGNOSTIC COMPLETE';
-      resultTitle.textContent = titles[weak];
-      resultCopy.textContent = `${routine.name} · ${routine.focus} for ${selectedGame}.`;
+      resultTitle.textContent = balancedRead ? 'NO SINGLE LIMITER STOOD OUT' : titles[weak];
+      resultCopy.textContent = balancedRead
+        ? `${routine.name} is a balanced starting block for ${selectedGame}; your three scores are close.`
+        : `${routine.name} · ${routine.focus} for ${selectedGame}.`;
       starsEl.textContent = `${'★'.repeat(focusLevel)}${'☆'.repeat(5 - focusLevel)}`;
       starsEl.setAttribute('aria-label', `${focusLevel} of 5 focus level`);
-      priorityEl.textContent = focusLevel >= 4 ? 'HIGH-LEVERAGE FIX' : focusLevel >= 3 ? 'WORTH A BLOCK' : 'MAINTENANCE FOCUS';
-      planTitle.textContent = `${routine.name} · ${plan.label}`;
+      priorityEl.textContent = balancedRead ? 'BALANCED READ' : focusLevel >= 4 ? 'HIGH-LEVERAGE FIX' : focusLevel >= 3 ? 'WORTH A BLOCK' : 'MAINTENANCE FOCUS';
+      planTitle.textContent = balancedRead ? `${routine.name} · Balanced block` : `${routine.name} · ${plan.label}`;
       planMeta.textContent = `${plan.duration} · ${plan.difficulty} · paste the share code into KovaaK's`;
-      nextStepEl.textContent = `${nextSteps[weak]} ${goalAdvice[goalKey]}`;
-      resultWhy.textContent = `Your ${plan.label.toLowerCase()} score was ${scores[weak]}/100, the lowest part of this run. ${plan.useWhen}`;
-      confidenceEl.textContent = `Confidence: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${Math.round(trackTotalMs / 1000)}s tracking.`;
+      nextStepEl.textContent = `${balancedRead ? 'No skill was clearly behind the others. Run one balanced block and judge how it feels in your game.' : nextSteps[weak]} ${goalAdvice[goalKey]}`;
+      resultWhy.textContent = balancedRead
+        ? `The scores were close: flick ${scores.flick}, track ${scores.track}, switch ${scores.switch}. A single weakness would be overclaiming, so this block keeps the session balanced.`
+        : `Your ${plan.label.toLowerCase()} score was ${scores[weak]}/100, ${gap} points below the next skill. ${metricWhy[weak]}. ${plan.useWhen}`;
+      confidenceEl.textContent = `Useful sample: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${trackSeconds}s tracking. ${balancedRead ? 'Scores are close, so this is a starting point rather than a weakness verdict.' : 'Enough confirmed interactions for a directional warm-up recommendation.'}`;
       inputNote.textContent = matchMedia('(pointer: coarse)').matches
         ? 'Touch preview only · desktop mouse scores are not comparable.'
         : 'Hardened run · measured locally from this mouse session · no data leaves the tab.';
@@ -640,22 +694,22 @@ const { product } = Astro.props;
       resultLink.textContent = 'Start this warm-up';
       resultLink.href = routineAnchor(routine);
       retestButton.disabled = false;
-      rememberRun(weak, scores[weak]);
+      rememberRun(focusSkill, scores[focusSkill], balancedRead ? 'balanced' : 'limiter');
       phaseEl.textContent = 'COMPLETE';
       timeEl.textContent = '0.0';
       status.textContent = 'ROUTINE RESOLVED';
       root.dataset.state = 'result';
-      root.dataset.phase = weak;
+      root.dataset.phase = focusSkill;
     };
 
     const loop = (now: number) => {
       const elapsed = now - started - pausedMs;
       const dt = Math.min(50, Math.max(0, now - lastFrame));
       lastFrame = now;
-      const phase: SkillKey = elapsed < 3500 ? 'flick' : elapsed < 7000 ? 'track' : 'switch';
+      const phase: SkillKey = elapsed < readPlan.flickEndsAt ? 'flick' : elapsed < readPlan.trackEndsAt ? 'track' : 'switch';
       root.dataset.phase = phase;
       phaseEl.textContent = phase.toUpperCase();
-      timeEl.textContent = Math.max(0, (12000 - elapsed) / 1000).toFixed(1);
+      timeEl.textContent = Math.max(0, (readPlan.totalMs - elapsed) / 1000).toFixed(1);
       setPhaseInstruction(phase);
       const phaseIndex = phase === 'flick' ? 1 : phase === 'track' ? 2 : 3;
       if (phaseStarted !== phaseIndex) {
@@ -664,6 +718,7 @@ const { product } = Astro.props;
           targets[1].style.display = 'none';
           setTargetSize(targets[0], hardened.trackSize);
           targets[0].setAttribute('aria-label', 'Tracking target');
+          status.textContent = 'TRACKING SAMPLE';
         }
         if (phase === 'switch') {
           switchStep = 0;
@@ -671,10 +726,13 @@ const { product } = Astro.props;
           applySwitchLayout();
           updateSwitchCourse();
           lastSpawn = performance.now();
+          status.textContent = 'TRANSFER SAMPLE';
         }
       }
+      if (phase === 'flick' && flickTimes.length >= readPlan.minFlickHits) status.textContent = 'FLICK SAMPLE LOCKED';
+      if (phase === 'switch' && switchStep >= readPlan.minSwitchHits) status.textContent = 'SAMPLE LOCKED · KEEP AIMING';
       if (phase === 'track') {
-        const t = elapsed - 4000;
+        const t = elapsed - readPlan.flickEndsAt;
         const x = 50 + Math.sin(t / 430) * 28 + Math.sin(t / 860 + .8) * 10;
         const y = 50 + Math.sin(t / 285) * 18 + Math.cos(t / 620) * 8;
         targets[0].style.left = `${Math.max(14, Math.min(86, x))}%`;
@@ -687,7 +745,7 @@ const { product } = Astro.props;
         trackErrorPxMs += Math.min(distance, radius * 4) * dt;
         trackClosenessMs += Math.max(0, 1 - distance / (radius * 2.5)) * dt;
       }
-      if (elapsed >= 12000) return finish();
+      if (elapsed >= readPlan.totalMs) return finish();
       frame = requestAnimationFrame(loop);
     };
 
@@ -725,12 +783,12 @@ const { product } = Astro.props;
       resetScores();
       resultKicker.textContent = 'AWAITING RUN';
       resultTitle.textContent = 'YOUR READ WILL LAND HERE';
-      resultCopy.textContent = 'Complete the 12-second run to unlock a game-specific warm-up.';
+      resultCopy.textContent = `Complete the ~${readPlan.totalMs / 1000}-second run to unlock a game-specific warm-up.`;
       starsEl.textContent = '☆☆☆☆☆';
       starsEl.setAttribute('aria-label', 'No result yet');
       priorityEl.textContent = 'AWAITING INPUT';
       planTitle.textContent = 'Run the diagnostic first';
-      planMeta.textContent = '10 min · a focused routine appears here after a clean read';
+      planMeta.textContent = '10 min · a focused routine appears here after enough confirmed input';
       nextStepEl.textContent = 'Click start, then follow the lit target through each stage.';
       resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
       confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
@@ -748,7 +806,7 @@ const { product } = Astro.props;
       targets[0].setAttribute('aria-label', 'Calibration target');
       targets[0].style.left = '50%'; targets[0].style.top = '50%';
       phaseEl.textContent = 'CALIBRATE';
-      timeEl.textContent = '12.0';
+      timeEl.textContent = (readPlan.totalMs / 1000).toFixed(1);
       instruction.textContent = 'Click the center target when your pointer is ready';
       status.textContent = matchMedia('(pointer: coarse)').matches ? 'TOUCH PREVIEW' : 'MOUSE CALIBRATION';
       focusCalibrationTarget();
