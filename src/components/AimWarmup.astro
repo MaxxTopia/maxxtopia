@@ -20,6 +20,16 @@ const fmtSubs = (n: number): string =>
   n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(n);
 
 type Routine = { name: string; code: string; subs: number };
+type RoutineStyle = 'Clicking' | 'Tracking' | 'Mixed' | 'Switching';
+
+const routineMeta: Record<RoutineStyle, { duration: string; difficulty: string; skill: string }> = {
+  Clicking: { duration: '10 min', difficulty: 'Precision', skill: 'Click control' },
+  Tracking: { duration: '10 min', difficulty: 'Steady', skill: 'Target contact' },
+  Mixed: { duration: '10 min', difficulty: 'Balanced', skill: 'Flick + transfer' },
+  Switching: { duration: '10 min', difficulty: 'Demanding', skill: 'Target acquisition' },
+};
+
+const routineMetaFor = (style: RoutineStyle) => routineMeta[style];
 
 type Game = {
   game: string;
@@ -137,19 +147,23 @@ const skates = [
     <header class="aim-warmup__header reveal-on-scroll">
       <p class="aim-warmup__eyebrow">Warm up right</p>
       <h2 id="aim-warmup-heading" class="aim-warmup__heading">
-        Your aim warmup. <span class="aim-warmup__accent">Per game.</span>
+        Find your next <span class="aim-warmup__accent">ten minutes.</span>
       </h2>
       <p class="aim-warmup__sub">
-        Aim is three skills — clicking, tracking, switching — and the right warmup is the one
-        your game leans on. We picked the community routine for each. Copy the KovaaK's share
-        code, paste it in, and you're warming up in ten — no scenario hunting.
+        Run the browser read above and start with the routine it points to. Already know what
+        needs work? Pick your game below, copy the real KovaaK's share code, and start a focused
+        ten-minute block — no scenario hunting.
       </p>
+      <div class="aim-warmup__quick-actions" aria-label="Aimmaxxer next steps">
+        <a href="#aim-diagnostic">Run the diagnostic</a>
+        <a href="#aim-game-routines">Browse by game</a>
+      </div>
     </header>
 
-    <div class="aim-warmup__map reveal-on-scroll" aria-label="Aimmaxxer training map">
+    <div class="aim-warmup__map reveal-on-scroll" aria-label="What the diagnostic measures">
       <div class="aim-warmup__map-head">
-        <span>Training map</span>
-        <small>Match the weakness to the warm-up</small>
+        <span>What the read measures</span>
+        <small>Three skills · one next step</small>
       </div>
       <div class="aim-warmup__map-grid">
         <div class="aim-warmup__map-item aim-warmup__map-item--clicking">
@@ -164,21 +178,30 @@ const skates = [
       </div>
     </div>
 
-    <div class="aim-warmup__grid">
+    <div class="aim-warmup__grid" id="aim-game-routines">
       {games.map((g) => (
-        <article class:list={['aim-warmup__card', `aim-warmup__card--${g.style.toLowerCase()}`, 'reveal-on-scroll']}>
+        <article
+          id={`aim-game-routine-${g.game.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+          data-aim-routine-code={g.routine.code}
+          class:list={['aim-warmup__card', `aim-warmup__card--${g.style.toLowerCase()}`]}
+        >
           <div class="aim-warmup__card-head">
             <h3 class="aim-warmup__game">{g.game}</h3>
             <span class:list={['aim-warmup__tag', `aim-warmup__tag--${g.style.toLowerCase()}`]}>{g.style}</span>
           </div>
-          <div class="aim-warmup__best"><span>BEST FOR</span><strong>{g.bestFor}</strong></div>
-          <p class="aim-warmup__why">{g.why}</p>
+          <div class="aim-warmup__best"><span>WHEN TO USE</span><strong>{g.bestFor}</strong></div>
+          <p class="aim-warmup__why"><strong>Why it helps:</strong> {g.why}</p>
 
           <div class="aim-warmup__routine">
             <div class="aim-warmup__routine-head">
               <span class="aim-warmup__routine-label">Run</span>
               <span class="aim-warmup__routine-name">{g.routine.name}</span>
               <span class="aim-warmup__subs">{fmtSubs(g.routine.subs)} subs</span>
+            </div>
+            <div class="aim-warmup__routine-meta" aria-label={`${g.game} routine details`}>
+              <span>{routineMetaFor(g.style).duration}</span>
+              <span>{routineMetaFor(g.style).difficulty}</span>
+              <span>{routineMetaFor(g.style).skill}</span>
             </div>
             <div class="aim-warmup__code">
               <code class="aim-warmup__code-text">{g.routine.code}</code>
@@ -227,18 +250,27 @@ const skates = [
         <p class="aim-warmup__eyebrow">Train one skill</p>
         <h3 class="aim-warmup__skill-title">Or drill what's <span class="aim-warmup__accent">actually broken.</span></h3>
         <p class="aim-warmup__skill-sub">
-          The four core aim skills — static, dynamic, control, air — plus switching and micro,
-          each isolated in its own routine. Same import, one click.
+          If the diagnostic points to a single limiter, start here. Each routine isolates a
+          useful skill so you can train with intent instead of cycling through random scenarios.
         </p>
       </header>
       <div class="aim-warmup__grid aim-warmup__grid--skill">
         {skillRoutines.map((s) => (
-          <article class:list={['aim-warmup__card', `aim-warmup__card--${s.tag.toLowerCase()}`, 'reveal-on-scroll']}>
+          <article
+            id={`aim-skill-routine-${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+            data-aim-routine-code={s.routine.code}
+            class:list={['aim-warmup__card', `aim-warmup__card--${s.tag.toLowerCase()}`]}
+          >
             <div class="aim-warmup__card-head">
               <h4 class="aim-warmup__routine-name aim-warmup__routine-name--lg">{s.name}</h4>
               <span class:list={['aim-warmup__tag', `aim-warmup__tag--${s.tag.toLowerCase()}`]}>{s.tag}</span>
             </div>
-            <p class="aim-warmup__why">{s.trains}</p>
+            <p class="aim-warmup__why"><strong>Use it when:</strong> {s.trains}</p>
+            <div class="aim-warmup__routine-meta" aria-label={`${s.name} routine details`}>
+              <span>{routineMetaFor(s.tag).duration}</span>
+              <span>{routineMetaFor(s.tag).difficulty}</span>
+              <span>{routineMetaFor(s.tag).skill}</span>
+            </div>
             <div class="aim-warmup__code">
               <code class="aim-warmup__code-text">{s.routine.code}</code>
               <button
@@ -264,44 +296,51 @@ const skates = [
     </p>
 
     <!-- Brief gear note: mouse skates -->
-    <div class="aim-warmup__skates reveal-on-scroll">
-      <div class="aim-warmup__skates-head">
-        <p class="aim-warmup__eyebrow">While you're at it · the glide</p>
-        <h3 class="aim-warmup__skates-title">On cloth it's glide vs brake — and both are PTFE.</h3>
-        <p class="aim-warmup__skates-tradeoff">
-          On an <strong>Artisan</strong> cloth pad you want <strong>PTFE</strong>; the real choice is speed
-          vs control. <strong>Jade</strong> is the fastest (almost no stopping power); <strong>Tiger Ice V2</strong>,
-          <strong>Tiger Arc</strong> and <strong>Corepad</strong> add the brake a build-and-edit flicker needs.
-          The glass-first skates — <strong>Obsidian</strong>, Pulsar Superglide — belong on hard / glass pads, not cloth.
+    <details class="aim-warmup__skates reveal-on-scroll">
+      <summary class="aim-warmup__secondary-summary">
+        <span>Setup note</span>
+        <strong>Mouse skates: glide vs brake</strong>
+        <b aria-hidden="true">+</b>
+      </summary>
+      <div class="aim-warmup__skates-body">
+        <div class="aim-warmup__skates-head">
+          <p class="aim-warmup__eyebrow">While you're at it · the glide</p>
+          <h3 class="aim-warmup__skates-title">On cloth it's glide vs brake — and both are PTFE.</h3>
+          <p class="aim-warmup__skates-tradeoff">
+            On an <strong>Artisan</strong> cloth pad you want <strong>PTFE</strong>; the real choice is speed
+            vs control. <strong>Jade</strong> is the fastest (almost no stopping power); <strong>Tiger Ice V2</strong>,
+            <strong>Tiger Arc</strong> and <strong>Corepad</strong> add the brake a build-and-edit flicker needs.
+            The glass-first skates — <strong>Obsidian</strong>, Pulsar Superglide — belong on hard / glass pads, not cloth.
+          </p>
+        </div>
+        <div class="aim-warmup__skates-grid">
+          {skates.map((s) => (
+            <div class="aim-warmup__skate">
+              <div class="aim-warmup__skate-top">
+                <span class="aim-warmup__skate-name">{s.name}</span>
+                <span class="aim-warmup__skate-kind">{s.kind}</span>
+              </div>
+              <p class="aim-warmup__skate-best">{s.best}</p>
+            </div>
+          ))}
+        </div>
+        <p class="aim-warmup__skates-tip">
+          The hype, corrected: Jade and Obsidian are both X-Raypad flagships, but opposites — Jade is fast PTFE
+          built for cloth; Obsidian is a hardened control skate built for glass. On your Artisan cloth, run Jade
+          for glide, Tiger Ice V2 / Tiger Arc for control. Grab the Superstrike / Superlight 2 cut (sold for both)
+          or universal dots; for the Finalmouse ULX Prophecy use universal dots (S12 / UL2 / ULX). No pro publishes
+          their feet — this is reviewer + community consensus (boardzy, Mighty, r/MouseReview), not a "pro uses X" claim.
         </p>
       </div>
-      <div class="aim-warmup__skates-grid">
-        {skates.map((s) => (
-          <div class="aim-warmup__skate">
-            <div class="aim-warmup__skate-top">
-              <span class="aim-warmup__skate-name">{s.name}</span>
-              <span class="aim-warmup__skate-kind">{s.kind}</span>
-            </div>
-            <p class="aim-warmup__skate-best">{s.best}</p>
-          </div>
-        ))}
-      </div>
-      <p class="aim-warmup__skates-tip">
-        The hype, corrected: Jade and Obsidian are both X-Raypad flagships, but opposites — Jade is fast PTFE
-        built for cloth; Obsidian is a hardened control skate built for glass. On your Artisan cloth, run Jade
-        for glide, Tiger Ice V2 / Tiger Arc for control. Grab the Superstrike / Superlight 2 cut (sold for both)
-        or universal dots; for the Finalmouse ULX Prophecy use universal dots (S12 / UL2 / ULX). No pro publishes
-        their feet — this is reviewer + community consensus (boardzy, Mighty, r/MouseReview), not a "pro uses X" claim.
-      </p>
-    </div>
+    </details>
 
     <!-- v2 teaser — Dante red, paid, Discord-to-purchase -->
     <div class="aim-warmup__v2 reveal-on-scroll" style={`--aim-accent: ${accentHex};`}>
-      <p class="aim-warmup__v2-eyebrow">What's coming</p>
-      <h3 class="aim-warmup__v2-title">Aimmaxxer <span class="aim-warmup__accent">v2.</span> The real deal.</h3>
-      <p class="aim-warmup__v2-body">Real training happens in the lab. Use the routines above to improve — that's V1. Only go to V2 if you want an AI that drills the aim that's actually holding you back.</p>
+      <p class="aim-warmup__v2-eyebrow">Next version</p>
+      <h3 class="aim-warmup__v2-title">Aimmaxxer <span class="aim-warmup__accent">v2.</span> Adaptive training.</h3>
+      <p class="aim-warmup__v2-body">V1 gives you a useful browser read and a real routine. V2 will turn that read into adaptive sessions that change as your aim improves.</p>
       <a class="aim-warmup__v2-cta" href="https://discord.gg/S78eecbWdx" target="_blank" rel="noopener">
-        Join The Discord To Purchase
+        Join the Discord for V2
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
     </div>
@@ -386,6 +425,33 @@ const skates = [
     max-width: 60ch;
     margin: 0;
   }
+  .aim-warmup__quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 0;
+  }
+  .aim-warmup__quick-actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid color-mix(in srgb, var(--aim-accent) 50%, transparent);
+    border-radius: 999px;
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--aim-accent) 9%, transparent);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+  .aim-warmup__quick-actions a:first-child { color: #fff; background: var(--aim-accent); border-color: var(--aim-accent); }
+  .aim-warmup__quick-actions a:hover { border-color: var(--aim-accent); background: color-mix(in srgb, var(--aim-accent) 18%, transparent); transform: translateY(-1px); }
+  .aim-warmup__quick-actions a:first-child:hover { background: color-mix(in srgb, var(--aim-accent) 86%, white); }
 
   .aim-warmup__map {
     margin: 0 0 30px;
@@ -465,6 +531,7 @@ const skates = [
     border-radius: 16px;
     padding: 20px;
     transition: border-color 200ms ease, transform 200ms ease, background-color 200ms ease;
+    scroll-margin-top: 18vh;
   }
   .aim-warmup__card:hover {
     border-color: color-mix(in srgb, var(--aim-card-accent) 45%, transparent);
@@ -475,6 +542,10 @@ const skates = [
   .aim-warmup__card--tracking { --aim-card-accent: var(--aim-track); }
   .aim-warmup__card--mixed,
   .aim-warmup__card--switching { --aim-card-accent: var(--aim-switch); }
+  .aim-warmup__card.is-recommended {
+    border-color: color-mix(in srgb, var(--aim-card-accent) 78%, white);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--aim-card-accent) 26%, transparent), 0 18px 45px color-mix(in srgb, var(--aim-card-accent) 14%, transparent);
+  }
   .aim-warmup__card-head {
     display: flex;
     align-items: center;
@@ -514,6 +585,7 @@ const skates = [
     line-height: 1.45;
     margin: 0 0 14px;
   }
+  .aim-warmup__why strong { color: var(--color-text-mid); font-weight: 700; }
 
   /* Routine block — name + share code + copy. */
   .aim-warmup__routine {
@@ -526,6 +598,22 @@ const skates = [
     align-items: baseline;
     gap: 8px;
     margin: 0 0 10px;
+  }
+  .aim-warmup__routine-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: -2px 0 10px;
+  }
+  .aim-warmup__routine-meta span {
+    padding: 3px 7px;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
   }
   .aim-warmup__routine-label {
     font-family: var(--font-mono);
@@ -709,7 +797,38 @@ const skates = [
     margin: 48px 0 0;
     padding-top: 40px;
     border-top: 1px solid var(--color-line);
+    content-visibility: auto;
+    contain-intrinsic-size: 640px;
   }
+  .aim-warmup__secondary-summary {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .aim-warmup__secondary-summary::-webkit-details-marker { display: none; }
+  .aim-warmup__secondary-summary > span {
+    color: var(--aim-accent);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+  }
+  .aim-warmup__secondary-summary strong {
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .aim-warmup__secondary-summary b {
+    color: var(--aim-accent);
+    font: 400 22px/1 var(--font-mono);
+    transition: transform 160ms ease;
+  }
+  .aim-warmup__skates[open] .aim-warmup__secondary-summary b { transform: rotate(45deg); }
+  .aim-warmup__skates-body { padding-top: 24px; }
   .aim-warmup__skates-head { max-width: 680px; margin: 0 0 22px; }
   .aim-warmup__skates-title {
     font-size: clamp(22px, 3vw, 30px);
@@ -784,6 +903,8 @@ const skates = [
       radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--aim-accent) 12%, transparent), transparent 60%),
       var(--color-bg-card);
     box-shadow: 0 0 60px color-mix(in srgb, var(--aim-accent) 12%, transparent);
+    content-visibility: auto;
+    contain-intrinsic-size: 330px;
   }
   .aim-warmup__v2-eyebrow {
     font-family: var(--font-mono);
@@ -831,13 +952,27 @@ const skates = [
   .aim-warmup__v2-cta:active { transform: scale(0.98); }
   .aim-warmup__copy:focus-visible,
   .aim-warmup__v2-cta:focus-visible,
-  .aim-warmup__import-foot a:focus-visible { outline: 2px solid var(--aim-accent); outline-offset: 3px; }
+  .aim-warmup__import-foot a:focus-visible,
+  .aim-warmup__quick-actions a:focus-visible,
+  .aim-warmup__secondary-summary:focus-visible { outline: 2px solid var(--aim-accent); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aim-warmup__card,
+    .aim-warmup__quick-actions a,
+    .aim-warmup__copy,
+    .aim-warmup__v2-cta,
+    .aim-warmup__secondary-summary b { transition: none; }
+  }
 
   @media (max-width: 620px) {
     .aim-warmup { padding-top: 68px; }
+    .aim-warmup__quick-actions { align-items: stretch; }
+    .aim-warmup__quick-actions a { flex: 1 1 180px; justify-content: center; }
     .aim-warmup__map-head { align-items: flex-start; flex-direction: column; gap: 5px; }
     .aim-warmup__map-grid { grid-template-columns: 1fr; gap: 6px; }
     .aim-warmup__map-item { min-height: 42px; }
     .aim-warmup__card { padding: 18px; }
+    .aim-warmup__secondary-summary { grid-template-columns: 1fr auto; }
+    .aim-warmup__secondary-summary > span { grid-column: 1 / -1; }
   }
 </style>

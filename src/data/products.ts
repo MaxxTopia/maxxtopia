@@ -604,21 +604,21 @@ export const products: Product[] = [
     slug: 'aimmaxxer',
     name: 'Aimmaxxer',
     category: 'Training',
-    status: 'soon',
+    status: 'dev',
     version: releaseRegistry.aimmaxxer.version ?? undefined,
-    tagline: 'Warm up right. Per game.',
+    tagline: 'Find your limiter. Warm up with purpose.',
     description:
-      'Best aim-routine warmups for now — plus mouse-skate guidance and the setup details that shape your feel. The real-deal Aimmaxxer V2 is currently in the works.',
+      "A 12-second browser read that points you to a focused KovaaK's warm-up for the game you play. Aimmaxxer V2 adaptive training is in development.",
     longDescription:
-      "Start with a focused ten-minute warmup in KovaaK's for the game you actually play, then learn which mouse skates and setup choices change your feel. Aimmaxxer V2 — the full trainer — is currently in the works.",
+      "Run a local, no-account check of flicking, tracking, and switching. Then copy a game-specific KovaaK's routine and retest after your block. Aimmaxxer V2 adaptive training is in development.",
     features: [
       {
-        title: '4 metrics. 4 drills.',
-        body: 'Sensitivity, prediction, anchor, trigger — measured separately, drilled separately.',
+        title: '3 aim signals. One next step.',
+        body: 'Flicking, tracking, and switching are measured in a short local browser run, then translated into a focused routine.',
       },
       {
-        title: 'Your sens. Your routine.',
-        body: 'Routine adapts to your DPI, sensitivity, and play style. Not the other way around.',
+        title: 'Your game. Your routine.',
+        body: "Choose the game and goal, copy a real KovaaK's share code, and start a focused ten-minute block. No account required.",
       },
     ],
     primaryCta: releaseRegistry.aimmaxxer.installerUrl
@@ -634,31 +634,31 @@ export const products: Product[] = [
     heroStat: { value: '6', label: 'games · a warmup for each' },
     zones: [
       {
-        eyebrow: '01 · The Metrics',
-        headline: "Aim is four things. Drilled four ways.",
-        body: 'Sensitivity, prediction, anchor, trigger. KovaaK\'s hands you 200 scenarios. We measure the 4 that fix what\'s actually broken, and drill each separately.',
+        eyebrow: '01 · The Read',
+        headline: 'Three skills. One clear next step.',
+        body: 'A short local run checks flicking, tracking, and switching. If there is not enough confirmed input, it stays inconclusive instead of inventing a weakness.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Sensitivity', value: 'drilled' },
-            { label: 'Prediction', value: 'drilled' },
-            { label: 'Anchor', value: 'drilled' },
-            { label: 'Trigger discipline', value: 'drilled' },
+            { label: 'Flicking', value: 'measured' },
+            { label: 'Tracking', value: 'measured' },
+            { label: 'Switching', value: 'measured' },
+            { label: 'Confidence', value: 'shown' },
           ],
-          caption: 'Four independent measurements · four independent drills',
+          caption: 'Confirmed input first · recommendation second',
         },
       },
       {
-        eyebrow: '02 · The Routine',
-        headline: "Adapts to your sens.",
-        body: 'Your DPI, your in-game sensitivity, your play style. The routine flexes around them — not the other way around. No "use 800 DPI" prescriptions.',
+        eyebrow: '02 · The Block',
+        headline: 'From read to routine.',
+        body: "Choose the game you play, copy a real KovaaK's share code, and spend ten focused minutes on the skill that needs the most attention. Retest after the block.",
         visual: {
           kind: 'chips',
           chips: [
-            { label: "KovaaK's — one fixed sens prescription", value: 'static' },
-            { label: 'Aimmaxxer — adapts to your DPI + style', value: 'adaptive', emphasize: true },
+            { label: 'Game-specific routine', value: 'selected' },
+            { label: '10 minute block', value: 'focused', emphasize: true },
           ],
-          caption: 'Calibration model · static vs adaptive',
+          caption: 'A useful next action, not a mystery score',
         },
       },
     ],

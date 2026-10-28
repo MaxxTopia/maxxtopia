@@ -13,7 +13,7 @@ type Props = { product: Product };
 const { product } = Astro.props;
 ---
 
-<section class="aim-diagnostic" data-aim-diagnostic data-state="idle" aria-label="Aimmaxxer interactive aim diagnostic">
+<section id="aim-diagnostic" class="aim-diagnostic" data-aim-diagnostic data-state="idle" aria-label="Aimmaxxer interactive aim diagnostic">
   <div class="aim-diag__noise" aria-hidden="true"></div>
   <div class="aim-diag__shell">
     <button type="button" class="aim-diag__exit" data-aim-exit aria-keyshortcuts="Escape" aria-label="Exit the aim diagnostic">
@@ -30,7 +30,7 @@ const { product } = Astro.props;
         <div class="aim-diag__brand">
           <img src={product.icon} alt="" />
           <span>TRAINING / AIMMAXXER</span>
-          <i>COMING SOON</i>
+          <i>V1 · BROWSER PREVIEW</i>
         </div>
         <p class="aim-diag__eyebrow"><span></span>12-second browser diagnostic <b>HARDENED RUN</b></p>
         <h1>Don’t guess what<br />your aim <em>needs.</em></h1>
@@ -38,7 +38,11 @@ const { product } = Astro.props;
           Flick. Track. Switch. Aimmaxxer finds the weakest link, then hands you
           a verified KovaaK’s warm-up for the game you actually play.
         </p>
-        <p class="aim-diag__method">Local browser check · best with a mouse or trackpad · no data leaves this tab</p>
+        <p class="aim-diag__method">12 seconds · mouse recommended · local only · no account required</p>
+        <div class="aim-diag__expectation">
+          <strong>How the read works</strong>
+          <span>Click the center target, then follow three short stages. A routine is only recommended after enough confirmed flicks and transfers.</span>
+        </div>
         <div class="aim-diag__skill-key" aria-label="Diagnostic stages">
           <span data-skill-key="flick"><i></i><b>Flick</b><small>precision</small></span>
           <span data-skill-key="track"><i></i><b>Track</b><small>control</small></span>
@@ -52,11 +56,12 @@ const { product } = Astro.props;
           <a class="aim-diag__notify" href={product.primaryCta.href} target={product.primaryCta.external ? '_blank' : undefined} rel={product.primaryCta.external ? 'noopener' : undefined}>
             {product.primaryCta.label}
           </a>
+          <a class="aim-diag__browse" href="#aim-warmup-heading">Browse routines</a>
         </div>
         <div class="aim-diag__proof">
           <span><b>6</b> games</span>
           <span><b>12</b> real routines</span>
-          <span><b>0</b> login</span>
+          <span><b>0</b> account required</span>
         </div>
       </div>
 
@@ -114,7 +119,7 @@ const { product } = Astro.props;
           <div class="aim-diag__crosshair" aria-hidden="true"><i></i></div>
           <p class="aim-diag__instruction" data-aim-instruction>Press start — or watch the calibration run</p>
 
-          <div class="aim-diag__result" data-aim-result aria-live="polite">
+          <div class="aim-diag__result" data-aim-result aria-live="polite" aria-atomic="true">
             <p data-aim-result-kicker>AWAITING RUN</p>
             <strong data-aim-result-title>YOUR READ WILL LAND HERE</strong>
             <span data-aim-result-copy>Complete the 12-second run to unlock a game-specific warm-up.</span>
@@ -122,17 +127,26 @@ const { product } = Astro.props;
               <span data-aim-stars aria-label="No result yet">☆☆☆☆☆</span>
               <b data-aim-priority>AWAITING INPUT</b>
             </div>
+            <div class="aim-diag__result-plan">
+              <span>NEXT BLOCK</span>
+              <strong data-aim-plan-title>Run the diagnostic first</strong>
+              <small data-aim-plan-meta>10 min · a focused routine appears here after a clean read</small>
+            </div>
             <div class="aim-diag__breakdown">
               <span><b>FLICK</b><i data-aim-detail="flick">-- ms · --% accurate</i></span>
               <span><b>TRACK</b><i data-aim-detail="track">--% contact · -- px error</i></span>
               <span><b>SWITCH</b><i data-aim-detail="switch">-- ms · --% accurate</i></span>
             </div>
             <p class="aim-diag__result-next" data-aim-next-step>Click start, then follow the lit target through each stage.</p>
+            <p class="aim-diag__result-why" data-aim-result-why>We will explain what the run measured and why the routine fits before we ask you to copy anything.</p>
+            <p class="aim-diag__result-confidence" data-aim-confidence>Confidence appears after enough confirmed input.</p>
             <small data-aim-input-note>Local only · no data leaves this tab.</small>
+            <p class="aim-diag__history" data-aim-history>Runs stay on this browser only.</p>
             <div class="aim-diag__result-action">
               <code data-aim-code>Run the diagnostic first</code>
-              <button type="button" data-aim-copy>Copy code</button>
-              <a href="#aim-warmup-heading" data-aim-result-link>View plan</a>
+              <button type="button" data-aim-copy>Copy share code</button>
+              <a href="#aim-warmup-heading" data-aim-result-link>Start this warm-up</a>
+              <button type="button" data-aim-retest>Retest</button>
             </div>
           </div>
         </div>
@@ -170,9 +184,9 @@ const { product } = Astro.props;
   .aim-diag__copy{position:relative}.aim-diag__brand{display:flex;align-items:center;gap:9px;margin-bottom:31px;color:var(--color-text-mid);font:650 9px/1 var(--font-mono),monospace;letter-spacing:.11em}.aim-diag__brand img{width:34px;height:34px;border-radius:8px}.aim-diag__brand i{margin-left:auto;padding:6px 8px;border:1px solid rgba(209,24,32,.3);border-radius:4px;color:var(--ad-ember);font-style:normal;font-size:8px}
   .aim-diag__eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 18px;color:var(--ad-ember);font:650 10px/1 var(--font-mono),monospace;letter-spacing:.15em;text-transform:uppercase}.aim-diag__eyebrow span{width:7px;height:7px;border:1px solid var(--ad-ember);border-radius:50%;box-shadow:0 0 13px var(--ad-ember);animation:ad-ready 1.5s ease-in-out infinite}@keyframes ad-ready{50%{background:var(--ad-ember);box-shadow:0 0 4px var(--ad-ember)}}
   .aim-diag__copy h1{max-width:630px;margin:0;font-size:clamp(54px,5.6vw,88px);font-weight:780;line-height:.9;letter-spacing:-.06em}.aim-diag__copy h1 em{color:var(--ad-ember);font-style:normal;text-shadow:0 0 35px rgba(255,75,62,.17)}
-  .aim-diag__lede{max-width:540px;margin:27px 0 0;color:var(--color-text-mid);font-size:clamp(15px,1.15vw,18px);line-height:1.62}.aim-diag__method{max-width:540px;margin:13px 0 0;color:var(--color-muted);font:650 8px/1.5 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}.aim-diag__actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:30px}
+  .aim-diag__lede{max-width:540px;margin:27px 0 0;color:var(--color-text-mid);font-size:clamp(15px,1.15vw,18px);line-height:1.62}.aim-diag__method{max-width:540px;margin:13px 0 0;color:var(--color-muted);font:650 8px/1.5 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}.aim-diag__expectation{display:grid;gap:5px;max-width:540px;margin-top:16px;padding:11px 13px;border-left:2px solid var(--ad-ember);background:rgba(255,75,62,.045)}.aim-diag__expectation strong{color:var(--color-text);font-size:12px;font-weight:700}.aim-diag__expectation span{color:var(--color-text-mid);font-size:12px;line-height:1.45}.aim-diag__actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:24px}
   .aim-diag__eyebrow b{margin-left:2px;color:var(--color-text);font-size:8px;letter-spacing:.1em}.aim-diag__skill-key{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:540px;margin-top:23px;border:1px solid var(--color-line-strong);background:rgba(12,4,6,.68)}.aim-diag__skill-key span{display:grid;grid-template-columns:auto 1fr;column-gap:7px;align-items:center;padding:9px 10px;border-left:2px solid var(--skill-color)}.aim-diag__skill-key span:first-child{border-left:0}.aim-diag__skill-key [data-skill-key="flick"]{--skill-color:var(--ad-ember)}.aim-diag__skill-key [data-skill-key="track"]{--skill-color:var(--ad-track)}.aim-diag__skill-key [data-skill-key="switch"]{--skill-color:var(--ad-switch)}.aim-diag__skill-key i{grid-row:span 2;width:6px;height:6px;border:1px solid var(--skill-color);border-radius:50%;box-shadow:0 0 9px color-mix(in srgb,var(--skill-color) 55%,transparent)}.aim-diag__skill-key b{color:var(--color-text-mid);font:700 8px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase}.aim-diag__skill-key small{color:var(--color-muted);font:7px/1 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}
-  .aim-diag__start,.aim-diag__notify{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:49px;padding:0 20px;border-radius:6px;font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}.aim-diag__start{border:1px solid var(--ad-ember);background:var(--ad-ember);color:#1c0305;box-shadow:0 14px 35px rgba(255,75,62,.2);transition:transform .2s,box-shadow .2s}.aim-diag__start:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(255,75,62,.34)}.aim-diag__start svg{width:14px;fill:none;stroke:currentColor;stroke-width:2.5}.aim-diag__notify{border:1px solid var(--color-line-strong);background:var(--color-bg);color:var(--color-text-mid);transition:border-color .2s,color .2s}.aim-diag__notify:hover{border-color:var(--ad-ember);color:var(--color-text)}
+  .aim-diag__start,.aim-diag__notify,.aim-diag__browse{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:49px;padding:0 20px;border-radius:6px;font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}.aim-diag__start{border:1px solid var(--ad-ember);background:var(--ad-ember);color:#1c0305;box-shadow:0 14px 35px rgba(255,75,62,.2);transition:transform .2s,box-shadow .2s}.aim-diag__start:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(255,75,62,.34)}.aim-diag__start svg{width:14px;fill:none;stroke:currentColor;stroke-width:2.5}.aim-diag__notify{border:1px solid var(--color-line-strong);background:var(--color-bg);color:var(--color-text-mid);transition:border-color .2s,color .2s}.aim-diag__notify:hover{border-color:var(--ad-ember);color:var(--color-text)}.aim-diag__browse{min-height:40px;padding-inline:4px;border:0;color:var(--color-muted);font-size:11px;text-decoration:underline;text-decoration-color:rgba(255,75,62,.55);text-underline-offset:4px}.aim-diag__browse:hover{color:var(--ad-cream)}
   .aim-diag__proof{display:grid;grid-template-columns:repeat(3,1fr);max-width:470px;margin-top:36px;border-top:1px solid var(--color-line-strong)}.aim-diag__proof span{padding:15px 14px 0 0;color:var(--color-muted);font:9px/1 var(--font-mono),monospace;letter-spacing:.1em;text-transform:uppercase}.aim-diag__proof span+span{padding-left:17px;border-left:1px solid var(--color-line-strong)}.aim-diag__proof b{display:block;margin-bottom:7px;color:var(--color-text);font:700 23px/1 var(--font-display),sans-serif}
 
   .aim-diag__machine{position:relative;min-width:0;border:1px solid var(--color-line-strong);border-radius:13px;overflow:hidden;background:#0c0406;box-shadow:0 35px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.025) inset,0 0 75px rgba(209,24,32,.1)}
@@ -197,7 +211,7 @@ const { product } = Astro.props;
   .aim-diag__instruction{position:absolute;z-index:8;left:50%;bottom:13px;margin:0;transform:translateX(-50%);color:var(--color-muted);font:650 7px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
   .aim-diag__scores{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--color-line);border-bottom:1px solid var(--color-line)}.aim-diag__scores>div{position:relative;padding:11px 13px 12px}.aim-diag__scores>div+div{border-left:1px solid var(--color-line)}.aim-diag__scores span{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.14em}.aim-diag__scores b{float:right;color:var(--color-text-mid);font:800 12px/1 var(--font-mono),monospace}.aim-diag__scores i{position:absolute;left:13px;right:13px;bottom:6px;height:2px;overflow:hidden;background:#3c060a}.aim-diag__scores em{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--ad-red),var(--ad-phase));box-shadow:0 0 6px var(--ad-phase);transition:width .4s}
   .aim-diag__machine-bottom{height:31px}.aim-diag__machine-bottom button{position:relative;z-index:21;border:0;background:none;color:var(--color-muted);font:700 7px var(--font-mono),monospace;letter-spacing:.12em;cursor:pointer}.aim-diag__machine-bottom button:hover{color:var(--ad-ember)}
-  .aim-diag__result{position:absolute;z-index:12;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;opacity:0;pointer-events:none;background:radial-gradient(circle,rgba(var(--ad-phase-rgb),.16),rgba(12,4,6,.97) 72%);transform:scale(1.03);transition:opacity .35s,transform .5s}.aim-diag__result p{margin:0 0 8px;color:var(--ad-phase);font:700 8px var(--font-mono),monospace;letter-spacing:.18em}.aim-diag__result>strong{color:var(--color-text);font:750 clamp(22px,2.7vw,35px)/1 var(--font-display),sans-serif;letter-spacing:.01em}.aim-diag__result>span{margin-top:7px;color:var(--color-text-mid);font-size:11px}.aim-diag__result-rating{display:flex;align-items:center;gap:9px;margin-top:10px}.aim-diag__result-rating span{color:var(--ad-ember);font:800 12px/1 var(--font-mono),monospace;letter-spacing:.08em;text-shadow:0 0 10px rgba(255,75,62,.3)}.aim-diag__result-rating b{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.12em}.aim-diag__breakdown{display:grid;grid-template-columns:repeat(3,1fr);width:min(480px,100%);margin-top:13px;border:1px solid var(--color-line-strong);border-radius:5px;background:rgba(12,4,6,.76)}.aim-diag__breakdown span{padding:7px 8px}.aim-diag__breakdown span+span{border-left:1px solid var(--color-line-strong)}.aim-diag__breakdown b,.aim-diag__breakdown i{display:block;font-family:var(--font-mono),monospace}.aim-diag__breakdown b{color:var(--ad-phase);font-size:7px;letter-spacing:.12em}.aim-diag__breakdown i{margin-top:4px;color:var(--color-text-mid);font-size:7px;font-style:normal;white-space:nowrap}.aim-diag__result-next{max-width:520px;margin:10px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result>small{margin-top:7px;color:var(--color-muted);font:6px var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__result-action{display:flex;align-items:center;gap:7px;margin-top:12px}.aim-diag__result code{padding:8px 10px;border:1px solid #5a0b10;border-radius:5px;background:#0c0406;color:var(--color-text-mid);font:10px var(--font-mono),monospace}.aim-diag__result button,.aim-diag__result-action a{padding:9px 11px;border:1px solid var(--ad-phase);border-radius:5px;background:var(--ad-phase);color:#1c0305;font:800 9px var(--font-mono),monospace;cursor:pointer;text-decoration:none}.aim-diag__result-action a{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button.is-copied{background:#73d89f;border-color:#73d89f}
+  .aim-diag__result{position:absolute;z-index:12;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;opacity:0;pointer-events:none;overflow:auto;background:radial-gradient(circle,rgba(var(--ad-phase-rgb),.16),rgba(12,4,6,.97) 72%);transform:scale(1.03);transition:opacity .35s,transform .5s}.aim-diag__result p{margin:0 0 8px;color:var(--ad-phase);font:700 8px var(--font-mono),monospace;letter-spacing:.18em}.aim-diag__result>strong{color:var(--color-text);font:750 clamp(22px,2.7vw,35px)/1 var(--font-display),sans-serif;letter-spacing:.01em}.aim-diag__result>span{margin-top:7px;color:var(--color-text-mid);font-size:11px}.aim-diag__result-rating{display:flex;align-items:center;gap:9px;margin-top:10px}.aim-diag__result-rating span{color:var(--ad-ember);font:800 12px/1 var(--font-mono),monospace;letter-spacing:.08em;text-shadow:0 0 10px rgba(255,75,62,.3)}.aim-diag__result-rating b{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.12em}.aim-diag__result-plan{display:grid;gap:4px;width:min(520px,100%);margin-top:13px;padding:10px 12px;border:1px solid rgba(255,75,62,.28);border-left:2px solid var(--ad-phase);text-align:left;background:rgba(12,4,6,.72)}.aim-diag__result-plan span{color:var(--ad-phase);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.16em}.aim-diag__result-plan strong{color:var(--color-text);font-size:14px;line-height:1.2}.aim-diag__result-plan small{color:var(--color-text-mid);font-size:10px;line-height:1.35}.aim-diag__breakdown{display:grid;grid-template-columns:repeat(3,1fr);width:min(480px,100%);margin-top:13px;border:1px solid var(--color-line-strong);border-radius:5px;background:rgba(12,4,6,.76)}.aim-diag__breakdown span{padding:7px 8px}.aim-diag__breakdown span+span{border-left:1px solid var(--color-line-strong)}.aim-diag__breakdown b,.aim-diag__breakdown i{display:block;font-family:var(--font-mono),monospace}.aim-diag__breakdown b{color:var(--ad-phase);font-size:7px;letter-spacing:.12em}.aim-diag__breakdown i{margin-top:4px;color:var(--color-text-mid);font-size:7px;font-style:normal;white-space:nowrap}.aim-diag__result-next{max-width:520px;margin:10px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result-why{max-width:520px;margin:7px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result-confidence{max-width:520px;margin:6px 0 0!important;color:var(--color-muted)!important;font:7px/1.45 var(--font-mono),monospace!important;letter-spacing:.03em}.aim-diag__result>small{margin-top:7px;color:var(--color-muted);font:6px var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__history{max-width:520px;margin:6px 0 0!important;color:var(--color-muted)!important;font:7px/1.35 var(--font-mono),monospace!important;letter-spacing:.02em}.aim-diag__result-action{display:flex;align-items:center;gap:7px;margin-top:12px}.aim-diag__result code{padding:8px 10px;border:1px solid #5a0b10;border-radius:5px;background:#0c0406;color:var(--color-text-mid);font:10px var(--font-mono),monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}.aim-diag__result button,.aim-diag__result-action a{padding:9px 11px;border:1px solid var(--ad-phase);border-radius:5px;background:var(--ad-phase);color:#1c0305;font:800 9px var(--font-mono),monospace;cursor:pointer;text-decoration:none}.aim-diag__result-action a{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button[data-aim-retest]{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button.is-copied{background:#73d89f;border-color:#73d89f}
   .aim-diag__result button:disabled{border-color:#5a0b10;background:#241014;color:var(--color-muted);cursor:not-allowed;opacity:.72}
   [data-state="result"] .aim-diag__result{opacity:1;pointer-events:auto;transform:scale(1)}[data-state="running"] .aim-diag__crosshair,[data-state="calibration"] .aim-diag__crosshair,[data-state="result"] .aim-diag__crosshair{display:none}[data-state="result"] .aim-diag__target{display:none!important}
   [data-phase="switch"][data-active-target="a"] .aim-diag__target--a,[data-phase="switch"][data-active-target="b"] .aim-diag__target--b{z-index:8}[data-phase="switch"] .aim-diag__target[aria-hidden="true"]{display:none!important}
@@ -211,13 +225,17 @@ const { product } = Astro.props;
   .aim-diagnostic.is-immersive .aim-diag__machine{width:min(1180px,100%);margin:auto}
 
   @media(max-width:1060px){.aim-diag__grid{grid-template-columns:1fr;gap:45px}.aim-diag__copy{max-width:760px}.aim-diag__machine{width:min(820px,100%);margin:auto}.aim-diag__copy h1{font-size:clamp(58px,10vw,88px)}}
-  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{--ad-target-size:52px}.aim-diag__skill-key{margin-top:18px}.aim-diag__skill-key span{padding-inline:7px}.aim-diag__skill-key b{font-size:7px}.aim-diag__skill-key small{font-size:6px}.aim-diag__instruction{font-size:6px}.aim-diag__selectors{gap:5px}.aim-diag__machine-top{height:auto;min-height:39px;gap:8px;padding-block:7px}.aim-diag__machine-top>span{flex-shrink:0}.aim-diag__machine-label small{display:none}.aim-diag__machine-top label{gap:4px;font-size:6px}.aim-diag__machine-top select{max-width:88px;height:23px;padding-left:5px;font-size:7px}.aim-diag__loadout{font-size:6px}.aim-diag__course{right:8px;bottom:8px;gap:5px;padding:5px}.aim-diag__course>b{display:none}.aim-diag__result{padding:13px}.aim-diag__result-rating{margin-top:8px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #5a0b10;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column}.aim-diag__result code{font-size:8px}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
+  .aim-diag__start:focus-visible,.aim-diag__notify:focus-visible,.aim-diag__browse:focus-visible,.aim-diag__result button:focus-visible,.aim-diag__result-action a:focus-visible,.aim-diag__machine-top select:focus-visible,.aim-diag__machine-bottom button:focus-visible,.aim-diag__exit:focus-visible{outline:2px solid var(--ad-cream);outline-offset:3px}
+  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__expectation{margin-top:13px}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{--ad-target-size:52px}.aim-diag__skill-key{margin-top:18px}.aim-diag__skill-key span{padding-inline:7px}.aim-diag__skill-key b{font-size:7px}.aim-diag__skill-key small{font-size:6px}.aim-diag__instruction{font-size:6px}.aim-diag__selectors{gap:5px}.aim-diag__machine-top{height:auto;min-height:39px;gap:8px;padding-block:7px}.aim-diag__machine-top>span{flex-shrink:0}.aim-diag__machine-label small{display:none}.aim-diag__machine-top label{gap:4px;font-size:6px}.aim-diag__machine-top select{max-width:88px;height:23px;padding-left:5px;font-size:7px}.aim-diag__loadout{font-size:6px}.aim-diag__course{right:8px;bottom:8px;gap:5px;padding:5px}.aim-diag__course>b{display:none}.aim-diag__result{justify-content:flex-start;padding:13px 11px 15px}.aim-diag__result-rating{margin-top:8px}.aim-diag__result-plan{margin-top:9px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #5a0b10;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column;width:min(240px,100%)}.aim-diag__result code{max-width:100%;font-size:8px}.aim-diag__result button,.aim-diag__result-action a{width:100%}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
 </style>
 
 <script>
+  document.getElementById('daily-quote')?.setAttribute('hidden', 'true');
+
   type SkillKey = 'flick' | 'track' | 'switch';
   type TrainingGoal = 'balanced' | 'speed' | 'control' | 'consistency';
   type Routine = { name: string; code: string; focus: string };
+  type SkillPlan = { label: string; duration: string; difficulty: string; useWhen: string };
 
   const gameNames = {
     fortnite: 'Fortnite', valorant: 'Valorant', cs2: 'CS2',
@@ -236,6 +254,12 @@ const { product } = Astro.props;
     speed: 'Get faster',
     control: 'Get steadier',
     consistency: 'Clean up misses',
+  };
+
+  const skillPlans: Record<SkillKey, SkillPlan> = {
+    flick: { label: 'Flicking', duration: '10 min', difficulty: 'Focused', useWhen: 'You need cleaner first clicks, stops, and micro-adjustments.' },
+    track: { label: 'Tracking', duration: '10 min', difficulty: 'Steady', useWhen: 'Your crosshair drifts off moving targets or loses contact.' },
+    switch: { label: 'Switching', duration: '10 min', difficulty: 'Demanding', useWhen: 'You find the first target but lose time moving to the next one.' },
   };
 
   const weaknessRoutines: Record<SkillKey, Record<string, Routine>> = {
@@ -287,11 +311,17 @@ const { product } = Astro.props;
     const resultCopy = root.querySelector<HTMLElement>('[data-aim-result-copy]')!;
     const starsEl = root.querySelector<HTMLElement>('[data-aim-stars]')!;
     const priorityEl = root.querySelector<HTMLElement>('[data-aim-priority]')!;
+    const planTitle = root.querySelector<HTMLElement>('[data-aim-plan-title]')!;
+    const planMeta = root.querySelector<HTMLElement>('[data-aim-plan-meta]')!;
     const nextStepEl = root.querySelector<HTMLElement>('[data-aim-next-step]')!;
+    const resultWhy = root.querySelector<HTMLElement>('[data-aim-result-why]')!;
+    const confidenceEl = root.querySelector<HTMLElement>('[data-aim-confidence]')!;
     const inputNote = root.querySelector<HTMLElement>('[data-aim-input-note]')!;
+    const historyEl = root.querySelector<HTMLElement>('[data-aim-history]')!;
     const codeEl = root.querySelector<HTMLElement>('[data-aim-code]')!;
     const copyButton = root.querySelector<HTMLButtonElement>('[data-aim-copy]')!;
     const resultLink = root.querySelector<HTMLAnchorElement>('[data-aim-result-link]')!;
+    const retestButton = root.querySelector<HTMLButtonElement>('[data-aim-retest]')!;
     const courseGates = Array.from(root.querySelectorAll<HTMLElement>('[data-switch-gate]'));
     const switchStepEl = root.querySelector<HTMLElement>('[data-aim-switch-step]')!;
     const scoreEls = Object.fromEntries(keys.map(k => [k, root.querySelector<HTMLElement>(`[data-aim-score="${k}"]`)!])) as Record<SkillKey, HTMLElement>;
@@ -387,6 +417,37 @@ const { product } = Astro.props;
     const routineFor = (skill: SkillKey) =>
       weaknessRoutines[skill][game.value] || weaknessRoutines[skill].default;
 
+    const routineAnchor = (routine: Routine) => {
+      const card = Array.from(document.querySelectorAll<HTMLElement>('[data-aim-routine-code]'))
+        .find((candidate) => candidate.dataset.aimRoutineCode === routine.code);
+      return card?.id ? `#${card.id}` : '#aim-warmup-heading';
+    };
+    const readLastRun = () => {
+      try {
+        const raw = window.localStorage.getItem('aimmaxxer:last-read');
+        return raw ? JSON.parse(raw) as { game?: string; skill?: SkillKey; score?: number } : null;
+      } catch {
+        return null;
+      }
+    };
+    const rememberRun = (skill: SkillKey, score: number) => {
+      try {
+        window.localStorage.setItem('aimmaxxer:last-read', JSON.stringify({ game: game.value, skill, score }));
+      } catch {
+        // Private browsing and blocked storage should not interrupt a read.
+      }
+    };
+    const renderHistory = () => {
+      const previous = readLastRun();
+      if (!previous?.skill) {
+        historyEl.textContent = 'First read on this browser. Retest after your warm-up to compare.';
+        return;
+      }
+      const previousGame = gameNames[previous.game as keyof typeof gameNames] || 'Previous game';
+      const previousSkill = skillPlans[previous.skill]?.label || 'Previous limiter';
+      historyEl.textContent = `Previous local read: ${previousGame} · ${previousSkill} ${previous.score ?? '--'}/100. Retest after your block to compare.`;
+    };
+
     const resetScores = () => {
       keys.forEach(key => {
         scoreEls[key].textContent = '--';
@@ -417,11 +478,20 @@ const { product } = Astro.props;
       starsEl.textContent = '☆☆☆☆☆';
       starsEl.setAttribute('aria-label', 'No result yet');
       priorityEl.textContent = 'AWAITING INPUT';
+      planTitle.textContent = 'Run the diagnostic first';
+      planMeta.textContent = '10 min · a focused routine appears here after a clean read';
       nextStepEl.textContent = 'Click start, then follow the lit target through each stage.';
+      resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
+      confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
       inputNote.textContent = 'Local only · no data leaves this tab.';
+      renderHistory();
       codeEl.textContent = 'Run the diagnostic first';
       copyButton.disabled = true;
-      resultLink.textContent = 'View plan';
+      copyButton.textContent = 'Copy share code';
+      copyButton.classList.remove('is-copied');
+      resultLink.textContent = 'Start this warm-up';
+      resultLink.href = '#aim-warmup-heading';
+      retestButton.disabled = false;
       targets.forEach(target => {
         target.style.display = '';
         target.style.opacity = '';
@@ -500,11 +570,17 @@ const { product } = Astro.props;
         starsEl.textContent = '☆☆☆☆☆';
         starsEl.setAttribute('aria-label', 'No confidence yet');
         priorityEl.textContent = 'RETRY FOR A READ';
+        planTitle.textContent = 'No routine selected yet';
+        planMeta.textContent = 'A clean read needs at least two flicks and two transfers.';
         nextStepEl.textContent = 'Click at least two flick targets and two lit transfer targets, then use the result to choose your ten-minute block.';
+        resultWhy.textContent = 'This result is intentionally inconclusive. Picking a weakness from too little input would be misleading.';
+        confidenceEl.textContent = `Confirmed input: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${Math.round(trackTotalMs / 1000)}s tracking.`;
         inputNote.textContent = 'Not enough target confirmations · no routine selected.';
         codeEl.textContent = 'Run again to unlock a routine';
         copyButton.disabled = true;
-        resultLink.textContent = 'View training maps';
+        resultLink.textContent = 'Browse routines';
+        resultLink.href = '#aim-warmup-heading';
+        retestButton.disabled = false;
         phaseEl.textContent = 'COMPLETE';
         timeEl.textContent = '0.0';
         status.textContent = 'MORE INPUT NEEDED';
@@ -526,6 +602,7 @@ const { product } = Astro.props;
       })[0] || 'track';
       const routine = routineFor(weak);
       const selectedGame = gameNames[game.value as keyof typeof gameNames] || 'your game';
+      const plan = skillPlans[weak];
       const titles: Record<SkillKey, string> = {
         flick: 'FLICK SPEED IS THE LIMIT',
         track: 'TRACKING IS THE LIMIT',
@@ -549,13 +626,21 @@ const { product } = Astro.props;
       starsEl.textContent = `${'★'.repeat(focusLevel)}${'☆'.repeat(5 - focusLevel)}`;
       starsEl.setAttribute('aria-label', `${focusLevel} of 5 focus level`);
       priorityEl.textContent = focusLevel >= 4 ? 'HIGH-LEVERAGE FIX' : focusLevel >= 3 ? 'WORTH A BLOCK' : 'MAINTENANCE FOCUS';
+      planTitle.textContent = `${routine.name} · ${plan.label}`;
+      planMeta.textContent = `${plan.duration} · ${plan.difficulty} · paste the share code into KovaaK's`;
       nextStepEl.textContent = `${nextSteps[weak]} ${goalAdvice[goalKey]}`;
+      resultWhy.textContent = `Your ${plan.label.toLowerCase()} score was ${scores[weak]}/100, the lowest part of this run. ${plan.useWhen}`;
+      confidenceEl.textContent = `Confidence: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${Math.round(trackTotalMs / 1000)}s tracking.`;
       inputNote.textContent = matchMedia('(pointer: coarse)').matches
         ? 'Touch preview only · desktop mouse scores are not comparable.'
         : 'Hardened run · measured locally from this mouse session · no data leaves the tab.';
+      historyEl.textContent = 'Saving this read only on this browser so you can compare after the block.';
       codeEl.textContent = routine.code;
       copyButton.disabled = false;
-      resultLink.textContent = 'View plan';
+      resultLink.textContent = 'Start this warm-up';
+      resultLink.href = routineAnchor(routine);
+      retestButton.disabled = false;
+      rememberRun(weak, scores[weak]);
       phaseEl.textContent = 'COMPLETE';
       timeEl.textContent = '0.0';
       status.textContent = 'ROUTINE RESOLVED';
@@ -644,11 +729,20 @@ const { product } = Astro.props;
       starsEl.textContent = '☆☆☆☆☆';
       starsEl.setAttribute('aria-label', 'No result yet');
       priorityEl.textContent = 'AWAITING INPUT';
+      planTitle.textContent = 'Run the diagnostic first';
+      planMeta.textContent = '10 min · a focused routine appears here after a clean read';
       nextStepEl.textContent = 'Click start, then follow the lit target through each stage.';
+      resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
+      confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
       inputNote.textContent = 'Local only · no data leaves this tab.';
+      historyEl.textContent = 'Read in progress. Your result stays on this browser only.';
       codeEl.textContent = 'Run the diagnostic first';
       copyButton.disabled = true;
-      resultLink.textContent = 'View plan';
+      copyButton.textContent = 'Copy share code';
+      copyButton.classList.remove('is-copied');
+      resultLink.textContent = 'Start this warm-up';
+      resultLink.href = '#aim-warmup-heading';
+      retestButton.disabled = false;
       targets.forEach(t => { t.style.display = ''; t.style.opacity = ''; t.style.transform = ''; t.style.removeProperty('--ad-target-size'); });
       targets[1].style.display = 'none';
       targets[0].setAttribute('aria-label', 'Calibration target');
@@ -725,10 +819,27 @@ const { product } = Astro.props;
       enterImmersive();
       prepare();
     }));
+    retestButton.addEventListener('click', () => {
+      enterImmersive();
+      prepare();
+    });
+    resultLink.addEventListener('click', (event) => {
+      const href = resultLink.getAttribute('href');
+      if (!href?.startsWith('#')) return;
+      event.preventDefault();
+      exitImmersive();
+      window.setTimeout(() => {
+        const target = document.querySelector<HTMLElement>(href);
+        target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target?.classList.add('is-recommended');
+        window.setTimeout(() => target?.classList.remove('is-recommended'), 2200);
+      }, 0);
+    });
     copyButton.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(codeEl.textContent || ''); } catch {}
-      copyButton.textContent = 'Copied'; copyButton.classList.add('is-copied');
-      window.setTimeout(() => { copyButton.textContent = 'Copy code'; copyButton.classList.remove('is-copied'); }, 1400);
+      copyButton.textContent = "Copied — paste in KovaaK's"; copyButton.classList.add('is-copied');
+      inputNote.textContent = "Copied. Paste the share code into KovaaK's Online Playlists.";
+      window.setTimeout(() => { copyButton.textContent = 'Copy share code'; copyButton.classList.remove('is-copied'); }, 1800);
     });
     updateSelectionSummary();
     updateSwitchCourse();
