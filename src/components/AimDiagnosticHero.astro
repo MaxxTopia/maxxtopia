@@ -97,10 +97,12 @@ const { product } = Astro.props;
           <div class="aim-diag__range-mark" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="aim-diag__course" aria-hidden="true">
             <b>TRANSFER COURSE</b>
-            <span data-aim-switch-step>01 / 06</span>
+            <span data-aim-switch-step>01 / 10</span>
             <div>
               <i data-switch-gate="0"></i><i data-switch-gate="1"></i><i data-switch-gate="2"></i>
               <i data-switch-gate="3"></i><i data-switch-gate="4"></i><i data-switch-gate="5"></i>
+              <i data-switch-gate="6"></i><i data-switch-gate="7"></i><i data-switch-gate="8"></i>
+              <i data-switch-gate="9"></i>
             </div>
           </div>
           <div class="aim-diag__hud">
@@ -198,7 +200,7 @@ const { product } = Astro.props;
   .aim-diag__result{position:absolute;z-index:12;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;opacity:0;pointer-events:none;background:radial-gradient(circle,rgba(var(--ad-phase-rgb),.16),rgba(12,4,6,.97) 72%);transform:scale(1.03);transition:opacity .35s,transform .5s}.aim-diag__result p{margin:0 0 8px;color:var(--ad-phase);font:700 8px var(--font-mono),monospace;letter-spacing:.18em}.aim-diag__result>strong{color:var(--color-text);font:750 clamp(22px,2.7vw,35px)/1 var(--font-display),sans-serif;letter-spacing:.01em}.aim-diag__result>span{margin-top:7px;color:var(--color-text-mid);font-size:11px}.aim-diag__result-rating{display:flex;align-items:center;gap:9px;margin-top:10px}.aim-diag__result-rating span{color:var(--ad-ember);font:800 12px/1 var(--font-mono),monospace;letter-spacing:.08em;text-shadow:0 0 10px rgba(255,75,62,.3)}.aim-diag__result-rating b{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.12em}.aim-diag__breakdown{display:grid;grid-template-columns:repeat(3,1fr);width:min(480px,100%);margin-top:13px;border:1px solid var(--color-line-strong);border-radius:5px;background:rgba(12,4,6,.76)}.aim-diag__breakdown span{padding:7px 8px}.aim-diag__breakdown span+span{border-left:1px solid var(--color-line-strong)}.aim-diag__breakdown b,.aim-diag__breakdown i{display:block;font-family:var(--font-mono),monospace}.aim-diag__breakdown b{color:var(--ad-phase);font-size:7px;letter-spacing:.12em}.aim-diag__breakdown i{margin-top:4px;color:var(--color-text-mid);font-size:7px;font-style:normal;white-space:nowrap}.aim-diag__result-next{max-width:520px;margin:10px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result>small{margin-top:7px;color:var(--color-muted);font:6px var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__result-action{display:flex;align-items:center;gap:7px;margin-top:12px}.aim-diag__result code{padding:8px 10px;border:1px solid #5a0b10;border-radius:5px;background:#0c0406;color:var(--color-text-mid);font:10px var(--font-mono),monospace}.aim-diag__result button,.aim-diag__result-action a{padding:9px 11px;border:1px solid var(--ad-phase);border-radius:5px;background:var(--ad-phase);color:#1c0305;font:800 9px var(--font-mono),monospace;cursor:pointer;text-decoration:none}.aim-diag__result-action a{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button.is-copied{background:#73d89f;border-color:#73d89f}
   .aim-diag__result button:disabled{border-color:#5a0b10;background:#241014;color:var(--color-muted);cursor:not-allowed;opacity:.72}
   [data-state="result"] .aim-diag__result{opacity:1;pointer-events:auto;transform:scale(1)}[data-state="running"] .aim-diag__crosshair,[data-state="calibration"] .aim-diag__crosshair,[data-state="result"] .aim-diag__crosshair{display:none}[data-state="result"] .aim-diag__target{display:none!important}
-  [data-phase="switch"] .aim-diag__target--b{display:grid}[data-phase="switch"][data-active-target="a"] .aim-diag__target--a,[data-phase="switch"][data-active-target="b"] .aim-diag__target--b{z-index:8}[data-phase="switch"][data-active-target="a"] .aim-diag__target--b,[data-phase="switch"][data-active-target="b"] .aim-diag__target--a{z-index:5;opacity:.25;filter:grayscale(.7);transform:translate(-50%,-50%) scale(.75);pointer-events:none}
+  [data-phase="switch"][data-active-target="a"] .aim-diag__target--a,[data-phase="switch"][data-active-target="b"] .aim-diag__target--b{z-index:8}[data-phase="switch"] .aim-diag__target[aria-hidden="true"]{display:none!important}
   html.aim-diagnostic-active,html.aim-diagnostic-active body{cursor:auto!important}html.aim-diagnostic-active body{overflow:hidden}html.aim-diagnostic-active .custom-cursor{display:none!important}html.aim-diagnostic-active a,html.aim-diagnostic-active button,html.aim-diagnostic-active select{cursor:pointer!important}html.aim-diagnostic-active .aim-diag__arena,html.aim-diagnostic-active .aim-diag__target{cursor:default!important}
   .aim-diagnostic.is-immersive{position:fixed;inset:0;z-index:2147483000;width:100%;height:100svh;min-height:100svh;max-height:none;overflow:auto;border-bottom:0}
   .aim-diagnostic.is-immersive .aim-diag__shell{display:flex;flex-direction:column;justify-content:center;min-height:100%;padding-block:clamp(58px,7vh,78px)}
@@ -298,12 +300,16 @@ const { product } = Astro.props;
 
     const hardened = { flickSize: 48, trackSize: 44 } as const;
     const switchLayouts = [
-      { a: [17, 29], b: [83, 71], size: 44 },
-      { a: [74, 23], b: [28, 77], size: 42 },
-      { a: [24, 72], b: [76, 31], size: 40 },
-      { a: [64, 18], b: [19, 64], size: 38 },
-      { a: [16, 47], b: [84, 55], size: 36 },
-      { a: [73, 73], b: [37, 22], size: 34 },
+      { x: 17, y: 29, size: 44 },
+      { x: 83, y: 71, size: 42 },
+      { x: 74, y: 23, size: 40 },
+      { x: 28, y: 77, size: 38 },
+      { x: 24, y: 72, size: 36 },
+      { x: 76, y: 31, size: 34 },
+      { x: 64, y: 18, size: 32 },
+      { x: 19, y: 64, size: 31 },
+      { x: 16, y: 47, size: 30 },
+      { x: 84, y: 55, size: 29 },
     ] as const;
     let frame = 0, started = 0, phaseStarted = 0, lastSpawn = 0, lastFrame = 0, active = 'a';
     let switchStep = 0;
@@ -341,20 +347,37 @@ const { product } = Astro.props;
       target.style.top = `${22 + Math.random() * 56}%`;
       lastSpawn = performance.now();
     };
+    const setActiveSwitchTarget = () => {
+      root.dataset.activeTarget = active;
+      targets.forEach(target => {
+        const isActive = target.dataset.aimTarget === active;
+        target.style.display = isActive ? 'grid' : 'none';
+        target.tabIndex = isActive ? 0 : -1;
+        target.setAttribute('aria-label', isActive ? 'Active switch target' : 'Inactive switch target');
+        if (isActive) {
+          target.removeAttribute('aria-hidden');
+        } else {
+          if (document.activeElement === target) target.blur();
+          target.setAttribute('aria-hidden', 'true');
+        }
+      });
+    };
     const applySwitchLayout = () => {
       const layout = switchLayouts[switchStep % switchLayouts.length];
-      targets[0].style.left = `${layout.a[0]}%`;
-      targets[0].style.top = `${layout.a[1]}%`;
-      targets[1].style.left = `${layout.b[0]}%`;
-      targets[1].style.top = `${layout.b[1]}%`;
-      targets.forEach(target => setTargetSize(target, layout.size));
+      targets.forEach(target => {
+        target.style.left = `${layout.x}%`;
+        target.style.top = `${layout.y}%`;
+        setTargetSize(target, layout.size);
+      });
+      setActiveSwitchTarget();
     };
     const updateSwitchCourse = () => {
       const total = courseGates.length || switchLayouts.length;
-      const current = switchStep % total;
-      switchStepEl.textContent = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      const current = Math.min(switchStep, total - 1);
+      const displayStep = Math.min(switchStep + 1, total);
+      switchStepEl.textContent = `${String(displayStep).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
       courseGates.forEach((gate, index) => {
-        gate.dataset.state = index < current ? 'done' : index === current ? 'current' : 'upcoming';
+        gate.dataset.state = index < switchStep ? 'done' : index === current && switchStep < total ? 'current' : 'upcoming';
       });
     };
     const setScore = (key: SkillKey, value: number) => {
@@ -403,6 +426,8 @@ const { product } = Astro.props;
         target.style.display = '';
         target.style.opacity = '';
         target.style.transform = '';
+        target.removeAttribute('aria-hidden');
+        target.removeAttribute('tabindex');
         target.style.removeProperty('--ad-target-size');
         target.style.removeProperty('left');
         target.style.removeProperty('top');
@@ -446,7 +471,7 @@ const { product } = Astro.props;
         ? 'Click each target · misses reduce precision'
         : phase === 'track'
           ? 'Keep your pointer centered on the moving target'
-          : 'Alternate between the lit targets · misses count';
+          : 'Hit the lit target · each move gets smaller';
     };
 
     const finish = () => {
@@ -542,7 +567,7 @@ const { product } = Astro.props;
       const elapsed = now - started - pausedMs;
       const dt = Math.min(50, Math.max(0, now - lastFrame));
       lastFrame = now;
-      const phase: SkillKey = elapsed < 4000 ? 'flick' : elapsed < 8000 ? 'track' : 'switch';
+      const phase: SkillKey = elapsed < 3500 ? 'flick' : elapsed < 7000 ? 'track' : 'switch';
       root.dataset.phase = phase;
       phaseEl.textContent = phase.toUpperCase();
       timeEl.textContent = Math.max(0, (12000 - elapsed) / 1000).toFixed(1);
@@ -556,14 +581,11 @@ const { product } = Astro.props;
           targets[0].setAttribute('aria-label', 'Tracking target');
         }
         if (phase === 'switch') {
-          targets[1].style.display = '';
           switchStep = 0;
+          active = 'a';
           applySwitchLayout();
           updateSwitchCourse();
           lastSpawn = performance.now();
-          active = 'a'; root.dataset.activeTarget = active;
-          targets[0].setAttribute('aria-label', 'Active switch target');
-          targets[1].setAttribute('aria-label', 'Inactive switch target');
         }
       }
       if (phase === 'track') {
@@ -650,10 +672,7 @@ const { product } = Astro.props;
         active = active === 'a' ? 'b' : 'a';
         switchStep++;
         applySwitchLayout();
-        root.dataset.activeTarget = active;
         updateSwitchCourse();
-        targets[0].setAttribute('aria-label', active === 'a' ? 'Active switch target' : 'Inactive switch target');
-        targets[1].setAttribute('aria-label', active === 'b' ? 'Active switch target' : 'Inactive switch target');
         lastSpawn = performance.now();
       }
     }));
