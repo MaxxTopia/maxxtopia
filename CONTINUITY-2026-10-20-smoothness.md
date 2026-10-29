@@ -243,3 +243,12 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
 - User-owed test: review the local page at `http://127.0.0.1:4321/aimmaxxer?release=score-loop`, especially the warmup cards/import guide and the diagnostic target color, at desktop and narrow widths.
 - Best next move: if the simpler presentation is approved, request an explicit push-live step and follow the documented ship sequence; otherwise make another scoped visual adjustment before release.
+
+## Aimmaxxer hero aim accent - 2026-10-29
+
+- Scope: give the `aim` word in the diagnostic headline its own visual cue without changing the green limiter emphasis on `needs.`.
+- Changed `src/components/AimDiagnosticHero.astro`: wrapped `aim` in a dedicated span using the existing cyan diagnostic-target token and matching cyan glow; the heading's `needs.` word remains green.
+- Verification: `git diff --check` passed; `npm run build` passed release truth, sitemap validation, and the complete 28-page Astro build. Local preview returned HTTP 200, and browser AX/screenshot review confirmed the cyan `aim` and green `needs.` in the hero.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+- User-owed test: review the hero at desktop and mobile widths and confirm the two-color emphasis feels intentional rather than too busy.
+- Best next move: if approved, request an explicit push-live step; otherwise keep any follow-up to a small, scoped visual adjustment.
