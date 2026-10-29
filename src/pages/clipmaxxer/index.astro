@@ -21,14 +21,17 @@ const product = products.find((p) => p.slug === 'clipmaxxer')!;
 const APPLY_HREF = '/clipmaxxer/apply/';
 const DASHBOARD_HREF = 'https://app.maxxtopia.com/';
 
-// Sample readout lines for the hero "YOU ENDED …" ticker. Illustrative only —
-// use role labels instead of fabricated player handles so the UI never implies
-// a real endorsement or a real match result.
+// Approved example roster supplied by Diggy. These are presented as illustrative
+// public examples, not customer, product-use, or endorsement claims.
 const readouts = [
-  { tag: 'LIVE STREAMER', badge: 'TWITCH', weapon: 'Phantom', clutch: '1v3 retake', t: '3h24m39s', delta: '+1' },
-  { tag: 'PRO PLAYER', badge: 'PRO', weapon: 'Frenzy AR', clutch: 'box fight', t: '58m02s', delta: '+1' },
-  { tag: 'ORG PLAYER', badge: 'ORG', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
-  { tag: 'NAMED OPPONENT', badge: 'MATCHED', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '1h39m12s', delta: '+1' },
+  { name: 'Clix', role: 'PRO PLAYER', badge: 'FN', game: 'FORTNITE', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '3h24m39s', delta: '+1' },
+  { name: 'BuckeFPS', role: 'CONTENT CREATOR', badge: 'FN', game: 'FORTNITE', weapon: 'AR', clutch: 'late-game beam', t: '1h39m12s', delta: '+1' },
+  { name: 'DIG Ark', role: 'PRO PLAYER', badge: 'FN', game: 'FORTNITE', weapon: 'Twin Mag AR', clutch: 'NA West endgame', t: '2h11m47s', delta: '+1' },
+  { name: 'Khanada', role: 'PRO PLAYER', badge: 'FN', game: 'FORTNITE', weapon: 'Pump Shotgun', clutch: 'box fight', t: '58m02s', delta: '+1' },
+  { name: 'Dasnerth', role: 'STREAMER', badge: 'VAL', game: 'VALORANT', weapon: 'Judge', clutch: 'close-range hold', t: '3h24m39s', delta: '+1' },
+  { name: 'TenZ', role: 'PRO PLAYER', badge: 'VAL', game: 'VALORANT', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
+  { name: 'zekken', role: 'PRO PLAYER', badge: 'VAL', game: 'VALORANT', weapon: 'Vandal', clutch: 'site retake', t: '58m02s', delta: '+1' },
+  { name: 'Demon1', role: 'PRO PLAYER', badge: 'VAL', game: 'VALORANT', weapon: 'Operator', clutch: 'opening pick', t: '1h39m12s', delta: '+1' },
 ];
 
 // SEO — lead with the real search intent (nobody googles the coined word),
@@ -68,7 +71,7 @@ const reels = [
 ];
 ---
 
-<Layout title={pageTitle} description={pageDescription} image={ogImage}>
+<Layout title={pageTitle} description={pageDescription} image={ogImage} hideQuote>
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
@@ -82,8 +85,10 @@ const reels = [
         <a href="/#apps" class="cx-back">&larr; All products</a>
 
         <a href={APPLY_HREF} class="cx-beta-pill" aria-label="Clipmaxxer is in beta. Apply now.">
-          <span class="cx-beta-pill__dot" aria-hidden="true"></span>
-          <span>IN BETA</span>
+          <span class="cx-beta-pill__status">
+            <span class="cx-beta-pill__dot" aria-hidden="true"></span>
+            <span>IN BETA</span>
+          </span>
           <span class="cx-beta-pill__sep" aria-hidden="true">&middot;</span>
           <span class="cx-beta-pill__action">APPLY NOW &rarr;</span>
         </a>
@@ -101,17 +106,19 @@ const reels = [
         <div class="cx-readout" aria-hidden="true">
           <div class="cx-readout__bar">
             <span class="cx-dot"></span>
-            <span class="cx-readout__title">REAL PROS + TWITCH STREAMERS</span>
-            <span class="cx-readout__sample">role sample</span>
+            <span class="cx-readout__title">APPROVED PLAYER EXAMPLES</span>
+            <span class="cx-readout__sample">8 names</span>
           </div>
           <div class="cx-readout__body">
             <span class="cx-readout__verb">YOU ENDED</span>
             <span class="cx-readout__tag">
-              <b class="cx-readout__badge" id="cxBadge">TWITCH</b>
-              <b class="cx-readout__name" id="cxName">LIVE STREAMER</b><i class="cx-caret" id="cxCaret">_</i>
+              <b class="cx-readout__badge" id="cxBadge">FN</b>
+              <b class="cx-readout__name" id="cxName">Clix</b><i class="cx-caret" id="cxCaret">_</i>
             </span>
             <span class="cx-readout__meta">
-              <em id="cxWeapon">Phantom</em>
+              <em id="cxGame">FORTNITE</em>
+              <em id="cxRole">PRO PLAYER</em>
+              <em id="cxWeapon">Pump Shotgun</em>
               <em id="cxClutch">1v3 retake</em>
               <em id="cxTime">3h24m39s</em>
               <em class="cx-readout__delta" id="cxDelta">+1</em>
@@ -127,7 +134,7 @@ const reels = [
 
         <div class="cx-cta">
           <a href={APPLY_HREF} class="cx-btn cx-btn--primary">
-            Apply — done-for-you
+            Apply for the beta
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
           <a href={DASHBOARD_HREF} class="cx-btn cx-btn--ghost">Open dashboard</a>
@@ -140,6 +147,27 @@ const reels = [
       <a href="#signal" class="cx-scroll" aria-label="Scroll down">
         <span></span>
       </a>
+    </section>
+
+    <!-- ══════════════════════ THE PROOF ══════════════════════ -->
+    <section class="cx-panel cx-work" id="work">
+      <div class="cx-wrap cx-reveal">
+        <p class="cx-tag">Proof demos</p>
+        <h2 class="cx-h2">Clips in action. <span class="cx-grad">Made with Clipmaxxer.</span></h2>
+        <div class="cx-reels">
+          {reels.map((r) => (
+            <figure class="cx-reel">
+              <video class="cx-reel__vid" poster={r.poster} preload="none" playsinline loop muted>
+                <source src={r.src} type="video/mp4" />
+              </video>
+              <button type="button" class="cx-reel__btn" aria-label={`Play ${r.label}`}>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+              <figcaption class="cx-reel__cap">{r.label}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
     </section>
 
     <!-- ══════════════════════ 01 · THE SIGNAL ══════════════════════ -->
@@ -179,33 +207,33 @@ const reels = [
         <h2 class="cx-h2">Sorted by <span class="cx-grad">who you beat.</span><br/>Not that you won.</h2>
         <p class="cx-lead">
           Every clip arrives with a name attached — so the best ones rise. Ended a
-          pro? An org player? Someone live right now? That clip goes to the top and
-          titles itself. The stuff that makes people stop scrolling, first.
+          pro, creator, or streamer? That clip goes to the top and titles itself.
+          The stuff that makes people stop scrolling, first.
         </p>
 
         <ul class="cx-board">
           <li class="cx-row cx-row--gold" style="--i:0">
             <span class="cx-row__rank">01</span>
-            <span class="cx-row__who"><b>LIVE STREAMER</b><i>TWITCH · live</i></span>
-            <span class="cx-row__meta">Phantom · 1v3 retake</span>
+            <span class="cx-row__who"><b>Clix</b><i>FORTNITE · pro</i></span>
+            <span class="cx-row__meta">Pump Shotgun · endgame 1v1</span>
           </li>
           <li class="cx-row" style="--i:1">
             <span class="cx-row__rank">02</span>
-            <span class="cx-row__who"><b>PRO PLAYER</b><i>PRO</i></span>
-            <span class="cx-row__meta">Frenzy · box fight</span>
+            <span class="cx-row__who"><b>BuckeFPS</b><i>FORTNITE · creator</i></span>
+            <span class="cx-row__meta">AR · late-game beam</span>
           </li>
           <li class="cx-row" style="--i:2">
             <span class="cx-row__rank">03</span>
-            <span class="cx-row__who"><b>ORG PLAYER</b><i>ORG</i></span>
+            <span class="cx-row__who"><b>Dasnerth</b><i>VALORANT · streamer</i></span>
+            <span class="cx-row__meta">Judge · close-range hold</span>
+          </li>
+          <li class="cx-row" style="--i:3">
+            <span class="cx-row__rank">04</span>
+            <span class="cx-row__who"><b>TenZ</b><i>VALORANT · pro</i></span>
             <span class="cx-row__meta">Operator · clean flick</span>
           </li>
-          <li class="cx-row cx-row--dim" style="--i:3">
-            <span class="cx-row__rank">04</span>
-            <span class="cx-row__who"><b>unknown</b><i>no name</i></span>
-            <span class="cx-row__meta">what everyone else clips</span>
-          </li>
         </ul>
-        <p class="cx-note">Sample ranking &middot; a named opponent on every clip</p>
+        <p class="cx-note">Approved examples &middot; the ticker also cycles DIG Ark, Khanada, zekken, and Demon1</p>
       </div>
     </section>
 
@@ -248,27 +276,6 @@ const reels = [
       </div>
     </section>
 
-    <!-- ══════════════════════ REAL CUTS ══════════════════════ -->
-    <section class="cx-panel cx-work" id="work">
-      <div class="cx-wrap cx-reveal">
-        <p class="cx-tag">The proof</p>
-        <h2 class="cx-h2">Real cuts. <span class="cx-grad">Made with Clipmaxxer.</span></h2>
-        <div class="cx-reels">
-          {reels.map((r) => (
-            <figure class="cx-reel">
-              <video class="cx-reel__vid" poster={r.poster} preload="none" playsinline loop muted>
-                <source src={r.src} type="video/mp4" />
-              </video>
-              <button type="button" class="cx-reel__btn" aria-label={`Play ${r.label}`}>
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-              </button>
-              <figcaption class="cx-reel__cap">{r.label}</figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    </section>
-
     <!-- ══════════════════════ FINAL CTA ══════════════════════ -->
     <section class="cx-final">
       <div class="cx-hero__glow" aria-hidden="true"></div>
@@ -282,7 +289,7 @@ const reels = [
         </p>
         <div class="cx-cta cx-final__cta">
           <a href={APPLY_HREF} class="cx-btn cx-btn--primary cx-btn--big">
-            Apply — done-for-you
+            Apply for the beta
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
           <a href={DASHBOARD_HREF} class="cx-btn cx-btn--ghost cx-btn--big">Open dashboard</a>
@@ -308,7 +315,6 @@ const reels = [
       --cx-lime: #c6ff2e;
       --cx-cyan: #17e0ff;
       --cx-grad: linear-gradient(100deg, var(--cx-mag) 0%, var(--cx-lime) 52%, var(--cx-cyan) 100%);
-      --cx-action-grad: linear-gradient(102deg, var(--cx-mag) 0%, #ff7a6e 44%, var(--cx-lime) 100%);
       --cx-proof-grad: linear-gradient(102deg, var(--cx-cyan) 0%, var(--cx-lime) 68%, var(--cx-text) 100%);
       position: relative;
       background: var(--cx-ink);
@@ -366,24 +372,39 @@ const reels = [
     .cx-back:hover { color: var(--cx-text); }
 
     .cx-beta-pill {
-      display: inline-flex; align-items: center; gap: 8px; width: fit-content;
-      margin: 0 0 20px; padding: 8px 12px;
-      border: 1px solid rgba(198,255,46,0.38); border-radius: 999px;
-      background: rgba(198,255,46,0.08); color: var(--cx-text);
+      display: inline-flex; align-items: center; gap: 0; width: fit-content;
+      margin: 0 0 20px; padding: 2px;
+      border: 1px solid transparent; border-radius: 999px;
+      background:
+        linear-gradient(rgba(11,7,24,0.94), rgba(11,7,24,0.94)) padding-box,
+        linear-gradient(112deg, rgba(198,255,46,0.82), rgba(23,224,255,0.92) 56%, rgba(255,45,155,0.78)) border-box;
+      color: var(--cx-text);
       font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em;
       line-height: 1; text-transform: uppercase;
-      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 10px 28px rgba(23,224,255,0.10), 0 0 24px rgba(255,45,155,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .cx-beta-pill:hover {
-      border-color: var(--cx-lime); background: rgba(198,255,46,0.14);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(23,224,255,0.16), 0 0 30px rgba(255,45,155,0.14);
+    }
+    .cx-beta-pill__status {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 9px 8px 10px;
+      color: var(--cx-text); background: rgba(255,255,255,0.035);
+      border-radius: 999px 0 0 999px;
     }
     .cx-beta-pill__dot {
       width: 7px; height: 7px; border-radius: 999px; background: var(--cx-lime);
       box-shadow: 0 0 10px rgba(198,255,46,0.72);
     }
-    .cx-beta-pill__sep { color: var(--cx-muted); }
-    .cx-beta-pill__action { color: var(--cx-lime); }
+    .cx-beta-pill__sep { padding: 0 3px; color: rgba(198,255,46,0.72); }
+    .cx-beta-pill__action {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 8px 11px; border-radius: 999px;
+      color: var(--cx-ink); background: var(--cx-grad); font-weight: 800;
+      letter-spacing: 0.13em; box-shadow: 0 4px 14px rgba(255,45,155,0.20);
+    }
 
     .cx-eyebrow {
       font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.24em;
@@ -408,7 +429,7 @@ const reels = [
     }
     .cx-line-1 > span { color: var(--cx-text); }
     .cx-line-2 > span {
-      background: var(--cx-action-grad);
+      background: var(--cx-grad);
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent; color: transparent;
     }
@@ -681,16 +702,22 @@ const reels = [
         reveals.forEach((r) => io.observe(r));
       }
 
-      // ── Hero readout cycler: type a named-opponent line, hold, wipe, next ──
+      // ── Hero readout cycler: type an approved example, hold, wipe, next ──
       const readouts = [
-        { tag: 'LIVE STREAMER', badge: 'TWITCH', weapon: 'Phantom', clutch: '1v3 retake', t: '3h24m39s', delta: '+1' },
-        { tag: 'PRO PLAYER', badge: 'PRO', weapon: 'Frenzy AR', clutch: 'box fight', t: '58m02s', delta: '+1' },
-        { tag: 'ORG PLAYER', badge: 'ORG', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
-        { tag: 'NAMED OPPONENT', badge: 'MATCHED', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '1h39m12s', delta: '+1' },
+        { name: 'Clix', role: 'PRO PLAYER', badge: 'FN', game: 'FORTNITE', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '3h24m39s', delta: '+1' },
+        { name: 'BuckeFPS', role: 'CONTENT CREATOR', badge: 'FN', game: 'FORTNITE', weapon: 'AR', clutch: 'late-game beam', t: '1h39m12s', delta: '+1' },
+        { name: 'DIG Ark', role: 'PRO PLAYER', badge: 'FN', game: 'FORTNITE', weapon: 'Twin Mag AR', clutch: 'NA West endgame', t: '2h11m47s', delta: '+1' },
+        { name: 'Khanada', role: 'PRO PLAYER', badge: 'FN', game: 'FORTNITE', weapon: 'Pump Shotgun', clutch: 'box fight', t: '58m02s', delta: '+1' },
+        { name: 'Dasnerth', role: 'STREAMER', badge: 'VAL', game: 'VALORANT', weapon: 'Judge', clutch: 'close-range hold', t: '3h24m39s', delta: '+1' },
+        { name: 'TenZ', role: 'PRO PLAYER', badge: 'VAL', game: 'VALORANT', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
+        { name: 'zekken', role: 'PRO PLAYER', badge: 'VAL', game: 'VALORANT', weapon: 'Vandal', clutch: 'site retake', t: '58m02s', delta: '+1' },
+        { name: 'Demon1', role: 'PRO PLAYER', badge: 'VAL', game: 'VALORANT', weapon: 'Operator', clutch: 'opening pick', t: '1h39m12s', delta: '+1' },
       ];
       const el = {
         badge: document.getElementById('cxBadge'),
         name: document.getElementById('cxName'),
+        game: document.getElementById('cxGame'),
+        role: document.getElementById('cxRole'),
         weapon: document.getElementById('cxWeapon'),
         clutch: document.getElementById('cxClutch'),
         time: document.getElementById('cxTime'),
@@ -702,7 +729,8 @@ const reels = [
       if (reduce) {
         // Static: just show the first line, no typing loop.
         const r = readouts[0];
-        el.badge!.textContent = r.badge; el.name!.textContent = r.tag;
+        el.badge!.textContent = r.badge; el.name!.textContent = r.name;
+        el.game!.textContent = r.game; el.role!.textContent = r.role;
         el.weapon!.textContent = r.weapon; el.clutch!.textContent = r.clutch;
         el.time!.textContent = r.t; el.delta!.textContent = r.delta;
         return;
@@ -711,7 +739,8 @@ const reels = [
       let i = 0;
       const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
       const setMeta = (r: typeof readouts[number]) => {
-        el.badge!.textContent = r.badge; el.weapon!.textContent = r.weapon;
+        el.badge!.textContent = r.badge; el.game!.textContent = r.game; el.role!.textContent = r.role;
+        el.weapon!.textContent = r.weapon;
         el.clutch!.textContent = r.clutch; el.time!.textContent = r.t; el.delta!.textContent = r.delta;
       };
 
@@ -728,7 +757,7 @@ const reels = [
           for (let k = cur.length; k >= 0; k--) { el.name!.textContent = cur.slice(0, k); await sleep(28); }
           setMeta(r);
           // type
-          for (let k = 1; k <= r.tag.length; k++) { el.name!.textContent = r.tag.slice(0, k); await sleep(52); }
+          for (let k = 1; k <= r.name.length; k++) { el.name!.textContent = r.name.slice(0, k); await sleep(52); }
           await sleep(2600);
         }
       }

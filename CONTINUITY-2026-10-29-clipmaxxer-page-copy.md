@@ -36,3 +36,96 @@ Updated the Clipmaxxer product page so the hero proof card does not present inve
 - Diggy approved the local preview and authorized the live publish; production verification is complete for the changed route and smoke routes.
 - If real player names are ever shown, they should come from verified, approved examples rather than placeholder handles.
 - Best next move: review the live page at `https://maxxtopia.com/clipmaxxer/` and call out any final copy/color preference; no release blocker remains.
+
+## 2026-10-29 Clipmaxxer proof-first preview (LOCAL ONLY)
+
+### Scope
+
+Prepared a follow-up visual/content pass for Diggy's review. This pass is intentionally not published.
+
+### Changed
+
+- `src/pages/clipmaxxer/index.astro`
+  - Restored the older Maxxtopia magenta-to-lime-to-cyan treatment for `WE CLIP.`.
+  - Kept the stronger cyan/lime proof treatment for `YOU ENDED` and the sample role.
+  - Moved the existing proof reels directly below the hero so the page demonstrates the product earlier.
+  - Changed the proof-card heading to `WHO YOU BEAT · ROLE-BASED EXAMPLES` until Diggy supplies approved real names.
+  - Changed the primary hero and final CTAs to `Apply for the beta`.
+  - Removed the shared daily-quote pill from this page so it does not compete with the product story.
+
+### Verification
+
+- `git diff --check` passed.
+- Release-truth check passed for 10 products.
+- Sitemap check passed for 20 Astro routes and `/play/spritecannon/`.
+- `npm run build` passed; all 30 static pages generated, including `/clipmaxxer/`.
+- Local preview opened at `http://127.0.0.1:4331/clipmaxxer/?preview=clipmaxxer-pass-2` and visually checked at the hero and proof sections.
+
+### Release state
+
+- Production remains unchanged at the previously verified release; no commit, push, or deploy was made for this preview.
+- Release worktree has only the scoped page edit pending review.
+
+### Diggy-owed review and next move
+
+- Review the local preview and decide whether the restored `WE CLIP.` gradient is preferred.
+- Supply 2-6 approved Fortnite and/or VALORANT names, their game/role, and whether Maxxtopia has permission or a real relationship to feature them. Do not imply endorsement without that basis.
+- After visual and name approval, make the smallest focused change, re-run the checks, and ask before publishing.
+
+## 2026-10-29 Approved roster preview (LOCAL ONLY)
+
+### Scope
+
+Added the roster Diggy supplied and confirmed permission to feature in the local preview. The names are shown as approved public examples; the page does not claim they are Clipmaxxer customers, users, or endorsers.
+
+### Approved examples
+
+- Fortnite: Clix (pro), BuckeFPS (content creator), DIG Ark (pro, NA West), and Khanada (pro).
+- VALORANT: Dasnerth (streamer), TenZ (pro), zekken (pro), and Demon1 (pro).
+
+### Changed
+
+- `src/pages/clipmaxxer/index.astro`
+  - Hero ticker now cycles all eight approved names with game and role chips.
+  - Ranking examples now show Clix, BuckeFPS, Dasnerth, and TenZ; the note identifies the other four names in the ticker.
+  - Replaced the temporary role-only heading with `APPROVED PLAYER EXAMPLES` and an `8 NAMES` marker.
+  - Kept the restored `WE CLIP.` gradient, cyan/lime `YOU ENDED` treatment, early proof reels, beta CTA, and page-specific quote removal.
+
+### Verification
+
+- `git diff --check` passed.
+- Release-truth check passed for 10 products.
+- Sitemap route check passed for 20 Astro page routes and `/play/spritecannon/`.
+- `npm run build` passed; all 30 static pages generated.
+- Generated `/clipmaxxer/` contains all eight approved names, the approved-examples heading, and none of the old fabricated-name or role-only markers.
+- Local browser preview visually confirmed the hero ticker and ranking list.
+
+### Release state and next move
+
+- Production is unchanged; no commit, push, or deploy was made for this roster preview.
+- The page is ready for Diggy's visual approval. If approved, stage only the scoped page and continuity-note changes, then ask before publishing.
+
+## 2026-10-29 Beta badge polish (LOCAL ONLY)
+
+### Scope
+
+Refined the hero `IN BETA` / `APPLY NOW` control after visual review so its status and action states are easier to read and better connected to the page's neon color system.
+
+### Changed
+
+- `src/pages/clipmaxxer/index.astro`
+  - Split the control into a dark glass status segment with the lime live dot and a bright gradient action segment.
+  - Added a lime-to-cyan-to-magenta edge and restrained hover glow to match the hero without competing with the primary CTA.
+
+### Verification
+
+- `git diff --check` passed.
+- Release-truth check passed for 10 products.
+- Sitemap route check passed for 20 Astro page routes and `/play/spritecannon/`.
+- `npm run build` passed; all 30 static pages generated.
+- Local browser preview visually confirmed the revised badge at the page viewport width.
+
+### Release state and next move
+
+- Production is unchanged; no commit, push, or deploy was made for this polish pass.
+- The local preview is open for Diggy's approval or another design iteration. If approved, stage only the scoped page and continuity-note changes, then ask before publishing.
