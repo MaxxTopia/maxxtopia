@@ -21,16 +21,18 @@ Updated the Clipmaxxer product page so the hero proof card does not present inve
 - `npm run build` passed in the isolated E: drive release checkout; all 30 static pages generated, including `/clipmaxxer/`.
 - Generated HTML/CSS contains the beta pill, role labels, and the new warm/proof gradients; old random handles and `HIGHLIGHT DETECTED` are absent.
 - Local preview at `http://127.0.0.1:4331/clipmaxxer/` visually confirmed the top beta pill, proof-panel role labels, and updated color treatment.
+- Public root and `/clipmaxxer/` returned `200` with HSTS, CSP, and `nosniff`; `/snipemaxxer` redirected `308` to its canonical trailing-slash route, which returned `200`.
+- GitHub Actions deploy run `40900842019` completed successfully for commit `b7a9915`; the live browser view confirmed the beta pill, `REAL PROS + TWITCH STREAMERS`, role labels, and refreshed color hierarchy.
 
 ## Release state
 
 - Canonical checkout: `C:\Users\Diggy\projects\maxxtopia`.
-- Release checkout is based on the fetched `origin/main` tip and contains only the intended page and continuity-note changes; commit/push/deployment is in progress.
+- Release commit `b7a9915` is pushed to `origin/main`; the matching Cloudflare Pages deploy completed successfully in run `40900842019`.
 - The canonical checkout was already dirty; unrelated changes were preserved.
 - The C: drive had no free space, so dependency installation and build verification used a temporary, source-only copy on E:. The canonical dependency state was not repaired or overwritten.
 
 ## Open items and next move
 
-- Diggy approved the local preview and authorized the live publish; production verification remains the next gate.
+- Diggy approved the local preview and authorized the live publish; production verification is complete for the changed route and smoke routes.
 - If real player names are ever shown, they should come from verified, approved examples rather than placeholder handles.
-- After the first publish, record the commit, Pages deployment, and live-route verification here before closing the task.
+- Best next move: review the live page at `https://maxxtopia.com/clipmaxxer/` and call out any final copy/color preference; no release blocker remains.
