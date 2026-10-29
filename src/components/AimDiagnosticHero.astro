@@ -254,11 +254,72 @@ const { product } = Astro.props;
   .aim-diagnostic.is-immersive .aim-diag__grid{display:block;width:100%;margin:auto}
   .aim-diagnostic.is-immersive .aim-diag__machine{width:min(1180px,100%);margin:auto}
 
+  /* Aimmaxxer's visual language is a red-lit evidence lab: a quiet target
+     ring in the page chrome, then a physical-looking measurement console. */
+  .aim-diagnostic {
+    background:
+      radial-gradient(42% 68% at 88% 50%, rgba(209, 24, 32, .2), transparent 72%),
+      radial-gradient(34% 52% at 10% 8%, rgba(255, 75, 62, .12), transparent 74%),
+      linear-gradient(125deg, #070102 0%, #180406 53%, #060102 100%);
+  }
+  .aim-diagnostic::after {
+    content: '';
+    position: absolute;
+    top: 18%;
+    right: -16%;
+    width: min(900px, 66vw);
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 75, 62, .1);
+    border-radius: 50%;
+    box-shadow: 0 0 0 34px rgba(255, 75, 62, .025), 0 0 0 72px rgba(209, 24, 32, .018);
+    transform: rotate(-18deg);
+    pointer-events: none;
+  }
+  .aim-diag__shell { max-width: 1440px; }
+  .aim-diag__grid { grid-template-columns: minmax(390px, .84fr) minmax(620px, 1.16fr); gap: clamp(52px, 6.5vw, 104px); }
+  .aim-diag__copy {
+    padding-left: 20px;
+    border-left: 2px solid rgba(255, 75, 62, .65);
+  }
+  .aim-diag__copy::before {
+    content: 'EVIDENCE FIRST';
+    position: absolute;
+    top: 2px;
+    left: -36px;
+    color: rgba(255, 75, 62, .72);
+    font: 700 8px/1 var(--font-mono), monospace;
+    letter-spacing: .16em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  .aim-diag__machine {
+    border-radius: 18px;
+    background: linear-gradient(145deg, #170306, #0c0406 42%, #090204);
+    box-shadow: 0 38px 100px rgba(0, 0, 0, .72), 0 0 0 1px rgba(255, 255, 255, .03) inset, 0 0 90px rgba(209, 24, 32, .16);
+  }
+  .aim-diag__machine::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    z-index: 1;
+    border: 1px solid rgba(255, 75, 62, .08);
+    border-radius: 11px;
+    pointer-events: none;
+  }
+  .aim-diag__machine-top { height: 44px; background: linear-gradient(180deg, #350a10, #0c0406); }
+  .aim-diag__loadout { min-height: 31px; background: linear-gradient(90deg, #190406, #100205); }
+  .aim-diag__scores { background: linear-gradient(180deg, rgba(255, 75, 62, .035), transparent); }
+
+  @media(max-width:1060px) {
+    .aim-diag__copy { padding-left: 0; border-left: 0; }
+    .aim-diag__copy::before { display: none; }
+  }
+
   @media(max-width:1060px){.aim-diag__grid{grid-template-columns:1fr;gap:45px}.aim-diag__copy{max-width:760px}.aim-diag__machine{width:min(820px,100%);margin:auto}.aim-diag__copy h1{font-size:clamp(58px,10vw,88px)}}
   .aim-diag__start:focus-visible,.aim-diag__notify:focus-visible,.aim-diag__browse:focus-visible,.aim-diag__result button:focus-visible,.aim-diag__result-action a:focus-visible,.aim-diag__machine-top select:focus-visible,.aim-diag__machine-bottom button:focus-visible,.aim-diag__exit:focus-visible{outline:2px solid var(--ad-cream);outline-offset:3px}
   @media(prefers-reduced-motion:reduce){.aim-diag__score-pop{animation:none;opacity:1;transform:translate(-50%,-8px)}.aim-diag__result{transition:none}.aim-diag__target{transition:none}}
   .aim-diag__personal-board li.is-empty{display:block;color:var(--color-muted);line-height:1.4}
-  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__expectation{margin-top:13px}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{--ad-target-size:52px}.aim-diag__start-guide{left:12px;top:12px;width:calc(100% - 24px);transform:none;padding:11px 12px}.aim-diag__start-guide-list{gap:5px;margin-top:8px}.aim-diag__start-guide-list span{grid-template-columns:43px 1fr}.aim-diag__start-guide-list i{font-size:9px}.aim-diag__start-guide p{margin-top:9px;padding-top:7px;font-size:7px}.aim-diag__skill-key{margin-top:18px}.aim-diag__skill-key span{padding-inline:7px}.aim-diag__skill-key b{font-size:7px}.aim-diag__skill-key small{font-size:6px}.aim-diag__instruction{font-size:6px}.aim-diag__selectors{gap:5px}.aim-diag__machine-top{height:auto;min-height:39px;gap:8px;padding-block:7px}.aim-diag__machine-top>span{flex-shrink:0}.aim-diag__machine-label small{display:none}.aim-diag__machine-top label{gap:4px;font-size:6px}.aim-diag__machine-top select{max-width:88px;height:23px;padding-left:5px;font-size:7px}.aim-diag__loadout{font-size:6px}.aim-diag__course{right:8px;bottom:8px;gap:5px;padding:5px}.aim-diag__course>b,.aim-diag__course small{display:none}.aim-diag__hud-readout{gap:4px}.aim-diag__hud-score{gap:3px;padding-inline:5px}.aim-diag__hud-score i{display:none}.aim-diag__hud-combo{padding-inline:5px}.aim-diag__result{justify-content:flex-start;padding:13px 11px 15px}.aim-diag__result-rating{margin-top:8px}.aim-diag__result-plan{margin-top:9px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #5a0b10;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column;width:min(240px,100%)}.aim-diag__result code{max-width:100%;font-size:8px}.aim-diag__result button,.aim-diag__result-action a{width:100%}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
+  @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diagnostic::after{display:none}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1;border-radius:14px}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__expectation{margin-top:13px}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{--ad-target-size:52px}.aim-diag__start-guide{left:12px;top:12px;width:calc(100% - 24px);transform:none;padding:11px 12px}.aim-diag__start-guide-list{gap:5px;margin-top:8px}.aim-diag__start-guide-list span{grid-template-columns:43px 1fr}.aim-diag__start-guide-list i{font-size:9px}.aim-diag__start-guide p{margin-top:9px;padding-top:7px;font-size:7px}.aim-diag__skill-key{margin-top:18px}.aim-diag__skill-key span{padding-inline:7px}.aim-diag__skill-key b{font-size:7px}.aim-diag__skill-key small{font-size:6px}.aim-diag__instruction{font-size:6px}.aim-diag__selectors{gap:5px}.aim-diag__machine-top{height:auto;min-height:39px;gap:8px;padding-block:7px}.aim-diag__machine-top>span{flex-shrink:0}.aim-diag__machine-label small{display:none}.aim-diag__machine-top label{gap:4px;font-size:6px}.aim-diag__machine-top select{max-width:88px;height:23px;padding-left:5px;font-size:7px}.aim-diag__loadout{font-size:6px}.aim-diag__course{right:8px;bottom:8px;gap:5px;padding:5px}.aim-diag__course>b,.aim-diag__course small{display:none}.aim-diag__hud-readout{gap:4px}.aim-diag__hud-score{gap:3px;padding-inline:5px}.aim-diag__hud-score i{display:none}.aim-diag__hud-combo{padding-inline:5px}.aim-diag__result{justify-content:flex-start;padding:13px 11px 15px}.aim-diag__result-rating{margin-top:8px}.aim-diag__result-plan{margin-top:9px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #5a0b10;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column;width:min(240px,100%)}.aim-diag__result code{max-width:100%;font-size:8px}.aim-diag__result button,.aim-diag__result-action a{width:100%}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
 </style>
 
 <script>

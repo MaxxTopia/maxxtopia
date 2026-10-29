@@ -186,3 +186,20 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Changed `src/components/AimWarmup.astro`: set the button to `Join the Discord to purchase`; kept the direct `#aimmaxerv2` channel destination.
 - Decision: `purchase` is clearer and more polished for a paid product than `buy`; sentence case matches the site's other CTA labels.
 - Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+
+## Aimmaxxer V2 teaser color restoration - 2026-10-29
+
+- Scope: keep the bottom V2 panel's original independent color treatment while preserving the newer logo-aligned colors everywhere else on the page.
+- Changed `src/components/AimWarmup.astro`: restored the V2 teaser's original `#e11d2b` accent instead of inheriting the page-wide `#d11820`; no other page colors changed. The CTA still points to the same `#aimmaxerv2` channel.
+- Evidence: the earlier V2 teaser implementation in repository history used the dedicated `#e11d2b` inline accent.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+
+## Aimmaxxer visual parity pass - 2026-10-29
+
+- Scope: raise the Aimmaxxer page presentation toward the editorial, game-specific quality of Playlistmaxxing without changing diagnostic behavior or the bottom V2 CTA contract.
+- Changed `src/components/AimDiagnosticHero.astro`: added a red-lit evidence-lab backdrop, subtle target-ring page chrome, stronger diagnostic-console framing, more deliberate desktop exhibit proportions, and responsive resets for narrower screens.
+- Changed `src/components/AimWarmup.astro`: added dynamic routine counts, a deeper routine-deck surface, editorial section rules, stronger map/card/import/system styling, and a responsive import/steps layout. The bottom V2 teaser remains `#e11d2b`, keeps the original copy, uses `Join the Discord to purchase`, and still points to the same `#aimmaxerv2` channel.
+- Verification: `git diff --check` and `npm run build` passed release truth, sitemap validation, and the complete 28-page Astro/Vite build. Local browser review covered the hero, diagnostic console, routine cards, system strip, and V2 teaser at the current preview width.
+- Release state: local isolated worktree only; not committed, pushed, or deployed. The canonical dirty checkout remains untouched.
+- User-owed test: review the local page at desktop and narrow widths, then request an explicit push-live step if approved.
+- Best next move: commit this scoped visual pass after review; do not deploy automatically.
