@@ -164,3 +164,10 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
 - User-owed test: open the V2 CTA while signed into Discord and confirm it lands in `🎯aimmaxerv2`; test with a member who lacks channel access or while signed out so the onboarding fallback is clear. Run one full diagnostic with the crosshair and confirm it feels useful rather than distracting.
 - Best next move: request explicit push-live approval if the CTA and reticle behavior feel right. If public visitors need guaranteed onboarding, add a visible server-invite fallback alongside the direct channel link.
+
+## Aimmaxxer V2 teaser label correction - 2026-10-29
+
+- Scope: preserve the existing bottom teaser wording after Diggy clarified that only its destination should change.
+- Changed `src/components/AimWarmup.astro`: restored the bottom CTA label to `Join the Discord for V2`; it still links directly to the verified `#aimmaxerv2` channel. The separate primary product CTA remains `Get Aimmaxxer V2`.
+- Verification: source diff checked; the local build should be rerun before any release.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
