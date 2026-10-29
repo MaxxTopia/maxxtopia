@@ -1,5 +1,38 @@
 # Maxxtopia continuity addendum
 
+## Standings command center UX pass - 2026-10-29
+
+- Implemented the next standings UX pass in the isolated worktree
+  `C:\Users\Diggy\projects\maxxtopia-standings-command-center`, based on the
+  published `30c1a88` source. The canonical dirty checkout was not edited.
+- The standings page now leads with a live event desk separated into Live now,
+  Next up, and Recently completed; uses a readable event-path stage navigator;
+  defaults to Top 10; persists event, round, region, board size, and player
+  search state in the URL; and keeps the compact Format & Scoring control.
+- Search now accepts events, rounds, regions, and loaded provider-snapshot
+  player names. A player match is visibly highlighted and labeled above the
+  board; clearing search restores the normal board. Search-result copy wraps
+  without text clipping.
+- Added explicit board trust states for live provisional data, upcoming data,
+  completed provider snapshots, stale last-good data, and unavailable data.
+  Payout display continues to use the deployed prize-pool Worker contract.
+- Provider catalog check on 2026-10-29 returned HTTP 200, 500 rounds total,
+  0 currently live, 70 upcoming, and 430 recent. Direct FNCS Solo Final EU
+  standings returned HTTP 200 with 10 rows and the published $253,500 prize
+  pool. This is evidence of the upstream route, not a production UI release.
+- Verification passed in the isolated checkout: `npm run build`, release-truth
+  check, sitemap check, `npm run test:standings-search` (6/6),
+  `npm run test:standings-pagination` (3/3), and `git diff --check`. Worker-backed
+  local preview was exercised at `http://127.0.0.1:4326/standings/`; deep-link,
+  event search, player search, clear-search, stage switching, and desktop
+  no-horizontal-overflow checks passed.
+- Release state: source changes are local and uncommitted in the isolated
+  worktree; nothing was pushed or deployed in this pass. The previously
+  deployed payout Worker and published `30c1a88` site remain the production
+  baseline. Diggy still owes explicit approval for publish plus production
+  browser verification after deployment. Best next move: review this local
+  preview, then authorize the normal Pages release if the UI is accepted.
+
 ## Viewmaxxing provider reliability update and accent separation - 2026-08-20
 
 - Published a significant Viewmaxxing web update for bounded provider failure

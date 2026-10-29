@@ -602,7 +602,7 @@ const standingsApi = '/api';
         <div class="sp-stage-topline">
           <div>
             <p class="sp-section-label">Tournament board</p>
-            <h2 id="sp-stage-title">Choose a round, then read the board.</h2>
+            <h2 id="sp-stage-title">Find the live round. Read the board.</h2>
             <div class="sp-board-context"><span id="sp-board-event">Loading event</span><i aria-hidden="true">/</i><span id="sp-board-round">Loading round</span></div>
           </div>
           <div class="sp-stage-actions">
@@ -646,17 +646,32 @@ const standingsApi = '/api';
           <div class="sp-discovery-heading">
             <div>
               <p class="sp-section-label">Start here</p>
-              <h3 id="sp-discovery-title">Live now</h3>
-              <p class="sp-discovery-copy">Current rounds are shown first. Select one to load its latest Epic snapshot.</p>
+              <h3 id="sp-discovery-title">The live event desk</h3>
+              <p class="sp-discovery-copy">Current rounds are shown first, then what starts next and what just finished. Select a card to load its latest provider snapshot.</p>
             </div>
             <span class="sp-discovery-count" id="sp-discovery-count">Loading rounds…</span>
           </div>
-          <div class="sp-live-grid" id="sp-live-list"></div>
+          <div class="sp-discovery-lane sp-discovery-lane--live">
+            <div class="sp-discovery-lane-heading"><span>Live now</span><span>Follow the action</span></div>
+            <div class="sp-live-grid" id="sp-live-list"></div>
+          </div>
           <div class="sp-upcoming-block" id="sp-upcoming-block" hidden>
             <div class="sp-upcoming-heading"><span>Next up</span><span id="sp-upcoming-count">Upcoming rounds</span></div>
             <div class="sp-upcoming-grid" id="sp-upcoming-list"></div>
           </div>
+          <div class="sp-recent-block" id="sp-recent-block" hidden>
+            <div class="sp-upcoming-heading"><span>Recently completed</span><span id="sp-recent-count">Recent rounds</span></div>
+            <div class="sp-recent-grid" id="sp-recent-list"></div>
+          </div>
         </section>
+
+        <nav class="sp-stage-nav" aria-label="Event stage navigation">
+          <div class="sp-stage-nav-heading">
+            <div><span class="sp-stage-nav-kicker">Event path</span><strong id="sp-stage-nav-title">Choose a round to see its stages</strong></div>
+            <span id="sp-stage-nav-caption">Stages in this event</span>
+          </div>
+          <div class="sp-stage-nav-list" id="sp-stage-nav-list"></div>
+        </nav>
 
         <div class="sp-controls">
           <label class="sp-control">
@@ -679,13 +694,14 @@ const standingsApi = '/api';
               <button id="sp-window-clear" class="sp-search-clear" type="button" aria-label="Clear tournament search" hidden>×</button>
             </div>
             <span class="sp-selected-window" id="sp-selected-window">Choose a tournament round</span>
+            <span class="sp-search-hint" id="sp-search-hint">Search events, rounds, regions, or the current board's player snapshot.</span>
             <div class="sp-window-results" id="sp-window-results" role="listbox" aria-label="Search matches" hidden></div>
           </div>
           <div class="sp-control sp-control--view">
             <span>Board size</span>
             <div class="sp-segmented" role="group" aria-label="Board size">
-              <button id="sp-top5" data-limit="5" class="is-active" type="button" aria-pressed="true">Top 5</button>
-              <button id="sp-top10" data-limit="10" type="button" aria-pressed="false">Top 10</button>
+              <button id="sp-top5" data-limit="5" type="button" aria-pressed="false">Top 5</button>
+              <button id="sp-top10" data-limit="10" class="is-active" type="button" aria-pressed="true">Top 10</button>
             </div>
           </div>
         </div>
@@ -706,6 +722,10 @@ const standingsApi = '/api';
         </div>
 
         <div class="sp-board" id="sp-board" aria-live="polite">
+          <div class="sp-board-intro">
+            <div><strong id="sp-board-view-label">Top 10 snapshot</strong><span id="sp-board-view-note">Provider-ranked rows only. This keeps the board honest when the full field is not available.</span></div>
+            <span class="sp-board-trust sp-board-trust--waiting" id="sp-board-trust">Waiting for provider data</span>
+          </div>
           <div class="sp-board-head" aria-hidden="true">
             <span>Move</span><span>Competitor</span><span>Points</span><span>Wins</span><span>Prize</span><span>Next target</span>
           </div>
@@ -723,7 +743,7 @@ const standingsApi = '/api';
 
         <div class="sp-footnote">
           <span class="sp-footnote-mark">i</span>
-          <p><strong>What this board shows.</strong> Epic replay and session processing can trail a live event by several minutes. This page currently shows the provider's ranked top-five or top-ten snapshot, never a fake full field, and keeps the last successful snapshot when an update is missing.</p>
+          <p><strong>What this board shows.</strong> Epic replay and session processing can trail a live event by several minutes. This page shows the provider's ranked top-five or top-ten snapshot, never a fake full field, and keeps the last successful snapshot when an update is missing.</p>
         </div>
       </section>
 
@@ -765,7 +785,7 @@ const standingsApi = '/api';
     eventId: '',
     windowId: '',
     windows: [],
-    limit: 5,
+    limit: 10,
     pollSeconds: 90,
     timer: null,
     request: 0,
@@ -778,6 +798,8 @@ const standingsApi = '/api';
     selectedWindow: null,
     windowSearch: '',
     playerSearchQuery: '',
+    fetchedAt: '',
+    snapshotState: 'waiting',
     overlay: false,
     collapsed: false,
   };
@@ -820,6 +842,27 @@ const standingsApi = '/api';
     const date = new Date(value);
     if (!Number.isFinite(date.getTime())) return 'Time unavailable';
     return date.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
+  function normalizeSearchText(value) {
+    return String(value ?? '')
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase('en-US')
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .trim();
+  }
+
+  function playerMatchesQuery(row, query) {
+    const normalizedQuery = normalizeSearchText(query);
+    if (!normalizedQuery) return false;
+    const candidate = normalizeSearchText([
+      row?.name,
+      row?.displayName,
+      row?.teamName,
+      ...(Array.isArray(row?.members) ? row.members.map((member) => member?.name) : []),
+    ].filter(Boolean).join(' '));
+    return normalizedQuery.split(/\s+/).every((token) => candidate.includes(token));
   }
 
   function firstPublished(...values) {
@@ -909,6 +952,20 @@ const standingsApi = '/api';
     return item.live === true || item.status === 'live';
   }
 
+  function isRecent(item = {}) {
+    return !isLive(item) && !isUpcoming(item);
+  }
+
+  function startTimeValue(item = {}) {
+    const value = item.beginTime || item.startTime || item.startsAt || item.endTime || item.finishTime || item.endsAt;
+    const time = new Date(value).getTime();
+    return Number.isFinite(time) ? time : 0;
+  }
+
+  function sortRounds(items = []) {
+    return [...items].sort((left, right) => startTimeValue(left) - startTimeValue(right));
+  }
+
   function regionCode(item = {}) {
     const explicit = String(item.region || '').trim().toUpperCase();
     const suffix = String(item.windowId || '').match(/_(NAC|NAW|EU|BR|ASIA|OCE|ME)$/i)?.[1]?.toUpperCase();
@@ -920,12 +977,51 @@ const standingsApi = '/api';
     return REGION_LABELS[code] || (code ? code : 'Region unavailable');
   }
 
+  function readableWindowLabel(item = {}) {
+    const preferred = String(item.windowName || item.roundName || '').trim();
+    if (preferred && !/^(qualifiers?|round|stage|finals?|opens?)$/i.test(preferred)) return preferred;
+
+    let raw = String(item.windowId || '').trim();
+    if (!raw) return preferred || '';
+    raw = raw.replace(/^S\d+_/i, '').replace(/_(NAC|NAW|EU|BR|ASIA|OCE|ME)$/i, '');
+
+    const eventKey = String(item.eventId || '')
+      .replace(/^epicgames_/i, '')
+      .replace(/^S\d+_/i, '')
+      .replace(/_(NAC|NAW|EU|BR|ASIA|OCE|ME)$/i, '');
+    if (eventKey && raw.toLowerCase().startsWith(eventKey.toLowerCase())) {
+      raw = raw.slice(eventKey.length).replace(/^_/, '');
+    }
+
+    const label = raw
+      .replace(/Qual(\d+)/gi, 'Qual $1')
+      .replace(/Round(\d+)/gi, ' · Round $1')
+      .replace(/Day(\d+)/gi, ' · Day $1')
+      .replace(/Heat(\d+)/gi, ' · Heat $1')
+      .replace(/Event(\d+)/gi, 'Event $1')
+      .replace(/Stage(\d+)/gi, 'Stage $1')
+      .replace(/_/g, ' · ')
+      .replace(/\s+·\s+/g, ' · ')
+      .replace(/^\s*·\s*/, '')
+      .trim();
+    return label || preferred || '';
+  }
+
   function roundLabel(item = {}) {
-    const round = item.windowName || item.roundName || item.windowId || 'Round';
+    const round = readableWindowLabel(item) || 'Round';
     const phase = formatPhase(item);
     return phase !== 'Format unavailable' && !String(round).toLowerCase().includes(phase.toLowerCase())
       ? `${round} · ${phase}`
       : round;
+  }
+
+  function stageLabel(item = {}) {
+    const specific = readableWindowLabel(item);
+    if (specific) return specific;
+    const explicit = firstPublished(item.stage, item.phase);
+    if (explicit && typeof explicit === 'string') return explicit.trim();
+    const phase = formatPhase(item);
+    return phase !== 'Format unavailable' ? phase : (item.windowName || item.windowId || 'Stage');
   }
 
   function selectedWindow() {
@@ -935,10 +1031,52 @@ const standingsApi = '/api';
   function renderEventContext(item = null, data = {}) {
     const event = item || {};
     $('sp-board-event').textContent = event.name || event.eventName || event.eventId || 'Tournament';
-    const round = event.windowName || event.roundName || event.windowId || data.windowId || 'Round';
+    const round = readableWindowLabel(event) || data.windowId || 'Round';
     const phase = formatPhase(event, data);
     const hasPhase = phase !== 'Format unavailable' && !String(round).toLowerCase().includes(phase.toLowerCase());
     $('sp-board-round').textContent = hasPhase ? `${round} · ${phase}` : round;
+  }
+
+  function renderSearchHint() {
+    const hint = $('sp-search-hint');
+    if (!hint) return;
+    if (state.playerSearchQuery) {
+      const matches = state.rows.filter((row) => playerMatchesQuery(row, state.playerSearchQuery));
+      hint.textContent = matches.length
+        ? `Showing ${matches.length} player match${matches.length === 1 ? '' : 'es'} in this provider snapshot. Clear search to restore the board.`
+        : 'No player match in this provider snapshot. Clear search to browse the event desk.';
+      return;
+    }
+    hint.textContent = 'Search events, rounds, regions, or the current board\'s player snapshot.';
+  }
+
+  function renderBoardMeta() {
+    const label = $('sp-board-view-label');
+    const note = $('sp-board-view-note');
+    const trust = $('sp-board-trust');
+    if (!label || !note || !trust) return;
+    if (state.playerSearchQuery) {
+      const names = [...new Set(state.rows.filter((row) => playerMatchesQuery(row, state.playerSearchQuery)).map((row) => row.name).filter(Boolean))];
+      label.textContent = names.length ? `Player: ${names.join(', ')}` : `Player search: ${state.playerSearchQuery}`;
+      note.textContent = 'Filtered from the current provider-ranked snapshot. Clear search to restore the full board.';
+    } else {
+      label.textContent = `Top ${state.limit} snapshot`;
+      note.textContent = 'Provider-ranked rows only. This keeps the board honest when the full field is not available.';
+    }
+    const selected = selectedWindow();
+    const suffix = state.snapshotState === 'good' && selected && isLive(selected)
+      ? 'LIVE · PROVISIONAL'
+      : state.snapshotState === 'good' && selected && isUpcoming(selected)
+        ? 'UPCOMING · WAITING'
+        : state.snapshotState === 'good'
+          ? 'COMPLETED · PROVIDER SNAPSHOT'
+        : state.snapshotState === 'stale'
+          ? 'LAST GOOD SNAPSHOT'
+          : state.snapshotState === 'error'
+            ? 'DATA UNAVAILABLE'
+            : 'WAITING FOR PROVIDER DATA';
+    trust.textContent = suffix;
+    trust.className = `sp-board-trust sp-board-trust--${state.snapshotState}`;
   }
 
   function updateUrl() {
@@ -948,6 +1086,7 @@ const standingsApi = '/api';
     if (state.windowId) url.searchParams.set('windowId', state.windowId); else url.searchParams.delete('windowId');
     url.searchParams.set('limit', String(state.limit));
     url.searchParams.delete('playerRegion');
+    if (state.playerSearchQuery) url.searchParams.set('player', state.playerSearchQuery); else url.searchParams.delete('player');
     if (state.overlay) url.searchParams.set('overlay', '1'); else url.searchParams.delete('overlay');
     window.history.replaceState({}, '', url);
   }
@@ -971,12 +1110,14 @@ const standingsApi = '/api';
     const label = $('sp-selected-window');
     if (!label) return;
     if (state.playerSearchQuery) {
-      const matches = state.rows.filter((row) => String(row?.name || '').toLowerCase().includes(state.playerSearchQuery));
+      const matches = state.rows.filter((row) => playerMatchesQuery(row, state.playerSearchQuery));
       const names = [...new Set(matches.map((row) => row.name).filter(Boolean))];
       if (names.length) {
         label.textContent = `${names.length === 1 ? 'Showing player' : 'Showing players'}: ${names.join(', ')}`;
         label.title = label.textContent;
         label.classList.add('is-searching');
+        renderSearchHint();
+        renderBoardMeta();
         return;
       }
     }
@@ -984,10 +1125,14 @@ const standingsApi = '/api';
     if (!selected) {
       label.textContent = 'Choose a tournament round';
       label.removeAttribute('title');
+      renderSearchHint();
+      renderBoardMeta();
       return;
     }
     label.textContent = `Selected: ${selected.name || selected.eventName || selected.eventId || 'Tournament'} · ${roundLabel(selected)} · ${regionLabel(regionCode(selected))}`;
     label.title = label.textContent;
+    renderSearchHint();
+    renderBoardMeta();
   }
 
   function makeTournamentCard(item, variant = 'live') {
@@ -1029,12 +1174,16 @@ const standingsApi = '/api';
     const liveList = $('sp-live-list');
     const upcomingList = $('sp-upcoming-list');
     const upcomingBlock = $('sp-upcoming-block');
-    if (!liveList || !upcomingList || !upcomingBlock) return;
+    const recentBlock = $('sp-recent-block');
+    const recentList = $('sp-recent-list');
+    if (!liveList || !upcomingList || !upcomingBlock || !recentBlock || !recentList) return;
 
     liveList.replaceChildren();
     upcomingList.replaceChildren();
-    const live = state.windows.filter(isLive).slice(0, 6);
-    const upcoming = state.windows.filter(isUpcoming).slice(0, 6);
+    recentList.replaceChildren();
+    const live = sortRounds(state.windows.filter(isLive)).slice(0, 6);
+    const upcoming = sortRounds(state.windows.filter(isUpcoming)).slice(0, 6);
+    const recent = sortRounds(state.windows.filter(isRecent)).reverse().slice(0, 6);
     $('sp-discovery-count').textContent = live.length ? `${live.length} live now` : 'No live round in this region';
 
     if (live.length) {
@@ -1049,6 +1198,55 @@ const standingsApi = '/api';
     upcomingBlock.hidden = upcoming.length === 0;
     $('sp-upcoming-count').textContent = upcoming.length ? `${upcoming.length} scheduled` : 'None scheduled';
     upcoming.forEach((item) => upcomingList.append(makeTournamentCard(item, 'upcoming')));
+
+    recentBlock.hidden = recent.length === 0;
+    $('sp-recent-count').textContent = recent.length ? `${recent.length} recent` : 'None available';
+    recent.forEach((item) => recentList.append(makeTournamentCard(item, 'recent')));
+  }
+
+  function renderStageNav() {
+    const list = $('sp-stage-nav-list');
+    const title = $('sp-stage-nav-title');
+    const caption = $('sp-stage-nav-caption');
+    if (!list || !title || !caption) return;
+    list.replaceChildren();
+    const selected = selectedWindow();
+    const stages = selected
+      ? sortRounds(state.windows.filter((item) => item.eventId === selected.eventId))
+      : [];
+    title.textContent = selected
+      ? (selected.name || selected.eventName || selected.eventId || 'Selected tournament')
+      : 'Choose a round to see its stages';
+    caption.textContent = stages.length
+      ? `${stages.length} stage${stages.length === 1 ? '' : 's'} in this event`
+      : 'Stages appear after you choose an event';
+    if (!stages.length) {
+      const empty = document.createElement('span');
+      empty.className = 'sp-stage-nav-empty';
+      empty.textContent = 'Pick a live or upcoming card above to see the event path.';
+      list.append(empty);
+      return;
+    }
+    stages.forEach((item, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'sp-stage-nav-item';
+      button.dataset.eventId = item.eventId || '';
+      button.dataset.windowId = item.windowId || '';
+      const isSelected = item.eventId === state.eventId && item.windowId === state.windowId;
+      button.setAttribute('aria-current', isSelected ? 'step' : 'false');
+      button.classList.toggle('is-selected', isSelected);
+      const status = document.createElement('span');
+      status.className = 'sp-stage-nav-status';
+      status.textContent = isLive(item) ? 'LIVE' : isUpcoming(item) ? (index === 0 ? 'NEXT' : 'UP NEXT') : 'DONE';
+      const stage = document.createElement('strong');
+      stage.textContent = stageLabel(item);
+      const meta = document.createElement('small');
+      meta.textContent = `${regionLabel(regionCode(item))} · ${formatSchedule(item)}`;
+      button.append(status, stage, meta);
+      button.setAttribute('aria-label', `${status.textContent}: ${stage.textContent}, ${meta.textContent}`);
+      list.append(button);
+    });
   }
 
   function renderWindowSearchResults(open = false) {
@@ -1058,11 +1256,12 @@ const standingsApi = '/api';
     if (!input || !results) return;
     const query = String(input.value || '').trim().toLowerCase();
     state.windowSearch = query;
-    const playerMatches = query ? state.rows.filter((row) => String(row?.name || '').toLowerCase().includes(query)) : [];
+    const playerMatches = query ? state.rows.filter((row) => playerMatchesQuery(row, query)) : [];
     const nextPlayerSearchQuery = query && playerMatches.length ? query : '';
     if (state.playerSearchQuery !== nextPlayerSearchQuery) {
       state.playerSearchQuery = nextPlayerSearchQuery;
       renderRows();
+      updateUrl();
     }
     const live = state.windows.filter(isLive);
     const upcoming = state.windows.filter(isUpcoming);
@@ -1080,11 +1279,11 @@ const standingsApi = '/api';
       playerResult.setAttribute('role', 'option');
       const playerLabel = document.createElement('span');
       playerLabel.className = 'sp-player-search-label';
-      playerLabel.textContent = 'Player match';
+      playerLabel.textContent = 'Player match · filtered below';
       const playerNames = document.createElement('strong');
       playerNames.textContent = [...new Set(playerMatches.map((row) => row.name).filter(Boolean))].join(', ');
       const playerDetail = document.createElement('small');
-      playerDetail.textContent = 'The leaderboard below is filtered to this name.';
+      playerDetail.textContent = 'Matches are highlighted in the current provider snapshot. Clear the search to restore all rows.';
       playerResult.append(playerLabel, playerNames, playerDetail);
       results.append(playerResult);
     }
@@ -1104,6 +1303,8 @@ const standingsApi = '/api';
     results.hidden = !open;
     input.setAttribute('aria-expanded', String(open));
     if (clear) clear.hidden = !input.value;
+    renderSearchHint();
+    renderBoardMeta();
   }
 
   function chooseWindow(eventId, windowId) {
@@ -1119,6 +1320,7 @@ const standingsApi = '/api';
     renderEventContext(item);
     renderRules(item, {});
     renderDiscovery();
+    renderStageNav();
     renderWindowSearchResults(false);
     updateUrl();
     loadStandings({ reset: true });
@@ -1214,6 +1416,7 @@ const standingsApi = '/api';
       renderRules(null, {});
       renderSelectedWindow();
       renderDiscovery();
+      renderStageNav();
       renderWindowSearchResults(false);
       renderFutureWindows();
       updateUrl();
@@ -1228,6 +1431,7 @@ const standingsApi = '/api';
     renderEventContext(selected);
     renderRules(selected, {});
     renderDiscovery();
+    renderStageNav();
     renderWindowSearchResults(false);
     renderFutureWindows();
     updateUrl();
@@ -1488,7 +1692,7 @@ const standingsApi = '/api';
     const sourceRows = Array.isArray(rows) ? rows : [];
     if (rows !== state.rows) state.rows = sourceRows;
     const filteredRows = state.playerSearchQuery
-      ? sourceRows.filter((row) => String(row?.name || '').toLowerCase().includes(state.playerSearchQuery))
+      ? sourceRows.filter((row) => playerMatchesQuery(row, state.playerSearchQuery))
       : sourceRows;
     const visible = filteredRows.slice(0, state.limit);
     $('sp-count').textContent = visible.length
@@ -1516,6 +1720,7 @@ const standingsApi = '/api';
       const article = document.createElement('article');
       const rankClass = rank <= 3 ? 'sp-row--rank-' + rank : 'sp-row--standard';
       article.className = 'sp-row ' + rankClass + ' ' + (movement ? (delta > 0 ? 'sp-row--up' : 'sp-row--down') : 'sp-row--steady');
+      if (state.playerSearchQuery && playerMatchesQuery(row, state.playerSearchQuery)) article.classList.add('sp-row--player-match');
       article.style.setProperty('--row-delay', Math.min(index, 9) * 48 + 'ms');
       article.dataset.rank = String(rank);
 
@@ -1627,23 +1832,30 @@ const standingsApi = '/api';
     if (!state.eventId || !state.windowId) {
       state.rows = [];
       state.playerSearchQuery = '';
+      state.fetchedAt = '';
+      state.snapshotState = 'waiting';
       renderRows([]);
       renderEmptyState('no-selection');
       renderRules(null, {});
       renderPrizePool({}, 'Choose a round', null);
       $('sp-signal').textContent = 'Choose a round';
+      renderBoardMeta();
       setStatus('Choose a tournament round to load standings.', 'idle');
       return;
     }
     if (reset) {
       state.rows = [];
-      state.playerSearchQuery = '';
+      state.playerSearchQuery = state.windowSearch || '';
+      state.fetchedAt = '';
+      state.snapshotState = 'waiting';
       renderRows([]);
       renderEmptyState('loading');
     } else if (!state.hasRows) {
       renderEmptyState('loading');
     }
     const item = selectedWindow();
+    state.snapshotState = 'waiting';
+    renderBoardMeta();
     const controller = new AbortController();
     state.standingsController = controller;
     let timedOut = false;
@@ -1664,32 +1876,37 @@ const standingsApi = '/api';
       const data = await readJson(url, controller.signal);
       if (requestId !== state.request) return;
       state.rows = Array.isArray(data.rows) ? data.rows : [];
-      state.playerSearchQuery = state.windowSearch && state.rows.some((row) => String(row?.name || '').toLowerCase().includes(state.windowSearch))
+      state.playerSearchQuery = state.windowSearch && state.rows.some((row) => playerMatchesQuery(row, state.windowSearch))
         ? state.windowSearch
         : '';
+      state.fetchedAt = data.fetched || '';
+      state.snapshotState = state.rows.length ? 'good' : 'waiting';
       renderRows();
       renderRules(item, data);
       renderPrizePool(data, 'No prize details', item);
       if (!state.hasRows) renderEmptyState('no-rows');
       state.pollSeconds = Math.min(300, Math.max(60, Number(data.pollAfterSeconds) || 90));
-      $('sp-signal').textContent = state.hasRows ? `Top ${state.limit} snapshot` : 'No processed rows';
+      $('sp-signal').textContent = state.hasRows ? `${isLive(item) ? 'Live · ' : ''}Top ${state.limit} snapshot` : 'No processed rows';
       $('sp-updated').textContent = formatPacificTime(data.fetched);
       $('sp-source').textContent = data.source || 'Epic leaderboard';
       $('sp-games').textContent = Number.isFinite(Number(data.maxGames)) ? Number(data.maxGames).toLocaleString('en-US') : '—';
       $('sp-delay').textContent = data.replayAware ? 'Provider processing delay expected' : '';
       $('sp-board-status').textContent = state.hasRows ? `Updated ${formatPacificTime(data.fetched)}` : 'No processed rows';
+      renderBoardMeta();
       setStatus(`Updated ${formatPacificTime(data.fetched)} · showing the top ${state.limit} · next check in ${state.pollSeconds}s`, 'good');
       updateUrl();
       schedulePoll();
     } catch (error) {
       if (requestId !== state.request) return;
       if (error.name === 'AbortError' && !timedOut) return;
+      state.snapshotState = state.hasRows ? 'stale' : 'error';
       $('sp-signal').textContent = state.hasRows ? 'Showing last good' : 'Unavailable';
       if (!state.hasRows) {
         renderPrizePool({}, 'Unavailable', item);
         renderEmptyState('standings-error');
       }
       $('sp-board-status').textContent = state.hasRows ? 'LAST GOOD SNAPSHOT' : 'DATA UNAVAILABLE';
+      renderBoardMeta();
       setStatus(state.hasRows ? `Provider update unavailable — showing the last good snapshot. ${error.message}` : `Standings unavailable: ${error.message}`, 'warn');
       schedulePoll();
     } finally {
@@ -1707,7 +1924,9 @@ const standingsApi = '/api';
     abortStandings();
     window.clearTimeout(state.timer);
     state.rows = [];
-    state.playerSearchQuery = '';
+    state.playerSearchQuery = state.windowSearch || '';
+    state.fetchedAt = '';
+    state.snapshotState = 'waiting';
     renderRows([]);
     renderEmptyState('loading');
     setStatus(`Loading ${state.region === 'ALL' ? 'all regions' : state.region} tournaments…`, 'loading');
@@ -1734,6 +1953,7 @@ const standingsApi = '/api';
         renderEmptyState('no-catalog');
         $('sp-signal').textContent = 'No active rounds';
         $('sp-board-status').textContent = 'NO TOURNAMENTS';
+        renderBoardMeta();
         setStatus('No tournament rounds were returned for this region.', 'warn');
       }
     } catch (error) {
@@ -1742,10 +1962,12 @@ const standingsApi = '/api';
       state.windows = [];
       state.rows = [];
       state.playerSearchQuery = '';
+      state.snapshotState = 'error';
       renderWindows();
       renderRows([]);
       renderEmptyState('catalog-error');
       $('sp-signal').textContent = 'Catalog unavailable';
+      renderBoardMeta();
       setStatus(`Tournament catalog unavailable: ${error.message}`, 'warn');
     } finally {
       window.clearTimeout(timeout);
@@ -1762,7 +1984,7 @@ const standingsApi = '/api';
   }
 
   function setLimit(limit) {
-    state.limit = limit === 10 ? 10 : 5;
+    state.limit = limit === 5 ? 5 : 10;
     document.querySelectorAll('[data-limit]').forEach((button) => {
       const active = Number(button.dataset.limit) === state.limit;
       button.classList.toggle('is-active', active);
@@ -1794,7 +2016,7 @@ const standingsApi = '/api';
     button.addEventListener('click', () => setLimit(Number(button.dataset.limit)));
   });
   $('sp-refresh').addEventListener('click', () => loadStandings());
-  ['sp-live-list', 'sp-upcoming-list', 'sp-future-list', 'sp-window-results'].forEach((id) => $(id).addEventListener('click', (event) => {
+  ['sp-live-list', 'sp-upcoming-list', 'sp-recent-list', 'sp-future-list', 'sp-window-results', 'sp-stage-nav-list'].forEach((id) => $(id).addEventListener('click', (event) => {
     const button = event.target.closest('button[data-event-id][data-window-id]');
     if (!button) return;
     chooseWindow(button.dataset.eventId || '', button.dataset.windowId || '');
@@ -1846,11 +2068,17 @@ const standingsApi = '/api';
   const params = new URLSearchParams(window.location.search);
   const initialRegion = String(params.get('region') || 'ALL').toUpperCase();
   state.region = REGIONS.has(initialRegion) ? initialRegion : 'ALL';
-  state.limit = params.get('limit') === '10' ? 10 : 5;
+  state.eventId = params.get('eventId') || '';
+  state.windowId = params.get('windowId') || '';
+  state.limit = params.get('limit') === '5' ? 5 : 10;
+  const initialPlayer = normalizeSearchText(params.get('player') || '');
+  state.windowSearch = initialPlayer;
+  state.playerSearchQuery = initialPlayer;
   state.overlay = params.get('overlay') === '1' || params.get('view') === 'overlay';
   document.querySelector('.standings-page').classList.toggle('sp-overlay-mode', state.overlay);
   if (state.overlay) document.title = 'OBS Standings Overlay — Maxxtopia';
   $('sp-region').value = state.region;
+  $('sp-window-search').value = params.get('player') || '';
   setLimit(state.limit);
   updateFullBoardLink();
   loadWindows();
@@ -3665,6 +3893,346 @@ const standingsApi = '/api';
   @media (max-width: 360px) {
     .standings-page .sp-rules-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* Event desk, stage path, and board trust cues. These are intentionally
+     opaque and high-contrast so live tournament state stays readable on a
+     stream monitor and on a phone. */
+  .standings-page .sp-discovery-lane {
+    padding: 13px;
+    border: 1px solid rgba(36, 221, 255, .28);
+    border-radius: 12px;
+    background: #0b1727;
+  }
+
+  .standings-page .sp-discovery-lane--live {
+    border-color: rgba(63, 240, 142, .46);
+    background: #0d241d;
+  }
+
+  .standings-page .sp-discovery-lane-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 2px 10px;
+    color: #d9e9f6;
+    font: 700 12px/1.2 var(--font-sans);
+    letter-spacing: .02em;
+  }
+
+  .standings-page .sp-discovery-lane--live .sp-discovery-lane-heading span:first-child {
+    color: #69ffad;
+  }
+
+  .standings-page .sp-discovery-lane-heading span:last-child {
+    color: #96aabd;
+    font-weight: 500;
+  }
+
+  .standings-page .sp-recent-block {
+    margin-top: 18px;
+  }
+
+  .standings-page .sp-recent-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .standings-page :global(.sp-tournament-card--recent) {
+    border-color: rgba(162, 181, 207, .42);
+    background: #121b2b;
+    box-shadow: inset 4px 0 #a2b5cf;
+  }
+
+  .standings-page :global(.sp-tournament-card--recent .sp-tournament-card-status) {
+    color: #c0cee0;
+  }
+
+  .standings-page .sp-stage-nav {
+    padding: 16px 30px 17px;
+    border-bottom: 1px solid rgba(255, 255, 255, .09);
+    background: #0a1221;
+  }
+
+  .standings-page .sp-stage-nav-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 11px;
+  }
+
+  .standings-page .sp-stage-nav-heading > div {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .standings-page .sp-stage-nav-kicker {
+    color: #6bdcff;
+    font: 700 10px/1.1 var(--font-sans);
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+
+  .standings-page .sp-stage-nav-heading strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #f3f8ff;
+    font: 700 14px/1.25 var(--font-sans);
+  }
+
+  .standings-page .sp-stage-nav-heading > span:last-child {
+    flex: none;
+    color: #9cb1c7;
+    font: 500 12px/1.2 var(--font-sans);
+  }
+
+  .standings-page .sp-stage-nav-list {
+    display: flex;
+    gap: 8px;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 2px 2px 5px;
+    scrollbar-color: #2a9db7 #0a1221;
+  }
+
+  .standings-page .sp-stage-nav-item {
+    display: grid;
+    flex: 0 0 190px;
+    gap: 4px;
+    min-height: 74px;
+    padding: 10px 12px;
+    border: 1px solid rgba(142, 171, 200, .3);
+    border-radius: 8px;
+    color: #edf6ff;
+    text-align: left;
+    background: #121e31;
+    cursor: pointer;
+  }
+
+  .standings-page .sp-stage-nav-item:hover,
+  .standings-page .sp-stage-nav-item:focus-visible {
+    border-color: #6bdcff;
+    background: #172943;
+    outline: none;
+  }
+
+  .standings-page .sp-stage-nav-item.is-selected {
+    border-color: #3ff08e;
+    background: #123124;
+    box-shadow: 0 0 0 1px rgba(63, 240, 142, .18);
+  }
+
+  .standings-page .sp-stage-nav-status {
+    color: #9fb4c8;
+    font: 700 10px/1.1 var(--font-sans);
+    letter-spacing: .06em;
+  }
+
+  .standings-page .sp-stage-nav-item.is-selected .sp-stage-nav-status,
+  .standings-page .sp-stage-nav-item:first-child .sp-stage-nav-status {
+    color: #69ffad;
+  }
+
+  .standings-page .sp-stage-nav-item strong {
+    overflow-wrap: anywhere;
+    color: #f4f8ff;
+    font: 700 13px/1.2 var(--font-sans);
+  }
+
+  .standings-page .sp-stage-nav-item small {
+    overflow-wrap: anywhere;
+    color: #a9bdd0;
+    font: 500 11px/1.25 var(--font-sans);
+  }
+
+  .standings-page .sp-stage-nav-empty {
+    display: block;
+    padding: 9px 2px 3px;
+    color: #9cb1c7;
+    font: 500 12px/1.35 var(--font-sans);
+  }
+
+  .standings-page .sp-search-hint {
+    display: block;
+    min-height: 1.35em;
+    margin-top: 6px;
+    color: #a9bdd0;
+    font: 500 12px/1.35 var(--font-sans);
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .standings-page .sp-window-picker,
+  .standings-page .sp-controls {
+    overflow: visible;
+  }
+
+  .standings-page .sp-board-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 0 0 10px;
+    padding: 12px 14px;
+    border: 1px solid rgba(107, 220, 255, .28);
+    border-radius: 8px;
+    background: #0e1d31;
+  }
+
+  .standings-page .sp-board-intro > div {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .standings-page .sp-board-view-label {
+    overflow-wrap: anywhere;
+    color: #f4f8ff;
+    font: 700 14px/1.25 var(--font-sans);
+  }
+
+  .standings-page .sp-board-view-note {
+    color: #abc0d5;
+    font: 500 12px/1.35 var(--font-sans);
+    overflow-wrap: anywhere;
+  }
+
+  .standings-page .sp-board-trust {
+    flex: none;
+    padding: 6px 8px;
+    border: 1px solid rgba(168, 190, 214, .35);
+    border-radius: 999px;
+    color: #b9c9da;
+    background: #162236;
+    font: 700 10px/1.1 var(--font-sans);
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+
+  .standings-page .sp-board-trust--good {
+    border-color: rgba(63, 240, 142, .5);
+    color: #69ffad;
+    background: #123124;
+  }
+
+  .standings-page .sp-board-trust--stale,
+  .standings-page .sp-board-trust--error {
+    border-color: rgba(255, 193, 63, .5);
+    color: #ffe49a;
+    background: #332512;
+  }
+
+  .standings-page .sp-row--player-match {
+    border-color: #6bdcff;
+    box-shadow: inset 5px 0 #6bdcff, 0 0 0 1px rgba(107, 220, 255, .2), 0 10px 25px rgba(0, 0, 0, .28);
+  }
+
+  .standings-page .sp-row--player-match .sp-player strong {
+    color: #b9f4ff;
+  }
+
+  .standings-page .sp-overlay-mode .sp-stage-nav {
+    display: none;
+  }
+
+  /* Stage buttons are created after hydration, so their visual rules must
+     cross Astro's scoped-style boundary. */
+  .standings-page :global(.sp-stage-nav-item) {
+    display: grid;
+    flex: 0 0 190px;
+    gap: 4px;
+    min-height: 74px;
+    padding: 10px 12px;
+    border: 1px solid rgba(142, 171, 200, .3);
+    border-radius: 8px;
+    color: #edf6ff;
+    text-align: left;
+    background: #121e31;
+    cursor: pointer;
+  }
+
+  .standings-page :global(.sp-stage-nav-item:hover),
+  .standings-page :global(.sp-stage-nav-item:focus-visible) {
+    border-color: #6bdcff;
+    background: #172943;
+    outline: none;
+  }
+
+  .standings-page :global(.sp-stage-nav-item.is-selected) {
+    border-color: #3ff08e;
+    background: #123124;
+    box-shadow: 0 0 0 1px rgba(63, 240, 142, .18);
+  }
+
+  .standings-page :global(.sp-stage-nav-status) {
+    color: #9fb4c8;
+    font: 700 10px/1.1 var(--font-sans);
+    letter-spacing: .06em;
+  }
+
+  .standings-page :global(.sp-stage-nav-item.is-selected .sp-stage-nav-status),
+  .standings-page :global(.sp-stage-nav-item:first-child .sp-stage-nav-status) {
+    color: #69ffad;
+  }
+
+  .standings-page :global(.sp-stage-nav-item strong) {
+    overflow-wrap: anywhere;
+    color: #f4f8ff;
+    font: 700 13px/1.2 var(--font-sans);
+  }
+
+  .standings-page :global(.sp-stage-nav-item small) {
+    overflow-wrap: anywhere;
+    color: #a9bdd0;
+    font: 500 11px/1.25 var(--font-sans);
+  }
+
+  @media (max-width: 980px) {
+    .standings-page .sp-recent-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 820px) {
+    .standings-page .sp-stage-nav {
+      padding-right: 20px;
+      padding-left: 20px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .standings-page .sp-recent-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .standings-page .sp-stage-nav-heading {
+      align-items: start;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .standings-page .sp-stage-nav-item {
+      flex-basis: 175px;
+    }
+
+    .standings-page .sp-board-intro {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .standings-page .sp-board-trust {
+      white-space: normal;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .standings-page :global(.sp-stage-nav-item) {
+      flex-basis: 175px;
     }
   }
 </style>
