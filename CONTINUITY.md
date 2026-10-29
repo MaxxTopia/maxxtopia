@@ -999,7 +999,7 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   The canonical dirty checkouts were not edited. The site release is committed
   as `d7343bf`, pushed to `origin/main`, and deployed through Pages workflow
   `40870559829`. The Worker release is committed as `c89e79d` in the isolated
-  worktree and deployed as Worker version
+  worktree, pushed to `snipemaxxer` `origin/master`, and deployed as Worker version
   `bf613e63-84e9-4731-b523-b9b6b8e25845`.
 - Updated `src/pages/standings.astro` so the public finals board requests and
   displays the provider field up to a 100-player safety cap. It clearly marks
