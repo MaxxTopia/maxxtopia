@@ -33,6 +33,28 @@
   browser verification after deployment. Best next move: review this local
   preview, then authorize the normal Pages release if the UI is accepted.
 
+## Standings command center production release - 2026-10-29
+
+- Diggy authorized the normal Pages release after the local review. Focused
+  commit `7246b10` was pushed from the isolated checkout to `origin/main`;
+  the canonical dirty checkout remained untouched.
+- GitHub Actions deployment run `40865167205` completed successfully. The
+  workflow ran `npm ci`, `npm run build`, and the production Cloudflare Pages
+  deployment for project `maxxtopia`. The only annotations were upstream
+  runner warnings about the Node 20 action transition and Ubuntu 26 migration;
+  they did not fail the release.
+- Production verification passed on 2026-10-29: `https://maxxtopia.com` and
+  the standings route returned HTTP 200 with security headers; the documented
+  `/snipemaxxer` route returned a normal 308 slash redirect followed by HTTP
+  200. The public catalog and standings API returned HTTP 200; the selected
+  FNCS Solo Final EU snapshot returned 10 rows and a `$253,500` prize pool.
+- The deployed browser review showed the event desk, stage path, search bar,
+  compact Format & Scoring control, Top 10 board, published payouts, and
+  completed provider-snapshot state. Browser console errors were empty.
+- The final live state is deployed and verified. The next useful check is a
+  fresh mobile visual pass during a normal user review; no mobile viewport
+  claim is made here because the available browser tab remained desktop-sized.
+
 ## Viewmaxxing provider reliability update and accent separation - 2026-08-20
 
 - Published a significant Viewmaxxing web update for bounded provider failure
