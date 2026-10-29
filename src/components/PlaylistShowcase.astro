@@ -2,10 +2,9 @@
 /**
  * PlaylistShowcase — playlistmaxxing's bespoke, music-themed hero exhibit.
  * A spinning vinyl record centers the section (VinylDisc) while three
- * story pillars tell how it looks and works: three platforms unified on one
- * page, the floating pop-out vinyl mini-player, and synced karaoke lyrics.
- * A live-equalizer accent + platform chips carry the music motif; a footer
- * strip covers the one-toggle push to the Streammaxxing vinyl overlay.
+ * story pillars explain the core experience: paste anything, discover your
+ * own taste, and karaoke built in.
+ * A live-equalizer accent + platform chips carry the music motif.
  *
  * All copy is grounded in real product facts. No fabricated numbers.
  */
@@ -27,8 +26,9 @@ const {
 
 // Illustrative karaoke lines
 const karaokeLines = [
-  'the lights go down, the needle drops',
-  'every platform on one turning page',
+  'the lights go down',
+  'the words move with the song',
+  'every platform on one page',
   'paste the link and let it play',
 ];
 
@@ -61,12 +61,12 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
         <p class="pls__eyebrow"><span aria-hidden="true"></span>Playlistmaxxing &middot; live</p>
         <h1 id="pls-heading" class="pls__heading">
           <span class="gradient-text">Every platform.</span>
-          <span class="serif-accent gradient-music">One spinning page.</span>
+          <span class="serif-accent gradient-music">One music library.</span>
         </h1>
         <p class="pls__sub">
-          Spotify, SoundCloud and YouTube side by side. Paste a track or a whole
-          playlist and it plays in place &mdash; no account, nothing to install,
-          saved on your device.
+          All your music from various platforms in one place. Just paste a link
+          or a whole playlist and keep everything together &mdash; no account,
+          no install, just a browser that saves your music with extra features included.
         </p>
         <div class="pls__platforms" aria-label="Supported platforms">
           <span class="pls__chip pls__chip--sp">Spotify</span>
@@ -82,25 +82,24 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
       </header>
     </div>
 
-    <!-- Reverted story pillars layout — original structure & spacing -->
+    <!-- Core experience pillars -->
     <div class="pls__pillars">
       <article class="pls__card reveal-on-scroll">
         <span class="pls__num">01</span>
         <h3 class="pls__card-title">Paste anything. It plays.</h3>
         <p class="pls__card-body">
-          A single track or a whole playlist, album or set. It detects the
-          platform and drops in a real, playable card &mdash; Spotify,
-          SoundCloud and YouTube living on the same page.
+          Paste a link. Playlistmaxxing detects the platform and drops in a real,
+          playable card &mdash; all your music lives on the same page.
         </p>
       </article>
 
       <article class="pls__card reveal-on-scroll">
         <span class="pls__num">02</span>
-        <h3 class="pls__card-title">A record that follows you.</h3>
+        <h3 class="pls__card-title">Discover your own taste.</h3>
         <p class="pls__card-body">
-          Pop out a floating vinyl mini-player that stays on top while you
-          move across other tabs. Spin, skip, done &mdash; the now-playing
-          disc never leaves your sight.
+          Discover your own taste. Pop out a floating mini-player that stays on
+          top, spins and lets you skip. Use the Discover button to build your
+          library further.
         </p>
       </article>
 
@@ -108,8 +107,8 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
         <span class="pls__num">03</span>
         <h3 class="pls__card-title">Karaoke, built in.</h3>
         <p class="pls__card-body">
-          Synced lyrics light up line by line, colour-pulled from the cover
-          art. Sing along without leaving the page.
+          Synced lyrics light up line by line, colour-pulled from the cover art.
+          Sing along without leaving the page.
         </p>
         <div class="pls__karaoke" aria-hidden="true">
           {karaokeLines.map((line, i) => (
@@ -119,17 +118,15 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
       </article>
     </div>
 
-    <!-- Reverted footer strip layout — original structure & spacing -->
-    <div class="pls__stream reveal-on-scroll">
-      <div class="pls__stream-copy">
-        <p class="pls__stream-tag">One toggle</p>
-        <p class="pls__stream-line">
-          Push what&rsquo;s playing straight to your
-          <strong> Streammaxxing vinyl overlay</strong> &mdash; live
-          now-playing on stream, no extra software.
+    <div class="pls__trust reveal-on-scroll">
+      <div class="pls__trust-copy">
+        <p class="pls__trust-tag">No account. No sign-up.</p>
+        <p class="pls__trust-line">
+          <strong>Your songs save to your device.</strong> Use Copy code and Paste
+          code to transfer them between devices, including your phone&rsquo;s browser.
         </p>
       </div>
-      <a class="pls__stream-cta" href={appUrl} target="_blank" rel="noopener">
+      <a class="pls__trust-cta" href={appUrl} target="_blank" rel="noopener">
         Open Playlistmaxxing
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h14M13 5l7 7-7 7" />
@@ -409,14 +406,12 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     40%, 100% { color: var(--color-subtle); opacity: 0.45; text-shadow: none; }
   }
 
-  /* ── Stream push strip ────────────────────────────────────── */
-  .pls__stream {
+  /* ── Local-first library callout ─────────────────────────── */
+  .pls__trust {
     margin-top: 44px;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    align-items: flex-start;
     padding: 22px 26px;
     border-radius: 18px;
     border: 1px solid color-mix(in srgb, var(--accent-2) 30%, var(--color-line-strong));
@@ -424,7 +419,7 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
       linear-gradient(120deg, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 60%),
       var(--color-bg-card);
   }
-  .pls__stream-tag {
+  .pls__trust-tag {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.16em;
@@ -432,33 +427,39 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     color: var(--accent-2);
     margin: 0 0 6px;
   }
-  .pls__stream-line {
+  .pls__trust-line {
     margin: 0;
     color: var(--color-text-mid);
     font-size: 15px;
     line-height: 1.5;
-    max-width: 62ch;
+    max-width: 78ch;
   }
-  .pls__stream-line strong { color: var(--color-text); font-weight: 600; }
-  .pls__stream-cta {
+  .pls__trust-line strong { color: var(--color-text); font-weight: 650; }
+  .pls__trust-copy { flex: 1 1 520px; min-width: 0; }
+  .pls__trust-cta {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    white-space: nowrap;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 11px 20px;
+    flex: 0 0 auto;
+    align-self: center;
+    margin: 0 0 0 24px;
+    padding: 11px 17px;
     border-radius: 999px;
-    color: #ffffff;
-    background: linear-gradient(135deg, var(--accent-2), #a855f7 50%, var(--accent));
-    box-shadow: 0 8px 26px color-mix(in srgb, var(--accent-2) 35%, transparent);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.16);
-    transition: transform 160ms ease, box-shadow 160ms ease;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent-2), #a855f7 50%, var(--accent));
+    box-shadow: 0 10px 26px color-mix(in srgb, var(--accent-2) 34%, transparent);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    white-space: nowrap;
+    transition: transform 180ms ease, box-shadow 180ms ease;
   }
-  .pls__stream-cta:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 32px color-mix(in srgb, var(--accent-2) 45%, transparent);
+  .pls__trust-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px color-mix(in srgb, var(--accent-2) 42%, transparent);
   }
 
   /* Note: Audio showcase animations (equalizer, karaoke lyrics lighting) continue
@@ -476,5 +477,6 @@ const eqBars = [42, 68, 30, 84, 54, 72, 38, 90, 48, 64, 34, 78];
     .pls__sub { font-size: 15px; }
     .pls__platforms { margin-top: 20px; }
     .pls__pillars { margin-top: 44px; }
+    .pls__trust-cta { width: 100%; margin: 16px 0 0; }
   }
 </style>

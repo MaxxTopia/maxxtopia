@@ -60,7 +60,8 @@ export type Product = {
   heroStat?: { value: string; label: string; inline?: boolean };
   primaryCta: { label: string; href: string; external?: boolean };
   secondaryCta?: { label: string; href: string; external?: boolean; note?: string };
-  /** Optional third download, rendered as a subtle link + note under the buttons. */
+  /** Optional third download, rendered as a subtle link + note under the buttons.
+   *  Used for opt-in add-ons most users don't need (e.g. the YouTube companion). */
   tertiaryCta?: { label: string; href: string; external?: boolean; note?: string };
   /** Optional companion surface promoted on the product page. */
   mobileCompanion?: { installerUrl: string; mobileUrl: string };
@@ -1270,7 +1271,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Download for Windows', href: installerUrlFor('snipemaxxer'), external: true },
     secondaryCta: { label: 'Get launch updates', href: waitlistUrl('snipemaxxer'), external: true },
     mobileCompanion: {
-      installerUrl: 'https://dl.maxxtopia.com/maxxtopia-companion/Maxxtopia-Companion-Setup-0.1.9.exe',
+      installerUrl: 'https://dl.maxxtopia.com/maxxtopia-companion/Maxxtopia-Companion-Setup-0.1.5.exe',
       mobileUrl: 'https://mobile.maxxtopia.com/',
     },
     glyph: '⌖',
@@ -1292,35 +1293,35 @@ export const products: Product[] = [
     name: 'Playlistmaxxing',
     category: 'Music',
     status: 'live',
-    tagline: 'Every platform. One playlist.',
+    tagline: 'Every platform. One music library.',
     description:
-      'Your music is scattered — some songs only on SoundCloud, some only on YouTube, some on Spotify. Playlistmaxxing puts them all on one page. Paste a link, it plays. No account. Nothing to install.',
+      'A browser music library for Spotify, SoundCloud and YouTube. Paste tracks or playlists, discover new music, and keep it all in one place.',
     longDescription:
-      'One page for the music you actually listen to — Spotify, SoundCloud and YouTube, side by side. Paste a track or a whole playlist and it plays in place. No login, no install, saved on your device.',
+      'Bring Spotify, SoundCloud and YouTube into one browser library. Paste tracks or whole playlists, discover music from your own library, and manage it with search, playlists, shuffle, lyrics and a pop-out player. No account or install; Copy code and Paste code move your library to another device.',
     features: [
       {
-        title: 'Paste anything. It plays.',
-        body: 'A single track — or a whole playlist, album or set — from Spotify, SoundCloud or YouTube. It detects the platform and drops in a real, playable card.',
+        title: 'Three sources. One library.',
+        body: 'Keep Spotify, SoundCloud and YouTube together. Search, sort, shuffle and build playlists without switching tabs.',
       },
       {
-        title: 'Nothing to log into.',
-        body: 'No account, no install, no server. Runs in your browser, saves on your device. SoundCloud and YouTube play full and free; Spotify plays full when you\'re signed in.',
+        title: 'Paste what you already use.',
+        body: 'Add a track, playlist, album or set. Spotify imports look for full-song matches, and anything unresolved stays visible so you can fix it.',
       },
       {
-        title: 'A record that follows you.',
-        body: 'Pop out a floating vinyl mini-player that stays on top while you\'re on other tabs. Spin, skip, done. Spotify-style pop-out — your look.',
+        title: 'Discover from your own taste.',
+        body: 'Get recommendations from artists already in your library. Preview, hide or mute what you do not want, then add what fits.',
       },
       {
-        title: 'Karaoke, built in.',
-        body: 'Synced lyrics that light up line by line, colour-pulled from the cover art. Sing along without leaving the page.',
+        title: 'Keep playback within reach.',
+        body: 'Pop out a floating vinyl player, scrub, pause, skip and adjust volume while you browse other tabs.',
       },
       {
-        title: 'Put it on your stream.',
-        body: 'One toggle pushes what\'s playing to your Streammaxxing vinyl overlay — live now-playing on stream, no extra software.',
+        title: 'Lyrics that move with the song.',
+        body: 'Synced lyrics advance line by line and pull colors from the cover art, all in the same window.',
       },
       {
-        title: 'Yours, everywhere.',
-        body: 'Search, reorder, tag into playlists, export or share your whole library as a link. Open it on your phone — same link, same music.',
+        title: 'No account or lock-in.',
+        body: 'Your library stays on this device. Copy code, Paste code or Export a file when you want to move or back it up.',
       },
     ],
     stats: [
@@ -1339,88 +1340,101 @@ export const products: Product[] = [
     heroStat: { value: '3-in-1', label: 'Spotify · SoundCloud · YouTube' },
     zones: [
       {
-        eyebrow: '01 · The Stack',
-        headline: "Three services. One page.",
-        body: 'Some songs only live on SoundCloud. Some only on YouTube. Some only on Spotify. Playlistmaxxing puts all three side by side, so the music you actually listen to finally shares one home instead of four tabs.',
+        eyebrow: '01 · The Library',
+        headline: 'Three sources. One library.',
+        body: 'Keep Spotify, SoundCloud and YouTube together. Search, sort, shuffle and build playlists without switching tabs.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Spotify', value: 'one page', emphasize: true },
-            { label: 'SoundCloud', value: 'one page', emphasize: true },
-            { label: 'YouTube', value: 'one page', emphasize: true },
+            { label: 'Spotify', value: 'One page', emphasize: true },
+            { label: 'SoundCloud', value: 'One page', emphasize: true },
+            { label: 'YouTube', value: 'One page', emphasize: true },
           ],
-          caption: 'Three platforms, side by side · one turning page',
+          caption: 'Three platforms, side by side · one turning page.',
         },
       },
       {
         eyebrow: '02 · The Paste',
-        headline: "Paste a link. It plays.",
-        body: 'A single track, or a whole playlist, album or set. Drop the link and it detects the platform and drops in a real, playable card that plays right in place. No copy-paste dance, no reformatting.',
+        headline: 'Paste a link. Keep the song.',
+        body: 'Paste a track, playlist, album or set. Playlistmaxxing finds a playable source; if a Spotify song needs help, it stays in Transfer issues with its original link and a fix path.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Track link', value: 'plays in place', emphasize: true },
-            { label: 'Playlist / album / set', value: 'plays in place', emphasize: true },
-            { label: 'Platform detection', value: 'automatic' },
+            { label: 'Paste it in', value: 'Track, playlist, album or set', emphasize: true },
+            { label: 'Match the song', value: 'Find a full-song source', emphasize: true },
+            { label: 'Fix what needs help', value: 'Nothing disappears', emphasize: true },
           ],
-          caption: 'Paste it in · a playable card appears',
+          caption: 'Paste it in · playable when matched · fix it when not.',
         },
       },
       {
-        eyebrow: '03 · The Login',
-        headline: "Nothing to log into.",
-        body: 'No account, no install, no server. It runs in your browser and saves on your device. SoundCloud and YouTube play full and free; Spotify plays full when you\'re signed in.',
+        eyebrow: '03 · The Discover',
+        headline: 'Discover music from your library.',
+        body: 'Use artists already in your library as seeds. Preview a recommendation, hide a song, mute an artist or add what you want to keep.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Accounts needed', value: '0', emphasize: true },
-            { label: 'To install', value: 'Nothing', emphasize: true },
-            { label: 'Saved', value: 'On your device' },
-            { label: 'Cost', value: 'Free' },
+            { label: 'Start with your artists', value: 'Recommendations use your library', emphasize: true },
+            { label: 'Preview a pick', value: 'Add it if it fits', emphasize: true },
+            { label: 'Control the mix', value: 'Hide a song or mute an artist', emphasize: true },
           ],
-          caption: 'Runs in the browser · saved locally · nothing to sign up for',
+          caption: 'Your taste is the starting point.',
         },
       },
       {
         eyebrow: '04 · The Mini-Player',
-        headline: "A record that follows you.",
-        body: 'Pop out a floating vinyl mini-player that stays on top while you move across other tabs. Spin, skip, done. A Spotify-style pop-out, in your look, that never leaves your sight.',
+        headline: 'Keep playback within reach.',
+        body: 'Pop out a floating vinyl player that stays visible while you browse other tabs. Scrub, pause, skip and adjust volume without losing your place.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Floating vinyl pop-out', value: 'stays on top', emphasize: true },
-            { label: 'Across other tabs', value: 'always visible' },
-            { label: 'Spin · skip · done', value: 'one glance' },
+            { label: 'Pop-out player', value: 'Stays visible while you browse', emphasize: true },
+            { label: 'Scrub + skip', value: 'Find the exact moment', emphasize: true },
+            { label: 'Volume + now playing', value: 'Keep playback in reach', emphasize: true },
           ],
-          caption: 'The now-playing disc pops out and rides along on top',
+          caption: 'Your music stays with you.',
         },
       },
       {
         eyebrow: '05 · The Lyrics',
-        headline: "Karaoke, built in.",
-        body: 'Synced lyrics light up line by line, colour-pulled from the cover art. Sing along without leaving the page or opening a second site.',
+        headline: 'Lyrics that move with the song.',
+        body: 'Synced lyrics advance line by line and pull colors from the cover art, so the words stay with the music in the same window.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Synced lyrics', value: 'line by line', emphasize: true },
-            { label: 'Colour', value: 'pulled from the cover art' },
-            { label: 'Second site', value: 'not needed' },
+            { label: 'Synced lines', value: 'Follow along as the song plays', emphasize: true },
+            { label: 'Artwork palette', value: 'Colors pulled from the cover', emphasize: true },
+            { label: 'Karaoke mode', value: 'Sing without leaving the page', emphasize: true },
           ],
-          caption: 'Lyrics that light up in time · coloured by the artwork',
+          caption: 'Music and words in the same view.',
         },
       },
       {
-        eyebrow: '06 · The Stream',
-        headline: "One toggle to your overlay.",
-        body: 'Flip one switch and what\'s playing pushes straight to your Streammaxxing vinyl overlay - live now-playing on stream, no extra software. Search, reorder, tag and share your whole library as a link; open it on your phone and it\'s the same music.',
+        eyebrow: '06 · The Controls',
+        headline: 'Run the library your way.',
+        body: 'Create and rename playlists, reorder songs, search, shuffle, find duplicates, clear the library and fix songs that get stuck.',
         visual: {
           kind: 'chips',
           chips: [
-            { label: 'Now-playing to Streammaxxing overlay', value: 'one toggle', emphasize: true },
-            { label: 'Share your library', value: 'as a link' },
-            { label: 'On your phone', value: 'same link, same music' },
+            { label: 'Build playlists', value: 'Create, rename and reorder', emphasize: true },
+            { label: 'Keep it clean', value: 'Search, shuffle and find duplicates', emphasize: true },
+            { label: 'Repair playback', value: 'Fix stuck songs or clear all', emphasize: true },
           ],
-          caption: 'One switch pushes now-playing on stream · library travels as a link',
+          caption: 'Useful controls, not clutter.',
+        },
+      },
+      {
+        eyebrow: '07 · No Account',
+        headline: 'Your library goes with you.',
+        body: 'No login or sign-up. Your library stays saved on this device; Copy code and Paste code move it to another device, including your phone, while Export keeps a file backup.',
+        visual: {
+          kind: 'chips',
+          chips: [
+            { label: 'No account', value: 'Start using it immediately', emphasize: true },
+            { label: 'Copy + Paste code', value: 'Move it to your phone or another device', emphasize: true },
+            { label: 'Export file', value: 'Keep your own backup', emphasize: true },
+          ],
+          caption: 'Your library stays yours.',
         },
       },
     ],
