@@ -252,3 +252,12 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
 - User-owed test: review the hero at desktop and mobile widths and confirm the two-color emphasis feels intentional rather than too busy.
 - Best next move: if approved, request an explicit push-live step; otherwise keep any follow-up to a small, scoped visual adjustment.
+
+## Aimmaxxer hero accent and V2 CTA signal pass - 2026-10-29
+
+- Scope: use Diggy's preferred red `aim` treatment, make `needs.` a more visible green, and give the top `Get Aimmaxxer V2` button a distinctive but restrained signal effect.
+- Changed `src/components/AimDiagnosticHero.astro`: set the headline `aim` to the logo red, strengthened `needs.` to `#39d66e`, and added a persistent red halo, soft ambient pulse, and text-only glow to the top V2 CTA only. The CTA label and direct `#aimmaxerv2` Discord destination are unchanged. Reduced-motion and animation-suppressed environments still receive the visible static treatment.
+- Verification: `git diff --check` passed; `npm run build` passed release truth for 10 products, sitemap validation for 18 Astro routes plus `/play/spritecannon/`, and the complete 28-page Astro build. Local browser AX/screenshot review confirmed the red/green headline, paired actions, cyan diagnostic target, and the V2 link's accessible label/destination. Computed-style review confirmed the persistent halo/text glow under reduced motion and no diagonal beam remains.
+- Release state: local isolated worktree only; not committed, pushed, or deployed. Diggy has now explicitly authorized pushing this version live. The canonical dirty checkout remains untouched.
+- User-owed test: after deployment, compare the live top CTA effect at `https://maxxtopia.com/aimmaxxer/?release=score-loop` and confirm the treatment is visible without a stripe.
+- Best next move: commit only this scoped Aimmaxxer/continuity change, push safely to `main`, watch the deploy workflow, then verify the live route.
