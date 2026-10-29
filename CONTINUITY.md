@@ -62,6 +62,29 @@
   production release is still the baseline. Diggy approval is required before
   pushing `main` and triggering the normal Cloudflare Pages workflow.
 
+## Standings cumulative and stream-overlay release - 2026-10-29
+
+- Diggy authorized publication of commit `4c96240`. The focused commit was
+  pushed from the isolated checkout to `origin/main`; the canonical dirty
+  checkout remained untouched.
+- GitHub Actions deployment run `40867329401` completed successfully. It ran
+  the repository build and deployed the Cloudflare Pages project `maxxtopia`.
+  The only annotations were the existing Node 20 action-transition and Ubuntu
+  26 runner notices; they did not fail the release.
+- Production verification passed on 2026-10-29. The normal standings URL and
+  the overlay URL returned HTTP 200 and rendered the new cumulative-availability
+  card, foldable board metadata, provider-ranked snapshot, and live `$253,500`
+  prize pool for the selected FNCS Solo Final EU Day 2 board.
+- The deployed overlay rendered only the selected top-ten snapshot, showed
+  `Auto-updating · next check 90s`, hid discovery/stage/metadata clutter, and
+  kept the full-board return link. The browser console error check was empty.
+- Release state: the source is deployed and browser-verified live. The public
+  provider currently exposes Day 1 and Day 2 but no authoritative cumulative
+  board, so the UI correctly marks cumulative standings as not published
+  instead of adding partial snapshots. The next useful user-owned check is to
+  try the live cumulative explanation and overlay URL during a real stream
+  layout.
+
 ## Standings command center production release - 2026-10-29
 
 - Diggy authorized the normal Pages release after the local review. Focused
