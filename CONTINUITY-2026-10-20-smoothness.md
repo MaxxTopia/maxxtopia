@@ -143,3 +143,12 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
 - User-owed test: reload the preview, run the full 28-second diagnostic with a real mouse, confirm the tracking prompt feels clear without holding left click, and check that a balanced result reads naturally and shows board rows like `#1 SCORE 3,505`.
 - Best next move: review this local interaction and request a separate explicit push-live step only after the wording and instructions feel right.
+
+## Aimmaxxer calibration guide visibility - 2026-10-29
+
+- Scope: keep the How to play guidance visible on the main diagnostic surface after the user enters the in-page diagnostic, before the calibration click.
+- Changed `src/components/AimDiagnosticHero.astro`: added a compact calibration-only guide inside the arena with plain-language Flick, Track (no click or hold), Switch, and center-target start instructions. It hides during the timed run and resets on exit; mobile positioning keeps the center calibration target unobstructed. The original main-page guide remains in the left copy.
+- Verification: `git diff --check` and `npm run build` passed; local browser verified the idle main-page guide, the calibration panel before start, and the panel hiding when the run began / reset on exit.
+- Release state: local isolated worktree only; not committed, pushed, or deployed. Canonical dirty checkout untouched.
+- User-owed test: review the local preview and confirm the pre-start panel reads naturally before the center target.
+- Best next move: if the wording and placement feel right in Diggy's local test, request explicit push-live approval; do not publish automatically.
