@@ -254,25 +254,27 @@ const { product } = Astro.props;
   .aim-diagnostic.is-immersive .aim-diag__grid{display:block;width:100%;margin:auto}
   .aim-diagnostic.is-immersive .aim-diag__machine{width:min(1180px,100%);margin:auto}
 
-  /* Aimmaxxer's visual language is a red-lit evidence lab: a quiet target
-     ring in the page chrome, then a physical-looking measurement console. */
+  /* Aimmaxxer's visual language is a red-lit evidence lab: angled scan lanes,
+     hard measurement edges, then a physical-looking console. */
   .aim-diagnostic {
     background:
-      radial-gradient(42% 68% at 88% 50%, rgba(209, 24, 32, .2), transparent 72%),
-      radial-gradient(34% 52% at 10% 8%, rgba(255, 75, 62, .12), transparent 74%),
+      linear-gradient(118deg, transparent 0 27%, rgba(255, 75, 62, .075) 27.2% 27.8%, transparent 28.1%),
+      linear-gradient(158deg, transparent 0 57%, rgba(209, 24, 32, .09) 57.2% 57.8%, transparent 58.2%),
       linear-gradient(125deg, #070102 0%, #180406 53%, #060102 100%);
   }
   .aim-diagnostic::after {
     content: '';
     position: absolute;
-    top: 18%;
-    right: -16%;
-    width: min(900px, 66vw);
-    aspect-ratio: 1;
-    border: 1px solid rgba(255, 75, 62, .1);
-    border-radius: 50%;
-    box-shadow: 0 0 0 34px rgba(255, 75, 62, .025), 0 0 0 72px rgba(209, 24, 32, .018);
-    transform: rotate(-18deg);
+    top: 12%;
+    right: -10%;
+    width: min(980px, 72vw);
+    height: 42%;
+    border-top: 1px solid rgba(255, 75, 62, .11);
+    border-bottom: 1px solid rgba(255, 75, 62, .06);
+    background:
+      repeating-linear-gradient(90deg, transparent 0 52px, rgba(255, 75, 62, .04) 53px 54px),
+      linear-gradient(142deg, transparent 0 23%, rgba(255, 75, 62, .095) 23.5% 24%, transparent 24.6%);
+    clip-path: polygon(15% 0, 100% 0, 82% 100%, 0 100%);
     pointer-events: none;
   }
   .aim-diag__shell { max-width: 1440px; }

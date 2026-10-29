@@ -203,3 +203,13 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not committed, pushed, or deployed. The canonical dirty checkout remains untouched.
 - User-owed test: review the local page at desktop and narrow widths, then request an explicit push-live step if approved.
 - Best next move: commit this scoped visual pass after review; do not deploy automatically.
+
+## Aimmaxxer visual motif refinement - 2026-10-29
+
+- Scope: remove the decorative target-circle treatment after Diggy said it felt generic; preserve functional diagnostic target and range guides plus the existing V2 CTA contract.
+- Changed `src/components/AimDiagnosticHero.astro`: replaced the page-level hero ring and radial washes with angled scan lanes and a clipped evidence-plane grid.
+- Changed `src/components/AimWarmup.astro`: replaced the routine-deck ring and card-corner circles with diagonal scan planes, angular corner brackets, and diamond map markers. Bottom V2 teaser copy, `#e11d2b` accent, CTA text, and direct channel link are unchanged.
+- Verification: `git diff --check` passed; `npm run build` passed release truth, sitemap validation, and the complete 28-page Astro/Vite build. Local browser review confirmed the page-level and card-level decorative rings are gone while the diagnostic target/range guides remain available inside the exercise.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical checkout remains untouched.
+- User-owed test: review the refreshed preview at desktop and narrow widths; functional target/range circles remain intentionally inside the diagnostic.
+- Best next move: commit this scoped motif refinement after visual QA; do not deploy automatically.

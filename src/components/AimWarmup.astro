@@ -465,8 +465,8 @@ const skates = [
   .aim-warmup {
     overflow: hidden;
     background:
-      radial-gradient(44% 22% at 82% 8%, color-mix(in srgb, var(--aim-accent) 13%, transparent), transparent 72%),
-      radial-gradient(34% 24% at 8% 45%, color-mix(in srgb, var(--aim-track) 7%, transparent), transparent 74%),
+      linear-gradient(116deg, transparent 0 18%, color-mix(in srgb, var(--aim-accent) 9%, transparent) 18.3% 18.8%, transparent 19.2%),
+      linear-gradient(154deg, transparent 0 62%, color-mix(in srgb, var(--aim-track) 7%, transparent) 62.2% 62.8%, transparent 63.2%),
       linear-gradient(180deg, #0a0103 0%, color-mix(in srgb, var(--color-bg) 94%, var(--aim-accent)) 22%, var(--color-bg) 66%);
   }
   .aim-warmup::before {
@@ -484,14 +484,16 @@ const skates = [
   .aim-warmup::after {
     content: '';
     position: absolute;
-    top: 18%;
-    right: -18%;
-    width: min(760px, 72vw);
-    aspect-ratio: 1;
-    border: 1px solid color-mix(in srgb, var(--aim-accent) 11%, transparent);
-    border-radius: 50%;
-    box-shadow: 0 0 0 34px color-mix(in srgb, var(--aim-accent) 3%, transparent), 0 0 0 70px color-mix(in srgb, var(--aim-accent) 2%, transparent);
-    transform: rotate(-18deg);
+    top: 10%;
+    right: -12%;
+    width: min(840px, 74vw);
+    height: 40%;
+    border-top: 1px solid color-mix(in srgb, var(--aim-accent) 13%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--aim-accent) 6%, transparent);
+    background:
+      repeating-linear-gradient(90deg, transparent 0 48px, color-mix(in srgb, var(--aim-accent) 5%, transparent) 49px 50px),
+      linear-gradient(142deg, transparent 0 22%, color-mix(in srgb, var(--aim-accent) 11%, transparent) 22.5% 23%, transparent 23.6%);
+    clip-path: polygon(14% 0, 100% 0, 84% 100%, 0 100%);
     pointer-events: none;
   }
   .aim-warmup__inner { position: relative; z-index: 1; max-width: 1200px; }
@@ -576,7 +578,7 @@ const skates = [
     width: 7px;
     height: 7px;
     border: 1px solid var(--aim-map-color);
-    border-radius: 50%;
+    transform: rotate(45deg);
     box-shadow: 0 0 9px color-mix(in srgb, var(--aim-map-color) 50%, transparent);
   }
   .aim-warmup__map-item strong {
@@ -617,13 +619,14 @@ const skates = [
   .aim-warmup__card::before {
     content: '';
     position: absolute;
-    top: -72px;
-    right: -62px;
-    width: 170px;
-    height: 170px;
-    border: 1px solid color-mix(in srgb, var(--aim-card-accent) 18%, transparent);
-    border-radius: 50%;
-    box-shadow: 0 0 0 18px color-mix(in srgb, var(--aim-card-accent) 3%, transparent);
+    top: 0;
+    right: 0;
+    width: 86px;
+    height: 58px;
+    border-top: 1px solid color-mix(in srgb, var(--aim-card-accent) 25%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--aim-card-accent) 18%, transparent);
+    background: linear-gradient(135deg, transparent 0 48%, color-mix(in srgb, var(--aim-card-accent) 8%, transparent) 49% 50%, transparent 51%);
+    clip-path: polygon(34% 0, 100% 0, 100% 100%, 90% 100%, 90% 15%, 0 15%, 0 0);
     pointer-events: none;
   }
   .aim-warmup__card > * { position: relative; z-index: 1; }
