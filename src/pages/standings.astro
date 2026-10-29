@@ -648,9 +648,24 @@ const standingsApi = '/api';
             <div>
               <p class="sp-section-label">Start here</p>
               <h3 id="sp-discovery-title">The live event desk</h3>
-              <p class="sp-discovery-copy">Current rounds are shown first, then what starts next and what just finished. Select a card to load its latest provider snapshot.</p>
+              <p class="sp-discovery-copy">Current rounds are shown first, then what starts next and what just finished. Use the region filter to see a specific competitive circuit across all three lists.</p>
             </div>
-            <span class="sp-discovery-count" id="sp-discovery-count">Loading rounds…</span>
+            <div class="sp-discovery-tools">
+              <label class="sp-discovery-filter" for="sp-region">
+                <span>Event desk region</span>
+                <select id="sp-region" aria-label="Filter live, upcoming, and recently completed tournaments by region">
+                  <option value="ALL">All regions</option>
+                  <option value="NAC">NA Central (NAC)</option>
+                  <option value="NAW">NA West (NAW)</option>
+                  <option value="EU">Europe (EU)</option>
+                  <option value="BR">Brazil (BR)</option>
+                  <option value="ASIA">Asia (ASIA)</option>
+                  <option value="OCE">Oceania (OCE)</option>
+                  <option value="ME">Middle East (ME)</option>
+                </select>
+              </label>
+              <span class="sp-discovery-count" id="sp-discovery-count">Loading rounds…</span>
+            </div>
           </div>
           <div class="sp-discovery-lane sp-discovery-lane--live">
             <div class="sp-discovery-lane-heading"><span>Live now</span><span>Follow the action</span></div>
@@ -683,19 +698,6 @@ const standingsApi = '/api';
           </summary>
           <div class="sp-board-details-body">
             <div class="sp-controls">
-              <label class="sp-control">
-                <span>Tournament region</span>
-                <select id="sp-region">
-                  <option value="ALL">All regions</option>
-                  <option value="NAC">NA Central (NAC)</option>
-                  <option value="NAW">NA West (NAW)</option>
-                  <option value="EU">Europe (EU)</option>
-                  <option value="BR">Brazil (BR)</option>
-                  <option value="ASIA">Asia (ASIA)</option>
-                  <option value="OCE">Oceania (OCE)</option>
-                  <option value="ME">Middle East (ME)</option>
-                </select>
-              </label>
               <div class="sp-control sp-control--wide sp-window-picker">
                 <label for="sp-window-search">Search bar</label>
                 <div class="sp-search-wrap">
@@ -1325,7 +1327,10 @@ const standingsApi = '/api';
     const live = sortRounds(state.windows.filter(isLive)).slice(0, 6);
     const upcoming = sortRounds(state.windows.filter(isUpcoming)).slice(0, 6);
     const recent = sortRounds(state.windows.filter(isRecent)).reverse().slice(0, 6);
-    $('sp-discovery-count').textContent = live.length ? `${live.length} live now` : 'No live round in this region';
+    const discoveryScope = state.region === 'ALL' ? 'all regions' : regionLabel(state.region);
+    $('sp-discovery-count').textContent = live.length
+      ? `${live.length} live now · ${discoveryScope}`
+      : state.region === 'ALL' ? 'No live round right now' : `No live round in ${discoveryScope}`;
 
     if (live.length) {
       live.forEach((item) => liveList.append(makeTournamentCard(item, 'live')));
@@ -3156,6 +3161,43 @@ const standingsApi = '/api';
     font: 600 12px var(--font-sans);
   }
 
+  .standings-page .sp-discovery-tools {
+    display: flex;
+    align-items: end;
+    justify-content: flex-end;
+    gap: 12px;
+    flex: none;
+  }
+
+  .standings-page .sp-discovery-filter {
+    display: grid;
+    gap: 6px;
+    min-width: 220px;
+    color: #b8c8d8;
+    font: 700 11px/1.2 var(--font-sans);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .standings-page .sp-discovery-filter select {
+    width: 100%;
+    min-height: 43px;
+    padding: 0 38px 0 13px;
+    border: 1px solid rgba(107,220,255,.38);
+    border-radius: 8px;
+    color: #f3f8ff;
+    background: #0a1424;
+    font: 600 14px/1.2 var(--font-sans);
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: 0 0 0 1px rgba(107,220,255,.05), inset 0 1px rgba(255,255,255,.08);
+  }
+
+  .standings-page .sp-discovery-filter select:hover {
+    border-color: rgba(107,220,255,.72);
+    background: #0c1c31;
+  }
+
   .standings-page .sp-live-grid,
   .standings-page .sp-upcoming-grid {
     display: grid;
@@ -3284,7 +3326,7 @@ const standingsApi = '/api';
   .standings-page .sp-controls {
     position: relative;
     z-index: 5;
-    grid-template-columns: minmax(170px, .8fr) minmax(300px, 1.8fr) minmax(190px, .9fr);
+    grid-template-columns: minmax(300px, 1.8fr) minmax(190px, .9fr);
     align-items: start;
     padding-top: 20px;
   }
@@ -3348,6 +3390,7 @@ const standingsApi = '/api';
   }
 
   .standings-page .sp-control select:focus-visible,
+  .standings-page .sp-discovery-filter select:focus-visible,
   .standings-page .sp-search-wrap input:focus-visible,
   .standings-page .sp-search-clear:focus-visible {
     border-color: #6bdcff;
@@ -3690,13 +3733,8 @@ const standingsApi = '/api';
       grid-row: 1;
     }
 
-    .standings-page .sp-control:first-child {
-      grid-column: 1;
-      grid-row: 2;
-    }
-
     .standings-page .sp-control--view {
-      grid-column: 2;
+      grid-column: 1 / -1;
       grid-row: 2;
     }
   }
@@ -3715,6 +3753,20 @@ const standingsApi = '/api';
       flex-direction: column;
     }
 
+    .standings-page .sp-discovery-tools {
+      width: 100%;
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .standings-page .sp-discovery-filter {
+      min-width: 0;
+    }
+
+    .standings-page .sp-discovery-count {
+      align-self: flex-start;
+    }
+
     .standings-page .sp-live-grid,
     .standings-page .sp-upcoming-grid {
       grid-template-columns: 1fr;
@@ -3725,7 +3777,6 @@ const standingsApi = '/api';
     }
 
     .standings-page .sp-window-picker,
-    .standings-page .sp-control:first-child,
     .standings-page .sp-control--view {
       grid-column: auto;
       grid-row: auto;
