@@ -1073,3 +1073,29 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - No commit, push, or Pages deployment was made. The source checkout remains
   dirty with unrelated work preserved. Verify the local route, then publish
   only after Diggy approves the final CTA wording.
+
+## MontageMaxxer controls preview published -- 2026-10-29
+
+- Diggy approved publication of the focused preview release. The changes were
+  committed as `aff99ca` on top of remote `main` `2166428`, pushed to
+  `origin/main`, and deployed by Pages workflow `40897524419`. The deploy
+  completed successfully; Wrangler reported deployment
+  `https://10e246a4.maxxtopia.pages.dev`.
+- The public `/montagemaxxer/preview/` route is read-only and keeps the four
+  real editor screenshots. Both former live-editor CTAs now download the free
+  Windows beta from `dl.maxxtopia.com`; the page explains that clips stay on
+  the user's own PC. The landing-page `See the controls` CTA resolves to the
+  preview route.
+- Production verification passed with GET requests: the preview and landing
+  routes returned 200; the preview contained two download CTAs and download
+  URLs, one `Read the controls` link, the local-PC privacy copy, and zero
+  `Open the live beta editor` labels. All four screenshot assets returned 200
+  as `image/png` from `maxxtopia.com`.
+- Local and CI verification passed: release-truth and sitemap checks,
+  `astro build` for 30 pages, and `git diff --check`. GitHub Actions emitted
+  only the existing Node.js 20 and ubuntu-latest migration warnings; the
+  deployment itself succeeded.
+- Remaining gate: Diggy's visual acceptance of the live route and a normal
+  download/install test of the Windows beta. Do not restore a public link to
+  the machine-backed editor unless its access boundary is intentionally
+  changed.
