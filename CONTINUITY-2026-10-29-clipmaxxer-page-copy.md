@@ -129,3 +129,13 @@ Refined the hero `IN BETA` / `APPLY NOW` control after visual review so its stat
 
 - Production is unchanged; no commit, push, or deploy was made for this polish pass.
 - The local preview is open for Diggy's approval or another design iteration. If approved, stage only the scoped page and continuity-note changes, then ask before publishing.
+
+## 2026-10-29 Clipmaxxer badge polish published
+
+- Diggy authorized the normal Pages release after reviewing the local preview.
+- Focused source commit `77ff436` was pushed from the isolated release worktree to `origin/main`; the canonical dirty checkout remained untouched.
+- GitHub Actions deploy run `40969034081` completed successfully. It ran `npm ci`, `npm run build`, and deployed the Cloudflare Pages project `maxxtopia`.
+- Production verification passed: `https://maxxtopia.com/` and `https://maxxtopia.com/clipmaxxer/?release=77ff436` returned HTTP 200 with HSTS, CSP, and `nosniff` headers.
+- The live Clipmaxxer HTML contains the approved-examples heading, approved roster names, and the new beta badge classes; `HIGHLIGHT DETECTED` is absent.
+- The live browser view confirmed the split dark-status / gradient-action beta control. The available in-app browser was desktop-sized, so no mobile viewport claim is made here.
+- The production release is complete. Best next move: Diggy can review the public page and call out any final copy, roster, or color preference.
