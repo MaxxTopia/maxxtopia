@@ -24,13 +24,14 @@ every rotating example is a verified detection.
 
 - Worktree: `E:\CodexTemp\maxxtopia-clipmaxxer-live-20261029`.
 - Branch: `codex/clipmaxxer-live-20261029`.
-- The source changes are not pushed or deployed yet.
-- The previously published Clipmaxxer page remains the live public version.
+- Commit `65977b4` is pushed to `origin/main` and the GitHub Actions
+  Cloudflare Pages deploy completed successfully as run `40975299749`.
+- The public route returned 200 and a cache-busted response contained
+  `APPROVED PROS + STREAMERS`, `SAMPLE OUTPUT`, `Open Clipmaxxer`, and
+  `IN BETA`.
 
 ## Remaining gate and next action
 
-Review and commit only the Clipmaxxer source change plus this continuity note.
-The user has now explicitly authorized publishing. Push the isolated branch to
-the repository's `main` ref through the documented Maxxtopia Pages workflow,
-then verify the public route and the app entry separately. Mobile visual proof
-and a real authenticated browser flow remain separate acceptance checks.
+The public source and deployment are complete. Keep the separate acceptance
+boundaries explicit: mobile visual proof and a real authenticated browser flow
+remain outstanding; same-session app health is not reboot/logon proof.
