@@ -1,0 +1,548 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const downloadUrl = 'https://dl.maxxtopia.com/montagemaxxer/MontageMaxxer-Local-Windows-v3.zip?v=2026-10-20';
+const pageTitle = 'MontageMaxxer controls preview — See the real editor';
+const pageDescription =
+  'See the actual MontageMaxxer beta editor: clip preview, title and outro controls, exact song picks, and the working timeline.';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://maxxtopia.com/' },
+    { '@type': 'ListItem', position: 2, name: 'MontageMaxxer', item: 'https://maxxtopia.com/montagemaxxer/' },
+    { '@type': 'ListItem', position: 3, name: 'Controls preview', item: 'https://maxxtopia.com/montagemaxxer/preview/' },
+  ],
+};
+
+const captures = [
+  {
+    number: '02',
+    label: 'Titles + outro',
+    title: 'Place the words where the cut needs them.',
+    description:
+      'The Text panel keeps the outro message, social shout-out, animated intro title, placement, and edit controls in the same workspace as the video preview.',
+    image: '/screenshots/montagemaxxer/editor-text-controls.png',
+    alt: 'Actual MontageMaxxer beta editor showing the Text controls for outro and intro titles.',
+  },
+  {
+    number: '03',
+    label: 'Exact song',
+    title: 'Choose the track, then hear that track.',
+    description:
+      'The Audio panel shows the song picks and their preview buttons. The selected track is part of the montage setup instead of a promise made only in the marketing copy.',
+    image: '/screenshots/montagemaxxer/editor-audio-controls.png',
+    alt: 'Actual MontageMaxxer beta editor showing song picks and preview controls.',
+  },
+  {
+    number: '04',
+    label: 'Timeline + mix',
+    title: 'Shape the pacing in the timeline.',
+    description:
+      'The working timeline shows the active clips, beat snap, auto-arrange, re-fit, and track controls. This is where the montage stops being a preset and becomes your cut.',
+    image: '/screenshots/montagemaxxer/editor-timeline.png',
+    alt: 'Actual MontageMaxxer beta editor showing the timeline, active clips, beat snap, and arrangement controls.',
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} hideQuote>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <div class="mmx-preview-page">
+    <section class="mmx-preview-hero" aria-labelledby="preview-title">
+      <div class="mmx-preview-wrap">
+        <a href="/montagemaxxer/" class="mmx-preview-back">&larr; MontageMaxxer</a>
+
+        <div class="mmx-preview-hero-grid">
+          <div class="mmx-preview-copy">
+            <p class="mmx-preview-eyebrow"><span></span> MontageMaxxer &middot; actual beta capture</p>
+            <h1 id="preview-title">See the real controls.<br /><em>Then use them.</em></h1>
+            <p class="mmx-preview-lead">
+              These are captures from the working MontageMaxxer editor — not a concept screen. See where the clips,
+              title tools, song choices, and timeline decisions actually live before you download the beta.
+            </p>
+            <div class="mmx-preview-actions">
+              <a href={downloadUrl} class="mmx-preview-button mmx-preview-button--primary" target="_blank" rel="noreferrer">
+                Download the free Windows beta <span>&darr;</span>
+              </a>
+              <a href="/montagemaxxer/#controls" class="mmx-preview-button mmx-preview-button--ghost">Read the controls</a>
+            </div>
+            <p class="mmx-preview-note">This preview stays read-only. The download gives you a local Windows editor where your clips stay on your own PC.</p>
+          </div>
+
+          <div class="mmx-preview-index" aria-label="Preview contents">
+            <span class="mmx-preview-index__tag">CONTROL PREVIEW / 01</span>
+            <strong>Four views.<br /><em>One real workflow.</em></strong>
+            <p>Load the footage. Place the title. Pick the song. Shape the timeline. Then render on your own Windows PC.</p>
+            <div class="mmx-preview-index__rule" aria-hidden="true"></div>
+            <span class="mmx-preview-index__meta">CURRENT BETA / READ-ONLY CAPTURES</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <section class="mmx-preview-section mmx-preview-section--overview" aria-labelledby="overview-title">
+        <div class="mmx-preview-wrap">
+          <div class="mmx-preview-section-heading">
+            <div>
+              <p class="mmx-preview-tag">01 &middot; Start here</p>
+              <h2 id="overview-title">The actual editor,<br /><em>in the actual workflow.</em></h2>
+            </div>
+            <p>
+              The first view shows the product doing its job: your media and layers on the left, a real clip preview in
+              the middle, and the build controls on the right. Nothing here is a decorative stand-in for the app.
+            </p>
+          </div>
+
+          <figure class="mmx-proof mmx-proof--overview">
+            <div class="mmx-proof-media">
+              <img
+                src="/screenshots/montagemaxxer/editor-overview.png"
+                width="1265"
+                height="712"
+                loading="eager"
+                decoding="async"
+                alt="Actual MontageMaxxer beta editor showing media and layers, a Fortnite clip preview, and build controls."
+              />
+            </div>
+            <figcaption class="mmx-proof-caption">
+              <div class="mmx-proof-caption__number">01</div>
+              <div>
+                <p class="mmx-proof-caption__label">EDITOR OVERVIEW / ACTUAL BETA</p>
+                <h3>Load, preview, build.</h3>
+                <p>Start from the footage you already have. The editor keeps the clip preview and the montage workflow visible together.</p>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="mmx-preview-section mmx-preview-section--details" aria-labelledby="details-title">
+        <div class="mmx-preview-wrap">
+          <div class="mmx-preview-section-heading mmx-preview-section-heading--details">
+            <div>
+              <p class="mmx-preview-tag">02 &middot; The controls</p>
+              <h2 id="details-title">The decisions<br /><em>stay yours.</em></h2>
+            </div>
+            <p>Each frame below is a different real state of the editor. The labels explain what to look for without pretending the website itself is the app.</p>
+          </div>
+
+          <div class="mmx-capture-grid">
+            {captures.map((capture) => (
+              <figure class="mmx-proof mmx-proof--detail">
+                <div class="mmx-proof-media">
+                  <img src={capture.image} width="1265" height="712" loading="lazy" decoding="async" alt={capture.alt} />
+                </div>
+                <figcaption class="mmx-detail-caption">
+                  <div class="mmx-detail-caption__top"><span>{capture.number}</span><b>{capture.label}</b></div>
+                  <h3>{capture.title}</h3>
+                  <p>{capture.description}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="mmx-preview-cta" aria-labelledby="cta-title">
+        <div class="mmx-preview-wrap mmx-preview-cta__inner">
+          <div>
+            <p class="mmx-preview-tag">03 &middot; Try the real thing</p>
+            <h2 id="cta-title">Ready to move<br /><em>the title yourself?</em></h2>
+          </div>
+          <div class="mmx-preview-cta__copy">
+            <p>Download the beta when you are ready to work locally and render the final cut on your own PC. Your clips stay on that Windows machine by default.</p>
+            <div class="mmx-preview-actions">
+              <a href={downloadUrl} class="mmx-preview-button mmx-preview-button--primary" target="_blank" rel="noreferrer">Download the free Windows beta <span>&darr;</span></a>
+              <a href="/montagemaxxer/" class="mmx-preview-button mmx-preview-button--ghost">Back to MontageMaxxer</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .mmx-preview-page {
+    --preview-bg: #08090e;
+    --preview-panel: #11151d;
+    --preview-panel-soft: #171c24;
+    --preview-ink: #f4efe5;
+    --preview-muted: #9ca3af;
+    --preview-cyan: #27d9c3;
+    --preview-orange: #ff8a3d;
+    --preview-paper: #f1e8d4;
+    min-height: 100vh;
+    overflow: hidden;
+    color: var(--preview-ink);
+    background: var(--preview-bg);
+  }
+
+  .mmx-preview-wrap {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+  }
+
+  .mmx-preview-back {
+    display: inline-flex;
+    margin-bottom: 70px;
+    color: var(--preview-muted);
+    font: 500 12px var(--font-mono);
+    letter-spacing: .04em;
+    text-decoration: none;
+  }
+
+  .mmx-preview-back:hover { color: var(--preview-cyan); }
+
+  .mmx-preview-hero {
+    padding: 72px 0 118px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+
+  .mmx-preview-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(260px, .62fr);
+    gap: 80px;
+    align-items: end;
+  }
+
+  .mmx-preview-eyebrow,
+  .mmx-preview-tag,
+  .mmx-preview-index__tag,
+  .mmx-preview-index__meta,
+  .mmx-proof-caption__label,
+  .mmx-detail-caption__top {
+    font: 600 11px/1.2 var(--font-mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .mmx-preview-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 22px;
+    color: var(--preview-cyan);
+  }
+
+  .mmx-preview-eyebrow span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--preview-cyan);
+    box-shadow: 0 0 14px rgba(39,217,195,.7);
+  }
+
+  .mmx-preview-copy h1,
+  .mmx-preview-section h2,
+  .mmx-preview-cta h2 {
+    margin: 0;
+    font: 400 clamp(60px, 8.2vw, 126px)/.82 var(--font-display);
+    letter-spacing: -.025em;
+    text-transform: uppercase;
+  }
+
+  .mmx-preview-copy h1 em,
+  .mmx-preview-section h2 em,
+  .mmx-preview-cta h2 em {
+    color: var(--preview-orange);
+    font-style: normal;
+  }
+
+  .mmx-preview-lead {
+    max-width: 600px;
+    margin: 34px 0 0;
+    color: #c1c6cf;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .mmx-preview-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .mmx-preview-button {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 18px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font: 600 12px var(--font-mono);
+    text-decoration: none;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
+  }
+
+  .mmx-preview-button:hover { transform: translateY(-2px); }
+
+  .mmx-preview-button:focus-visible,
+  .mmx-preview-back:focus-visible {
+    outline: 3px solid var(--preview-orange);
+    outline-offset: 4px;
+  }
+
+  .mmx-preview-button--primary {
+    color: #071211;
+    background: var(--preview-cyan);
+    box-shadow: 0 12px 32px rgba(39,217,195,.2);
+  }
+
+  .mmx-preview-button--primary:hover { background: #55e5d4; }
+
+  .mmx-preview-button--ghost {
+    color: var(--preview-ink);
+    border-color: rgba(255,255,255,.18);
+    background: rgba(255,255,255,.035);
+  }
+
+  .mmx-preview-button--ghost:hover {
+    border-color: rgba(255,138,61,.65);
+    background: rgba(255,138,61,.08);
+  }
+
+  .mmx-preview-note {
+    max-width: 650px;
+    margin: 20px 0 0;
+    color: #747d8b;
+    font: 11px/1.6 var(--font-mono);
+  }
+
+  .mmx-preview-index {
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: var(--preview-panel);
+    box-shadow: 14px 14px 0 rgba(255,138,61,.16);
+  }
+
+  .mmx-preview-index__tag,
+  .mmx-preview-index__meta { color: var(--preview-cyan); }
+
+  .mmx-preview-index strong {
+    display: block;
+    margin-top: 76px;
+    color: var(--preview-ink);
+    font: 400 clamp(34px, 4.5vw, 62px)/.88 var(--font-display);
+    text-transform: uppercase;
+  }
+
+  .mmx-preview-index strong em {
+    color: var(--preview-orange);
+    font-style: normal;
+  }
+
+  .mmx-preview-index p {
+    max-width: 30ch;
+    margin: 26px 0 0;
+    color: var(--preview-muted);
+    line-height: 1.6;
+  }
+
+  .mmx-preview-index__rule {
+    width: 100%;
+    height: 1px;
+    margin: 30px 0 17px;
+    background: rgba(255,255,255,.16);
+  }
+
+  .mmx-preview-index__meta {
+    color: #77818e;
+    font-size: 9px;
+  }
+
+  .mmx-preview-section { padding: 120px 0; }
+
+  .mmx-preview-section--overview { background: var(--preview-paper); color: #161713; }
+
+  .mmx-preview-section--overview .mmx-preview-tag,
+  .mmx-preview-section--overview .mmx-preview-section-heading > p { color: #57564e; }
+
+  .mmx-preview-section--overview h2 em { color: #d94336; }
+
+  .mmx-preview-section-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(260px, .6fr);
+    gap: 70px;
+    align-items: end;
+    margin-bottom: 54px;
+  }
+
+  .mmx-preview-section-heading > p {
+    max-width: 38ch;
+    margin: 0 0 4px;
+    color: #aeb4bd;
+    line-height: 1.65;
+  }
+
+  .mmx-preview-section-heading--details { margin-bottom: 62px; }
+
+  .mmx-preview-tag { margin: 0 0 23px; color: var(--preview-cyan); }
+
+  .mmx-preview-section--details { background: var(--preview-bg); }
+
+  .mmx-proof { margin: 0; }
+
+  .mmx-proof-media {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,.22);
+    background: #0c1016;
+  }
+
+  .mmx-preview-section--details .mmx-proof-media { border-color: rgba(255,255,255,.16); }
+
+  .mmx-proof-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .mmx-proof-caption {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 21px;
+    margin-top: 0;
+    padding: 23px 25px 26px;
+    border: 1px solid rgba(0,0,0,.22);
+    border-top: 0;
+    background: #e8dcc2;
+  }
+
+  .mmx-proof-caption__number {
+    color: #d94336;
+    font: 800 14px var(--font-mono);
+  }
+
+  .mmx-proof-caption__label { margin: 0 0 9px; color: #656054; font-size: 9px; }
+
+  .mmx-proof-caption h3,
+  .mmx-detail-caption h3 {
+    margin: 0;
+    font: 400 clamp(27px, 3vw, 42px)/.92 var(--font-display);
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+  }
+
+  .mmx-proof-caption p:last-child {
+    max-width: 54ch;
+    margin: 12px 0 0;
+    color: #4f4d45;
+    line-height: 1.55;
+  }
+
+  .mmx-capture-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .mmx-proof--detail { min-width: 0; }
+
+  .mmx-detail-caption {
+    min-height: 235px;
+    padding: 20px 20px 23px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-top: 0;
+    background: var(--preview-panel-soft);
+  }
+
+  .mmx-detail-caption__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 26px;
+    color: var(--preview-cyan);
+    font-size: 9px;
+  }
+
+  .mmx-detail-caption__top b { color: #77818e; font-weight: 500; text-align: right; }
+
+  .mmx-detail-caption h3 { color: var(--preview-ink); font-size: clamp(28px, 3vw, 38px); }
+
+  .mmx-detail-caption p {
+    margin: 16px 0 0;
+    color: #aeb4bd;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .mmx-preview-cta {
+    padding: 100px 0 130px;
+    color: #161713;
+    background: var(--preview-orange);
+  }
+
+  .mmx-preview-cta__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .55fr);
+    gap: 80px;
+    align-items: end;
+  }
+
+  .mmx-preview-cta h2 em { color: var(--preview-paper); }
+
+  .mmx-preview-cta .mmx-preview-tag { color: #392018; }
+
+  .mmx-preview-cta__copy > p {
+    margin: 0;
+    color: #4b2519;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .mmx-preview-cta .mmx-preview-button--primary {
+    color: var(--preview-paper);
+    background: #161713;
+    box-shadow: none;
+  }
+
+  .mmx-preview-cta .mmx-preview-button--primary:hover { background: #303129; }
+
+  .mmx-preview-cta .mmx-preview-button--ghost {
+    color: #161713;
+    border-color: rgba(22,23,19,.4);
+    background: transparent;
+  }
+
+  .mmx-preview-cta .mmx-preview-button--ghost:hover { border-color: #161713; background: rgba(22,23,19,.08); }
+
+  @media (max-width: 980px) {
+    .mmx-preview-hero-grid,
+    .mmx-preview-section-heading,
+    .mmx-preview-cta__inner { grid-template-columns: 1fr; gap: 35px; }
+
+    .mmx-preview-index { max-width: 600px; }
+    .mmx-preview-index strong { margin-top: 45px; }
+    .mmx-capture-grid { grid-template-columns: 1fr; gap: 32px; }
+    .mmx-detail-caption { min-height: 0; }
+  }
+
+  @media (max-width: 700px) {
+    .mmx-preview-wrap { width: min(100% - 32px, 620px); }
+    .mmx-preview-hero { padding: 42px 0 80px; }
+    .mmx-preview-back { margin-bottom: 52px; }
+    .mmx-preview-copy h1,
+    .mmx-preview-section h2,
+    .mmx-preview-cta h2 { font-size: clamp(52px, 16vw, 86px); }
+    .mmx-preview-lead { margin-top: 27px; font-size: 15px; }
+    .mmx-preview-section { padding: 78px 0; }
+    .mmx-preview-section-heading { margin-bottom: 36px; }
+    .mmx-preview-section-heading--details { margin-bottom: 42px; }
+    .mmx-proof-caption { grid-template-columns: 34px minmax(0, 1fr); gap: 13px; padding: 18px; }
+    .mmx-preview-cta { padding: 78px 0 90px; }
+    .mmx-preview-cta__inner { gap: 30px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mmx-preview-button { transition: none; }
+    .mmx-preview-button:hover { transform: none; }
+  }
+</style>

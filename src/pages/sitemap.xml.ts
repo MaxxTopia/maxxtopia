@@ -26,6 +26,7 @@ export const GET: APIRoute = () => {
     { loc: `${SITE}/discordmaxxer/vip/`, priority: '0.7', changefreq: 'monthly' },
     { loc: `${SITE}/clipmaxxer/apply/`,  priority: '0.6', changefreq: 'monthly' },
     { loc: `${SITE}/montagemaxxer/`,      priority: '0.7', changefreq: 'monthly' },
+    { loc: `${SITE}/montagemaxxer/preview/`, priority: '0.6', changefreq: 'monthly' },
     { loc: `${SITE}/montagemaxxer/apply/`, priority: '0.6', changefreq: 'monthly' },
     { loc: `${SITE}/standings/`, priority: '0.7', changefreq: 'weekly' },
     // Legal pages are public and indexable, so their inclusion is intentional.

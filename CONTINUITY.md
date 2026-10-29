@@ -1035,3 +1035,41 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   than the cap or cannot prove pagination/identity completeness, the UI must
   retain its explicit partial/unavailable state rather than inventing a full
   field or cumulative result.
+
+## MontageMaxxer truthful controls preview -- 2026-10-29 (local, not published)
+
+- Replaced the retired marketing-page editor mockup with a dedicated
+  `/montagemaxxer/preview/` route. The hero `See the controls` CTA now lands
+  there, while the preserved `#controls` section remains the canonical
+  `01 · The controls` copy the user approved.
+- The new preview uses four captures from the real public MontageMaxxer beta
+  editor for the overview, title/outro controls, audio controls, and timeline
+  states. It does not draw fake controls or imply that the marketing page is
+  the editor. It links directly to the beta workspace for the interactive
+  experience and explains that the page itself is read-only.
+- Added the four image assets under
+  `public/screenshots/montagemaxxer/`, added the route to
+  `src/pages/sitemap.xml.ts`, removed the deleted mockup markup and CSS, and
+  removed the unused orbit/noise background rules from the landing page.
+- Verification completed locally: `npm run build` passed (30 Astro pages,
+  release-truth and sitemap checks included), `git diff --check` passed, the
+  local preview route rendered with its expected headings, links, and four
+  image assets, and the local landing-page AX tree confirms the CTA resolves
+  to `/montagemaxxer/preview/`.
+- Production remains the previous release `4d44408` with Pages workflow
+  `40890620283` and Worker deployment `414ad807-cf6d-4cb6-a3be-bf2f254d7ef1`.
+  No commit, push, or deploy was made for this correction. The next action is
+  Diggy's visual acceptance of the local route; publish only after approval.
+
+## MontageMaxxer preview CTA privacy correction -- 2026-10-29 (local, not published)
+
+- Replaced both `Open the live beta editor` links on
+  `/montagemaxxer/preview/` with the existing direct download CTA for the free
+  Windows beta. The public preview no longer points visitors at the private
+  machine-backed editor or its sign-in prompt.
+- Kept the read-only controls preview and its `Read the controls` navigation.
+  Updated the supporting copy so users understand that the downloaded editor
+  runs locally and keeps clips on their Windows PC by default.
+- No commit, push, or Pages deployment was made. The source checkout remains
+  dirty with unrelated work preserved. Verify the local route, then publish
+  only after Diggy approves the final CTA wording.
