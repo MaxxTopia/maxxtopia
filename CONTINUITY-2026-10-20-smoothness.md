@@ -171,3 +171,11 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Changed `src/components/AimWarmup.astro`: restored the bottom CTA label to `Join the Discord for V2`; it still links directly to the verified `#aimmaxerv2` channel. The separate primary product CTA remains `Get Aimmaxxer V2`.
 - Verification: source diff checked; the local build should be rerun before any release.
 - Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+
+## Aimmaxxer V2 teaser copy restoration - 2026-10-29
+
+- Scope: restore the original V1/V2 positioning above the bottom CTA after Diggy identified that an earlier redesign had changed it.
+- Changed `src/components/AimWarmup.astro`: restored `What's coming`, `Aimmaxxer v2. The real deal.`, and the original explanation that real training happens in the lab, the routines above are V1, and V2 is for AI-guided drilling. Kept the existing `Join the Discord for V2` label and the direct `#aimmaxerv2` destination.
+- Evidence: the exact copy was recovered from the repository's earlier `2fe442f`/`32af5c2` history rather than reconstructed from memory.
+- Verification: source diff checked; build should be rerun before release.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
