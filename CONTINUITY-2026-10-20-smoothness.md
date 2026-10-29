@@ -152,3 +152,15 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not committed, pushed, or deployed. Canonical dirty checkout untouched.
 - User-owed test: review the local preview and confirm the pre-start panel reads naturally before the center target.
 - Best next move: if the wording and placement feel right in Diggy's local test, request explicit push-live approval; do not publish automatically.
+
+## Aimmaxxer V2 channel CTA and arena reticle - 2026-10-29
+
+- Scope: replace the generic Aimmaxxer launch-waitlist CTA with a direct handoff to the verified Discord Aimmaxxer V2 channel, and make the browser diagnostic feel closer to an in-game reticle.
+- Changed `src/data/products.ts`: added the canonical deep link `https://discord.com/channels/794160379767947264/1549976907901309028`; the Aimmaxxer primary CTA now says `Get Aimmaxxer V2`.
+- Changed `src/components/AimWarmup.astro`: the lower V2 teaser now says `Open #aimmaxerv2` and uses the same channel deep link.
+- Changed `src/components/AimDiagnosticHero.astro`: the custom crosshair follows pointer movement inside calibration/running, the native cursor is hidden only while the active arena is live, the crosshair disappears when the pointer leaves, and normal cursor/focus behavior is restored on Exit/Escape. Tracking instructions now describe the crosshair and explicitly say no click or hold.
+- Channel evidence: a read-only Discord API check returned HTTP 200 for text channel `🎯aimmaxerv2` in guild `794160379767947264`; no Discord state was changed.
+- Verification: `git diff --check`, `npm run build`, local built-HTML checks for both CTA labels and the deep link, and browser interaction checks for calibration/running reticle behavior plus Escape cursor restoration.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+- User-owed test: open the V2 CTA while signed into Discord and confirm it lands in `🎯aimmaxerv2`; test with a member who lacks channel access or while signed out so the onboarding fallback is clear. Run one full diagnostic with the crosshair and confirm it feels useful rather than distracting.
+- Best next move: request explicit push-live approval if the CTA and reticle behavior feel right. If public visitors need guaranteed onboarding, add a visible server-invite fallback alongside the direct channel link.

@@ -1,5 +1,10 @@
 import { installerUrlFor, releaseRegistry } from './release-registry';
 
+// Direct deep link to the live Aimmaxxer V2 Discord channel. Visitors who are
+// not in the server or do not have channel access still need the server invite.
+export const AIMMAXXER_V2_CHANNEL_URL =
+  'https://discord.com/channels/794160379767947264/1549976907901309028';
+
 // Per-product waitlist: one Discord-OAuth click and the Maxx bot DMs the user
 // the moment that product ships. Handled by the vip-worker (waitlist:* keys in
 // VIP_CLAIMS); see optimizationmaxxing/vip-worker/worker.js.
@@ -623,7 +628,7 @@ export const products: Product[] = [
     ],
     primaryCta: releaseRegistry.aimmaxxer.installerUrl
         ? { label: 'Download for Windows', href: releaseRegistry.aimmaxxer.installerUrl, external: true }
-        : { label: 'Get notified on launch', href: waitlistUrl('aimmaxxer'), external: true },
+        : { label: 'Get Aimmaxxer V2', href: AIMMAXXER_V2_CHANNEL_URL, external: true },
     secondaryCta: releaseRegistry.aimmaxxer.releasePageUrl
         ? { label: 'Release notes', href: releaseRegistry.aimmaxxer.releasePageUrl, external: true }
         : undefined,
