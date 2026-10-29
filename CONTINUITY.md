@@ -33,6 +33,35 @@
   browser verification after deployment. Best next move: review this local
   preview, then authorize the normal Pages release if the UI is accepted.
 
+## Standings cumulative and stream-overlay clarity pass - 2026-10-29
+
+- Added a provider-safe cumulative affordance for multi-stage events. The UI
+  renders a real cumulative board only when the provider supplies explicit
+  cumulative/overall metadata. When the catalog exposes separate days but no
+  combined board, it shows a clearly marked `NOT PUBLISHED` card with an
+  explanation; it never adds partial day snapshots together.
+- Made the board details and `Why snapshot?` trust note foldable so the page
+  opens on the standings instead of a wall of metadata. The details summary
+  still exposes the selected day, round, region, board size, and update time.
+- Stream overlay URLs now retain the selected event and window while removing
+  player/search filters, so the overlay is a clean top snapshot. Overlay mode
+  keeps its provider auto-refresh status and next-check indicator, and the
+  normal page explains that cumulative/full-field views appear only when
+  published by the provider.
+- Local verification passed after the final source edit: `npm run build`,
+  `npm run test:standings-search` (6/6), `npm run test:standings-pagination`
+  (3/3), `git diff --check`, local desktop browser review, cumulative-
+  unavailable explanation click, and expanded board-details review. The local
+  overlay route was verified separately after fixing the root overlay CSS
+  selectors: discovery, stage navigation, and board metadata are hidden while
+  the selected provider snapshot, 10 rows, and auto-refresh status remain.
+  Production overlay behavior remains unverified until release.
+- Release state: these source changes are built and locally reviewed but not
+  committed, pushed, or deployed. The canonical dirty checkout remains
+  untouched, `.wrangler/` remains untracked and unstaged, and the existing
+  production release is still the baseline. Diggy approval is required before
+  pushing `main` and triggering the normal Cloudflare Pages workflow.
+
 ## Standings command center production release - 2026-10-29
 
 - Diggy authorized the normal Pages release after the local review. Focused
