@@ -22,14 +22,13 @@ const APPLY_HREF = '/clipmaxxer/apply/';
 const DASHBOARD_HREF = 'https://app.maxxtopia.com/';
 
 // Sample readout lines for the hero "YOU ENDED …" ticker. Illustrative only —
-// invented gamertags, tagged "sample" in the UI so it never reads as a real
-// endorsement. They demonstrate the named-opponent capability without leaking
-// where the name comes from.
+// use role labels instead of fabricated player handles so the UI never implies
+// a real endorsement or a real match result.
 const readouts = [
-  { tag: 'ZACKEY2X', badge: 'TWITCH', weapon: 'Phantom', clutch: '1v3 retake', t: '3h24m39s', delta: '+1' },
-  { tag: 'n0va_flick', badge: 'PRO', weapon: 'Frenzy AR', clutch: 'box fight', t: '58m02s', delta: '+1' },
-  { tag: 'APEXWOLF', badge: 'ORG', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
-  { tag: 'stormEQ', badge: 'LIVE', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '1h39m12s', delta: '+1' },
+  { tag: 'LIVE STREAMER', badge: 'TWITCH', weapon: 'Phantom', clutch: '1v3 retake', t: '3h24m39s', delta: '+1' },
+  { tag: 'PRO PLAYER', badge: 'PRO', weapon: 'Frenzy AR', clutch: 'box fight', t: '58m02s', delta: '+1' },
+  { tag: 'ORG PLAYER', badge: 'ORG', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
+  { tag: 'NAMED OPPONENT', badge: 'MATCHED', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '1h39m12s', delta: '+1' },
 ];
 
 // SEO — lead with the real search intent (nobody googles the coined word),
@@ -82,6 +81,13 @@ const reels = [
       <div class="cx-wrap">
         <a href="/#apps" class="cx-back">&larr; All products</a>
 
+        <a href={APPLY_HREF} class="cx-beta-pill" aria-label="Clipmaxxer is in beta. Apply now.">
+          <span class="cx-beta-pill__dot" aria-hidden="true"></span>
+          <span>IN BETA</span>
+          <span class="cx-beta-pill__sep" aria-hidden="true">&middot;</span>
+          <span class="cx-beta-pill__action">APPLY NOW &rarr;</span>
+        </a>
+
         <p class="cx-eyebrow">Done-for-you clipping &middot; Fortnite &amp; Valorant</p>
 
         <h1 class="cx-kinetic" aria-label="Stream. We clip. You blow up.">
@@ -95,14 +101,14 @@ const reels = [
         <div class="cx-readout" aria-hidden="true">
           <div class="cx-readout__bar">
             <span class="cx-dot"></span>
-            <span class="cx-readout__title">HIGHLIGHT DETECTED</span>
-            <span class="cx-readout__sample">sample</span>
+            <span class="cx-readout__title">REAL PROS + TWITCH STREAMERS</span>
+            <span class="cx-readout__sample">role sample</span>
           </div>
           <div class="cx-readout__body">
             <span class="cx-readout__verb">YOU ENDED</span>
             <span class="cx-readout__tag">
               <b class="cx-readout__badge" id="cxBadge">TWITCH</b>
-              <b class="cx-readout__name" id="cxName">ZACKEY2X</b><i class="cx-caret" id="cxCaret">_</i>
+              <b class="cx-readout__name" id="cxName">LIVE STREAMER</b><i class="cx-caret" id="cxCaret">_</i>
             </span>
             <span class="cx-readout__meta">
               <em id="cxWeapon">Phantom</em>
@@ -180,17 +186,17 @@ const reels = [
         <ul class="cx-board">
           <li class="cx-row cx-row--gold" style="--i:0">
             <span class="cx-row__rank">01</span>
-            <span class="cx-row__who"><b>ZACKEY2X</b><i>TWITCH · live</i></span>
+            <span class="cx-row__who"><b>LIVE STREAMER</b><i>TWITCH · live</i></span>
             <span class="cx-row__meta">Phantom · 1v3 retake</span>
           </li>
           <li class="cx-row" style="--i:1">
             <span class="cx-row__rank">02</span>
-            <span class="cx-row__who"><b>n0va_flick</b><i>PRO</i></span>
+            <span class="cx-row__who"><b>PRO PLAYER</b><i>PRO</i></span>
             <span class="cx-row__meta">Frenzy · box fight</span>
           </li>
           <li class="cx-row" style="--i:2">
             <span class="cx-row__rank">03</span>
-            <span class="cx-row__who"><b>APEXWOLF</b><i>ORG</i></span>
+            <span class="cx-row__who"><b>ORG PLAYER</b><i>ORG</i></span>
             <span class="cx-row__meta">Operator · clean flick</span>
           </li>
           <li class="cx-row cx-row--dim" style="--i:3">
@@ -302,6 +308,8 @@ const reels = [
       --cx-lime: #c6ff2e;
       --cx-cyan: #17e0ff;
       --cx-grad: linear-gradient(100deg, var(--cx-mag) 0%, var(--cx-lime) 52%, var(--cx-cyan) 100%);
+      --cx-action-grad: linear-gradient(102deg, var(--cx-mag) 0%, #ff7a6e 44%, var(--cx-lime) 100%);
+      --cx-proof-grad: linear-gradient(102deg, var(--cx-cyan) 0%, var(--cx-lime) 68%, var(--cx-text) 100%);
       position: relative;
       background: var(--cx-ink);
       color: var(--cx-text);
@@ -357,6 +365,26 @@ const reels = [
     }
     .cx-back:hover { color: var(--cx-text); }
 
+    .cx-beta-pill {
+      display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+      margin: 0 0 20px; padding: 8px 12px;
+      border: 1px solid rgba(198,255,46,0.38); border-radius: 999px;
+      background: rgba(198,255,46,0.08); color: var(--cx-text);
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em;
+      line-height: 1; text-transform: uppercase;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+    .cx-beta-pill:hover {
+      border-color: var(--cx-lime); background: rgba(198,255,46,0.14);
+      transform: translateY(-1px);
+    }
+    .cx-beta-pill__dot {
+      width: 7px; height: 7px; border-radius: 999px; background: var(--cx-lime);
+      box-shadow: 0 0 10px rgba(198,255,46,0.72);
+    }
+    .cx-beta-pill__sep { color: var(--cx-muted); }
+    .cx-beta-pill__action { color: var(--cx-lime); }
+
     .cx-eyebrow {
       font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.24em;
       text-transform: uppercase; color: var(--cx-cyan); margin: 0 0 18px;
@@ -380,7 +408,7 @@ const reels = [
     }
     .cx-line-1 > span { color: var(--cx-text); }
     .cx-line-2 > span {
-      background: var(--cx-grad);
+      background: var(--cx-action-grad);
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent; color: transparent;
     }
@@ -412,7 +440,11 @@ const reels = [
       padding: 2px 7px; border-radius: 999px;
     }
     .cx-readout__body { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 9px; }
-    .cx-readout__verb { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; color: var(--cx-muted); }
+    .cx-readout__verb {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
+      color: var(--cx-cyan); font-weight: 600;
+      text-shadow: 0 0 12px rgba(23,224,255,0.24);
+    }
     .cx-readout__tag { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .cx-readout__badge {
       font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em; font-weight: 600;
@@ -421,7 +453,7 @@ const reels = [
     .cx-readout__name {
       font-family: var(--font-display); font-weight: 400; letter-spacing: 0.02em;
       font-size: clamp(30px, 6vw, 46px); line-height: 1;
-      background: var(--cx-grad); -webkit-background-clip: text; background-clip: text;
+      background: var(--cx-proof-grad); -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent; color: transparent;
     }
     .cx-caret { font-style: normal; color: var(--cx-lime); font-size: clamp(26px,5vw,40px); animation: cx-blink 1s steps(1) infinite; margin-left: -4px; }
@@ -651,10 +683,10 @@ const reels = [
 
       // ── Hero readout cycler: type a named-opponent line, hold, wipe, next ──
       const readouts = [
-        { tag: 'ZACKEY2X', badge: 'TWITCH', weapon: 'Phantom', clutch: '1v3 retake', t: '3h24m39s', delta: '+1' },
-        { tag: 'n0va_flick', badge: 'PRO', weapon: 'Frenzy AR', clutch: 'box fight', t: '58m02s', delta: '+1' },
-        { tag: 'APEXWOLF', badge: 'ORG', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
-        { tag: 'stormEQ', badge: 'LIVE', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '1h39m12s', delta: '+1' },
+        { tag: 'LIVE STREAMER', badge: 'TWITCH', weapon: 'Phantom', clutch: '1v3 retake', t: '3h24m39s', delta: '+1' },
+        { tag: 'PRO PLAYER', badge: 'PRO', weapon: 'Frenzy AR', clutch: 'box fight', t: '58m02s', delta: '+1' },
+        { tag: 'ORG PLAYER', badge: 'ORG', weapon: 'Operator', clutch: 'clean flick', t: '2h11m47s', delta: '+1' },
+        { tag: 'NAMED OPPONENT', badge: 'MATCHED', weapon: 'Pump Shotgun', clutch: 'endgame 1v1', t: '1h39m12s', delta: '+1' },
       ];
       const el = {
         badge: document.getElementById('cxBadge'),
