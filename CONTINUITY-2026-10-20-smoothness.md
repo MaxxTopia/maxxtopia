@@ -233,3 +233,13 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not pushed or deployed. Canonical checkout untouched.
 - User-owed test: review the local hero actions and run the diagnostic if desired; confirm the blood-red primary and dark-red V2 treatment feel right.
 - Best next move: if approved, request explicit push-live approval and follow the documented ship sequence.
+
+## Aimmaxxer warmup simplification and palette pass - 2026-10-29
+
+- Scope: make the Aimmaxxer routine library feel closer to the earlier, simpler reference while keeping the diagnostic and V2 CTA behavior intact.
+- Changed `src/components/AimDiagnosticHero.astro`: changed the diagnostic target and its functional calibration glow to cyan-blue, and changed the hero `needs.` accent to green. Timing, scoring, cursor/crosshair behavior, and recommendation logic are unchanged.
+- Changed `src/components/AimWarmup.astro`: replaced the warmup heading and paragraph with Diggy's `Your aim warmup. Per game.` copy; removed the extra `What the read measures` map, `WHEN TO USE` framing, routine metadata pills, and decorative card/map CSS; simplified game and skill cards back to game, skill tag, description, run name, share code, and copy; and reduced the import guide to a clean three-step strip. The bottom V2 teaser copy, colors, and direct `#aimmaxerv2` destination remain unchanged.
+- Verification: `git diff --check` passed; `npm run build` passed release truth for 10 products, sitemap validation for 18 Astro routes plus `/play/spritecannon/`, and the complete 28-page Astro build. Local preview returned HTTP 200 with the new copy and no removed map/WHEN-TO-USE text. Fresh browser AX/screenshot review confirmed the cyan target, green `needs.`, simplified six-card library, and three-step import guide.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+- User-owed test: review the local page at `http://127.0.0.1:4321/aimmaxxer?release=score-loop`, especially the warmup cards/import guide and the diagnostic target color, at desktop and narrow widths.
+- Best next move: if the simpler presentation is approved, request an explicit push-live step and follow the documented ship sequence; otherwise make another scoped visual adjustment before release.

@@ -17,27 +17,16 @@ import { AIMMAXXER_V2_CHANNEL_URL } from '../data/products';
  */
 type Props = { accentHex: string };
 const { accentHex } = Astro.props;
-const warmupAccent = accentHex.toLowerCase() === '#d11820' ? '#f3af19' : accentHex;
+const warmupAccent = accentHex.toLowerCase() === '#d11820' ? '#68d391' : accentHex;
 
 const fmtSubs = (n: number): string =>
   n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(n);
 
 type Routine = { name: string; code: string; subs: number };
-type RoutineStyle = 'Clicking' | 'Tracking' | 'Mixed' | 'Switching';
-
-const routineMeta: Record<RoutineStyle, { duration: string; difficulty: string; skill: string }> = {
-  Clicking: { duration: '10 min', difficulty: 'Precision', skill: 'Click control' },
-  Tracking: { duration: '10 min', difficulty: 'Steady', skill: 'Target contact' },
-  Mixed: { duration: '10 min', difficulty: 'Balanced', skill: 'Flick + transfer' },
-  Switching: { duration: '10 min', difficulty: 'Demanding', skill: 'Target acquisition' },
-};
-
-const routineMetaFor = (style: RoutineStyle) => routineMeta[style];
 
 type Game = {
   game: string;
   style: 'Clicking' | 'Tracking' | 'Mixed';
-  bestFor: string;
   why: string;
   routine: Routine;
 };
@@ -47,42 +36,36 @@ const games: Game[] = [
   {
     game: 'Fortnite',
     style: 'Mixed',
-    bestFor: 'Shotgun flicks + close target transfers',
     why: 'Box-fight shotgun flicks, 180s, and air tracking.',
     routine: { name: 'COLD SHOTGUN GOD', code: 'KovaaKsPullingChestnutMap', subs: 70 },
   },
   {
     game: 'Valorant',
     style: 'Clicking',
-    bestFor: 'First-shot accuracy + clean stops',
     why: 'One-taps, micro-adjust, crosshair placement.',
     routine: { name: 'Shah · RADIANT Warm Up', code: 'KovaaKsBuyingStaticInitiator', subs: 522 },
   },
   {
     game: 'CS2',
     style: 'Clicking',
-    bestFor: 'Static precision + wide-peek control',
     why: 'Static precision and wide peek flicks.',
     routine: { name: 'm0narcS · TacFPS Euphoria', code: 'KovaaKsBouncingFedSuper', subs: 1474 },
   },
   {
     game: 'Apex Legends',
     style: 'Tracking',
-    bestFor: 'Beam control + movement tracking',
     why: 'Hold the beam — long and mid-air tracking.',
     routine: { name: 'higheuphoria · air', code: 'KovaaKsBloomingFastPerk', subs: 191 },
   },
   {
     game: 'Overwatch 2',
     style: 'Tracking',
-    bestFor: 'Close hitscan + fast direction changes',
     why: 'Close hitscan tracking and flanker duels.',
     routine: { name: 'higheuphoria · control', code: 'KovaaKsBlinkingFastAce', subs: 228 },
   },
   {
     game: 'Call of Duty',
     style: 'Mixed',
-    bestFor: 'Close beams + quick snap recovery',
     why: 'Close beams and quick flicks — an all-round daily.',
     routine: { name: 'Andrew · Daily Mix', code: 'KovaaKsPeekingFastQuaker', subs: 370 },
   },
@@ -145,17 +128,17 @@ const skates = [
 ];
 ---
 
-<section class="aim-warmup" style={`--aim-accent: ${warmupAccent}; --aim-logo-red: ${accentHex}; --aim-click: #f3af19; --aim-track: #ffd166; --aim-switch: #e94a2f;`} aria-labelledby="aim-warmup-heading">
+<section class="aim-warmup" style={`--aim-accent: ${warmupAccent}; --aim-logo-red: ${accentHex}; --aim-click: #68d391; --aim-track: #55d6c5; --aim-switch: #48b8ff;`} aria-labelledby="aim-warmup-heading">
   <div class="aim-warmup__inner">
     <header class="aim-warmup__header reveal-on-scroll">
       <p class="aim-warmup__eyebrow">Warm up right</p>
       <h2 id="aim-warmup-heading" class="aim-warmup__heading">
-        Find your next <span class="aim-warmup__accent">ten minutes.</span>
+        Your aim warmup. <span class="aim-warmup__accent">Per game.</span>
       </h2>
       <p class="aim-warmup__sub">
-        Run the browser read above and start with the routine it points to. Already know what
-        needs work? Pick your game below, copy the real KovaaK's share code, and start a focused
-        ten-minute block — no scenario hunting.
+        Aim is three skills — clicking, tracking, switching — and the right warmup is the one your
+        game leans on. We picked the community routine for each. Copy the KovaaK's share code,
+        paste it in, and you're warming up in ten — no scenario hunting.
       </p>
       <div class="aim-warmup__quick-actions" aria-label="Aimmaxxer next steps">
         <a href="#aim-diagnostic">Run the diagnostic</a>
@@ -168,24 +151,6 @@ const skates = [
       </div>
     </header>
 
-    <div class="aim-warmup__map reveal-on-scroll" aria-label="What the diagnostic measures">
-      <div class="aim-warmup__map-head">
-        <span>What the read measures</span>
-        <small>Three skills · one next step</small>
-      </div>
-      <div class="aim-warmup__map-grid">
-        <div class="aim-warmup__map-item aim-warmup__map-item--clicking">
-          <i></i><strong>Click</strong><span>Flick + confirm</span>
-        </div>
-        <div class="aim-warmup__map-item aim-warmup__map-item--tracking">
-          <i></i><strong>Track</strong><span>Hold the line</span>
-        </div>
-        <div class="aim-warmup__map-item aim-warmup__map-item--switching">
-          <i></i><strong>Switch</strong><span>Acquire the next</span>
-        </div>
-      </div>
-    </div>
-
     <div class="aim-warmup__grid" id="aim-game-routines">
       {games.map((g) => (
         <article
@@ -197,19 +162,13 @@ const skates = [
             <h3 class="aim-warmup__game">{g.game}</h3>
             <span class:list={['aim-warmup__tag', `aim-warmup__tag--${g.style.toLowerCase()}`]}>{g.style}</span>
           </div>
-          <div class="aim-warmup__best"><span>WHEN TO USE</span><strong>{g.bestFor}</strong></div>
-          <p class="aim-warmup__why"><strong>Why it helps:</strong> {g.why}</p>
+          <p class="aim-warmup__why">{g.why}</p>
 
           <div class="aim-warmup__routine">
             <div class="aim-warmup__routine-head">
               <span class="aim-warmup__routine-label">Run</span>
               <span class="aim-warmup__routine-name">{g.routine.name}</span>
               <span class="aim-warmup__subs">{fmtSubs(g.routine.subs)} subs</span>
-            </div>
-            <div class="aim-warmup__routine-meta" aria-label={`${g.game} routine details`}>
-              <span>{routineMetaFor(g.style).duration}</span>
-              <span>{routineMetaFor(g.style).difficulty}</span>
-              <span>{routineMetaFor(g.style).skill}</span>
             </div>
             <div class="aim-warmup__code">
               <code class="aim-warmup__code-text">{g.routine.code}</code>
@@ -273,12 +232,7 @@ const skates = [
               <h4 class="aim-warmup__routine-name aim-warmup__routine-name--lg">{s.name}</h4>
               <span class:list={['aim-warmup__tag', `aim-warmup__tag--${s.tag.toLowerCase()}`]}>{s.tag}</span>
             </div>
-            <p class="aim-warmup__why"><strong>Use it when:</strong> {s.trains}</p>
-            <div class="aim-warmup__routine-meta" aria-label={`${s.name} routine details`}>
-              <span>{routineMetaFor(s.tag).duration}</span>
-              <span>{routineMetaFor(s.tag).difficulty}</span>
-              <span>{routineMetaFor(s.tag).skill}</span>
-            </div>
+            <p class="aim-warmup__why">{s.trains}</p>
             <div class="aim-warmup__code">
               <code class="aim-warmup__code-text">{s.routine.code}</code>
               <button
@@ -495,127 +449,26 @@ const skates = [
   .aim-warmup__header-meta span { display: inline-flex; align-items: baseline; gap: 7px; }
   .aim-warmup__header-meta b { color: var(--aim-accent); font: 800 16px/1 var(--font-display), sans-serif; letter-spacing: 0; }
 
-  .aim-warmup__map {
-    position: relative;
-    overflow: hidden;
-    margin: 36px 0 32px;
-    padding: 18px 18px 20px;
-    border: 1px solid var(--color-line);
-    border-radius: 20px;
-    background:
-      radial-gradient(85% 140% at 0% 0%, color-mix(in srgb, var(--aim-accent) 10%, transparent), transparent 62%),
-      linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 90%, var(--aim-accent)), var(--color-bg-card));
-    box-shadow: 0 20px 60px rgba(0, 0, 0, .2), 0 0 0 1px rgba(255, 255, 255, .02) inset;
-  }
-  .aim-warmup__map::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .45; background: linear-gradient(115deg, transparent 0 38%, rgba(255, 255, 255, .025) 50%, transparent 62%); }
-  .aim-warmup__map-head {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 0 0 12px;
-  }
-  .aim-warmup__map-head span {
-    color: var(--color-text);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-  }
-  .aim-warmup__map-head small {
-    color: var(--color-subtle);
-    font-size: 12px;
-  }
-  .aim-warmup__map-grid {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-  .aim-warmup__map-item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 8px;
-    align-items: center;
-    padding: 10px 11px;
-    border-left: 2px solid var(--aim-map-color);
-    border-top: 1px solid color-mix(in srgb, var(--aim-map-color) 18%, transparent);
-    border-right: 1px solid color-mix(in srgb, var(--aim-map-color) 10%, transparent);
-    border-bottom: 1px solid color-mix(in srgb, var(--aim-map-color) 10%, transparent);
-    border-radius: 10px;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--aim-map-color) 9%, transparent), rgba(0, 0, 0, .12));
-    min-height: 54px;
-  }
-  .aim-warmup__map-item--clicking { --aim-map-color: var(--aim-click); }
-  .aim-warmup__map-item--tracking { --aim-map-color: var(--aim-track); }
-  .aim-warmup__map-item--switching { --aim-map-color: var(--aim-switch); }
-  .aim-warmup__map-item i {
-    grid-row: span 2;
-    width: 7px;
-    height: 7px;
-    border: 1px solid var(--aim-map-color);
-    transform: rotate(45deg);
-    box-shadow: 0 0 9px color-mix(in srgb, var(--aim-map-color) 50%, transparent);
-  }
-  .aim-warmup__map-item strong {
-    color: var(--color-text);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .aim-warmup__map-item span {
-    color: var(--color-subtle);
-    font-size: 12px;
-  }
-
   .aim-warmup__grid {
     display: grid;
-    gap: 16px;
+    gap: 14px;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
   .aim-warmup__card {
     --aim-card-accent: var(--aim-accent);
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--color-line);
-    border-top: 2px solid color-mix(in srgb, var(--aim-card-accent) 65%, transparent);
-    background:
-      radial-gradient(80% 65% at 100% 0%, color-mix(in srgb, var(--aim-card-accent) 9%, transparent), transparent 72%),
-      linear-gradient(145deg, color-mix(in srgb, var(--color-bg-card) 96%, var(--aim-card-accent)), var(--color-bg-card));
+    background: var(--color-bg-card);
     border-radius: 16px;
-    padding: 22px;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, .14), 0 0 0 1px rgba(255, 255, 255, .018) inset;
+    padding: 20px;
     transition: border-color 200ms ease, transform 200ms ease, background-color 200ms ease;
     scroll-margin-top: 18vh;
   }
-  .aim-warmup__card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 86px;
-    height: 58px;
-    border-top: 1px solid color-mix(in srgb, var(--aim-card-accent) 25%, transparent);
-    border-right: 1px solid color-mix(in srgb, var(--aim-card-accent) 18%, transparent);
-    background: linear-gradient(135deg, transparent 0 48%, color-mix(in srgb, var(--aim-card-accent) 8%, transparent) 49% 50%, transparent 51%);
-    clip-path: polygon(34% 0, 100% 0, 100% 100%, 90% 100%, 90% 15%, 0 15%, 0 0);
-    pointer-events: none;
-  }
-  .aim-warmup__card > * { position: relative; z-index: 1; }
   .aim-warmup__card:hover {
     border-color: color-mix(in srgb, var(--aim-card-accent) 45%, transparent);
     transform: translateY(-2px);
-    background:
-      radial-gradient(80% 65% at 100% 0%, color-mix(in srgb, var(--aim-card-accent) 14%, transparent), transparent 72%),
-      var(--color-bg-card-hover);
+    background: var(--color-bg-card-hover);
   }
   .aim-warmup__card--clicking { --aim-card-accent: var(--aim-click); }
   .aim-warmup__card--tracking { --aim-card-accent: var(--aim-track); }
@@ -632,9 +485,6 @@ const skates = [
     gap: 12px;
     margin: 0 0 6px;
   }
-  .aim-warmup__best { display: grid; gap: 4px; margin: 0 0 9px; padding: 8px 10px; border-left: 2px solid var(--aim-card-accent); background: color-mix(in srgb, var(--aim-card-accent) 7%, transparent); }
-  .aim-warmup__best span { color: var(--color-subtle); font: 700 8px/1 var(--font-mono), monospace; letter-spacing: .12em; }
-  .aim-warmup__best strong { color: var(--color-text-mid); font-size: 12px; font-weight: 600; line-height: 1.25; }
   .aim-warmup__game {
     font-size: 18px;
     font-weight: 600;
@@ -664,8 +514,6 @@ const skates = [
     line-height: 1.45;
     margin: 0 0 14px;
   }
-  .aim-warmup__why strong { color: var(--color-text-mid); font-weight: 700; }
-
   /* Routine block — name + share code + copy. */
   .aim-warmup__routine {
     margin-top: auto;
@@ -677,22 +525,6 @@ const skates = [
     align-items: baseline;
     gap: 8px;
     margin: 0 0 10px;
-  }
-  .aim-warmup__routine-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: -2px 0 10px;
-  }
-  .aim-warmup__routine-meta span {
-    padding: 3px 7px;
-    border: 1px solid var(--color-line);
-    border-radius: 999px;
-    color: var(--color-subtle);
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: .05em;
-    text-transform: uppercase;
   }
   .aim-warmup__routine-label {
     font-family: var(--font-mono);
@@ -769,20 +601,15 @@ const skates = [
 
   /* How to import. */
   .aim-warmup__import {
-    display: grid;
-    grid-template-columns: minmax(220px, .72fr) minmax(0, 1.28fr);
-    column-gap: clamp(26px, 5vw, 68px);
-    align-items: start;
-    margin: 34px 0 0;
-    padding: 30px 28px;
-    border-radius: 20px;
+    margin: 28px 0 0;
+    padding: 26px 24px;
+    border-radius: 18px;
     border: 1px solid var(--color-line);
     background:
-      radial-gradient(100% 160% at 0% 0%, color-mix(in srgb, var(--aim-accent) 11%, transparent), transparent 58%),
-      linear-gradient(145deg, color-mix(in srgb, var(--color-bg-card) 96%, var(--aim-accent)), var(--color-bg-card));
-    box-shadow: 0 20px 60px rgba(0, 0, 0, .16);
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--aim-accent) 7%, transparent), transparent 55%),
+      var(--color-bg-card);
   }
-  .aim-warmup__import-head { margin: 0; }
+  .aim-warmup__import-head { margin: 0 0 18px; }
   .aim-warmup__import-title {
     font-size: clamp(20px, 2.6vw, 26px);
     font-weight: 600;
@@ -795,19 +622,18 @@ const skates = [
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 10px;
+    gap: 0;
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .aim-warmup__step {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    min-height: 112px;
-    padding: 13px 12px;
-    border: 1px solid var(--color-line);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, .14);
+    min-height: 0;
+    padding: 0 16px;
   }
+  .aim-warmup__step:first-child { padding-left: 0; }
+  .aim-warmup__step + .aim-warmup__step { border-left: 1px solid var(--color-line); }
   .aim-warmup__step-num {
     font-family: var(--font-mono);
     font-size: 13px;
@@ -828,7 +654,6 @@ const skates = [
     margin: 0;
   }
   .aim-warmup__import-foot {
-    grid-column: 1 / -1;
     margin: 18px 0 0;
     padding-top: 16px;
     border-top: 1px solid var(--color-line);
@@ -1052,8 +877,7 @@ const skates = [
   .aim-warmup__secondary-summary:focus-visible { outline: 2px solid var(--aim-accent); outline-offset: 3px; }
 
   @media (max-width: 860px) {
-    .aim-warmup__import { grid-template-columns: 1fr; row-gap: 20px; }
-    .aim-warmup__import-head { margin: 0 0 2px; }
+    .aim-warmup__import-head { margin: 0 0 18px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1071,12 +895,11 @@ const skates = [
     .aim-warmup__header-meta { gap: 10px 14px; line-height: 1.25; }
     .aim-warmup__quick-actions { align-items: stretch; }
     .aim-warmup__quick-actions a { flex: 1 1 180px; justify-content: center; }
-    .aim-warmup__map-head { align-items: flex-start; flex-direction: column; gap: 5px; }
-    .aim-warmup__map-grid { grid-template-columns: 1fr; gap: 6px; }
-    .aim-warmup__map-item { min-height: 42px; }
     .aim-warmup__import { padding: 24px 18px; }
     .aim-warmup__steps { grid-template-columns: 1fr; }
-    .aim-warmup__step { min-height: 0; }
+    .aim-warmup__step { padding: 0; }
+    .aim-warmup__step:first-child { padding-left: 0; }
+    .aim-warmup__step + .aim-warmup__step { padding-top: 12px; border-left: 0; border-top: 1px solid var(--color-line); margin-top: 12px; }
     .aim-warmup__skill-header { padding-left: 14px; }
     .aim-warmup__card { padding: 18px; }
     .aim-warmup__secondary-summary { grid-template-columns: 1fr auto; }
