@@ -38,6 +38,8 @@ type Props = {
   hideSidebar?: boolean;
   /** Render a focused product surface without the Maxxtopia site chrome. */
   hideChrome?: boolean;
+  /** Hide the floating daily quote on focused forms and other task surfaces. */
+  hideQuote?: boolean;
   /** OpenGraph type — 'website' for most pages, 'article' for guides. */
   ogType?: 'website' | 'article';
   /** ISO date — emits article:published_time when ogType is 'article'. */
@@ -56,6 +58,7 @@ const {
   noindex = false,
   hideSidebar = false,
   hideChrome = false,
+  hideQuote = false,
   ogType = 'website',
   articlePublished,
   articleModified,
@@ -178,7 +181,7 @@ const yandexVerify = import.meta.env.PUBLIC_YANDEX_VERIFICATION;
     {!hideChrome && <Footer />}
     {!hideChrome && <RevealOnScroll />}
     {!hideChrome && <MagneticAndTilt />}
-    {!hideChrome && <DailyQuote />}
+    {!hideChrome && !hideQuote && <DailyQuote />}
 
     {/* Cloudflare Web Analytics — only renders when the token env var is set. */}
     {cfAnalyticsToken && (

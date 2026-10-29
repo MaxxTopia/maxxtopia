@@ -1,0 +1,320 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const PRICE = '$49 / montage';
+const APPLY_ENDPOINT = 'https://clipmaxxer-apply.maxxtopia.workers.dev/apply';
+---
+
+<Layout
+  title="MontageMaxxer — Done-for-you montage beta"
+  description="Send us your selected Fortnite or Valorant clips and we will shape them into one finished MontageMaxxer cut. Beta pricing starts at $49 per montage."
+  hideQuote
+>
+  <main class="mx-apply mx-auto max-w-3xl px-6 py-16 md:py-24">
+    <a href="/montagemaxxer/" class="mx-apply__back">&larr; MontageMaxxer</a>
+
+    <p class="mx-apply__eyebrow">MontageMaxxer &middot; done-for-you beta</p>
+    <h1 class="mx-apply__title">You send the clips.<br />We build the montage.</h1>
+    <p class="mx-apply__lead">
+      Already have the footage but do not want to edit it yourself? Send us your selected
+      clips and a song or direction. We shape the pacing, title, mix, and outro into one
+      finished montage.
+    </p>
+
+    <div class="mx-apply__price">
+      <span>{PRICE}</span>
+      <small>one cut &middot; one revision &middot; no subscription</small>
+    </div>
+
+    <ul class="mx-apply__points">
+      <li>You send the selected clips and a song or music direction.</li>
+      <li>We build the pacing, title, clip mix, and outro.</li>
+      <li>You receive one finished montage and one revision is included.</li>
+      <li>No payment is taken here; we confirm the scope first.</li>
+    </ul>
+
+    <section id="apply" class="mx-apply__card">
+      <p class="mx-apply__tag">REQUEST A BETA CUT</p>
+      <h2>Tell us what you want made.</h2>
+      <p class="mx-apply__card-copy">
+        Share a viewable folder or clip link. We will review the scope and contact you
+        before any work starts. Please do not send private footage until we confirm the next step.
+      </p>
+
+      <form id="montageApplyForm" class="mx-apply__form">
+        <label>
+          <span>Your name or handle</span>
+          <input name="name" autocomplete="name" placeholder="Your Discord or creator name" />
+        </label>
+        <label>
+          <span>Clip folder or links <b>*</b></span>
+          <input name="clips" required placeholder="Google Drive, Dropbox, or unlisted links" />
+        </label>
+        <label>
+          <span>Song or music direction <b>*</b></span>
+          <input name="song" required placeholder="Song link, title, or 'choose for me'" />
+        </label>
+        <label>
+          <span>Style or reference</span>
+          <input name="style" placeholder="Example montage, pacing, or visual direction" />
+        </label>
+        <label>
+          <span>How do we reach you? <b>*</b></span>
+          <input name="contact" required autocomplete="email" placeholder="Discord handle or email" />
+        </label>
+        <label>
+          <span>Anything else?</span>
+          <textarea name="notes" rows="4" placeholder="Title text, target length, deadline, or anything we should know"></textarea>
+        </label>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button type="submit" id="montageApplyBtn">Request the beta cut</button>
+        <p id="montageApplyMsg" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <p class="mx-apply__footer">
+      Want to edit it yourself? <a href="/montagemaxxer/">Download MontageMaxxer for free.</a>
+      Need recurring shorts from your streams or VODs? <a href="/clipmaxxer/apply/">See Clipmaxxer.</a>
+    </p>
+  </main>
+
+  <style>
+    .mx-apply {
+      color: #f3edf9;
+    }
+
+    .mx-apply__back,
+    .mx-apply a {
+      color: var(--color-cyan);
+    }
+
+    .mx-apply__back {
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    .mx-apply__eyebrow,
+    .mx-apply__tag {
+      margin: 46px 0 16px;
+      color: var(--color-magenta);
+      font: 700 12px/1 var(--font-mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .mx-apply__title {
+      max-width: 850px;
+      margin: 0;
+      color: #fff;
+      font: 400 clamp(54px, 9vw, 112px)/.86 var(--font-display);
+      letter-spacing: -.025em;
+      text-transform: uppercase;
+    }
+
+    .mx-apply__lead {
+      max-width: 650px;
+      margin: 28px 0 0;
+      color: #cfc8da;
+      font-size: 18px;
+      line-height: 1.58;
+    }
+
+    .mx-apply__price {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .mx-apply__price span {
+      color: var(--color-magenta);
+      font: 400 clamp(40px, 7vw, 72px)/1 var(--font-display);
+    }
+
+    .mx-apply__price small {
+      color: #9a93a8;
+      font-size: 14px;
+    }
+
+    .mx-apply__points {
+      display: grid;
+      gap: 9px;
+      margin: 30px 0 0;
+      padding: 0;
+      color: #cfc8da;
+      list-style: none;
+    }
+
+    .mx-apply__points li::before {
+      margin-right: 9px;
+      color: var(--color-cyan);
+      content: '•';
+    }
+
+    .mx-apply__card {
+      margin-top: 58px;
+      padding: 26px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .mx-apply__tag {
+      margin: 0 0 14px;
+      color: var(--color-cyan);
+    }
+
+    .mx-apply__card h2 {
+      margin: 0;
+      color: #fff;
+      font: 400 clamp(34px, 5vw, 56px)/.95 var(--font-display);
+      text-transform: uppercase;
+    }
+
+    .mx-apply__card-copy {
+      max-width: 58ch;
+      margin: 12px 0 0;
+      color: #9a93a8;
+      line-height: 1.55;
+    }
+
+    .mx-apply__form {
+      display: grid;
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .mx-apply__form label {
+      display: grid;
+      gap: 6px;
+    }
+
+    .mx-apply__form label span {
+      color: #b7b0c4;
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+
+    .mx-apply__form label b {
+      color: var(--color-magenta);
+    }
+
+    .mx-apply__form input,
+    .mx-apply__form textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 10px;
+      outline: none;
+      padding: 11px 13px;
+      color: #fff;
+      background: #0d0a16;
+      font: inherit;
+      font-size: 15px;
+    }
+
+    .mx-apply__form textarea {
+      resize: vertical;
+    }
+
+    .mx-apply__form input:focus,
+    .mx-apply__form textarea:focus {
+      border-color: var(--color-magenta);
+    }
+
+    .mx-apply__form input[name="website"] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .mx-apply__form button {
+      width: fit-content;
+      margin-top: 2px;
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 18px;
+      color: #11020f;
+      background: var(--color-magenta);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .mx-apply__form button:disabled {
+      cursor: default;
+      opacity: .6;
+    }
+
+    #montageApplyMsg {
+      min-height: 1.2em;
+      color: #9a93a8;
+      font-size: 14px;
+    }
+
+    .mx-apply__footer {
+      margin-top: 30px;
+      color: #6f6880;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 700px) {
+      .mx-apply__eyebrow {
+        margin-top: 38px;
+      }
+
+      .mx-apply__card {
+        padding: 20px;
+      }
+    }
+  </style>
+
+  <script define:vars={{ APPLY_ENDPOINT }}>
+    const form = document.getElementById('montageApplyForm');
+    const btn = document.getElementById('montageApplyBtn');
+    const msg = document.getElementById('montageApplyMsg');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const fd = new FormData(form);
+      if (fd.get('website')) return;
+
+      const body = {
+        service: 'montagemaxxer',
+        name: fd.get('name'),
+        clips: fd.get('clips'),
+        song: fd.get('song'),
+        style: fd.get('style'),
+        contact: fd.get('contact'),
+        notes: fd.get('notes'),
+        website: fd.get('website'),
+      };
+
+      btn.disabled = true;
+      msg.style.color = '#9a93a8';
+      msg.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(APPLY_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const result = await response.json();
+        if (result.ok) {
+          form.style.display = 'none';
+          msg.style.color = '#5dff9b';
+          msg.textContent = 'Request received. Diggy will confirm the scope and next step at the contact you gave.';
+        } else {
+          btn.disabled = false;
+          msg.style.color = '#ff6b6b';
+          msg.textContent = result.error || 'Something went wrong - try again.';
+        }
+      } catch {
+        btn.disabled = false;
+        msg.style.color = '#ff6b6b';
+        msg.textContent = "Couldn't send - check your connection and retry.";
+      }
+    });
+  </script>
+</Layout>

@@ -1,10 +1,12 @@
 // clipmaxxer-apply worker - intake for the done-for-you clipmaxxer service.
 //
 // Streamers APPLY from maxxtopia.com/clipmaxxer (channel + audience + which
-// socials to auto-post to). Diggy reviews, approves the ones he can automate,
-// and bills them. No accounts, no payments here - just a robust intake inbox.
+// socials to auto-post to), or MontageMaxxer customers request a one-off cut
+// (clips + song + direction). Diggy reviews the request, confirms scope, and
+// handles billing separately. No accounts or payments here - just an intake inbox.
 //
-//   POST /apply   body { name, channel, audience, platforms, contact, notes }
+//   POST /apply   body { service, name, channel, audience, platforms, clips,
+//                        song, style, contact, notes }
 //                 -> stores apply:<ts>-<rand> in KV, returns { ok:true }
 //   GET  /admin?key=ADMIN_KEY   -> simple HTML list of applications (newest first)
 //   GET  /                      -> health
@@ -38,10 +40,19 @@ async function handleApply(request, env) {
   // Pretend success + store nothing, so the bot doesn't retry.
   if (clean(b.website, 50)) return json({ ok: true });
 
+  const service = clean(b.service, 40) || 'clipmaxxer';
+  if (!['clipmaxxer', 'montagemaxxer'].includes(service)) {
+    return json({ ok: false, error: 'unknown service' }, 400);
+  }
+
   const channel = clean(b.channel, 200);
+  const clips = clean(b.clips, 500);
   const contact = clean(b.contact, 200);
-  if (!channel || !contact) {
-    return json({ ok: false, error: 'channel and contact are required' }, 400);
+  if (!contact || (service === 'clipmaxxer' && !channel) || (service === 'montagemaxxer' && !clips)) {
+    return json({
+      ok: false,
+      error: service === 'montagemaxxer' ? 'clip link and contact are required' : 'channel and contact are required',
+    }, 400);
   }
 
   // Light per-IP rate limit (~5/hr) to blunt spam floods. KV is eventually
@@ -54,10 +65,14 @@ async function handleApply(request, env) {
   } catch (_) { /* rate-limit is best-effort; never block a real applicant on it */ }
 
   const rec = {
+    service,
     name: clean(b.name, 120),
     channel,                                  // twitch/youtube handle or URL
     audience: clean(b.audience, 120),         // rough follower / avg-viewer count
     platforms: clean(b.platforms, 200),       // where to post (tiktok/shorts/reels)
+    clips,                                    // selected footage or folder link
+    song: clean(b.song, 300),                 // montage song or direction
+    style: clean(b.style, 500),               // reference or creative direction
     contact,                                  // discord/email to reach them
     notes: clean(b.notes, 1000),
     at: new Date().toISOString(),
@@ -89,22 +104,29 @@ async function handleAdmin(url, env) {
     if (raw) { try { recs.push(JSON.parse(raw)); } catch {} }
   }
   recs.sort((a, b) => (b.at || '').localeCompare(a.at || ''));
-  const rows = recs.map((r) => `
+  const rows = recs.map((r) => {
+    const isMontage = r.service === 'montagemaxxer';
+    const source = isMontage ? r.clips : r.channel;
+    const details = isMontage
+      ? `song: ${r.song || ''}\nstyle: ${r.style || ''}`
+      : `audience: ${r.audience || ''}\npost to: ${r.platforms || ''}`;
+    return `
     <tr>
       <td>${esc(r.at)}</td>
-      <td><b>${esc(r.channel)}</b><br><span class=m>${esc(r.name)}</span></td>
-      <td>${esc(r.audience)}</td>
-      <td>${esc(r.platforms)}</td>
+      <td>${esc(isMontage ? 'MontageMaxxer' : 'Clipmaxxer')}</td>
+      <td><b>${esc(source)}</b><br><span class=m>${esc(r.name)}</span></td>
+      <td class=pre>${esc(details)}</td>
       <td>${esc(r.contact)}</td>
       <td>${esc(r.notes)}</td>
-    </tr>`).join('');
-  const html = `<!doctype html><meta charset=utf-8><title>clipmaxxer applications</title>
+    </tr>`;
+  }).join('');
+  const html = `<!doctype html><meta charset=utf-8><title>Maxxtopia applications</title>
     <style>body{font:14px system-ui;background:#0a0612;color:#eee;padding:20px}
     h1{font-size:18px}table{border-collapse:collapse;width:100%}
     td,th{border:1px solid #333;padding:8px;vertical-align:top;text-align:left}
-    th{color:#e25bff}.m{color:#888;font-size:12px}</style>
-    <h1>clipmaxxer applications (${recs.length})</h1>
-    <table><tr><th>When</th><th>Channel</th><th>Audience</th><th>Post to</th><th>Contact</th><th>Notes</th></tr>${rows}</table>`;
+    th{color:#e25bff}.m{color:#888;font-size:12px}.pre{white-space:pre-wrap}</style>
+    <h1>Maxxtopia applications (${recs.length})</h1>
+    <table><tr><th>When</th><th>Service</th><th>Source</th><th>Details</th><th>Contact</th><th>Notes</th></tr>${rows}</table>`;
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 }
 
