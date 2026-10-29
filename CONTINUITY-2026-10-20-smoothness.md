@@ -133,3 +133,13 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not committed, pushed, or deployed at the time of this checkpoint. The canonical dirty checkout remains untouched. Preview remains available at `http://127.0.0.1:4321/aimmaxxer?release=score-loop`.
 - User-owed test: Diggy should complete the full 28-second read with a real mouse, confirm that the tracking recommendation is relevant and the plain-English explanation is understandable, then review the result panel at desktop and narrow widths. A full successful result remains a user-acceptance gate because the automated smoke run intentionally stopped at the guarded incomplete state.
 - Best next move: review the local result flow and request a separate explicit push-live step only after the recommendation feels useful.
+
+## Aimmaxxer scenario instruction and result clarity tweak - 2026-10-29
+
+- Scope: make the diagnostic understandable before and during play, and apply the follow-up wording fixes from Diggy's successful balanced run.
+- Changed `src/components/AimDiagnosticHero.astro`: added a plain-language How to play guide that distinguishes each stage; clarified that users click Run the diagnostic first, then click the centered calibration target; and added live arena prompts for one-click flicks, cursor-only tracking, and lit-target switching. Tracking explicitly says no click or hold is needed, matching the implementation, which measures pointer position rather than button state.
+- Balanced results now explain that close scores mean no single limiter was isolated yet, do not imply that every score is strong, and position the routine as a baseline to retest after training. Personal-board rows now visibly label the numeric value as `SCORE`, separating it from the rank in both the visual row and accessible text.
+- Verification: `git diff --check` and `npm run build` passed after the final copy patch; release-truth passed for 10 products, sitemap validation passed for 18 Astro routes plus `/play/spritecannon/`, and the complete 28-page Astro/Vite build passed. Local preview source is ready to reload at `http://127.0.0.1:4321/aimmaxxer?release=score-loop`.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+- User-owed test: reload the preview, run the full 28-second diagnostic with a real mouse, confirm the tracking prompt feels clear without holding left click, and check that a balanced result reads naturally and shows board rows like `#1 SCORE 3,505`.
+- Best next move: review this local interaction and request a separate explicit push-live step only after the wording and instructions feel right.

@@ -40,8 +40,8 @@ const { product } = Astro.props;
         </p>
         <p class="aim-diag__method">~28 seconds · mouse recommended · local only · no account required</p>
         <div class="aim-diag__expectation">
-          <strong>How the read works</strong>
-          <span>Click the center target, then follow three short stages. The timer keeps each stage open long enough to collect a useful sample before a routine is recommended.</span>
+          <strong>How to play</strong>
+          <span>Click Run the diagnostic, then click the center target to start. Flick: click each target once. Track: move your cursor over the moving target — do not click or hold. Switch: click the lit target, then move to the next one.</span>
         </div>
         <div class="aim-diag__skill-key" aria-label="Diagnostic stages">
           <span data-skill-key="flick"><i></i><b>Flick</b><small>precision</small></span>
@@ -122,7 +122,7 @@ const { product } = Astro.props;
           <button type="button" class="aim-diag__target aim-diag__target--a" data-aim-target="a" aria-label="Aim target"><i></i><span>A</span></button>
           <button type="button" class="aim-diag__target aim-diag__target--b" data-aim-target="b" aria-label="Second aim target"><i></i><span>B</span></button>
           <div class="aim-diag__crosshair" aria-hidden="true"><i></i></div>
-          <p class="aim-diag__instruction" data-aim-instruction>Press start — or watch the calibration run</p>
+          <p class="aim-diag__instruction" data-aim-instruction>Click Run the diagnostic, then the center target</p>
 
           <div class="aim-diag__result" data-aim-result aria-live="polite" aria-atomic="true">
             <p data-aim-result-kicker>AWAITING RUN</p>
@@ -142,7 +142,7 @@ const { product } = Astro.props;
               <span><b>TRACK</b><i data-aim-detail="track">--% on target · -- px away</i></span>
               <span><b>SWITCH</b><i data-aim-detail="switch">-- sec · --% accurate</i></span>
             </div>
-            <p class="aim-diag__result-next" data-aim-next-step>Click start, then follow the lit target through each stage.</p>
+            <p class="aim-diag__result-next" data-aim-next-step>Click Run the diagnostic, then the center target; follow the short instructions at the bottom of the arena.</p>
             <p class="aim-diag__result-why" data-aim-result-why>We will explain what the run measured and why the routine fits before we ask you to copy anything.</p>
             <p class="aim-diag__result-confidence" data-aim-confidence>Confidence appears after enough confirmed input.</p>
             <small data-aim-input-note>Local only · no data leaves this tab.</small>
@@ -225,7 +225,7 @@ const { product } = Astro.props;
   [data-state="idle"] .aim-diag__target--a{animation:ad-target-demo 6s cubic-bezier(.4,0,.2,1) infinite}[data-state="idle"] .aim-diag__crosshair{animation:ad-cross-demo 6s cubic-bezier(.2,.8,.2,1) infinite}
   @keyframes ad-target-demo{0%,12%{left:26%;top:33%}25%,38%{left:72%;top:62%}50%,63%{left:62%;top:27%}75%,88%{left:34%;top:69%}100%{left:26%;top:33%}}
   @keyframes ad-cross-demo{0%,8%{left:50%;top:50%}16%,23%{left:26%;top:33%}31%,46%{left:72%;top:62%}54%,69%{left:62%;top:27%}77%,94%{left:34%;top:69%}100%{left:50%;top:50%}}
-  .aim-diag__instruction{position:absolute;z-index:8;left:50%;bottom:13px;margin:0;transform:translateX(-50%);color:var(--color-muted);font:650 7px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+  .aim-diag__instruction{position:absolute;z-index:8;left:50%;bottom:13px;width:calc(100% - 28px);margin:0;transform:translateX(-50%);color:var(--color-muted);font:650 7px/1.25 var(--font-mono),monospace;letter-spacing:.12em;text-align:center;text-transform:uppercase;text-shadow:0 1px 4px #0c0406}
   .aim-diag__scores{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--color-line);border-bottom:1px solid var(--color-line)}.aim-diag__scores>div{position:relative;padding:11px 13px 12px}.aim-diag__scores>div+div{border-left:1px solid var(--color-line)}.aim-diag__scores span{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.14em}.aim-diag__scores b{float:right;color:var(--color-text-mid);font:800 12px/1 var(--font-mono),monospace}.aim-diag__scores i{position:absolute;left:13px;right:13px;bottom:6px;height:2px;overflow:hidden;background:#3c060a}.aim-diag__scores em{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--ad-red),var(--ad-phase));box-shadow:0 0 6px var(--ad-phase);transition:width .4s}
   .aim-diag__machine-bottom{height:31px}.aim-diag__machine-bottom button{position:relative;z-index:21;border:0;background:none;color:var(--color-muted);font:700 7px var(--font-mono),monospace;letter-spacing:.12em;cursor:pointer}.aim-diag__machine-bottom button:hover{color:var(--ad-ember)}
   .aim-diag__result{position:absolute;z-index:12;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;opacity:0;pointer-events:none;overflow:auto;background:radial-gradient(circle,rgba(var(--ad-phase-rgb),.16),rgba(12,4,6,.97) 72%);transform:scale(1.03);transition:opacity .35s,transform .5s}.aim-diag__result p{margin:0 0 8px;color:var(--ad-phase);font:700 8px var(--font-mono),monospace;letter-spacing:.18em}.aim-diag__result>strong{color:var(--color-text);font:750 clamp(22px,2.7vw,35px)/1 var(--font-display),sans-serif;letter-spacing:.01em}.aim-diag__result>span{margin-top:7px;color:var(--color-text-mid);font-size:11px}.aim-diag__result-rating{display:flex;align-items:center;gap:9px;margin-top:10px}.aim-diag__result-rating span{color:var(--ad-ember);font:800 12px/1 var(--font-mono),monospace;letter-spacing:.08em;text-shadow:0 0 10px rgba(255,75,62,.3)}.aim-diag__result-rating b{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.12em}.aim-diag__result-plan{display:grid;gap:4px;width:min(520px,100%);margin-top:13px;padding:10px 12px;border:1px solid rgba(255,75,62,.28);border-left:2px solid var(--ad-phase);text-align:left;background:rgba(12,4,6,.72)}.aim-diag__result-plan span{color:var(--ad-phase);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.16em}.aim-diag__result-plan strong{color:var(--color-text);font-size:14px;line-height:1.2}.aim-diag__result-plan small{color:var(--color-text-mid);font-size:10px;line-height:1.35}.aim-diag__breakdown{display:grid;grid-template-columns:repeat(3,1fr);width:min(480px,100%);margin-top:13px;border:1px solid var(--color-line-strong);border-radius:5px;background:rgba(12,4,6,.76)}.aim-diag__breakdown span{padding:7px 8px}.aim-diag__breakdown span+span{border-left:1px solid var(--color-line-strong)}.aim-diag__breakdown b,.aim-diag__breakdown i{display:block;font-family:var(--font-mono),monospace}.aim-diag__breakdown b{color:var(--ad-phase);font-size:7px;letter-spacing:.12em}.aim-diag__breakdown i{margin-top:4px;color:var(--color-text-mid);font-size:7px;font-style:normal;white-space:nowrap}.aim-diag__result-next{max-width:520px;margin:10px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result-why{max-width:520px;margin:7px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result-confidence{max-width:520px;margin:6px 0 0!important;color:var(--color-muted)!important;font:7px/1.45 var(--font-mono),monospace!important;letter-spacing:.03em}.aim-diag__result>small{margin-top:7px;color:var(--color-muted);font:6px var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__history{max-width:520px;margin:6px 0 0!important;color:var(--color-muted)!important;font:7px/1.35 var(--font-mono),monospace!important;letter-spacing:.02em}.aim-diag__run-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:min(520px,100%);margin-top:10px;padding:9px;border:1px solid rgba(255,75,62,.28);background:rgba(12,4,6,.72)}.aim-diag__run-summary>div{display:grid;gap:4px;text-align:left}.aim-diag__run-summary span,.aim-diag__personal-head span{color:var(--ad-phase);font:700 6px/1 var(--font-mono),monospace;letter-spacing:.12em}.aim-diag__run-summary strong{color:var(--ad-cream);font:800 14px/1 var(--font-mono),monospace}.aim-diag__run-summary-note{grid-column:1/-1;margin:2px 0 0;color:var(--color-muted);font:6px/1.3 var(--font-mono),monospace;letter-spacing:.03em}.aim-diag__personal-board{width:min(520px,100%);margin-top:8px;padding:9px;border:1px solid var(--color-line-strong);background:rgba(12,4,6,.6);text-align:left}.aim-diag__personal-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.aim-diag__personal-head small{color:var(--color-muted);font:6px/1 var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__personal-board ol{display:grid;gap:4px;margin:7px 0 0;padding:0;list-style:none}.aim-diag__personal-board li{display:grid;grid-template-columns:22px 1fr auto;align-items:baseline;gap:7px;color:var(--color-text-mid);font:7px/1.2 var(--font-mono),monospace}.aim-diag__personal-board li+li{padding-top:4px;border-top:1px solid rgba(255,75,62,.12)}.aim-diag__personal-board li b{color:var(--ad-phase)}.aim-diag__personal-board li strong{color:var(--ad-cream);font-size:9px}.aim-diag__personal-board li small{color:var(--color-muted);font-size:6px;text-align:left;line-height:1.35}.aim-diag__score-announcer{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}.aim-diag__result-action{display:flex;align-items:center;gap:7px;margin-top:12px}.aim-diag__result code{padding:8px 10px;border:1px solid #5a0b10;border-radius:5px;background:#0c0406;color:var(--color-text-mid);font:10px var(--font-mono),monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}.aim-diag__result button,.aim-diag__result-action a{padding:9px 11px;border:1px solid var(--ad-phase);border-radius:5px;background:var(--ad-phase);color:#1c0305;font:800 9px var(--font-mono),monospace;cursor:pointer;text-decoration:none}.aim-diag__result-action a{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button[data-aim-retest]{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button.is-copied{background:#73d89f;border-color:#73d89f}
@@ -630,7 +630,7 @@ const { product } = Astro.props;
         const score = document.createElement('strong');
         const meta = document.createElement('small');
         rank.textContent = `#${index + 1}`;
-        score.textContent = formatScore(entry.score);
+        score.textContent = `SCORE ${formatScore(entry.score)}`;
         const hitLabel = `${entry.hits} hit${entry.hits === 1 ? '' : 's'}`;
         const missLabel = `${entry.misses} miss${entry.misses === 1 ? '' : 'es'}`;
         meta.textContent = `${gameNames[entry.game as keyof typeof gameNames] || entry.game} · ${hitLabel} · ${missLabel} · best combo ${entry.combo}x`;
@@ -678,7 +678,7 @@ const { product } = Astro.props;
       switchStep = 0;
       phaseEl.textContent = 'READY';
       timeEl.textContent = (readPlan.totalMs / 1000).toFixed(1);
-      instruction.textContent = 'Press start — or watch the calibration run';
+      instruction.textContent = 'Click Run the diagnostic, then the center target';
       status.textContent = 'AUTO CALIBRATION';
       updateSwitchCourse();
       updateSelectionSummary();
@@ -692,7 +692,7 @@ const { product } = Astro.props;
       priorityEl.textContent = 'AWAITING INPUT';
       planTitle.textContent = 'Run the diagnostic first';
       planMeta.textContent = 'A focused routine appears after enough confirmed input.';
-      nextStepEl.textContent = 'Click start, then follow the lit target through each stage.';
+      nextStepEl.textContent = 'Click Run the diagnostic, then the center target; follow the short instructions at the bottom of the arena.';
       resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
       confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
       inputNote.textContent = 'Local only · no data leaves this tab.';
@@ -751,13 +751,13 @@ const { product } = Astro.props;
     const setPhaseInstruction = (phase: SkillKey) => {
       instruction.textContent = phase === 'flick'
         ? flickTimes.length >= readPlan.minFlickHits
-          ? 'Sample target met · keep clicking for a stronger read'
-          : `Click each target · ${readPlan.minFlickHits - flickTimes.length} more clean hits needed`
+          ? 'Click each target once · sample met · keep going'
+          : `Click each target once · ${readPlan.minFlickHits - flickTimes.length} more clean hits needed`
         : phase === 'track'
-          ? 'Keep your pointer centered on the moving target'
+          ? 'Move with the target · no click or hold needed'
           : switchStep >= readPlan.minSwitchHits
-            ? 'Sample target met · keep transferring for a stronger read'
-            : `Hit the lit target · ${readPlan.minSwitchHits - switchStep} more clean transfers needed`;
+            ? 'Click the lit target, then find the next · sample met'
+            : `Click the lit target, then find the next · ${readPlan.minSwitchHits - switchStep} more needed`;
     };
 
     const finish = () => {
@@ -848,7 +848,7 @@ const { product } = Astro.props;
         switch: 'Run one transfer block. Confirm the lit target first, then chase faster hand-offs between targets.',
       };
       const goalAdvice: Record<TrainingGoal, string> = {
-        balanced: 'Use this balanced block first, then retest to see if a clearer limiter appears.',
+        balanced: 'Run this block first; a retest can reveal a clearer limiter.',
         speed: 'Push pace only after the first clean set; speed without confirmation just adds misses.',
         control: 'Use the routine at a calm pace and protect smoothness before chasing a faster score.',
         consistency: 'Prioritize clean contacts and repeatable stops before increasing difficulty.',
@@ -874,9 +874,9 @@ const { product } = Astro.props;
       priorityEl.textContent = balancedRead ? 'BALANCED READ' : focusLevel >= 4 ? 'HIGH-LEVERAGE FIX' : focusLevel >= 3 ? 'WORTH A BLOCK' : 'MAINTENANCE FOCUS';
       planTitle.textContent = balancedRead ? `${routine.name} · Balanced block` : `${routine.name} · ${plan.label}`;
       planMeta.textContent = `${plan.duration.replace(' min', ' minutes')} · ${plan.difficulty} · copy the code into KovaaK's`;
-      nextStepEl.textContent = `${balancedRead ? 'No skill was clearly behind the others. Run one balanced block and judge how it feels in your game.' : nextSteps[weak]} ${goalAdvice[goalKey]}`;
+      nextStepEl.textContent = `${balancedRead ? 'All three skills landed in a similar range, so use this block as your baseline and retest after training.' : nextSteps[weak]} ${goalAdvice[goalKey]}`;
       resultWhy.textContent = balancedRead
-        ? `Your scores were close: flick ${scores.flick}, track ${scores.track}, switch ${scores.switch}. No single weakness stood out, so this is a balanced starting point.`
+        ? `Your scores were close: flick ${scores.flick}, track ${scores.track}, switch ${scores.switch}. All three skills landed in a similar range, so this run did not isolate one clear limiter yet. Balanced means no single skill stood out; it does not mean every score is strong. Use this as your baseline, then retest after the block.`
         : `Your ${plan.label.toLowerCase()} score was ${scores[weak]}/100. Your next-highest score was ${scores[runnerUp]}/100, so ${plan.label.toLowerCase()} was ${gap} points behind. ${metricWhy[weak]}. ${plainWhy[weak]} ${plan.useWhen}`;
       confidenceEl.textContent = `Useful sample: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${trackSeconds}s tracking. ${balancedRead ? 'Enough input for a balanced starting block — not a permanent rating.' : 'Enough input for a starting practice block — not a permanent rating.'}`;
       inputNote.textContent = matchMedia('(pointer: coarse)').matches
@@ -1005,7 +1005,7 @@ const { product } = Astro.props;
       priorityEl.textContent = 'AWAITING INPUT';
       planTitle.textContent = 'Run the diagnostic first';
       planMeta.textContent = 'A focused routine appears after enough confirmed input.';
-      nextStepEl.textContent = 'Click start, then follow the lit target through each stage.';
+      nextStepEl.textContent = 'Click Run the diagnostic, then the center target; follow the short instructions at the bottom of the arena.';
       resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
       confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
       inputNote.textContent = 'Local only · no data leaves this tab.';
