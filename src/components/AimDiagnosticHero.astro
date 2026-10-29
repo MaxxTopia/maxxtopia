@@ -30,7 +30,7 @@ const { product } = Astro.props;
         <div class="aim-diag__brand">
           <img src={product.icon} alt="" />
           <span>TRAINING / AIMMAXXER</span>
-          <i>V1 · BROWSER PREVIEW</i>
+          <i>COMING SOON</i>
         </div>
         <p class="aim-diag__eyebrow"><span></span>~28-second browser diagnostic <b>EVIDENCE RUN</b></p>
         <h1>Don’t guess what<br />your aim <em>needs.</em></h1>
@@ -196,25 +196,25 @@ const { product } = Astro.props;
 
 <style is:global>
   .aim-diagnostic{
-    --ad-ember:#ff4b3e;--ad-red:#7e0a10;--ad-track:#ff8a72;--ad-switch:#d11820;--ad-phase:var(--ad-ember);--ad-phase-rgb:255,75,62;--ad-cream:#fff4f2;--ad-ink:#0c0406;--ad-panel:#1c0305;--ad-line:#3c060a;
+    --ad-ember:#f3af19;--ad-red:#7e0a10;--ad-logo-red:#d11820;--ad-track:#ffd166;--ad-switch:#e94a2f;--ad-phase:var(--ad-ember);--ad-phase-rgb:243,175,25;--ad-cream:#fff4de;--ad-ink:#080705;--ad-panel:#100e0a;--ad-line:#3a3022;
     position:relative;isolation:isolate;overflow:hidden;min-height:clamp(760px,calc(100svh - 58px),920px);
     color:var(--ad-cream);border-bottom:1px solid var(--color-line);background:
-      radial-gradient(65% 85% at 78% 48%,rgba(209,24,32,.15),transparent 64%),
-      radial-gradient(38% 50% at 18% 16%,rgba(255,75,62,.08),transparent 72%),
-      linear-gradient(135deg,#080102,#140306 48%,#050102);
+      radial-gradient(58% 74% at 82% 34%,rgba(209,24,32,.12),transparent 70%),
+      radial-gradient(36% 48% at 18% 12%,rgba(243,175,25,.05),transparent 74%),
+      linear-gradient(135deg,#080705 0%,#130507 52%,#050304 100%);
   }
-  .aim-diagnostic::before{content:"";position:absolute;inset:0;opacity:.22;background-image:linear-gradient(rgba(255,75,62,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(209,24,32,.05) 1px,transparent 1px);background-size:54px 54px;mask-image:linear-gradient(90deg,transparent,#000 55%,#000)}
-  .aim-diagnostic[data-phase="flick"]{--ad-phase:var(--ad-ember);--ad-phase-rgb:255,75,62}.aim-diagnostic[data-phase="track"]{--ad-phase:var(--ad-track);--ad-phase-rgb:255,138,114}.aim-diagnostic[data-phase="switch"]{--ad-phase:var(--ad-switch);--ad-phase-rgb:209,24,32}
-  .aim-diag__noise{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.07;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 4px)}
+  .aim-diagnostic::before{display:none}
+  .aim-diagnostic[data-phase="flick"]{--ad-phase:var(--ad-ember);--ad-phase-rgb:243,175,25}.aim-diagnostic[data-phase="track"]{--ad-phase:var(--ad-track);--ad-phase-rgb:255,209,102}.aim-diagnostic[data-phase="switch"]{--ad-phase:var(--ad-switch);--ad-phase-rgb:233,74,47}
+  .aim-diag__noise{display:none}
   .aim-diag__shell{position:relative;z-index:2;max-width:1380px;margin:0 auto;padding:clamp(76px,9vh,106px) clamp(20px,4vw,54px) 58px}
   .aim-diag__back{display:inline-flex;align-items:center;gap:7px;margin-bottom:32px;color:var(--color-muted);font:600 11px/1 var(--font-mono),monospace;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:color .2s}.aim-diag__back:hover{color:var(--ad-cream)}.aim-diag__back svg{width:14px;fill:none;stroke:currentColor;stroke-width:2.4}
   .aim-diag__grid{display:grid;grid-template-columns:minmax(360px,.8fr) minmax(610px,1.25fr);align-items:center;gap:clamp(46px,6vw,88px)}
-  .aim-diag__copy{position:relative}.aim-diag__brand{display:flex;align-items:center;gap:9px;margin-bottom:31px;color:var(--color-text-mid);font:650 9px/1 var(--font-mono),monospace;letter-spacing:.11em}.aim-diag__brand img{width:34px;height:34px;border-radius:8px}.aim-diag__brand i{margin-left:auto;padding:6px 8px;border:1px solid rgba(209,24,32,.3);border-radius:4px;color:var(--ad-ember);font-style:normal;font-size:8px}
+  .aim-diag__copy{position:relative}.aim-diag__brand{display:flex;align-items:center;gap:9px;margin-bottom:31px;color:var(--color-text-mid);font:650 9px/1 var(--font-mono),monospace;letter-spacing:.11em}.aim-diag__brand img{width:34px;height:34px;border-radius:8px}.aim-diag__brand i{margin-left:auto;padding:6px 8px;border:1px solid rgba(243,175,25,.35);border-radius:4px;color:var(--ad-ember);font-style:normal;font-size:8px;box-shadow:0 0 20px rgba(243,175,25,.08)}
   .aim-diag__eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 18px;color:var(--ad-ember);font:650 10px/1 var(--font-mono),monospace;letter-spacing:.15em;text-transform:uppercase}.aim-diag__eyebrow span{width:7px;height:7px;border:1px solid var(--ad-ember);border-radius:50%;box-shadow:0 0 13px var(--ad-ember);animation:ad-ready 1.5s ease-in-out infinite}@keyframes ad-ready{50%{background:var(--ad-ember);box-shadow:0 0 4px var(--ad-ember)}}
-  .aim-diag__copy h1{max-width:630px;margin:0;font-size:clamp(54px,5.6vw,88px);font-weight:780;line-height:.9;letter-spacing:-.06em}.aim-diag__copy h1 em{color:var(--ad-ember);font-style:normal;text-shadow:0 0 35px rgba(255,75,62,.17)}
-  .aim-diag__lede{max-width:540px;margin:27px 0 0;color:var(--color-text-mid);font-size:clamp(15px,1.15vw,18px);line-height:1.62}.aim-diag__method{max-width:540px;margin:13px 0 0;color:var(--color-muted);font:650 8px/1.5 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}.aim-diag__expectation{display:grid;gap:5px;max-width:540px;margin-top:16px;padding:11px 13px;border-left:2px solid var(--ad-ember);background:rgba(255,75,62,.045)}.aim-diag__expectation strong{color:var(--color-text);font-size:12px;font-weight:700}.aim-diag__expectation span{color:var(--color-text-mid);font-size:12px;line-height:1.45}.aim-diag__actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:24px}
+  .aim-diag__copy h1{max-width:630px;margin:0;font-size:clamp(54px,5.6vw,88px);font-weight:780;line-height:.9;letter-spacing:-.06em}.aim-diag__copy h1 em{color:var(--ad-ember);font-style:normal;text-shadow:0 0 35px rgba(243,175,25,.17)}
+  .aim-diag__lede{max-width:540px;margin:27px 0 0;color:var(--color-text-mid);font-size:clamp(15px,1.15vw,18px);line-height:1.62}.aim-diag__method{max-width:540px;margin:13px 0 0;color:var(--color-muted);font:650 8px/1.5 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}.aim-diag__expectation{display:grid;gap:5px;max-width:540px;margin-top:16px;padding:11px 13px;border-left:2px solid var(--ad-ember);background:rgba(243,175,25,.045)}.aim-diag__expectation strong{color:var(--color-text);font-size:12px;font-weight:700}.aim-diag__expectation span{color:var(--color-text-mid);font-size:12px;line-height:1.45}.aim-diag__actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-top:24px}
   .aim-diag__eyebrow b{margin-left:2px;color:var(--color-text);font-size:8px;letter-spacing:.1em}.aim-diag__skill-key{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:540px;margin-top:23px;border:1px solid var(--color-line-strong);background:rgba(12,4,6,.68)}.aim-diag__skill-key span{display:grid;grid-template-columns:auto 1fr;column-gap:7px;align-items:center;padding:9px 10px;border-left:2px solid var(--skill-color)}.aim-diag__skill-key span:first-child{border-left:0}.aim-diag__skill-key [data-skill-key="flick"]{--skill-color:var(--ad-ember)}.aim-diag__skill-key [data-skill-key="track"]{--skill-color:var(--ad-track)}.aim-diag__skill-key [data-skill-key="switch"]{--skill-color:var(--ad-switch)}.aim-diag__skill-key i{grid-row:span 2;width:6px;height:6px;border:1px solid var(--skill-color);border-radius:50%;box-shadow:0 0 9px color-mix(in srgb,var(--skill-color) 55%,transparent)}.aim-diag__skill-key b{color:var(--color-text-mid);font:700 8px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase}.aim-diag__skill-key small{color:var(--color-muted);font:7px/1 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase}
-  .aim-diag__start,.aim-diag__notify,.aim-diag__browse{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:49px;padding:0 20px;border-radius:6px;font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}.aim-diag__start{border:1px solid var(--ad-ember);background:var(--ad-ember);color:#1c0305;box-shadow:0 14px 35px rgba(255,75,62,.2);transition:transform .2s,box-shadow .2s}.aim-diag__start:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(255,75,62,.34)}.aim-diag__start svg{width:14px;fill:none;stroke:currentColor;stroke-width:2.5}.aim-diag__notify{border:1px solid var(--color-line-strong);background:var(--color-bg);color:var(--color-text-mid);transition:border-color .2s,color .2s}.aim-diag__notify:hover{border-color:var(--ad-ember);color:var(--color-text)}.aim-diag__browse{min-height:40px;padding-inline:4px;border:0;color:var(--color-muted);font-size:11px;text-decoration:underline;text-decoration-color:rgba(255,75,62,.55);text-underline-offset:4px}.aim-diag__browse:hover{color:var(--ad-cream)}
+  .aim-diag__start,.aim-diag__notify,.aim-diag__browse{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:49px;padding:0 20px;border-radius:6px;font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}.aim-diag__start{border:1px solid var(--ad-ember);background:var(--ad-ember);color:#1c0305;box-shadow:0 14px 35px rgba(243,175,25,.2);transition:transform .2s,box-shadow .2s}.aim-diag__start:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(243,175,25,.34)}.aim-diag__start svg{width:14px;fill:none;stroke:currentColor;stroke-width:2.5}.aim-diag__notify{border:1px solid var(--color-line-strong);background:var(--color-bg);color:var(--color-text-mid);transition:border-color .2s,color .2s}.aim-diag__notify:hover{border-color:var(--ad-ember);color:var(--color-text)}.aim-diag__browse{min-height:40px;padding-inline:4px;border:0;color:var(--color-muted);font-size:11px;text-decoration:underline;text-decoration-color:rgba(243,175,25,.55);text-underline-offset:4px}.aim-diag__browse:hover{color:var(--ad-cream)}
   .aim-diag__proof{display:grid;grid-template-columns:repeat(3,1fr);max-width:470px;margin-top:36px;border-top:1px solid var(--color-line-strong)}.aim-diag__proof span{padding:15px 14px 0 0;color:var(--color-muted);font:9px/1 var(--font-mono),monospace;letter-spacing:.1em;text-transform:uppercase}.aim-diag__proof span+span{padding-left:17px;border-left:1px solid var(--color-line-strong)}.aim-diag__proof b{display:block;margin-bottom:7px;color:var(--color-text);font:700 23px/1 var(--font-display),sans-serif}
 
   .aim-diag__machine{position:relative;min-width:0;border:1px solid var(--color-line-strong);border-radius:13px;overflow:hidden;background:#0c0406;box-shadow:0 35px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.025) inset,0 0 75px rgba(209,24,32,.1)}
@@ -254,41 +254,28 @@ const { product } = Astro.props;
   .aim-diagnostic.is-immersive .aim-diag__grid{display:block;width:100%;margin:auto}
   .aim-diagnostic.is-immersive .aim-diag__machine{width:min(1180px,100%);margin:auto}
 
-  /* Aimmaxxer's visual language is a red-lit evidence lab: angled scan lanes,
-     hard measurement edges, then a physical-looking console. */
+  /* Aimmaxxer's visual language is a quiet black/red instrument panel with a
+     warm signal accent. Keep the page calm; the arena carries the motion. */
   .aim-diagnostic {
     background:
-      linear-gradient(118deg, transparent 0 27%, rgba(255, 75, 62, .075) 27.2% 27.8%, transparent 28.1%),
-      linear-gradient(158deg, transparent 0 57%, rgba(209, 24, 32, .09) 57.2% 57.8%, transparent 58.2%),
-      linear-gradient(125deg, #070102 0%, #180406 53%, #060102 100%);
+      radial-gradient(58% 76% at 86% 16%, rgba(209, 24, 32, .12), transparent 72%),
+      linear-gradient(135deg, #080705 0%, #130507 54%, #050304 100%);
   }
   .aim-diagnostic::after {
-    content: '';
-    position: absolute;
-    top: 12%;
-    right: -10%;
-    width: min(980px, 72vw);
-    height: 42%;
-    border-top: 1px solid rgba(255, 75, 62, .11);
-    border-bottom: 1px solid rgba(255, 75, 62, .06);
-    background:
-      repeating-linear-gradient(90deg, transparent 0 52px, rgba(255, 75, 62, .04) 53px 54px),
-      linear-gradient(142deg, transparent 0 23%, rgba(255, 75, 62, .095) 23.5% 24%, transparent 24.6%);
-    clip-path: polygon(15% 0, 100% 0, 82% 100%, 0 100%);
-    pointer-events: none;
+    display: none;
   }
   .aim-diag__shell { max-width: 1440px; }
   .aim-diag__grid { grid-template-columns: minmax(390px, .84fr) minmax(620px, 1.16fr); gap: clamp(52px, 6.5vw, 104px); }
   .aim-diag__copy {
     padding-left: 20px;
-    border-left: 2px solid rgba(255, 75, 62, .65);
+    border-left: 2px solid rgba(209, 24, 32, .6);
   }
   .aim-diag__copy::before {
     content: 'EVIDENCE FIRST';
     position: absolute;
     top: 2px;
     left: -36px;
-    color: rgba(255, 75, 62, .72);
+    color: rgba(243, 175, 25, .72);
     font: 700 8px/1 var(--font-mono), monospace;
     letter-spacing: .16em;
     writing-mode: vertical-rl;
@@ -304,13 +291,13 @@ const { product } = Astro.props;
     position: absolute;
     inset: 8px;
     z-index: 1;
-    border: 1px solid rgba(255, 75, 62, .08);
+    border: 1px solid rgba(243, 175, 25, .08);
     border-radius: 11px;
     pointer-events: none;
   }
   .aim-diag__machine-top { height: 44px; background: linear-gradient(180deg, #350a10, #0c0406); }
   .aim-diag__loadout { min-height: 31px; background: linear-gradient(90deg, #190406, #100205); }
-  .aim-diag__scores { background: linear-gradient(180deg, rgba(255, 75, 62, .035), transparent); }
+  .aim-diag__scores { background: linear-gradient(180deg, rgba(243, 175, 25, .035), transparent); }
 
   @media(max-width:1060px) {
     .aim-diag__copy { padding-left: 0; border-left: 0; }

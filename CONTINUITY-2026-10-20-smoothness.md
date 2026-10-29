@@ -213,3 +213,13 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not pushed or deployed. The canonical checkout remains untouched.
 - User-owed test: review the refreshed preview at desktop and narrow widths; functional target/range circles remain intentionally inside the diagnostic.
 - Best next move: commit this scoped motif refinement after visual QA; do not deploy automatically.
+
+## Aimmaxxer logo-aligned palette reset - 2026-10-29
+
+- Scope: restore the quieter plain background after Diggy said the angular scan treatment felt weaker than the earlier simple version, bring back the missing yellow `COMING SOON` badge, and keep the page closer to the Aimmaxxer logo.
+- Changed `src/components/AimDiagnosticHero.astro`: restored `COMING SOON`; made deep black/logo-red the foundation with warm amber as the controlled signal accent; removed decorative scan-plane, grid, and CRT texture backgrounds; and kept functional arena target/range guides unchanged.
+- Changed `src/components/AimWarmup.astro`: removed the routine-deck scan-plane/grid texture, kept the angular map/card details, and aligned the routine-library accent to warm amber while preserving the logo red and the bottom V2 teaser's independent accent, wording, and direct channel link.
+- Verification: `git diff --check` passed after the complete edit; `npm run build` passed release truth, sitemap validation, and the complete 28-page Astro build. The local preview visually showed the amber badge, calmer hero, amber routine labels, and unchanged V2 purchase panel.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical checkout remains untouched.
+- User-owed test: review `http://127.0.0.1:4321/aimmaxxer?release=score-loop` and confirm the plain black/red plus amber treatment feels better than the scan background.
+- Best next move: if approved, use the documented ship sequence and verify the live Aimmaxxer route; do not publish automatically from this pass.
