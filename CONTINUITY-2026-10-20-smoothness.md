@@ -223,3 +223,13 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not pushed or deployed. The canonical checkout remains untouched.
 - User-owed test: review `http://127.0.0.1:4321/aimmaxxer?release=score-loop` and confirm the plain black/red plus amber treatment feels better than the scan background.
 - Best next move: if approved, use the documented ship sequence and verify the live Aimmaxxer route; do not publish automatically from this pass.
+
+## Aimmaxxer diagnostic chrome and action polish - 2026-10-29
+
+- Scope: remove decorative/preview-only labels Diggy identified and sharpen the hero actions without changing diagnostic measurements.
+- Changed `src/components/AimDiagnosticHero.astro`: removed the vertical `EVIDENCE FIRST` label; hid the idle switch-course overlay copy while retaining the backing data nodes for switch-course logic; changed the running switch status to `SWITCH PHASE`; relabeled the selector `GAME CONTEXT` with an accessible recommendation-focused description; restored the Run button to a blood-red treatment; and upgraded the `Get Aimmaxxer V2` link with a dark-red secondary treatment and arrow while keeping its label and Discord destination unchanged.
+- Behavior note: game selection changes game notes, recommended routine mapping, result/personal-board labels, and locally saved context; it does not alter the 28-second target timing, spawn layouts, or scoring mechanics.
+- Verification: `git diff --check` and `npm run build` passed after the final edit; release-truth passed for 10 products, sitemap validation passed for 18 Astro routes plus `/play/spritecannon/`, and the complete 28-page Astro build passed. Local browser AX/screenshot verification showed no `EVIDENCE FIRST`, `TRANSFER SAMPLE`, `00 / 10`, or `WARMING UP` preview text and showed the paired hero actions together.
+- Release state: local isolated worktree only; not pushed or deployed. Canonical checkout untouched.
+- User-owed test: review the local hero actions and run the diagnostic if desired; confirm the blood-red primary and dark-red V2 treatment feel right.
+- Best next move: if approved, request explicit push-live approval and follow the documented ship sequence.
