@@ -996,9 +996,11 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - Scoped continuation uses the isolated frontend worktree
   `C:\Users\Diggy\projects\maxxtopia-standings-command-center` and isolated
   Worker worktree `C:\Users\Diggy\projects\snipemaxxer-standings-full-field-cumulative`.
-  The canonical dirty checkouts were not edited. The previous production
-  release remains live; this feature is local, uncommitted, unpushed, and not
-  deployed.
+  The canonical dirty checkouts were not edited. The site release is committed
+  as `d7343bf`, pushed to `origin/main`, and deployed through Pages workflow
+  `40870559829`. The Worker release is committed as `c89e79d` in the isolated
+  worktree and deployed as Worker version
+  `bf613e63-84e9-4731-b523-b9b6b8e25845`.
 - Updated `src/pages/standings.astro` so the public finals board requests and
   displays the provider field up to a 100-player safety cap. It clearly marks
   a scan as partial when the provider proves there are more rows, keeps player
@@ -1020,10 +1022,16 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   `npm run test:standings-pagination` (3/3), `node --check worker/src/index.js`,
   `git diff --check`, and `npx wrangler deploy --dry-run --config
   worker/wrangler.toml` (137.61 KiB upload, expected bindings).
-- Remaining release gate: authorize the normal release, then commit only
-  `src/pages/standings.astro` in the site worktree and `worker/src/index.js`
-  in the Worker worktree, push/deploy through the documented workflows, and
-  verify a real multi-day finals event: public field rows, computed cumulative
-  Top 10, overlay URL, refresh polling, and the >100 fallback state. Diggy's
-  owed acceptance test is a browser review of those live routes; production
-  proof does not exist until that deployment and provider-backed check happen.
+- Production verification passed on the live Europe FNCSSolo Final Day 2
+  route. The full-field API and browser board returned 100 rows with
+  `scanComplete=true` and `scanLimited=false`; the exact cumulative overlay
+  request (`limit=10&cumulative=1`) returned 10 rows with
+  `cumulativeAvailable=true`, `cumulativeAccuracy=complete`, and Day 1 plus
+  Day 2 windows. The refreshed live browser overlay showed `CUMULATIVE ·
+  COMPLETE`, 12 games per player, and the expected Top 10.
+- The remaining gate is Diggy's visual/stream acceptance of the deployed
+  routes. The public API is intentionally capped at 100 rows for resource
+  safety; the overlay remains Top 5 or Top 10. If the provider exposes more
+  than the cap or cannot prove pagination/identity completeness, the UI must
+  retain its explicit partial/unavailable state rather than inventing a full
+  field or cumulative result.
