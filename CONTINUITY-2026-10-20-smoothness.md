@@ -261,3 +261,12 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Release state: local isolated worktree only; not committed, pushed, or deployed. Diggy has now explicitly authorized pushing this version live. The canonical dirty checkout remains untouched.
 - User-owed test: after deployment, compare the live top CTA effect at `https://maxxtopia.com/aimmaxxer/?release=score-loop` and confirm the treatment is visible without a stripe.
 - Best next move: commit only this scoped Aimmaxxer/continuity change, push safely to `main`, watch the deploy workflow, then verify the live route.
+
+## Aimmaxxer V2 CTA persistent-glow release - 2026-10-29
+
+- Scope: make the top `Get Aimmaxxer V2` signal visible even when the visitor's PC/browser has reduced motion enabled, after Diggy reported that the earlier effect looked like a diagonal white line and could be missing entirely.
+- Changed `src/components/AimDiagnosticHero.astro`: removed the directional sweep; kept a persistent dark-red border, red halo, restrained red ambient wash, and warm text glow on the V2 CTA. Animation now only gently varies the strength; the reduced-motion rule explicitly preserves the static glow and text highlight.
+- Verification: `git diff --check` and `npm run build` passed. Local browser computed-style verification showed `prefers-reduced-motion: reduce` with `animation: none`, visible red box shadows, and visible label text glow. GitHub Actions run `40892819404` passed `npm ci`, the full build, and Cloudflare Pages deployment.
+- Release state: commit `11c2895` is on `origin/main`; production `https://maxxtopia.com/aimmaxxer/?release=score-loop` returned HTTP 200. Live browser verification confirmed the V2 CTA still links to `#aimmaxerv2` and, under reduced motion, renders the red border/halo plus static text glow with no diagonal sweep.
+- Remaining user gate: Diggy can compare the live CTA on their own PC; this release specifically removes the dependency on animation support, but perceived brightness can still vary by display/browser contrast settings.
+- Best next move: no code release blocker remains for this request; keep any further adjustment to the CTA's intensity as a separate visual tweak.
