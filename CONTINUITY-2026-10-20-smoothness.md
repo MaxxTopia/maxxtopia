@@ -179,3 +179,10 @@ Investigate the report that Maxxtopia.com feels laggy, with OptimizationMaxxing 
 - Evidence: the exact copy was recovered from the repository's earlier `2fe442f`/`32af5c2` history rather than reconstructed from memory.
 - Verification: source diff checked; build should be rerun before release.
 - Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
+
+## Aimmaxxer V2 purchase CTA wording - 2026-10-29
+
+- Scope: make the bottom CTA clearly communicate that the Discord handoff is for purchasing V2.
+- Changed `src/components/AimWarmup.astro`: set the button to `Join the Discord to purchase`; kept the direct `#aimmaxerv2` channel destination.
+- Decision: `purchase` is clearer and more polished for a paid product than `buy`; sentence case matches the site's other CTA labels.
+- Release state: local isolated worktree only; not pushed or deployed. The canonical dirty checkout remains untouched.
