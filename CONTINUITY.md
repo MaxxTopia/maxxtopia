@@ -1099,3 +1099,27 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   download/install test of the Windows beta. Do not restore a public link to
   the machine-backed editor unless its access boundary is intentionally
   changed.
+
+## Event desk region filters -- 2026-10-29
+
+- Added a visible `Event desk region` selector to the live event desk in
+  `src/pages/standings.astro`. It uses the existing canonical `region` state,
+  so changing it reloads the live, next-up, and recently completed catalog as
+  well as the selected board. The old duplicate selector was removed from the
+  collapsed Board details panel so region choice is no longer hidden.
+- The selector includes All regions, NAC, NAW, EU, BR, ASIA, OCE, and ME.
+  The live-count pill now names the active scope, and the mobile layout keeps
+  the selector full width. The Board details controls were reduced to the
+  search and public-board view without an empty desktop column.
+- Verification passed: `npm run build`, standings search tests (6/6),
+  standings pagination tests (3/3), `git diff --check`, and a local browser
+  preview. The local preview visibly selected `NAW` from the URL state. A
+  read-only production API check returned 211 NAW windows and only `NAW`
+  regions for `region=NAW`, while the all-region catalog returned 500 windows
+  across seven regions.
+- Local code commit is `cc0c2d9`. No push or deployment was performed in this
+  scoped feature turn; the release gate remains Diggy's authorization to push
+  and publish this frontend change. The existing `.wrangler/` untracked state
+  was preserved. Best next move: publish, then verify the live event desk by
+  switching from All regions to NAW and confirming both Next up and Recently
+  completed cards change.
