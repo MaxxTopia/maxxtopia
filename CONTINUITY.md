@@ -990,3 +990,40 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
 - The companion and mobile Worker remain separately released. The remaining
   field gate is still a real gaming-PC, Riot Client, phone, and known-history
   lobby test after the companion updates.
+
+## Standings full finals field and computed cumulative -- 2026-10-29
+
+- Scoped continuation uses the isolated frontend worktree
+  `C:\Users\Diggy\projects\maxxtopia-standings-command-center` and isolated
+  Worker worktree `C:\Users\Diggy\projects\snipemaxxer-standings-full-field-cumulative`.
+  The canonical dirty checkouts were not edited. The previous production
+  release remains live; this feature is local, uncommitted, unpushed, and not
+  deployed.
+- Updated `src/pages/standings.astro` so the public finals board requests and
+  displays the provider field up to a 100-player safety cap. It clearly marks
+  a scan as partial when the provider proves there are more rows, keeps player
+  search bounded to the loaded field, and keeps the stream overlay at Top 5 or
+  Top 10.
+- Updated `worker/src/index.js` so `limit=100` scans provider pages with a
+  terminal/total check instead of silently returning the first snapshot. The
+  overlay can request `cumulative=1`; when the provider has no combined board,
+  the Worker merges complete sibling day boards by stable team/player IDs and
+  sums their points. It only labels cumulative data complete after every
+  required day scan is complete and within the cap. Otherwise it returns the
+  selected provider board with an explicit cumulative-unavailable reason.
+- A complete cumulative calculation can still be more than 100 distinct
+  players across day boards. The cumulative Top 10 remains usable, while the
+  public cumulative field is marked capped at 100. No fabricated full-field or
+  cumulative claim is made when pagination or identity data is incomplete.
+- Verification passed after the final patch: `npm run build` (28 Astro pages),
+  `npm run test:standings-search` (6/6),
+  `npm run test:standings-pagination` (3/3), `node --check worker/src/index.js`,
+  `git diff --check`, and `npx wrangler deploy --dry-run --config
+  worker/wrangler.toml` (137.61 KiB upload, expected bindings).
+- Remaining release gate: authorize the normal release, then commit only
+  `src/pages/standings.astro` in the site worktree and `worker/src/index.js`
+  in the Worker worktree, push/deploy through the documented workflows, and
+  verify a real multi-day finals event: public field rows, computed cumulative
+  Top 10, overlay URL, refresh polling, and the >100 fallback state. Diggy's
+  owed acceptance test is a browser review of those live routes; production
+  proof does not exist until that deployment and provider-backed check happen.

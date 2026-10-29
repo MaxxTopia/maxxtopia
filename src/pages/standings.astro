@@ -592,7 +592,7 @@ const standingsApi = '/api';
         <div class="sp-title-row">
           <div>
             <h1><span class="sp-title-gradient">Live Fortnite standings</span><span class="sp-title-mark">.</span></h1>
-            <p class="sp-intro">Find the round being played now, then read a clean top-five or top-ten snapshot.</p>
+            <p class="sp-intro">Find the round being played now, then browse the finals field or open a focused Top 10 stream overlay.</p>
           </div>
           <span class="sp-hero-chip">One clear board</span>
         </div>
@@ -703,15 +703,13 @@ const standingsApi = '/api';
                   <button id="sp-window-clear" class="sp-search-clear" type="button" aria-label="Clear tournament search" hidden>×</button>
                 </div>
                 <span class="sp-selected-window" id="sp-selected-window">Choose a tournament round</span>
-                <span class="sp-search-hint" id="sp-search-hint">Search events, rounds, regions, or the current board's player snapshot.</span>
+                <span class="sp-search-hint" id="sp-search-hint">Search events, rounds, regions, or players in the loaded field.</span>
                 <div class="sp-window-results" id="sp-window-results" role="listbox" aria-label="Search matches" hidden></div>
               </div>
               <div class="sp-control sp-control--view">
-                <span>Board size</span>
-                <div class="sp-segmented" role="group" aria-label="Board size">
-                  <button id="sp-top5" data-limit="5" type="button" aria-pressed="false">Top 5</button>
-                  <button id="sp-top10" data-limit="10" class="is-active" type="button" aria-pressed="true">Top 10</button>
-                </div>
+                <span>Public board</span>
+                <strong class="sp-full-field-choice" id="sp-public-board-view">Finals field · up to 100</strong>
+                <small class="sp-full-field-note">The stream overlay stays bounded to Top 5 or Top 10.</small>
               </div>
             </div>
 
@@ -723,7 +721,7 @@ const standingsApi = '/api';
 
             <div class="sp-summary" aria-label="Leaderboard summary">
               <div class="sp-summary-item sp-summary-item--live"><span class="sp-summary-label">Signal</span><strong id="sp-signal">Waiting</strong></div>
-              <div class="sp-summary-item"><span class="sp-summary-label" title="This board currently shows the provider's ranked top-five or top-ten snapshot">Board coverage</span><strong id="sp-count">—</strong></div>
+              <div class="sp-summary-item"><span class="sp-summary-label" title="The public board loads up to 100 provider-ranked rows; the stream overlay stays at Top 5 or Top 10">Board coverage</span><strong id="sp-count">—</strong></div>
               <div class="sp-summary-item"><span class="sp-summary-label">Last provider update</span><strong id="sp-updated">—</strong></div>
               <div class="sp-summary-item"><span class="sp-summary-label">Games reported</span><strong id="sp-games">—</strong></div>
               <div class="sp-summary-item sp-summary-item--prize"><span class="sp-summary-label" id="sp-prize-label">Prize pool</span><strong id="sp-prizepool" class="is-unpublished">Choose a round</strong><a id="sp-prize-source" class="sp-prize-source" href="#" target="_blank" rel="noreferrer" hidden>Official event page ↗</a></div>
@@ -735,10 +733,10 @@ const standingsApi = '/api';
         <div class="sp-board" id="sp-board" aria-live="polite">
           <div class="sp-board-intro">
             <div>
-              <strong id="sp-board-view-label">Top 10 snapshot</strong>
+              <strong id="sp-board-view-label">Finals field · up to 100</strong>
               <details class="sp-board-note" id="sp-board-note">
                 <summary><span class="sp-board-note-icon" aria-hidden="true">i</span><span>Why snapshot?</span><span class="sp-board-note-chevron" aria-hidden="true">⌄</span></summary>
-                <p id="sp-board-view-note">Showing the top 10 ranked rows returned by Epic. We never combine partial day snapshots and call them a full field.</p>
+                <p id="sp-board-view-note">The public board loads every provider-ranked row available up to a 100-player safety cap. The stream overlay uses a separate Top 5 or Top 10 view.</p>
               </details>
             </div>
             <span class="sp-board-trust sp-board-trust--waiting" id="sp-board-trust">Waiting for provider data</span>
@@ -760,7 +758,7 @@ const standingsApi = '/api';
 
         <div class="sp-footnote">
           <span class="sp-footnote-mark">i</span>
-          <p><strong>What this board shows.</strong> Epic replay and session processing can trail a live event by several minutes. This page shows the provider's ranked top-five or top-ten snapshot, never a fake full field, and keeps the last successful snapshot when an update is missing.</p>
+          <p><strong>What this board shows.</strong> Epic replay and session processing can trail a live event by several minutes. Finals pages load up to 100 provider-ranked players; the overlay stays focused on the Top 5 or Top 10 and can compute a cumulative day total only after every required day board is complete.</p>
         </div>
       </section>
 
@@ -811,6 +809,15 @@ const standingsApi = '/api';
     catalogController: null,
     hasRows: false,
     rows: [],
+    totalPlayers: null,
+    fieldView: '',
+    fieldLimit: 100,
+    scanComplete: null,
+    scanLimited: false,
+    cumulativeRequested: false,
+    cumulativeAvailable: null,
+    cumulativeReason: '',
+    cumulativeWindows: [],
     previousRows: new Map(),
     selectedWindow: null,
     windowSearch: '',
@@ -818,6 +825,7 @@ const standingsApi = '/api';
     fetchedAt: '',
     snapshotState: 'waiting',
     overlay: false,
+    cumulativeMode: false,
     collapsed: false,
   };
 
@@ -880,6 +888,36 @@ const standingsApi = '/api';
       ...(Array.isArray(row?.members) ? row.members.map((member) => member?.name) : []),
     ].filter(Boolean).join(' '));
     return normalizedQuery.split(/\s+/).every((token) => candidate.includes(token));
+  }
+
+  function boardDisplayLimit() {
+    return state.overlay ? state.limit : state.fieldLimit;
+  }
+
+  function boardViewLabel() {
+    if (state.overlay) {
+      return state.cumulativeAvailable === true
+        ? `Cumulative Top ${state.limit}`
+        : `Top ${state.limit} snapshot`;
+    }
+    if (state.cumulativeMode) {
+      return state.cumulativeAvailable === true
+        ? `Cumulative finals field · up to ${state.fieldLimit}`
+        : 'Cumulative finals field';
+    }
+    return state.scanLimited ? `Finals field · first ${state.fieldLimit}` : `Finals field · up to ${state.fieldLimit}`;
+  }
+
+  function resetStandingsMetadata() {
+    state.totalPlayers = null;
+    state.fieldView = '';
+    state.fieldLimit = 100;
+    state.scanComplete = null;
+    state.scanLimited = false;
+    state.cumulativeRequested = false;
+    state.cumulativeAvailable = null;
+    state.cumulativeReason = '';
+    state.cumulativeWindows = [];
   }
 
   function firstPublished(...values) {
@@ -1068,11 +1106,11 @@ const standingsApi = '/api';
     if (state.playerSearchQuery) {
       const matches = state.rows.filter((row) => playerMatchesQuery(row, state.playerSearchQuery));
       hint.textContent = matches.length
-        ? `Showing ${matches.length} player match${matches.length === 1 ? '' : 'es'} in this provider snapshot. Clear search to restore the board.`
-        : 'No player match in this provider snapshot. Clear search to browse the event desk.';
+        ? `Showing ${matches.length} player match${matches.length === 1 ? '' : 'es'} in the loaded ${state.overlay ? 'overlay' : 'field'}. Clear search to restore the board.`
+        : `No player match in the loaded ${state.overlay ? 'overlay' : 'field'}. Clear search to browse the event desk.`;
       return;
     }
-    hint.textContent = 'Search events, rounds, regions, or the current board\'s player snapshot.';
+    hint.textContent = 'Search events, rounds, regions, or players in the loaded field.';
   }
 
   function renderBoardDetailsSummary() {
@@ -1090,7 +1128,7 @@ const standingsApi = '/api';
           ? 'Retrying provider'
           : 'Waiting for provider';
     const search = state.playerSearchQuery ? ' · Player filter' : '';
-    summary.textContent = `${selection} · Top ${state.limit}${search} · ${freshness}`;
+    summary.textContent = `${selection} · ${boardViewLabel()}${search} · ${freshness}`;
     summary.title = summary.textContent;
   }
 
@@ -1116,25 +1154,56 @@ const standingsApi = '/api';
     if (state.playerSearchQuery) {
       const names = [...new Set(state.rows.filter((row) => playerMatchesQuery(row, state.playerSearchQuery)).map((row) => row.name).filter(Boolean))];
       label.textContent = names.length ? `Player: ${names.join(', ')}` : `Player search: ${state.playerSearchQuery}`;
-      note.textContent = 'Filtered from the current provider-ranked snapshot. Clear search to restore the full board.';
+      note.textContent = `Filtered from the loaded ${state.overlay ? 'overlay snapshot' : 'public field'}. Clear search to restore the full board.`;
     } else {
-      label.textContent = `Top ${state.limit} snapshot`;
-      note.textContent = `Showing the top ${state.limit} ranked rows returned by Epic. A cumulative or full-field view appears only when the provider publishes one; we never combine partial day snapshots.`;
+      label.textContent = boardViewLabel();
+      if (state.cumulativeMode && state.cumulativeAvailable === true) {
+        const windows = Array.isArray(state.cumulativeWindows) ? state.cumulativeWindows.map((window) => window.name).filter(Boolean) : [];
+        note.textContent = windows.length
+          ? `Computed from complete provider boards for ${windows.join(' + ')}. This public cumulative view is capped at ${state.fieldLimit} players.`
+          : `Computed from complete provider day boards. This public cumulative view is capped at ${state.fieldLimit} players.`;
+      } else if (state.cumulativeMode && state.cumulativeRequested && state.cumulativeAvailable === false) {
+        note.textContent = `Cumulative totals are withheld: ${state.cumulativeReason || 'the required day boards are not complete.'} Showing the selected provider field instead.`;
+      } else if (state.overlay && state.cumulativeAvailable === true) {
+        const windows = Array.isArray(state.cumulativeWindows) ? state.cumulativeWindows.map((window) => window.name).filter(Boolean) : [];
+        note.textContent = windows.length
+          ? `Computed from complete provider boards for ${windows.join(' + ')}. The overlay updates when the provider refreshes those day boards.`
+          : 'Computed from complete provider day boards. The overlay updates when the provider refreshes them.';
+      } else if (state.overlay && state.cumulativeRequested && state.cumulativeAvailable === false) {
+        note.textContent = `Showing the provider Top ${state.limit} snapshot. Cumulative totals are withheld: ${state.cumulativeReason || 'the required day boards are not complete.'}`;
+      } else if (state.overlay) {
+        note.textContent = `Showing the provider Top ${state.limit} ranked rows. The overlay never adds partial day snapshots together.`;
+      } else if (state.scanLimited) {
+        note.textContent = `Showing the first ${state.fieldLimit} provider-ranked rows. This event has more than the public safety cap, so the board is clearly marked partial.`;
+      } else {
+        note.textContent = `Showing every provider-ranked row collected for this round, up to ${state.fieldLimit} players. The stream overlay stays bounded to Top 5 or Top 10.`;
+      }
     }
     const selected = selectedWindow();
-    const suffix = state.snapshotState === 'good' && selected && isLive(selected)
-      ? 'LIVE · PROVISIONAL'
-      : state.snapshotState === 'good' && selected && isUpcoming(selected)
-        ? 'UPCOMING · WAITING'
-        : state.snapshotState === 'good'
-          ? 'COMPLETED · PROVIDER SNAPSHOT'
-        : state.snapshotState === 'stale'
-          ? 'LAST GOOD SNAPSHOT'
-          : state.snapshotState === 'error'
-            ? 'DATA UNAVAILABLE'
-            : 'WAITING FOR PROVIDER DATA';
+    let suffix = 'WAITING FOR PROVIDER DATA';
+    if (state.snapshotState === 'good' && selected && isLive(selected)) {
+      suffix = state.overlay
+        ? state.cumulativeAvailable === true ? 'LIVE · CUMULATIVE' : 'LIVE · PROVIDER SNAPSHOT'
+        : state.cumulativeMode && state.cumulativeAvailable === true
+          ? 'LIVE · CUMULATIVE FIELD'
+          : state.scanLimited ? 'LIVE · FIRST 100' : 'LIVE · FULL FIELD';
+    } else if (state.snapshotState === 'good' && selected && isUpcoming(selected)) {
+      suffix = 'UPCOMING · WAITING';
+    } else if (state.snapshotState === 'good') {
+      suffix = state.overlay
+        ? state.cumulativeAvailable === true ? 'CUMULATIVE · COMPLETE' : 'COMPLETED · PROVIDER SNAPSHOT'
+        : state.cumulativeMode && state.cumulativeAvailable === true
+          ? 'CUMULATIVE · COMPLETE'
+          : state.scanLimited ? 'COMPLETED · FIRST 100' : 'COMPLETED · FULL FIELD';
+    } else if (state.snapshotState === 'stale') {
+      suffix = 'LAST GOOD SNAPSHOT';
+    } else if (state.snapshotState === 'error') {
+      suffix = 'DATA UNAVAILABLE';
+    }
     trust.textContent = suffix;
     trust.className = `sp-board-trust sp-board-trust--${state.snapshotState}`;
+    const publicView = $('sp-public-board-view');
+    if (publicView) publicView.textContent = state.overlay ? `Overlay · ${boardViewLabel()}` : boardViewLabel();
     renderBoardDetailsSummary();
     renderOverlaySync();
   }
@@ -1144,10 +1213,16 @@ const standingsApi = '/api';
     url.searchParams.set('region', state.region);
     if (state.eventId) url.searchParams.set('eventId', state.eventId); else url.searchParams.delete('eventId');
     if (state.windowId) url.searchParams.set('windowId', state.windowId); else url.searchParams.delete('windowId');
-    url.searchParams.set('limit', String(state.limit));
+    url.searchParams.set('limit', String(state.overlay ? state.limit : state.fieldLimit));
     url.searchParams.delete('playerRegion');
     if (state.playerSearchQuery) url.searchParams.set('player', state.playerSearchQuery); else url.searchParams.delete('player');
-    if (state.overlay) url.searchParams.set('overlay', '1'); else url.searchParams.delete('overlay');
+    if (state.overlay || state.cumulativeMode) {
+      if (state.overlay) url.searchParams.set('overlay', '1'); else url.searchParams.delete('overlay');
+      url.searchParams.set('cumulative', '1');
+    } else {
+      url.searchParams.delete('overlay');
+      url.searchParams.delete('cumulative');
+    }
     window.history.replaceState({}, '', url);
   }
 
@@ -1155,6 +1230,7 @@ const standingsApi = '/api';
     const url = new URL(window.location.href);
     url.searchParams.set('overlay', '1');
     url.searchParams.set('limit', String(state.limit));
+    url.searchParams.set('cumulative', '1');
     url.searchParams.delete('player');
     url.searchParams.delete('playerRegion');
     url.searchParams.delete('view');
@@ -1164,7 +1240,8 @@ const standingsApi = '/api';
   function updateFullBoardLink() {
     const url = new URL(window.location.href);
     url.searchParams.delete('overlay');
-    url.searchParams.set('limit', String(state.limit));
+    url.searchParams.delete('cumulative');
+    url.searchParams.set('limit', String(state.fieldLimit));
     $('sp-full-board').href = url.pathname + url.search;
   }
 
@@ -1192,7 +1269,8 @@ const standingsApi = '/api';
       renderBoardMeta();
       return;
     }
-    label.textContent = `Selected: ${selected.name || selected.eventName || selected.eventId || 'Tournament'} · ${roundLabel(selected)} · ${regionLabel(regionCode(selected))}`;
+    const selectedRound = state.cumulativeMode ? 'Cumulative finals' : roundLabel(selected);
+    label.textContent = `Selected: ${selected.name || selected.eventName || selected.eventId || 'Tournament'} · ${selectedRound} · ${regionLabel(regionCode(selected))}`;
     label.title = label.textContent;
     renderSearchHint();
     renderBoardMeta();
@@ -1287,7 +1365,7 @@ const standingsApi = '/api';
       ? (selected.name || selected.eventName || selected.eventId || 'Selected tournament')
       : 'Choose a round to see its stages';
     caption.textContent = stages.length
-      ? `${stages.length} stage${stages.length === 1 ? '' : 's'} · ${cumulativeStages.length ? 'cumulative available' : regularStages.length > 1 ? 'cumulative not published' : 'provider stage'}`
+      ? `${stages.length} stage${stages.length === 1 ? '' : 's'} · ${cumulativeStages.length ? 'cumulative available' : regularStages.length > 1 ? 'computed cumulative available' : 'provider stage'}`
       : 'Stages appear after you choose an event';
     if (!stages.length) {
       const empty = document.createElement('span');
@@ -1319,21 +1397,22 @@ const standingsApi = '/api';
       list.append(button);
     });
     if (regularStages.length > 1 && !cumulativeStages.length) {
-      const unavailable = document.createElement('button');
-      unavailable.type = 'button';
-      unavailable.className = 'sp-stage-nav-item sp-stage-nav-item--unavailable';
-      unavailable.dataset.cumulativeUnavailable = 'true';
-      unavailable.title = 'Cumulative standings are not published for this event';
+      const computed = document.createElement('button');
+      computed.type = 'button';
+      computed.className = 'sp-stage-nav-item sp-stage-nav-item--computed';
+      computed.dataset.cumulativeComputed = 'true';
+      computed.classList.toggle('is-selected', state.cumulativeMode);
+      computed.title = 'Build cumulative standings from complete day boards when the provider does not publish a combined board';
       const status = document.createElement('span');
       status.className = 'sp-stage-nav-status';
-      status.textContent = 'NOT PUBLISHED';
+      status.textContent = 'COMPUTED';
       const stage = document.createElement('strong');
       stage.textContent = 'Cumulative';
       const meta = document.createElement('small');
-      meta.textContent = 'Provider combined board unavailable';
-      unavailable.append(status, stage, meta);
-      unavailable.setAttribute('aria-label', 'Cumulative standings are not published by the provider. Choose a day to view a provider snapshot.');
-      list.append(unavailable);
+      meta.textContent = 'Built from complete day boards · capped at 100';
+      computed.append(status, stage, meta);
+      computed.setAttribute('aria-label', 'Open a computed cumulative board built from complete day standings, capped at 100 players.');
+      list.append(computed);
     }
   }
 
@@ -1401,6 +1480,7 @@ const standingsApi = '/api';
     state.eventId = item.eventId || '';
     state.windowId = item.windowId || '';
     state.selectedWindow = item;
+    state.cumulativeMode = false;
     $('sp-window-search').value = '';
     state.windowSearch = '';
     state.playerSearchQuery = '';
@@ -1782,14 +1862,24 @@ const standingsApi = '/api';
     const filteredRows = state.playerSearchQuery
       ? sourceRows.filter((row) => playerMatchesQuery(row, state.playerSearchQuery))
       : sourceRows;
-    const visible = filteredRows.slice(0, state.limit);
+    const visible = filteredRows.slice(0, boardDisplayLimit());
+    const reportedTotal = Number.isFinite(Number(state.totalPlayers)) ? Number(state.totalPlayers) : null;
+    const cappedCount = reportedTotal != null && reportedTotal > state.fieldLimit
+      ? `${visible.length} of ${formatNumber(reportedTotal)}`
+      : `First ${visible.length}`;
     $('sp-count').textContent = visible.length
       ? state.playerSearchQuery
         ? `Player search · ${visible.length} match${visible.length === 1 ? '' : 'es'}`
-        : `Top ${state.limit} view · ${visible.length} shown`
+        : state.overlay
+          ? `Top ${state.limit} view · ${visible.length} shown`
+          : state.scanLimited
+            ? `${cappedCount} · capped at ${state.fieldLimit}`
+            : `${visible.length} player${visible.length === 1 ? '' : 's'} · full field`
       : state.playerSearchQuery
         ? 'Player search · no matches'
-        : `Top ${state.limit} view · no rows`;
+        : state.overlay
+          ? `Top ${state.limit} view · no rows`
+          : 'Full field · no rows';
     state.hasRows = visible.length > 0;
     $('sp-empty').hidden = state.hasRows;
     renderSelectedWindow();
@@ -1922,6 +2012,7 @@ const standingsApi = '/api';
       state.playerSearchQuery = '';
       state.fetchedAt = '';
       state.snapshotState = 'waiting';
+      resetStandingsMetadata();
       renderRows([]);
       renderEmptyState('no-selection');
       renderRules(null, {});
@@ -1936,6 +2027,7 @@ const standingsApi = '/api';
       state.playerSearchQuery = state.windowSearch || '';
       state.fetchedAt = '';
       state.snapshotState = 'waiting';
+      resetStandingsMetadata();
       renderRows([]);
       renderEmptyState('loading');
     } else if (!state.hasRows) {
@@ -1960,10 +2052,24 @@ const standingsApi = '/api';
       const url = new URL(`${API}/standings`, window.location.origin);
       url.searchParams.set('eventId', state.eventId);
       url.searchParams.set('windowId', state.windowId);
-      url.searchParams.set('limit', '10');
+      url.searchParams.set('limit', state.overlay ? String(state.limit) : String(state.fieldLimit));
+      if (state.overlay || state.cumulativeMode) url.searchParams.set('cumulative', '1');
       const data = await readJson(url, controller.signal);
       if (requestId !== state.request) return;
       state.rows = Array.isArray(data.rows) ? data.rows : [];
+      state.totalPlayers = Number.isFinite(Number(data.totalPlayers)) ? Number(data.totalPlayers) : null;
+      state.fieldView = String(data.fieldView || '');
+      state.fieldLimit = Number.isFinite(Number(data.fieldLimit)) ? Number(data.fieldLimit) : 100;
+      state.scanComplete = typeof data.scanComplete === 'boolean' ? data.scanComplete : null;
+      state.scanLimited = data.scanLimited === true;
+      state.cumulativeRequested = data.cumulativeRequested === true;
+      state.cumulativeAvailable = data.cumulativeAvailable === true
+        ? true
+        : data.cumulativeRequested
+          ? false
+          : null;
+      state.cumulativeReason = String(data.cumulativeReason || '');
+      state.cumulativeWindows = Array.isArray(data.cumulativeWindows) ? data.cumulativeWindows : [];
       state.playerSearchQuery = state.windowSearch && state.rows.some((row) => playerMatchesQuery(row, state.windowSearch))
         ? state.windowSearch
         : '';
@@ -1974,14 +2080,27 @@ const standingsApi = '/api';
       renderPrizePool(data, 'No prize details', item);
       if (!state.hasRows) renderEmptyState('no-rows');
       state.pollSeconds = Math.min(300, Math.max(60, Number(data.pollAfterSeconds) || 90));
-      $('sp-signal').textContent = state.hasRows ? `${isLive(item) ? 'Live · ' : ''}Top ${state.limit} snapshot` : 'No processed rows';
+      const boardSignal = state.overlay
+        ? state.cumulativeAvailable === true ? `Cumulative · Top ${state.limit}` : `Top ${state.limit} snapshot`
+        : state.cumulativeMode && state.cumulativeAvailable === true ? 'Cumulative finals field'
+        : state.scanLimited ? `Full field · first ${state.fieldLimit}` : 'Full finals field';
+      $('sp-signal').textContent = state.hasRows ? `${isLive(item) ? 'Live · ' : ''}${boardSignal}` : 'No processed rows';
       $('sp-updated').textContent = formatPacificTime(data.fetched);
       $('sp-source').textContent = data.source || 'Epic leaderboard';
       $('sp-games').textContent = Number.isFinite(Number(data.maxGames)) ? Number(data.maxGames).toLocaleString('en-US') : '—';
       $('sp-delay').textContent = data.replayAware ? 'Provider processing delay expected' : '';
       $('sp-board-status').textContent = state.hasRows ? `Updated ${formatPacificTime(data.fetched)}` : 'No processed rows';
       renderBoardMeta();
-      setStatus(`Updated ${formatPacificTime(data.fetched)} · showing the top ${state.limit} · next check in ${state.pollSeconds}s`, 'good');
+      const statusScope = state.overlay
+        ? state.cumulativeAvailable === true ? `cumulative Top ${state.limit}` : `provider Top ${state.limit}`
+        : state.cumulativeMode && state.cumulativeAvailable === true
+          ? state.scanLimited && state.totalPlayers != null
+            ? `the first ${state.fieldLimit} of ${state.totalPlayers} cumulative provider rows`
+            : `${state.rows.length} cumulative provider rows`
+        : state.scanLimited
+          ? state.totalPlayers != null ? `the first ${state.fieldLimit} of ${state.totalPlayers} provider rows` : `the first ${state.fieldLimit} provider rows`
+          : `${state.rows.length} provider rows`;
+      setStatus(`Updated ${formatPacificTime(data.fetched)} · showing ${statusScope} · next check in ${state.pollSeconds}s`, 'good');
       updateUrl();
       schedulePoll();
     } catch (error) {
@@ -2015,6 +2134,7 @@ const standingsApi = '/api';
     state.playerSearchQuery = state.windowSearch || '';
     state.fetchedAt = '';
     state.snapshotState = 'waiting';
+    resetStandingsMetadata();
     renderRows([]);
     renderEmptyState('loading');
     setStatus(`Loading ${state.region === 'ALL' ? 'all regions' : state.region} tournaments…`, 'loading');
@@ -2051,6 +2171,7 @@ const standingsApi = '/api';
       state.rows = [];
       state.playerSearchQuery = '';
       state.snapshotState = 'error';
+      resetStandingsMetadata();
       renderWindows();
       renderRows([]);
       renderEmptyState('catalog-error');
@@ -2087,6 +2208,7 @@ const standingsApi = '/api';
     state.region = REGIONS.has(event.target.value) ? event.target.value : 'ALL';
     state.eventId = '';
     state.windowId = '';
+    state.cumulativeMode = false;
     state.windows = [];
     state.selectedWindow = null;
     state.windowSearch = '';
@@ -2105,14 +2227,16 @@ const standingsApi = '/api';
   });
   $('sp-refresh').addEventListener('click', () => loadStandings());
   ['sp-live-list', 'sp-upcoming-list', 'sp-recent-list', 'sp-future-list', 'sp-window-results', 'sp-stage-nav-list'].forEach((id) => $(id).addEventListener('click', (event) => {
-    const unavailable = event.target.closest('button[data-cumulative-unavailable]');
-    if (unavailable) {
-      const note = $('sp-stage-nav-note');
-      if (note) {
-        note.hidden = false;
-        note.textContent = 'Cumulative standings are not published by the provider for this event. Select a day above; partial day Top 10 snapshots are never added together.';
-      }
-      setStatus('Cumulative standings are not published for this event. Showing the selected provider snapshot instead.', 'warn');
+    const computed = event.target.closest('button[data-cumulative-computed]');
+    if (computed) {
+      state.cumulativeMode = true;
+      state.playerSearchQuery = '';
+      state.windowSearch = '';
+      $('sp-window-search').value = '';
+      updateUrl();
+      renderStageNav();
+      renderSelectedWindow();
+      loadStandings({ reset: true });
       return;
     }
     const button = event.target.closest('button[data-event-id][data-window-id]');
@@ -2173,6 +2297,7 @@ const standingsApi = '/api';
   state.windowSearch = initialPlayer;
   state.playerSearchQuery = initialPlayer;
   state.overlay = params.get('overlay') === '1' || params.get('view') === 'overlay';
+  state.cumulativeMode = params.get('cumulative') === '1' && !state.overlay;
   document.querySelector('.standings-page').classList.toggle('sp-overlay-mode', state.overlay);
   if (state.overlay) document.title = 'OBS Standings Overlay — Maxxtopia';
   $('sp-region').value = state.region;
@@ -3171,6 +3296,27 @@ const standingsApi = '/api';
     color: #b8b4ca;
     font: 600 13px/1.2 var(--font-sans);
     letter-spacing: .01em;
+    text-transform: none;
+  }
+
+  .standings-page .sp-full-field-choice {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    padding: 0 13px;
+    border: 1px solid rgba(107,220,255,.24);
+    border-radius: 8px;
+    color: #eafcff;
+    background: rgba(10,28,43,.72);
+    font: 700 14px/1.2 var(--font-sans);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .standings-page .sp-full-field-note {
+    color: #9fb7ca;
+    font: 500 11px/1.3 var(--font-sans);
+    letter-spacing: 0;
     text-transform: none;
   }
 
@@ -4489,6 +4635,15 @@ const standingsApi = '/api';
 
   .standings-page :global(.sp-stage-nav-item--unavailable .sp-stage-nav-status) {
     color: #ffe49a;
+  }
+
+  .standings-page :global(.sp-stage-nav-item--computed) {
+    border-color: rgba(107,220,255,.46);
+    background: #10263a;
+  }
+
+  .standings-page :global(.sp-stage-nav-item--computed .sp-stage-nav-status) {
+    color: #6bdcff;
   }
 
   .standings-page .sp-overlay-sync {
