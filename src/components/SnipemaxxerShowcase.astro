@@ -1,0 +1,1187 @@
+---
+import type { Product } from '../data/products';
+import ProductScreenshot from './ProductScreenshot.astro';
+import SnipemaxxerCompanion from './SnipemaxxerCompanion.astro';
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const version = product.version ?? '0.3.10';
+const oxide = '#ff3b3b';
+const demo = product.demoVideo
+  ? (Array.isArray(product.demoVideo) ? product.demoVideo[0] : product.demoVideo)
+  : undefined;
+
+const modeCards = [
+  {
+    number: '01',
+    theme: 'fortnite',
+    label: 'Fortnite / tournament desk',
+    headline: 'Play the points.',
+    body: 'Live standing tells you where you are now. Fortnite replay data is about five minutes delayed because it comes from the official replay; once it lands, Scout shows who is in the lobby and what the next drop demands.',
+    proof: {
+      src: '/screenshots/snipemaxxer/right-now.webp',
+      alt: 'Snipemaxxer Fortnite Scout showing keyable targets and threats still in the lobby.',
+      caption: 'Replay data / about 5 min delayed',
+    },
+    rows: [
+      ['Live standing', 'Points · rank · cutoff · games left'],
+      ['Replay scout', 'Field · drops · threats · survivors'],
+      ['Strategy lab', 'Routes · team shape · next call'],
+    ],
+    tags: ['Live now', 'Replay when it lands', 'Voice coach'],
+  },
+  {
+    number: '02',
+    theme: 'valorant',
+    label: 'Valorant / session desk',
+    headline: 'Read the round.',
+    body: 'Instant lobby intel from a connected Riot Client: rank, RR, phase, full lobby, and teammates in one read-only view. Match reports and a personal toolkit turn that read into a better next round.',
+    proof: {
+      src: '/screenshots/snipemaxxer/valorant-live-report.webp',
+      alt: 'Snipemaxxer Valorant report showing the connected team lobby and player performance.',
+      caption: 'Instant / connected lobby intel',
+    },
+    rows: [
+      ['Live context', 'Rank · RR · phase · full lobby'],
+      ['Match reports', 'Map · agent · K/D/A · round spine'],
+      ['Personal toolkit', 'Crosshairs · watchlists · alerts'],
+    ],
+    tags: ['Read-only', 'Reports in one window', 'Local tools'],
+  },
+];
+
+const playbooks = [
+  {
+    id: 'fortnite-playbook',
+    theme: 'fortnite',
+    eyebrow: '03 / Fortnite / tournament desk',
+    headline: 'Turn the bracket into your next drop.',
+    intro: 'Standing is live. Replay is delayed. Snipemaxxer keeps those reads separate so you know what is current, what is scouting, and what to do next.',
+    steps: [
+      {
+        label: 'Standing',
+        title: 'Know your place now.',
+        body: 'See points, rank, games left, cutoff, event timing, freshness, and the placement-versus-push call before you queue again.',
+        tags: ['Points', 'Cutoff', 'Placement or push'],
+        src: '/screenshots/snipemaxxer/overlay-hud.webp',
+        alt: 'Snipemaxxer Fortnite points, cutoff, games-left, and placement-versus-push decision card.',
+        caption: 'Points brain / cutoff + placement call',
+      },
+      {
+        label: 'Scout',
+        title: 'See the lobby when it lands.',
+        body: 'Use Epic\'s official server replay to name the field, map drops, flag pros and live streamers, and surface keyable targets, threats, survivors, and loadout reads.',
+        tags: ['Official replay', 'Drops', 'Threats + survivors'],
+        src: '/screenshots/snipemaxxer/right-now.webp',
+        alt: 'Snipemaxxer Fortnite Scout read showing keyable targets and threats still in the lobby.',
+        caption: 'Right Now / keyable targets + threats',
+        fit: 'contain',
+      },
+      {
+        label: 'Strategy Lab + coach',
+        title: 'Study the decision, not just the clip.',
+        body: 'Scrub landings, observed movement and loot paths, route timing, team shape, killfeed moments, captured zone rings, and endgame position. Reports and the voice coach turn the evidence into the next move.',
+        tags: ['Map scrub', 'Routes', 'Endgame + coach'],
+        src: '/screenshots/snipemaxxer/fortnite-strategy-lab.webp',
+        alt: 'Snipemaxxer Strategy Lab map replay comparison surface.',
+        caption: 'Strategy Lab / facts, inference, next call',
+      },
+    ],
+  },
+  {
+    id: 'valorant-playbook',
+    theme: 'valorant',
+    eyebrow: '04 / Valorant / session desk',
+    headline: 'Turn the last round into the next one.',
+    intro: 'Snipemaxxer reads the session, not your credentials. Live Riot context is read-only; reports and the personal toolkit stay in the same Windows app.',
+    steps: [
+      {
+        label: 'Live context',
+        title: 'See the round before it starts.',
+        body: 'Read rank, RR, peak, current phase, full lobby split, teammates, friends, personal offers, and teammate skins when Riot returns them.',
+        tags: ['Rank + RR', 'Phase + lobby', 'Read-only Riot'],
+        src: '/screenshots/snipemaxxer/valorant-home-live.webp',
+        alt: 'Snipemaxxer Valorant Home showing rank, RR, live phase, and Riot connection.',
+        caption: 'Live context / rank + phase + lobby',
+      },
+      {
+        label: 'Match reports',
+        title: 'Review the round with receipts.',
+        body: 'Completed-match reports carry map, agent, K/D/A, score, headshots, and the full lobby. The round spine adds KAST, trades, first deaths, clutches, and economy when the provider supplies those fields.',
+        tags: ['Map + agent', 'K/D/A + score', 'Round spine when available'],
+        src: '/screenshots/snipemaxxer/valorant-live-report.webp',
+        alt: 'Snipemaxxer Valorant full lobby report showing match performance details.',
+        caption: 'Reports / full lobby + performance read',
+      },
+      {
+        label: 'Personal toolkit',
+        title: 'Keep your answers close.',
+        body: 'Store local crosshairs, keep persistent watchlists, and get alerts for friends, players, matches, and skins without leaving the desk.',
+        tags: ['Crosshair vault', 'Watchlists', 'Friends + match alerts'],
+        src: '/screenshots/snipemaxxer/valorant-teammate-intel.webp',
+        alt: 'Snipemaxxer Valorant teammate intelligence surface.',
+        caption: 'Toolkit / teammate intel + alerts',
+      },
+    ],
+  },
+];
+
+const faqs = [
+  {
+    q: 'Does it read game memory or automate Riot login?',
+    a: "No. Fortnite scouting uses Epic's official server replay and leaderboard path without memory reading, injection, or a game-hooked overlay. Valorant uses a read-only attachment to an already-running Riot Client on the same PC or through the optional gaming-PC link. Snipemaxxer never asks for a Riot password, automates login, or exposes session tokens to the renderer.",
+  },
+  {
+    q: 'Why is a panel delayed or unavailable?',
+    a: 'The app keeps data speeds separate. Fortnite tournament standing can be current, while its official server replay normally trails the match by roughly five minutes. Valorant match history needs a HenrikDev key; live Riot panels need Riot Client or the one-time gaming-PC relay. Cached, offline, and missing provider fields stay labeled instead of being passed off as live.',
+  },
+  {
+    q: 'What does each game actually cover?',
+    a: 'Fortnite is the tournament desk: standing, qualify math, replay scouting, landing and player reads, Strategy Lab, Reports, and the voice coach. Valorant is the session desk: rank, RR, completed-match history, live lobby and phase, friends, personal offers, teammate skins, watchlists, alerts, and a local crosshair vault. Both feed the same in-window Reports workbench.',
+  },
+];
+---
+
+<div class="smx-lower">
+  <section class="smx-overview" aria-labelledby="smx-overview-title">
+    <div class="smx-shell">
+      <div class="smx-overview-top">
+        <p class="smx-eyebrow"><span>The desk</span><i aria-hidden="true"></i><span>Snipemaxxer {version}</span></p>
+        <p class="smx-overview-note">Current Windows build / two data paths</p>
+      </div>
+
+      <div class="smx-overview-heading">
+        <div>
+          <h2 id="smx-overview-title">One app.<br /><em>Two competitive reads.</em></h2>
+        </div>
+        <p>Fortnite pairs a live standing with official replay scouting that is about five minutes delayed. Valorant gives you instant lobby intel from a connected Riot Client, then keeps the completed round in reports. Same focused Windows app. Different data paths. No pretend-live data.</p>
+      </div>
+
+      <div class="smx-overview-proof-strip" aria-label="Live and replay proof">
+        <figure class="smx-overview-proof-card smx-overview-proof-card--valorant">
+          <div class="smx-overview-proof-label">
+            <span>Valorant</span>
+            <strong>Instant lobby intel</strong>
+          </div>
+          <button class="smx-shot-frame smx-overview-proof-shot smx-shot-frame--contain" type="button" data-zoom="/screenshots/snipemaxxer/valorant-live-report.webp" aria-label="Enlarge: Snipemaxxer Valorant report showing the connected team lobby and player performance.">
+            <img src="/screenshots/snipemaxxer/valorant-live-report.webp" alt="Snipemaxxer Valorant report showing the connected team lobby and player performance." loading="lazy" decoding="async" />
+            <span class="smx-zoom-hint" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+              <span>Click to enlarge</span>
+            </span>
+          </button>
+          <figcaption>Connected Riot Client / live, read-only context</figcaption>
+        </figure>
+
+        <figure class="smx-overview-proof-card smx-overview-proof-card--fortnite">
+          <div class="smx-overview-proof-label">
+            <span>Fortnite</span>
+            <strong>Replay scouting</strong>
+          </div>
+          <button class="smx-shot-frame smx-overview-proof-shot smx-shot-frame--contain" type="button" data-zoom="/screenshots/snipemaxxer/right-now.webp" aria-label="Enlarge: Snipemaxxer Fortnite Scout showing keyable targets and threats still in the lobby.">
+            <img src="/screenshots/snipemaxxer/right-now.webp" alt="Snipemaxxer Fortnite Scout showing keyable targets and threats still in the lobby." loading="lazy" decoding="async" />
+            <span class="smx-zoom-hint" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+              <span>Click to enlarge</span>
+            </span>
+          </button>
+          <figcaption>Official replay / about 5 min delayed</figcaption>
+        </figure>
+      </div>
+
+      <nav class="smx-anchor-nav" aria-label="Snipemaxxer sections">
+        <a href="#fortnite-playbook">Fortnite <span aria-hidden="true">↘</span></a>
+        <a href="#valorant-playbook">Valorant <span aria-hidden="true">↘</span></a>
+        <a href="#smx-product-tour">Product tour <span aria-hidden="true">↘</span></a>
+        <a href="#valorant-setup">Valorant setup <span aria-hidden="true">↘</span></a>
+        <a href="#mobile-companion">Phone companion <span aria-hidden="true">↘</span></a>
+        <a href="#smx-faq">FAQ <span aria-hidden="true">↘</span></a>
+      </nav>
+
+      {product.stats && (
+        <div class="smx-stat-strip" aria-label="Snipemaxxer product facts">
+          {product.stats.map((stat) => (
+            <div><strong>{stat.value}</strong><span>{stat.label}</span></div>
+          ))}
+        </div>
+      )}
+
+      <div class="smx-mode-grid">
+        {modeCards.map((mode) => (
+          <article class={`smx-mode-card smx-mode-card--${mode.theme}`}>
+            <div class="smx-mode-card-top"><b>{mode.number}</b><span>{mode.label}</span><i aria-hidden="true">↗</i></div>
+            <div class="smx-mode-intro">
+              <div class="smx-mode-copy">
+                <h3>{mode.headline}</h3>
+                <p>{mode.body}</p>
+              </div>
+              <figure class="smx-mode-proof">
+                <button class="smx-shot-frame smx-mode-shot smx-shot-frame--contain" type="button" data-zoom={mode.proof.src} aria-label={`Enlarge: ${mode.proof.alt}`}>
+                  <img src={mode.proof.src} alt={mode.proof.alt} loading="lazy" decoding="async" />
+                  <span class="smx-zoom-hint" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+                    <span>Click to enlarge</span>
+                  </span>
+                </button>
+                <figcaption>{mode.proof.caption}</figcaption>
+              </figure>
+            </div>
+            <div class="smx-mode-rows">
+              {mode.rows.map(([label, text]) => (
+                <div><span>{label}</span><b>{text}</b></div>
+              ))}
+            </div>
+            <div class="smx-mode-tags">
+              {mode.tags.map((tag) => <span>{tag}</span>)}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {demo && (
+    <section id="smx-product-tour" class="smx-tour" aria-labelledby="smx-tour-title">
+      <div class="smx-shell">
+        <div class="smx-section-heading smx-section-heading--tour">
+          <p class="smx-eyebrow"><span>02 / Current Windows build</span><i aria-hidden="true"></i><span>Product tour</span></p>
+          <h2 id="smx-tour-title">See the whole read <em>in motion.</em></h2>
+          <p>Watch the actual app move from Valorant live context and reports to Fortnite standing, Scout, Strategy Lab, Coach, and settings. The capture is intentionally silent so the interface stays unobstructed.</p>
+        </div>
+        <div class="smx-tour-layout">
+          <aside class="smx-tour-rail" aria-label="Product tour highlights">
+            <div><span>01</span><b>Live context</b><p>Start with what the connected game can prove now.</p></div>
+            <div><span>02</span><b>Reports</b><p>Keep the full lobby and round read in the same window.</p></div>
+            <div><span>03</span><b>Next call</b><p>Turn the evidence into a route, a drop, or a fix.</p></div>
+            <div class="smx-tour-proof"><span>Proof</span><p>Current app capture<br />{demo?.hasAudio === false ? 'silent interface tour' : 'product tour'}</p></div>
+          </aside>
+          <div class="smx-tour-media">
+            <ProductScreenshot
+              src={demo.poster}
+              alt="Snipemaxxer current Windows app product tour"
+              extras={[]}
+              video={product.demoVideo}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section id="valorant-setup" class="smx-valorant-route" aria-labelledby="valorant-setup-title">
+    <div class="smx-shell">
+      <div class="smx-route-heading">
+        <p class="smx-eyebrow"><span>Valorant / choose your setup</span><i aria-hidden="true"></i><span>Three connection paths</span></p>
+        <h2 id="valorant-setup-title">Play on the setup<br /><em>you already have.</em></h2>
+        <p>Valorant stays read-only, but Snipemaxxer does not force one desk arrangement. Run the full app beside Riot Client, keep the game on another PC, or check the companion view from a mobile browser.</p>
+      </div>
+
+      <div class="smx-route-schematic" aria-label="Valorant connection path from Riot Client to Snipemaxxer and your chosen screen">
+        <div class="smx-route-node"><span>Source</span><strong>Riot Client</strong></div>
+        <div class="smx-route-connector"><i aria-hidden="true"></i><span>read-only session context</span></div>
+        <div class="smx-route-node smx-route-node--desk"><span>Desk</span><strong>Snipemaxxer</strong></div>
+        <div class="smx-route-connector"><i aria-hidden="true"></i><span>choose your screen</span></div>
+        <div class="smx-route-node"><span>Output</span><strong>Your setup</strong></div>
+      </div>
+
+      <div class="smx-route-grid">
+        <article class="smx-route-card">
+          <span class="smx-route-number">01</span>
+          <h3>Same PC</h3>
+          <p>Riot Client and Snipemaxxer run together. The app reads the current phase, lobby, ranks, friends, offers, and teammate skins from the local client path when Riot returns them.</p>
+          <strong>Best for the full desk</strong>
+        </article>
+        <article class="smx-route-card">
+          <span class="smx-route-number">02</span>
+          <h3>Two PCs</h3>
+          <p>Keep Valorant and Riot Client on the gaming PC. Use the one-time gaming-PC link so Snipemaxxer on the other PC can receive the same read-only session context.</p>
+          <strong>Best when your work screen is separate</strong>
+        </article>
+        <article class="smx-route-card smx-route-card--mobile">
+          <span class="smx-route-number">03</span>
+          <h3>Mobile browser</h3>
+          <p>Install the Maxxtopia Companion on the PC where Riot Client is running, then open the phone view it creates. It is a quick lobby check, not a replacement for the full Windows reports desk.</p>
+          <a href="#mobile-companion">See the phone companion <span aria-hidden="true">↘</span></a>
+        </article>
+      </div>
+
+      <div class="smx-route-note"><strong>The boundary stays the same.</strong><span>No Riot password, no login automation, and no session token exposed to the renderer.</span></div>
+    </div>
+  </section>
+
+  {playbooks.map((playbook) => (
+    <section id={playbook.id} class={`smx-playbook smx-playbook--${playbook.theme}`} aria-labelledby={`${playbook.id}-title`}>
+      <div class="smx-shell">
+        <div class="smx-section-heading">
+          <p class="smx-eyebrow"><span>{playbook.eyebrow}</span><i aria-hidden="true"></i><span>THE WORKFLOW</span></p>
+          <h2 id={`${playbook.id}-title`}>{playbook.headline}</h2>
+          <p>{playbook.intro}</p>
+        </div>
+
+        <div class="smx-step-list">
+          {playbook.steps.map((step, index) => (
+              <article class:list={['smx-step', playbook.id === 'valorant-playbook' && index === 1 && 'smx-step--report']}>
+              <div class="smx-step-copy">
+                <div class="smx-step-index">0{index + 1}</div>
+                <p class="smx-step-label">{step.label}</p>
+                <h3>{step.title}</h3>
+                <p class="smx-step-body">{step.body}</p>
+                <div class="smx-step-tags">
+                  {step.tags.map((tag) => <span>{tag}</span>)}
+                </div>
+              </div>
+              <figure class="smx-step-shot">
+                <button class={`smx-shot-frame smx-shot-frame--${step.fit ?? 'cover'}`} type="button" data-zoom={step.src} aria-label={`Enlarge: ${step.alt}`}>
+                  <img src={step.src} alt={step.alt} loading="lazy" decoding="async" />
+                  <span class="smx-zoom-hint" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+                    <span>Click to enlarge</span>
+                  </span>
+                </button>
+                <figcaption><strong>{step.caption}</strong><span>Current app surface</span></figcaption>
+              </figure>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <div class="smx-transition" aria-label="Snipemaxxer product principle">
+    <div class="smx-shell">
+      <span>Freshness is a feature</span>
+      <strong>Every game gets the right read — never a fake one.</strong>
+      <small>Fortnite / official replay · Valorant / read-only Riot</small>
+    </div>
+  </div>
+
+  {product.mobileCompanion && (
+    <div class="smx-companion-wrap">
+      <SnipemaxxerCompanion
+        installerUrl={product.mobileCompanion.installerUrl}
+        mobileUrl={product.mobileCompanion.mobileUrl}
+        accentHex={oxide}
+      />
+    </div>
+  )}
+
+  <section class="smx-boundaries" aria-labelledby="smx-boundaries-title">
+    <div class="smx-shell">
+      <div class="smx-section-heading">
+        <p class="smx-eyebrow"><span>06 / Data boundaries</span><i aria-hidden="true"></i><span>Honest by design</span></p>
+        <h2 id="smx-boundaries-title">Every panel tells you <em>where it came from.</em></h2>
+        <p>Snipemaxxer is useful because it separates live signals, delayed evidence, and local tools. You always know what the app can prove right now.</p>
+      </div>
+
+      <div class="smx-boundary-grid">
+        <article><span class="smx-state smx-state--live">Live</span><h3>Current signals</h3><p>Epic tournament standing and live Riot context when the correct client path is connected.</p></article>
+        <article><span class="smx-state smx-state--delayed">Delayed</span><h3>Replay evidence</h3><p>Fortnite's official server replay normally lands around five minutes behind the live standing.</p></article>
+        <article><span class="smx-state smx-state--local">Local / read-only</span><h3>Connected tools</h3><p>Valorant history needs a HenrikDev key. Live Riot panels need Riot Client or the one-time gaming-PC relay. Cached, offline, and unavailable fields stay labeled.</p></article>
+      </div>
+
+      <div class="smx-trust-line"><span>Safe by design</span><strong>No game-memory reading. No Riot password. No login automation. No session token in the renderer.</strong></div>
+    </div>
+  </section>
+
+  <section id="smx-faq" class="smx-finish" aria-labelledby="smx-finish-title">
+    <div class="smx-shell">
+      <div class="smx-finish-grid">
+        <div class="smx-cta-card">
+          <p class="smx-eyebrow"><span>07 / Ready when you are</span><i aria-hidden="true"></i><span>Beta / Windows</span></p>
+          <h2 id="smx-finish-title">Two games.<br /><em>One better read.</em></h2>
+          <p>Choose the desk you actually play, then keep the signal and the evidence in one focused window.</p>
+          <div class="smx-cta-meta"><span>Version {version}</span><span>Fortnite + Valorant</span></div>
+          <div class="smx-cta-actions">
+            <a class="smx-cta-primary" href={product.primaryCta.href} target={product.primaryCta.external ? '_blank' : undefined} rel={product.primaryCta.external ? 'noopener' : undefined}>
+              {product.primaryCta.label}<span aria-hidden="true">↗</span>
+            </a>
+            {product.secondaryCta && (
+              <a class="smx-cta-secondary" href={product.secondaryCta.href} target={product.secondaryCta.external ? '_blank' : undefined} rel={product.secondaryCta.external ? 'noopener' : undefined}>
+                {product.secondaryCta.label}<span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </div>
+
+        <div class="smx-faq-list">
+          <p class="smx-faq-kicker">The questions that matter</p>
+          {faqs.map((faq) => (
+            <details>
+              <summary>{faq.q}<span aria-hidden="true">+</span></summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="smx-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Enlarged app capture">
+  <button class="smx-lightbox__close" type="button" aria-label="Close enlarged image">Close</button>
+  <div class="smx-lightbox__stage">
+    <img alt="" />
+    <p>Click the image to zoom · press Escape to close</p>
+  </div>
+</div>
+
+<script>
+  (() => {
+    if ((window as any).__fzLightbox || (window as any).__smxLightbox) return;
+    (window as any).__smxLightbox = true;
+    const lightbox = document.querySelector('.smx-lightbox') as HTMLElement | null;
+    const image = lightbox?.querySelector('img') as HTMLImageElement | null;
+    const closeButton = lightbox?.querySelector('.smx-lightbox__close') as HTMLButtonElement | null;
+    if (!lightbox || !image || !closeButton) return;
+    let returnTarget: HTMLElement | null = null;
+    let previousOverflow = '';
+    const close = () => {
+      lightbox.classList.remove('is-open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      image.classList.remove('is-zoomed');
+      document.body.style.overflow = previousOverflow;
+      returnTarget?.focus();
+      returnTarget = null;
+    };
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox || (event.target as HTMLElement).closest('.smx-lightbox__close')) close();
+    });
+    image.addEventListener('click', (event) => {
+      event.stopPropagation();
+      image.classList.toggle('is-zoomed');
+    });
+    closeButton.addEventListener('click', close);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && lightbox.classList.contains('is-open')) close();
+    });
+    document.addEventListener('click', (event) => {
+      const trigger = (event.target as HTMLElement).closest('[data-zoom]') as HTMLElement | null;
+      if (!trigger) return;
+      const src = trigger.getAttribute('data-zoom');
+      if (!src) return;
+      const sourceImage = trigger.querySelector('img') as HTMLImageElement | null;
+      returnTarget = trigger;
+      previousOverflow = document.body.style.overflow;
+      image.src = src;
+      image.alt = sourceImage?.alt ?? '';
+      image.classList.remove('is-zoomed');
+      lightbox.classList.add('is-open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      closeButton.focus();
+    });
+  })();
+</script>
+
+<style>
+  .smx-lower {
+    --smx-bg: #090b0f;
+    --smx-panel: #10151b;
+    --smx-panel-2: #0d1217;
+    --smx-text: #edf2f2;
+    --smx-muted: rgba(232, 239, 239, .64);
+    --smx-subtle: rgba(232, 239, 239, .42);
+    --smx-line: rgba(232, 239, 239, .13);
+    background: var(--smx-bg);
+    color: var(--smx-text);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    overflow: hidden;
+  }
+
+  .smx-shell { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+  .smx-overview, .smx-tour, .smx-playbook, .smx-boundaries, .smx-finish { position: relative; }
+  .smx-overview::before, .smx-tour::before, .smx-playbook::before, .smx-boundaries::before, .smx-finish::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .46; background: linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.025) 8.1% 8.2%, transparent 8.3% 91.7%, rgba(255,255,255,.025) 91.8% 91.9%, transparent 92%), linear-gradient(0deg, rgba(255,255,255,.022) 1px, transparent 1px); background-size: auto, 100% 74px; }
+  .smx-overview > .smx-shell, .smx-tour > .smx-shell, .smx-playbook > .smx-shell, .smx-boundaries > .smx-shell, .smx-finish > .smx-shell { position: relative; z-index: 1; }
+
+  .smx-overview { padding: clamp(78px, 10vw, 138px) 0 clamp(86px, 10vw, 144px); background: radial-gradient(circle at 80% 8%, color-mix(in srgb, var(--smx-amber) 13%, transparent), transparent 29%), linear-gradient(180deg, #0c1116, var(--smx-bg)); border-top: 1px solid var(--smx-line); }
+  .smx-overview-top, .smx-section-heading .smx-eyebrow, .smx-eyebrow { display: flex; align-items: center; gap: 13px; font: 9px/1.2 var(--font-mono), monospace; letter-spacing: .13em; text-transform: uppercase; }
+  .smx-eyebrow { margin: 0; color: var(--smx-amber); }
+  .smx-eyebrow i { display: block; width: 48px; height: 1px; background: currentColor; opacity: .65; }
+  .smx-overview-note { margin: 0; color: var(--smx-subtle); font: 9px/1.2 var(--font-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+  .smx-overview-heading { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(280px, .72fr); gap: 60px; align-items: end; margin-top: 28px; }
+  .smx-overview-heading h2, .smx-section-heading h2, .smx-cta-card h2 { max-width: 780px; margin: 0; color: var(--smx-text); font-size: clamp(46px, 6.8vw, 88px); font-weight: 800; line-height: .9; letter-spacing: -.065em; }
+  .smx-overview-heading h2 em, .smx-section-heading h2 em, .smx-cta-card h2 em { color: var(--smx-amber); font-family: var(--font-serif), Georgia, serif; font-weight: 400; letter-spacing: -.055em; }
+  .smx-overview-heading > p { max-width: 470px; margin: 0 0 3px; color: var(--smx-muted); font-size: 15px; line-height: 1.7; }
+  .smx-anchor-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 44px; }
+  .smx-anchor-nav a { display: inline-flex; align-items: center; gap: 15px; padding: 11px 13px; border: 1px solid var(--smx-line); color: var(--smx-muted); font: 9px/1 var(--font-mono), monospace; letter-spacing: .09em; text-decoration: none; text-transform: uppercase; transition: border-color .2s, color .2s, transform .2s, background .2s; }
+  .smx-anchor-nav a:hover, .smx-anchor-nav a:focus-visible { transform: translateY(-2px); border-color: var(--smx-amber); background: color-mix(in srgb, var(--smx-amber) 8%, transparent); color: var(--smx-text); }
+  .smx-anchor-nav a span { color: var(--smx-amber); font-size: 13px; }
+  .smx-stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 50px; border-top: 1px solid var(--smx-line); border-bottom: 1px solid var(--smx-line); }
+  .smx-stat-strip div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 15px 16px; border-right: 1px solid var(--smx-line); }
+  .smx-stat-strip div:first-child { padding-left: 0; }
+  .smx-stat-strip div:last-child { border-right: 0; }
+  .smx-stat-strip strong { color: var(--smx-amber); font: 25px/1 var(--font-display), sans-serif; }
+  .smx-stat-strip span { color: var(--smx-subtle); font: 8px/1.3 var(--font-mono), monospace; letter-spacing: .09em; text-align: right; text-transform: uppercase; }
+  .smx-mode-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+  .smx-mode-card { position: relative; min-height: 390px; padding: 26px; overflow: hidden; border: 1px solid var(--smx-line); background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.016) 50%, rgba(0,0,0,.12)); }
+  .smx-mode-card::after { content: ''; position: absolute; width: 280px; height: 280px; right: -100px; bottom: -145px; border: 1px solid color-mix(in srgb, var(--mode-accent) 40%, transparent); border-radius: 50%; box-shadow: 0 0 0 26px color-mix(in srgb, var(--mode-accent) 8%, transparent), 0 0 0 54px color-mix(in srgb, var(--mode-accent) 4%, transparent); opacity: .8; pointer-events: none; }
+  .smx-mode-card--fortnite { --mode-accent: var(--smx-amber); }
+  .smx-mode-card--valorant { --mode-accent: var(--smx-rose); }
+  .smx-mode-card-top { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; color: var(--mode-accent); font: 9px/1.2 var(--font-mono), monospace; letter-spacing: .12em; }
+  .smx-mode-card-top b { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid color-mix(in srgb, var(--mode-accent) 70%, transparent); font-size: 10px; }
+  .smx-mode-card-top i { margin-left: auto; font-size: 18px; font-style: normal; }
+  .smx-mode-card h3 { position: relative; z-index: 1; margin: 52px 0 12px; color: var(--smx-text); font-size: clamp(34px, 4.2vw, 58px); font-weight: 800; line-height: .9; letter-spacing: -.055em; }
+  .smx-mode-card > p { position: relative; z-index: 1; max-width: 450px; margin: 0; color: var(--smx-muted); font-size: 14px; line-height: 1.6; }
+  .smx-mode-rows { position: relative; z-index: 1; display: grid; gap: 0; margin-top: 30px; border-top: 1px solid var(--smx-line); }
+  .smx-mode-rows div { display: grid; grid-template-columns: 130px 1fr; gap: 15px; padding: 11px 0; border-bottom: 1px solid var(--smx-line); }
+  .smx-mode-rows span, .smx-mode-tags, .smx-step-label, .smx-step-tags, .smx-state, .smx-cta-meta, .smx-faq-kicker { color: var(--mode-accent, var(--smx-amber)); font: 8px/1.35 var(--font-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+  .smx-mode-rows b { color: var(--smx-muted); font-size: 12px; font-weight: 500; }
+  .smx-mode-tags { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+  .smx-mode-tags span, .smx-step-tags span { padding: 7px 8px; border: 1px solid color-mix(in srgb, var(--mode-accent, var(--smx-amber)) 38%, transparent); color: var(--smx-subtle); }
+
+  .smx-tour { padding: clamp(76px, 9vw, 124px) 0; background: #0a0d11; border-top: 1px solid var(--smx-line); }
+  .smx-section-heading { max-width: 760px; }
+  .smx-section-heading h2 { margin-top: 20px; font-size: clamp(42px, 5.8vw, 76px); }
+  .smx-section-heading > p:last-child { max-width: 690px; margin: 20px 0 0; color: var(--smx-muted); font-size: 15px; line-height: 1.7; }
+  .smx-tour .smx-eyebrow { color: #66dfff; }
+  .smx-tour .smx-section-heading h2 em { color: #66dfff; }
+  .smx-tour-layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 32px; align-items: start; margin-top: 52px; }
+  .smx-tour-rail { display: grid; gap: 0; border-left: 1px solid rgba(102,223,255,.35); }
+  .smx-tour-rail > div { padding: 15px 0 15px 16px; border-bottom: 1px solid var(--smx-line); }
+  .smx-tour-rail span { display: block; color: #66dfff; font: 9px/1 var(--font-mono), monospace; letter-spacing: .1em; }
+  .smx-tour-rail b { display: block; margin-top: 8px; color: var(--smx-text); font: 9px/1.2 var(--font-mono), monospace; letter-spacing: .09em; }
+  .smx-tour-rail p { margin: 7px 0 0; color: var(--smx-subtle); font-size: 12px; line-height: 1.5; }
+  .smx-tour-rail .smx-tour-proof { margin-top: 20px; border: 1px solid rgba(102,223,255,.3); background: rgba(102,223,255,.05); }
+  .smx-tour-media { min-width: 0; }
+  .smx-tour-media :global(.product-screenshot) { margin: 0; }
+  .smx-tour-media :global(.product-screenshot__frame) { border-color: rgba(102,223,255,.36); box-shadow: 0 22px 65px rgba(0,0,0,.32), 0 0 0 1px rgba(102,223,255,.08) inset; }
+
+  .smx-playbook { padding: clamp(82px, 10vw, 140px) 0; border-top: 1px solid var(--smx-line); }
+  .smx-playbook--fortnite { background: linear-gradient(180deg, #0c1115, #0b0e12); }
+  .smx-playbook--valorant { background: linear-gradient(180deg, #0a0e13, #0d1017); }
+  .smx-playbook--fortnite .smx-eyebrow, .smx-playbook--fortnite .smx-step-label { color: var(--smx-amber); }
+  .smx-playbook--valorant .smx-eyebrow, .smx-playbook--valorant .smx-step-label { color: var(--smx-rose); }
+  .smx-playbook--valorant .smx-section-heading h2 em { color: var(--smx-rose); }
+  .smx-step-list { display: grid; gap: 1px; margin-top: 64px; border-top: 1px solid var(--smx-line); }
+  .smx-step { display: grid; grid-template-columns: minmax(250px, .75fr) minmax(0, 1.25fr); gap: clamp(30px, 6vw, 90px); align-items: center; padding: 38px 0; border-bottom: 1px solid var(--smx-line); }
+  .smx-step:nth-child(even) .smx-step-copy { order: 2; }
+  .smx-step:nth-child(even) .smx-step-shot { order: 1; }
+  .smx-step-index { color: color-mix(in srgb, var(--smx-amber) 32%, transparent); font: clamp(40px, 5vw, 68px)/.8 var(--font-display), sans-serif; letter-spacing: -.06em; }
+  .smx-playbook--valorant .smx-step-index { color: color-mix(in srgb, var(--smx-rose) 32%, transparent); }
+  .smx-step-label { margin: 18px 0 0; font-size: 9px; }
+  .smx-step h3 { max-width: 400px; margin: 11px 0 0; color: var(--smx-text); font-size: clamp(28px, 3.2vw, 46px); font-weight: 750; line-height: .98; letter-spacing: -.05em; }
+  .smx-step-body { max-width: 470px; margin: 15px 0 0; color: var(--smx-muted); font-size: 14px; line-height: 1.65; }
+  .smx-step-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 22px; }
+  .smx-step-tags span { color: var(--smx-subtle); }
+  .smx-step-shot { min-width: 0; margin: 0; }
+  .smx-shot-frame { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border: 1px solid var(--smx-line); background: #07090c; box-shadow: 0 20px 56px rgba(0,0,0,.28); }
+  .smx-shot-frame::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(120deg, rgba(255,255,255,.08), transparent 28%, transparent 70%, color-mix(in srgb, var(--smx-amber) 10%, transparent)); mix-blend-mode: screen; }
+  .smx-playbook--valorant .smx-shot-frame::after { background: linear-gradient(120deg, rgba(255,255,255,.08), transparent 28%, transparent 70%, color-mix(in srgb, var(--smx-rose) 12%, transparent)); }
+  .smx-shot-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; filter: saturate(.86) contrast(1.06); transition: transform .45s ease, filter .45s ease; }
+  .smx-shot-frame--contain img { object-fit: contain; object-position: center; background: #120d0f; }
+  .smx-step-shot:hover img { transform: scale(1.025); filter: saturate(1) contrast(1.06); }
+  .smx-step-shot figcaption { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 11px; }
+  .smx-step-shot figcaption strong { color: var(--smx-text); font-size: 12px; font-weight: 600; }
+  .smx-step-shot figcaption span { color: var(--smx-subtle); font: 8px/1 var(--font-mono), monospace; letter-spacing: .08em; }
+
+  .smx-transition { padding: 26px 0; border-top: 1px solid var(--smx-line); border-bottom: 1px solid var(--smx-line); background: #080a0d; }
+  .smx-transition .smx-shell { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 20px; align-items: center; }
+  .smx-transition span, .smx-transition small { color: var(--smx-amber); font: 8px/1.3 var(--font-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+  .smx-transition strong { color: var(--smx-text); font-size: 19px; letter-spacing: -.02em; }
+  .smx-transition small { color: var(--smx-subtle); text-align: right; }
+
+  .smx-companion-wrap { background: #0a0d11; }
+  .smx-companion-wrap :global(#mobile-companion) { border-top: 0; }
+  .smx-companion-wrap :global(#mobile-companion > div) { padding-top: 78px; padding-bottom: 78px; }
+
+  .smx-boundaries { padding: clamp(80px, 10vw, 130px) 0; background: #0b0f13; border-top: 1px solid var(--smx-line); }
+  .smx-boundaries .smx-eyebrow { color: #8af5b5; }
+  .smx-boundaries .smx-section-heading h2 em { color: #8af5b5; }
+  .smx-boundary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 54px; border: 1px solid var(--smx-line); background: var(--smx-line); }
+  .smx-boundary-grid article { min-height: 210px; padding: 24px; background: var(--smx-panel-2); }
+  .smx-state { display: inline-flex; padding: 7px 8px; border: 1px solid currentColor; }
+  .smx-state--live { --mode-accent: #8af5b5; color: #8af5b5; }
+  .smx-state--delayed { --mode-accent: var(--smx-amber); color: var(--smx-amber); }
+  .smx-state--local { --mode-accent: #66dfff; color: #66dfff; }
+  .smx-boundary-grid h3 { margin: 34px 0 0; color: var(--smx-text); font-size: 22px; letter-spacing: -.035em; }
+  .smx-boundary-grid p { margin: 9px 0 0; color: var(--smx-muted); font-size: 13px; line-height: 1.6; }
+  .smx-trust-line { display: grid; grid-template-columns: 150px 1fr; gap: 24px; align-items: center; margin-top: 18px; padding: 17px 18px; border: 1px solid rgba(138,245,181,.25); background: rgba(138,245,181,.045); }
+  .smx-trust-line span { color: #8af5b5; font: 9px/1 var(--font-mono), monospace; letter-spacing: .1em; }
+  .smx-trust-line strong { color: rgba(232,239,239,.72); font-size: 13px; font-weight: 500; line-height: 1.5; }
+
+  .smx-finish { padding: clamp(82px, 10vw, 138px) 0 120px; background: radial-gradient(circle at 12% 80%, color-mix(in srgb, var(--smx-rose) 10%, transparent), transparent 30%), #090b0f; border-top: 1px solid var(--smx-line); }
+  .smx-finish-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, .78fr); gap: clamp(36px, 7vw, 100px); align-items: start; }
+  .smx-cta-card { padding: 28px 0 0; }
+  .smx-cta-card .smx-eyebrow { color: var(--smx-rose); }
+  .smx-cta-card h2 { margin-top: 28px; font-size: clamp(48px, 6vw, 80px); }
+  .smx-cta-card h2 em { color: var(--smx-rose); }
+  .smx-cta-card > p:not(.smx-eyebrow) { max-width: 460px; margin: 22px 0 0; color: var(--smx-muted); font-size: 15px; line-height: 1.65; }
+  .smx-cta-meta { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 24px; color: var(--smx-subtle); }
+  .smx-cta-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+  .smx-cta-primary, .smx-cta-secondary { display: inline-flex; align-items: center; gap: 18px; padding: 14px 16px; font: 10px/1 var(--font-mono), monospace; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; transition: transform .2s, border-color .2s, background .2s; }
+  .smx-cta-primary { border: 1px solid var(--smx-rose); background: var(--smx-rose); color: #19070a; }
+  .smx-cta-secondary { border: 1px solid var(--smx-line); color: var(--smx-text); }
+  .smx-cta-primary:hover, .smx-cta-secondary:hover, .smx-cta-primary:focus-visible, .smx-cta-secondary:focus-visible { transform: translateY(-2px); border-color: var(--smx-text); }
+  .smx-faq-list { border-top: 1px solid var(--smx-line); }
+  .smx-faq-kicker { margin: 0; padding: 14px 0; color: var(--smx-subtle); }
+  .smx-faq-list details { border-top: 1px solid var(--smx-line); }
+  .smx-faq-list summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 0; color: var(--smx-text); cursor: pointer; font-size: 14px; font-weight: 600; list-style: none; }
+  .smx-faq-list summary::-webkit-details-marker { display: none; }
+  .smx-faq-list summary span { color: var(--smx-rose); font: 24px/1 var(--font-sans), sans-serif; font-weight: 300; }
+  .smx-faq-list details[open] summary span { transform: rotate(45deg); }
+  .smx-faq-list details p { margin: -3px 0 19px; color: var(--smx-muted); font-size: 13px; line-height: 1.65; }
+
+  @media (max-width: 820px) {
+    .smx-overview-heading, .smx-finish-grid { grid-template-columns: 1fr; gap: 28px; }
+    .smx-mode-grid { grid-template-columns: 1fr; }
+    .smx-mode-card { min-height: 0; }
+    .smx-tour-layout { grid-template-columns: 1fr; }
+    .smx-tour-rail { grid-template-columns: repeat(3, 1fr); border-left: 0; border-top: 1px solid rgba(102,223,255,.35); }
+    .smx-tour-rail > div { padding: 14px 14px 14px 0; border-bottom: 0; border-right: 1px solid var(--smx-line); }
+    .smx-tour-rail > div:nth-child(3) { border-right: 0; }
+    .smx-tour-rail .smx-tour-proof { display: none; }
+    .smx-boundary-grid { grid-template-columns: 1fr; }
+    .smx-boundary-grid article { min-height: 0; }
+    .smx-transition .smx-shell { grid-template-columns: 1fr; gap: 8px; }
+    .smx-transition small { text-align: left; }
+  }
+
+  @media (max-width: 620px) {
+    .smx-shell { width: calc(100% - 36px); }
+    .smx-overview, .smx-tour, .smx-playbook, .smx-boundaries, .smx-finish { padding-top: 66px; padding-bottom: 78px; }
+    .smx-overview-top { display: block; }
+    .smx-overview-note { margin-top: 10px; }
+    .smx-overview-heading { margin-top: 24px; }
+    .smx-overview-heading h2 { font-size: clamp(44px, 14vw, 66px); }
+    .smx-overview-heading > p { font-size: 14px; }
+    .smx-anchor-nav { margin-top: 30px; }
+    .smx-anchor-nav a { flex: 1 1 calc(50% - 8px); justify-content: space-between; }
+    .smx-stat-strip { grid-template-columns: repeat(2, 1fr); margin-top: 34px; }
+    .smx-stat-strip div, .smx-stat-strip div:first-child { padding: 13px 10px; }
+    .smx-stat-strip div:nth-child(2) { border-right: 0; }
+    .smx-stat-strip div:nth-child(-n+2) { border-bottom: 1px solid var(--smx-line); }
+    .smx-stat-strip strong { font-size: 22px; }
+    .smx-stat-strip span { font-size: 7px; }
+    .smx-mode-card { padding: 22px; }
+    .smx-mode-card h3 { margin-top: 40px; font-size: 42px; }
+    .smx-mode-rows div { grid-template-columns: 1fr; gap: 5px; }
+    .smx-section-heading h2 { font-size: clamp(39px, 12vw, 58px); }
+    .smx-section-heading > p:last-child { font-size: 14px; }
+    .smx-tour-rail { display: grid; grid-template-columns: 1fr; }
+    .smx-tour-rail > div { padding: 13px 0; border-right: 0; border-bottom: 1px solid var(--smx-line); }
+    .smx-tour-rail > div:nth-child(3) { border-bottom: 0; }
+    .smx-step { display: flex; flex-direction: column; gap: 26px; align-items: stretch; padding: 30px 0; }
+    .smx-step:nth-child(even) .smx-step-copy, .smx-step:nth-child(even) .smx-step-shot { order: initial; }
+    .smx-step-index { font-size: 52px; }
+    .smx-step h3 { font-size: 35px; }
+    .smx-step-shot figcaption { display: block; }
+    .smx-step-shot figcaption span { display: block; margin-top: 6px; }
+    .smx-trust-line { grid-template-columns: 1fr; gap: 10px; }
+    .smx-cta-actions { display: grid; }
+    .smx-cta-primary, .smx-cta-secondary { justify-content: space-between; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .smx-anchor-nav a, .smx-cta-primary, .smx-cta-secondary, .smx-shot-frame img { transition: none; }
+    .smx-step-shot:hover img { transform: none; }
+  }
+
+  /* Art direction pass: one editorial match-report system, not a palette of game cards. */
+  .smx-lower {
+    --smx-bg: #151922;
+    --smx-bg-raised: #1b202a;
+    --smx-paper: #eee9df;
+    --smx-paper-ink: #1b1f28;
+    --smx-text: #f4f0e8;
+    --smx-muted: rgba(244, 240, 232, .7);
+    --smx-subtle: rgba(244, 240, 232, .48);
+    --smx-line: rgba(244, 240, 232, .16);
+    --smx-ink-line: rgba(27, 31, 40, .18);
+    --smx-oxide: #d0644d;
+    --smx-steel: #8192a6;
+    --smx-live: #abc5a4;
+    background: var(--smx-bg);
+    color: var(--smx-text);
+  }
+
+  .smx-shell { width: min(1160px, calc(100% - 56px)); }
+  .smx-overview::before,
+  .smx-tour::before,
+  .smx-playbook::before,
+  .smx-boundaries::before,
+  .smx-finish::before { display: none; }
+
+  .smx-overview { padding: clamp(88px, 11vw, 148px) 0 clamp(90px, 11vw, 152px); background: var(--smx-bg); border-top-color: var(--smx-line); }
+  .smx-overview-top { justify-content: space-between; }
+  .smx-eyebrow,
+  .smx-overview-top,
+  .smx-section-heading .smx-eyebrow { font: 600 10px/1.25 var(--font-mono), monospace; letter-spacing: .08em; text-transform: none; }
+  .smx-eyebrow { color: var(--smx-oxide); }
+  .smx-eyebrow i { width: 42px; background: currentColor; }
+  .smx-overview-note { color: var(--smx-subtle); font: 500 10px/1.25 var(--font-mono), monospace; letter-spacing: .06em; text-transform: none; }
+  .smx-overview-heading { grid-template-columns: minmax(0, 1.2fr) minmax(280px, .62fr); gap: clamp(34px, 7vw, 98px); margin-top: 34px; }
+  .smx-overview-heading h2,
+  .smx-section-heading h2,
+  .smx-cta-card h2,
+  .smx-route-heading h2 { font-family: var(--font-display), var(--font-sans), sans-serif; font-weight: 400; line-height: .9; letter-spacing: -.025em; text-transform: none; }
+  .smx-overview-heading h2 { font-size: clamp(58px, 8.5vw, 112px); }
+  .smx-overview-heading h2 em,
+  .smx-section-heading h2 em,
+  .smx-cta-card h2 em,
+  .smx-route-heading h2 em { display: inline-block; margin-top: .16em; color: var(--smx-oxide); font-family: var(--font-sans), system-ui, sans-serif; font-size: .45em; font-style: italic; font-weight: 500; letter-spacing: -.055em; line-height: 1.05; }
+  .smx-overview-heading > p { max-width: 440px; margin-bottom: 7px; color: var(--smx-muted); font-size: 15px; line-height: 1.75; }
+  .smx-anchor-nav { gap: 24px; margin-top: 48px; }
+  .smx-anchor-nav a { gap: 14px; padding: 11px 2px 10px; border: 0; border-bottom: 1px solid var(--smx-line); border-radius: 0; color: var(--smx-muted); font: 500 12px/1 var(--font-sans), system-ui, sans-serif; letter-spacing: 0; text-transform: none; transition: border-color .2s, color .2s; }
+  .smx-anchor-nav a:hover,
+  .smx-anchor-nav a:focus-visible { transform: none; border-color: var(--smx-oxide); background: transparent; color: var(--smx-text); }
+  .smx-anchor-nav a span { color: var(--smx-oxide); font-size: 14px; }
+  .smx-stat-strip { margin-top: 56px; border-top-color: var(--smx-line); border-bottom-color: var(--smx-line); }
+  .smx-stat-strip div { padding: 16px 18px; border-right-color: var(--smx-line); }
+  .smx-stat-strip strong { color: var(--smx-text); font: 30px/1 var(--font-display), sans-serif; letter-spacing: .01em; }
+  .smx-stat-strip span { color: var(--smx-subtle); font: 500 10px/1.35 var(--font-mono), monospace; letter-spacing: .04em; text-align: right; text-transform: none; }
+
+  .smx-mode-grid { gap: clamp(34px, 6vw, 86px); margin-top: 72px; }
+  .smx-mode-card { min-height: 0; padding: 27px 0 25px; border: 0; border-top: 2px solid var(--mode-accent); border-bottom: 1px solid var(--smx-line); border-radius: 0; background: transparent; }
+  .smx-mode-card::after { display: none; }
+  .smx-mode-card--fortnite { --mode-accent: var(--smx-oxide); }
+  .smx-mode-card--valorant { --mode-accent: var(--smx-steel); }
+  .smx-mode-card-top { color: var(--mode-accent); font: 600 10px/1.2 var(--font-mono), monospace; letter-spacing: .07em; text-transform: none; }
+  .smx-mode-card-top b { display: inline; width: auto; height: auto; border: 0; font-size: 11px; }
+  .smx-mode-card-top i { font-size: 17px; }
+  .smx-mode-card h3 { margin: 45px 0 14px; color: var(--smx-text); font-family: var(--font-display), sans-serif; font-size: clamp(44px, 5.3vw, 72px); font-weight: 400; line-height: .9; letter-spacing: -.02em; }
+  .smx-mode-card > p { max-width: 470px; color: var(--smx-muted); font-size: 14px; line-height: 1.7; }
+  .smx-mode-rows { margin-top: 32px; border-top-color: var(--smx-line); }
+  .smx-mode-rows div { grid-template-columns: 128px 1fr; padding: 12px 0; border-bottom-color: var(--smx-line); }
+  .smx-mode-rows span,
+  .smx-mode-tags,
+  .smx-step-label,
+  .smx-step-tags,
+  .smx-state,
+  .smx-cta-meta,
+  .smx-faq-kicker { color: var(--mode-accent, var(--smx-oxide)); font: 600 10px/1.35 var(--font-mono), monospace; letter-spacing: .055em; text-transform: none; }
+  .smx-mode-rows b { color: var(--smx-muted); font-size: 12px; font-weight: 500; }
+  .smx-mode-tags { gap: 0 13px; margin-top: 21px; }
+  .smx-mode-tags span,
+  .smx-step-tags span { padding: 0; border: 0; color: var(--smx-subtle); }
+  .smx-mode-tags span + span::before,
+  .smx-step-tags span + span::before { content: '/'; margin-right: 13px; color: var(--smx-subtle); opacity: .65; }
+
+  .smx-valorant-route { padding: clamp(76px, 9vw, 122px) 0; background: var(--smx-bg-raised); border-top: 1px solid var(--smx-line); }
+  .smx-route-heading { display: grid; grid-template-columns: minmax(0, .9fr) minmax(300px, 1.1fr); gap: 20px clamp(34px, 7vw, 100px); align-items: end; }
+  .smx-route-heading .smx-eyebrow { grid-column: 1 / -1; }
+  .smx-route-heading h2 { margin: 14px 0 0; color: var(--smx-text); font-size: clamp(50px, 6.4vw, 82px); }
+  .smx-route-heading > p:last-child { max-width: 520px; margin: 0 0 4px; color: var(--smx-muted); font-size: 15px; line-height: 1.75; }
+  .smx-route-grid { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 62px; border-top: 1px solid var(--smx-line); border-bottom: 1px solid var(--smx-line); }
+  .smx-route-card { min-height: 255px; padding: 25px 25px 28px 0; border-right: 1px solid var(--smx-line); }
+  .smx-route-card + .smx-route-card { padding-left: 25px; }
+  .smx-route-card:last-child { border-right: 0; }
+  .smx-route-number { color: var(--smx-steel); font: 600 11px/1 var(--font-mono), monospace; letter-spacing: .08em; }
+  .smx-route-card h3 { margin: 42px 0 11px; color: var(--smx-text); font-family: var(--font-display), sans-serif; font-size: 37px; font-weight: 400; line-height: .95; letter-spacing: -.01em; }
+  .smx-route-card p { margin: 0; color: var(--smx-muted); font-size: 13px; line-height: 1.65; }
+  .smx-route-card strong,
+  .smx-route-card a { display: block; margin-top: 21px; color: var(--smx-oxide); font: 600 11px/1.35 var(--font-mono), monospace; letter-spacing: .03em; text-decoration: none; }
+  .smx-route-card a span { margin-left: 8px; font-size: 14px; }
+  .smx-route-card a:hover { color: var(--smx-text); }
+  .smx-route-note { display: grid; grid-template-columns: 180px 1fr; gap: 28px; align-items: baseline; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--smx-line); }
+  .smx-route-note strong { color: var(--smx-text); font: 600 10px/1.35 var(--font-mono), monospace; letter-spacing: .07em; }
+  .smx-route-note span { color: var(--smx-subtle); font-size: 13px; line-height: 1.5; }
+
+  .smx-tour { padding: clamp(82px, 10vw, 132px) 0; background: var(--smx-paper); color: var(--smx-paper-ink); border-top-color: var(--smx-ink-line); }
+  .smx-tour .smx-eyebrow { color: var(--smx-oxide); }
+  .smx-tour .smx-section-heading h2 { color: var(--smx-paper-ink); }
+  .smx-tour .smx-section-heading h2 em { color: var(--smx-oxide); }
+  .smx-tour .smx-section-heading > p:last-child { color: rgba(27, 31, 40, .7); }
+  .smx-tour-layout { grid-template-columns: 210px minmax(0, 1fr); gap: clamp(32px, 6vw, 76px); margin-top: 56px; }
+  .smx-tour-rail { border-left-color: var(--smx-ink-line); }
+  .smx-tour-rail > div { border-bottom-color: var(--smx-ink-line); }
+  .smx-tour-rail span { color: var(--smx-oxide); }
+  .smx-tour-rail b { color: var(--smx-paper-ink); font: 600 10px/1.2 var(--font-mono), monospace; letter-spacing: .06em; text-transform: none; }
+  .smx-tour-rail p { color: rgba(27, 31, 40, .62); }
+  .smx-tour-rail .smx-tour-proof { border: 0; border-top: 2px solid var(--smx-oxide); background: transparent; }
+  .smx-tour-media :global(.product-screenshot) { margin: 0; }
+  .smx-tour-media :global(.product-screenshot__frame) { border: 1px solid var(--smx-ink-line) !important; border-radius: 0 !important; background: #151922 !important; box-shadow: 16px 16px 0 rgba(27, 31, 40, .11) !important; }
+  .smx-tour-media :global(.product-screenshot__shimmer) { display: none; }
+  .smx-tour-media :global(.product-screenshot__playcta-ring) { border-color: var(--smx-oxide) !important; box-shadow: none !important; }
+  .smx-tour-media :global(.product-screenshot__playcta-label) { color: var(--smx-paper) !important; }
+
+  .smx-playbook { padding: clamp(88px, 11vw, 148px) 0; background: #171c25; border-top-color: var(--smx-line); }
+  .smx-playbook--valorant { background: #1a202a; }
+  .smx-playbook--fortnite .smx-eyebrow,
+  .smx-playbook--fortnite .smx-step-label { color: var(--smx-oxide); }
+  .smx-playbook--valorant .smx-eyebrow,
+  .smx-playbook--valorant .smx-step-label { color: var(--smx-steel); }
+  .smx-playbook--valorant .smx-section-heading h2 em { color: var(--smx-steel); }
+  .smx-step-list { position: relative; gap: 0; margin-top: 70px; border-top: 0; }
+  .smx-step-list::before { content: ''; position: absolute; top: 0; bottom: 0; left: 17px; width: 1px; background: var(--smx-line); }
+  .smx-step { position: relative; grid-template-columns: minmax(240px, .78fr) minmax(0, 1.22fr); gap: clamp(30px, 6vw, 90px); padding: 52px 0 52px 72px; border-bottom-color: var(--smx-line); }
+  .smx-step::before { content: ''; position: absolute; top: 68px; left: 8px; width: 18px; height: 18px; border: 1px solid var(--smx-oxide); background: var(--smx-bg); transform: rotate(45deg); }
+  .smx-playbook--valorant .smx-step::before { border-color: var(--smx-steel); background: #1a202a; }
+  .smx-step-index { color: var(--smx-subtle); font: 600 11px/1 var(--font-mono), monospace; letter-spacing: .08em; }
+  .smx-playbook--valorant .smx-step-index { color: var(--smx-subtle); }
+  .smx-step-label { margin-top: 18px; }
+  .smx-step h3 { max-width: 420px; margin: 12px 0 0; color: var(--smx-text); font-family: var(--font-display), sans-serif; font-size: clamp(34px, 4vw, 54px); font-weight: 400; line-height: .93; letter-spacing: -.015em; }
+  .smx-step-body { max-width: 470px; margin-top: 17px; color: var(--smx-muted); font-size: 14px; line-height: 1.72; }
+  .smx-step-tags { gap: 0 13px; margin-top: 23px; }
+  .smx-step-shot { min-width: 0; }
+  .smx-shot-frame { display: block; width: 100%; padding: 0; position: relative; overflow: hidden; aspect-ratio: 16 / 10; border: 1px solid var(--smx-line); border-radius: 0; background: #0f131a; box-shadow: 15px 15px 0 rgba(0, 0, 0, .13); color: inherit; cursor: zoom-in; font: inherit; text-align: left; }
+  .smx-shot-frame::after { display: none; }
+  .smx-shot-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; filter: saturate(.88) contrast(1.04); transition: transform .4s ease, filter .4s ease; }
+  .smx-shot-frame--contain img { object-fit: contain; object-position: center; background: #11161e; }
+  .smx-step-shot:hover img { transform: none; }
+  .smx-shot-frame:hover img,
+  .smx-shot-frame:focus-visible img { transform: scale(1.015); filter: saturate(.98) contrast(1.04); }
+  .smx-shot-frame:focus-visible { outline: 2px solid var(--smx-oxide); outline-offset: 4px; }
+  .smx-zoom-hint { position: absolute; right: 12px; bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 7px 9px; border: 1px solid rgba(244, 240, 232, .28); background: rgba(21, 25, 34, .88); color: var(--smx-text); font: 500 10px/1 var(--font-mono), monospace; letter-spacing: .02em; }
+  .smx-step-shot figcaption { padding-top: 13px; }
+  .smx-step-shot figcaption strong { color: var(--smx-text); font-size: 13px; font-weight: 600; }
+  .smx-step-shot figcaption span { color: var(--smx-subtle); font: 500 10px/1 var(--font-mono), monospace; letter-spacing: .03em; text-transform: none; }
+
+  .smx-step--report { margin: 26px 0; margin-left: -72px; padding-right: clamp(22px, 4vw, 52px); padding-left: 72px; background: var(--smx-paper); color: var(--smx-paper-ink); border-bottom: 0; }
+  .smx-step--report::before { background: var(--smx-paper); border-color: var(--smx-oxide); }
+  .smx-step--report .smx-step-index,
+  .smx-step--report .smx-step-label { color: var(--smx-oxide); }
+  .smx-step--report h3 { color: var(--smx-paper-ink); }
+  .smx-step--report .smx-step-body { color: rgba(27, 31, 40, .7); }
+  .smx-step--report .smx-step-tags span { color: rgba(27, 31, 40, .62); }
+  .smx-step--report .smx-step-shot figcaption strong { color: var(--smx-paper-ink); }
+  .smx-step--report .smx-step-shot figcaption span { color: rgba(27, 31, 40, .55); }
+  .smx-step--report .smx-shot-frame { border-color: var(--smx-ink-line); box-shadow: 15px 15px 0 rgba(27, 31, 40, .12); }
+  .smx-step--report .smx-zoom-hint { border-color: rgba(238, 233, 223, .24); background: var(--smx-paper-ink); color: var(--smx-paper); }
+
+  .smx-transition { padding: 27px 0; background: var(--smx-oxide); border: 0; color: var(--smx-paper-ink); }
+  .smx-transition .smx-shell { grid-template-columns: 1fr 2fr 1fr; gap: 20px; }
+  .smx-transition span,
+  .smx-transition small { color: rgba(27, 31, 40, .72); font: 600 10px/1.35 var(--font-mono), monospace; letter-spacing: .05em; text-transform: none; }
+  .smx-transition strong { color: var(--smx-paper-ink); font-size: 19px; font-weight: 650; }
+  .smx-transition small { text-align: right; }
+
+  .smx-companion-wrap { background: var(--smx-paper); }
+  .smx-companion-wrap :global(#mobile-companion) { border-top: 0; border-bottom: 0; background: var(--smx-paper) !important; color: var(--smx-paper-ink); }
+  .smx-companion-wrap :global(#mobile-companion > div) { padding-top: 86px; padding-bottom: 86px; }
+  .smx-companion-wrap :global(#mobile-companion > div > div) { border-radius: 0 !important; border-color: var(--smx-oxide) !important; background: var(--smx-bg) !important; box-shadow: none !important; }
+  .smx-companion-wrap :global(#mobile-companion > div > div > div:first-child) { display: none !important; }
+
+  .smx-boundaries { padding: clamp(84px, 10vw, 132px) 0; background: var(--smx-paper); color: var(--smx-paper-ink); border-top-color: var(--smx-ink-line); }
+  .smx-boundaries .smx-eyebrow { color: var(--smx-oxide); }
+  .smx-boundaries .smx-section-heading h2 { color: var(--smx-paper-ink); }
+  .smx-boundaries .smx-section-heading h2 em { color: var(--smx-oxide); }
+  .smx-boundaries .smx-section-heading > p:last-child { color: rgba(27, 31, 40, .68); }
+  .smx-boundary-grid { grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 58px; border: 0; border-top: 1px solid var(--smx-ink-line); border-bottom: 1px solid var(--smx-ink-line); background: transparent; }
+  .smx-boundary-grid article { min-height: 216px; padding: 25px 25px 25px 0; background: transparent; }
+  .smx-boundary-grid article + article { padding-left: 25px; border-left: 1px solid var(--smx-ink-line); }
+  .smx-state { display: inline-flex; padding: 0 0 10px; border: 0; border-bottom: 2px solid currentColor; color: var(--smx-oxide); font: 600 10px/1.3 var(--font-mono), monospace; letter-spacing: .06em; text-transform: none; }
+  .smx-state--live { color: #648864; }
+  .smx-state--delayed { color: var(--smx-oxide); }
+  .smx-state--local { color: var(--smx-steel); }
+  .smx-boundary-grid h3 { margin: 35px 0 0; color: var(--smx-paper-ink); font-family: var(--font-display), sans-serif; font-size: 31px; font-weight: 400; letter-spacing: -.015em; }
+  .smx-boundary-grid p { margin-top: 11px; color: rgba(27, 31, 40, .68); font-size: 13px; line-height: 1.68; }
+  .smx-trust-line { grid-template-columns: 150px 1fr; gap: 24px; margin-top: 19px; padding: 17px 0; border: 0; border-bottom: 1px solid var(--smx-ink-line); background: transparent; }
+  .smx-trust-line span { color: var(--smx-oxide); font: 600 10px/1.3 var(--font-mono), monospace; letter-spacing: .06em; }
+  .smx-trust-line strong { color: rgba(27, 31, 40, .72); font-size: 13px; font-weight: 500; line-height: 1.5; }
+
+  .smx-finish { padding: clamp(90px, 11vw, 144px) 0 126px; background: var(--smx-bg); border-top-color: var(--smx-line); }
+  .smx-cta-card .smx-eyebrow { color: var(--smx-oxide); }
+  .smx-cta-card h2 { font-size: clamp(58px, 7.2vw, 96px); }
+  .smx-cta-card h2 em { color: var(--smx-oxide); }
+  .smx-cta-card > p:not(.smx-eyebrow) { color: var(--smx-muted); }
+  .smx-cta-meta { color: var(--smx-subtle); }
+  .smx-cta-primary,
+  .smx-cta-secondary { border-radius: 0; font: 600 11px/1 var(--font-mono), monospace; letter-spacing: .04em; text-transform: none; }
+  .smx-cta-primary { border-color: var(--smx-oxide); background: var(--smx-oxide); color: var(--smx-paper-ink); }
+  .smx-cta-secondary { border-color: var(--smx-line); color: var(--smx-text); }
+  .smx-cta-primary:hover,
+  .smx-cta-secondary:hover,
+  .smx-cta-primary:focus-visible,
+  .smx-cta-secondary:focus-visible { transform: translateY(-2px); border-color: var(--smx-text); }
+  .smx-faq-list { border-top-color: var(--smx-line); }
+  .smx-faq-kicker { color: var(--smx-subtle); }
+  .smx-faq-list details { border-top-color: var(--smx-line); }
+  .smx-faq-list summary { color: var(--smx-text); font-weight: 600; }
+  .smx-faq-list summary span { color: var(--smx-oxide); }
+  .smx-faq-list details p { color: var(--smx-muted); }
+
+  .smx-lightbox { position: fixed; inset: 0; z-index: 220; display: none; align-items: center; justify-content: center; padding: 30px; background: rgba(10, 13, 18, .95); cursor: zoom-out; overflow: auto; }
+  .smx-lightbox.is-open { display: flex; }
+  .smx-lightbox__stage { max-width: min(94vw, 1440px); text-align: center; }
+  .smx-lightbox__stage img { display: block; max-width: 94vw; max-height: 88vh; width: auto; height: auto; border: 1px solid rgba(244, 240, 232, .2); box-shadow: 18px 18px 0 rgba(0, 0, 0, .2); cursor: zoom-in; }
+  .smx-lightbox__stage img.is-zoomed { max-width: none; max-height: none; cursor: zoom-out; }
+  .smx-lightbox__stage p { margin: 13px 0 0; color: rgba(244, 240, 232, .55); font: 500 10px/1.3 var(--font-mono), monospace; letter-spacing: .04em; }
+  .smx-lightbox__close { position: fixed; top: 22px; right: 24px; padding: 9px 10px; border: 1px solid rgba(244, 240, 232, .28); background: transparent; color: var(--smx-text); cursor: pointer; font: 600 10px/1 var(--font-mono), monospace; letter-spacing: .05em; }
+  .smx-lightbox__close:hover,
+  .smx-lightbox__close:focus-visible { border-color: var(--smx-oxide); color: var(--smx-oxide); }
+
+  /* Hero identity pass: keep the lower page in Snipemaxer's black, red, and white world. */
+  .smx-lower {
+    --smx-bg: #06070a;
+    --smx-bg-raised: #0b0d10;
+    --smx-panel: #0e1014;
+    --smx-panel-2: #07080b;
+    --smx-text: #f3f4f4;
+    --smx-muted: rgba(243, 244, 244, .72);
+    --smx-subtle: rgba(243, 244, 244, .46);
+    --smx-line: rgba(243, 244, 244, .13);
+    --smx-paper: #f2f1ed;
+    --smx-paper-ink: #0b0c0e;
+    --smx-ink-line: rgba(11, 12, 14, .19);
+    --smx-oxide: #ff3b3b;
+    --smx-steel: rgba(243, 244, 244, .76);
+    --smx-live: #ff3b3b;
+  }
+
+  .smx-overview,
+  .smx-valorant-route,
+  .smx-tour,
+  .smx-playbook,
+  .smx-boundaries,
+  .smx-finish { overflow: hidden; }
+
+  .smx-overview::before { display: block; inset: 18px 0 auto; height: 1px; opacity: .8; background: linear-gradient(90deg, var(--smx-oxide) 0 13%, transparent 13% 87%, rgba(243,244,244,.24) 87% 92%, transparent 92%); }
+  .smx-overview { background: var(--smx-bg); }
+  .smx-overview-heading h2 em,
+  .smx-section-heading h2 em,
+  .smx-cta-card h2 em,
+  .smx-route-heading h2 em { color: var(--smx-oxide); }
+  .smx-eyebrow,
+  .smx-anchor-nav a span,
+  .smx-stat-strip strong { color: var(--smx-oxide); }
+  .smx-anchor-nav a:hover,
+  .smx-anchor-nav a:focus-visible { border-color: var(--smx-oxide); }
+  .smx-stat-strip { background: rgba(255,255,255,.018); border-color: var(--smx-line); }
+  .smx-stat-strip div { border-right-color: var(--smx-line); }
+
+  .smx-mode-grid { gap: 24px; margin-top: 64px; }
+  .smx-mode-card { min-height: 420px; padding: 30px; border: 1px solid var(--smx-line); border-top: 3px solid var(--mode-accent); background: #0b0d10; box-shadow: 11px 11px 0 rgba(0,0,0,.42); }
+  .smx-mode-card::before { content: 'FN'; position: absolute; right: 20px; bottom: -12px; color: rgba(243,244,244,.045); font: 400 190px/.75 var(--font-display), sans-serif; letter-spacing: -.08em; pointer-events: none; }
+  .smx-mode-card--valorant::before { content: 'V'; }
+  .smx-mode-card::after { display: none; }
+  .smx-mode-card--fortnite { --mode-accent: var(--smx-oxide); }
+  .smx-mode-card--valorant { --mode-accent: var(--smx-oxide); }
+  .smx-mode-card-top,
+  .smx-mode-rows,
+  .smx-mode-tags,
+  .smx-mode-card h3,
+  .smx-mode-card > p { position: relative; z-index: 1; }
+  .smx-mode-card-top { color: var(--smx-oxide); }
+  .smx-mode-card h3 { margin-top: 56px; }
+  .smx-mode-intro,
+  .smx-mode-rows,
+  .smx-mode-tags { position: relative; z-index: 1; }
+  .smx-mode-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(138px, .7fr); gap: 18px; align-items: start; margin-top: 52px; }
+  .smx-mode-copy { min-width: 0; }
+  .smx-mode-copy h3 { margin: 0 0 14px; }
+  .smx-mode-copy > p { max-width: none; margin: 0; color: var(--smx-muted); font-size: 13px; line-height: 1.62; }
+  .smx-mode-proof { min-width: 0; margin: 0; }
+  .smx-mode-shot { aspect-ratio: 1.45 / 1; border-color: rgba(255, 59, 59, .5); box-shadow: 8px 8px 0 rgba(255, 59, 59, .13); }
+  .smx-mode-shot img { object-fit: contain; object-position: center; background: #090a0d; filter: saturate(.9) contrast(1.04); }
+  .smx-mode-shot .smx-zoom-hint { right: 8px; bottom: 8px; gap: 5px; padding: 6px 7px; font-size: 8px; }
+  .smx-mode-proof figcaption { margin-top: 9px; color: var(--smx-subtle); font: 8px/1.35 var(--font-mono), monospace; letter-spacing: .07em; text-transform: uppercase; }
+  .smx-overview-proof-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--smx-line); }
+  .smx-overview-proof-card { display: grid; grid-template-columns: minmax(105px, .46fr) minmax(0, 1.54fr); grid-template-rows: auto auto; gap: 12px 18px; min-width: 0; margin: 0; padding: 14px; border: 1px solid var(--smx-line); background: #080a0d; }
+  .smx-overview-proof-label { grid-column: 1; grid-row: 1; align-self: end; min-width: 0; }
+  .smx-overview-proof-label span { display: block; color: var(--smx-oxide); font: 600 9px/1.2 var(--font-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+  .smx-overview-proof-label strong { display: block; margin-top: 11px; color: var(--smx-text); font: 400 22px/.92 var(--font-display), sans-serif; }
+  .smx-overview-proof-shot { grid-column: 2; grid-row: 1 / span 2; min-width: 0; min-height: 130px; aspect-ratio: 1.6 / 1; border-color: rgba(255, 59, 59, .42); box-shadow: 7px 7px 0 rgba(255, 59, 59, .1); }
+  .smx-overview-proof-shot img { object-fit: contain; object-position: center; background: #050608; filter: saturate(.9) contrast(1.04); }
+  .smx-overview-proof-shot .smx-zoom-hint { right: 8px; bottom: 8px; gap: 5px; padding: 6px 7px; font-size: 8px; }
+  .smx-overview-proof-card figcaption { grid-column: 1; grid-row: 2; margin: 0; color: var(--smx-subtle); font: 8px/1.35 var(--font-mono), monospace; letter-spacing: .06em; text-transform: uppercase; }
+  .smx-mode-rows { border-top-color: var(--smx-line); }
+  .smx-mode-rows div { border-bottom-color: var(--smx-line); }
+  .smx-mode-rows span,
+  .smx-mode-tags { color: var(--smx-oxide); }
+  .smx-mode-tags span { color: var(--smx-subtle); }
+
+  .smx-valorant-route { background: #080a0d; border-top-color: var(--smx-line); }
+  .smx-route-schematic { display: grid; grid-template-columns: minmax(135px, .8fr) minmax(90px, 1fr) minmax(150px, .9fr) minmax(90px, 1fr) minmax(135px, .8fr); gap: 16px; align-items: center; margin-top: 54px; padding: 18px 0; border-top: 1px solid var(--smx-line); border-bottom: 1px solid var(--smx-line); }
+  .smx-route-node { min-height: 76px; padding: 15px 16px; border: 1px solid var(--smx-line); border-left: 3px solid var(--smx-oxide); background: #0a0b0e; box-shadow: 7px 7px 0 rgba(255,59,59,.12); }
+  .smx-route-node span { display: block; color: var(--smx-oxide); font: 600 9px/1.2 var(--font-mono), monospace; letter-spacing: .08em; }
+  .smx-route-node strong { display: block; margin-top: 12px; color: var(--smx-text); font: 400 27px/.9 var(--font-display), sans-serif; }
+  .smx-route-connector { display: flex; align-items: center; gap: 9px; color: var(--smx-subtle); font: 500 9px/1.35 var(--font-mono), monospace; letter-spacing: .02em; text-align: center; }
+  .smx-route-connector i { position: relative; flex: 1 1 auto; height: 1px; background: var(--smx-oxide); }
+  .smx-route-connector i::after { content: ''; position: absolute; top: -3px; right: -1px; width: 6px; height: 6px; border-top: 1px solid var(--smx-oxide); border-right: 1px solid var(--smx-oxide); transform: rotate(45deg); }
+  .smx-route-grid { margin-top: 40px; border-top-color: var(--smx-line); border-bottom-color: var(--smx-line); }
+  .smx-route-card,
+  .smx-route-card + .smx-route-card { min-height: 285px; padding: 28px; border: 1px solid var(--smx-line); border-top: 2px solid var(--smx-oxide); background: #0b0d10; }
+  .smx-route-card + .smx-route-card { border-left: 0; }
+  .smx-route-card:last-child { border-right: 1px solid var(--smx-line); }
+  .smx-route-number { color: var(--smx-oxide); }
+  .smx-route-card h3 { margin-top: 48px; }
+  .smx-route-card strong,
+  .smx-route-card a { color: var(--smx-oxide); }
+  .smx-route-note { border-top-color: var(--smx-line); }
+  .smx-route-note strong { color: var(--smx-text); }
+
+  .smx-tour {
+    padding: clamp(72px, 8vw, 112px) 0;
+    background: linear-gradient(180deg, #07090c 0%, #0b0d10 100%);
+    color: var(--smx-text);
+    border-top-color: var(--smx-line);
+    border-bottom: 1px solid var(--smx-line);
+  }
+  .smx-tour .smx-section-heading { max-width: 880px; padding-left: 20px; border-left: 3px solid var(--smx-oxide); }
+  .smx-tour .smx-eyebrow { gap: 12px; color: var(--smx-oxide); }
+  .smx-tour .smx-eyebrow i { width: 26px; background: var(--smx-oxide); }
+  .smx-tour .smx-section-heading h2 { margin-top: 23px; color: var(--smx-text); }
+  .smx-tour .smx-section-heading > p:last-child { max-width: 690px; color: var(--smx-muted); }
+  .smx-tour-layout { gap: clamp(32px, 6vw, 76px); margin-top: 44px; }
+  .smx-tour .smx-eyebrow,
+  .smx-tour .smx-section-heading h2 em,
+  .smx-tour-rail span { color: var(--smx-oxide); }
+  .smx-tour-rail { border-left-color: rgba(255,59,59,.45); }
+  .smx-tour-rail > div { border-bottom-color: var(--smx-line); }
+  .smx-tour-rail b { color: var(--smx-text); }
+  .smx-tour-rail p { color: var(--smx-subtle); }
+  .smx-tour-rail .smx-tour-proof { border: 1px solid rgba(255,59,59,.32); border-left: 2px solid var(--smx-oxide); background: rgba(255,59,59,.045); }
+  .smx-tour-media { padding: 12px 12px 0 0; }
+  .smx-tour-media :global(.product-screenshot__frame) { border-color: rgba(255,59,59,.58) !important; background: #08090c !important; box-shadow: 14px 14px 0 rgba(255,59,59,.12), 0 28px 70px rgba(0,0,0,.38) !important; }
+  .smx-tour-media :global(.product-screenshot__playcta) { background: radial-gradient(ellipse at center, rgba(255,59,59,.16) 0%, rgba(8,9,12,.72) 100%); }
+  .smx-tour-media :global(.product-screenshot__playcta-ring) { border-color: rgba(255,255,255,.68) !important; background: var(--smx-oxide) !important; box-shadow: 0 0 0 8px rgba(255,59,59,.15), 0 10px 34px rgba(255,59,59,.3), 0 4px 14px rgba(0,0,0,.45) !important; }
+  .smx-tour-media :global(.product-screenshot__playcta-label) { color: var(--smx-text) !important; border-color: rgba(243,244,244,.22); }
+
+  .smx-playbook,
+  .smx-playbook--valorant { background: var(--smx-bg); }
+  .smx-playbook--valorant { background: #080a0d; }
+  .smx-playbook--fortnite .smx-eyebrow,
+  .smx-playbook--fortnite .smx-step-label,
+  .smx-playbook--valorant .smx-eyebrow,
+  .smx-playbook--valorant .smx-step-label,
+  .smx-playbook--valorant .smx-section-heading h2 em { color: var(--smx-oxide); }
+  .smx-playbook .smx-section-heading { padding-left: 20px; border-left: 3px solid var(--smx-oxide); }
+  .smx-step-list::before { background: rgba(255,59,59,.42); }
+  .smx-step { background: rgba(255,255,255,.018); border-top: 1px solid rgba(243,244,244,.06); border-bottom-color: var(--smx-line); }
+  .smx-step + .smx-step { margin-top: 14px; }
+  .smx-step::before,
+  .smx-playbook--valorant .smx-step::before { border-color: var(--smx-oxide); background: var(--smx-bg); box-shadow: 0 0 0 5px rgba(255,59,59,.06); }
+  .smx-step-index { color: var(--smx-oxide); }
+  .smx-shot-frame { border-color: rgba(255,59,59,.5); box-shadow: 12px 12px 0 rgba(255,59,59,.14); }
+  .smx-shot-frame:focus-visible { outline-color: var(--smx-oxide); }
+  .smx-step--report { border-top: 3px solid var(--smx-oxide); border-bottom: 1px solid var(--smx-line); background: #0b0d10; color: var(--smx-text); box-shadow: 12px 12px 0 rgba(255,59,59,.12); }
+  .smx-step--report::before { border-color: var(--smx-oxide); background: var(--smx-bg); }
+  .smx-step--report h3 { color: var(--smx-text); }
+  .smx-step--report .smx-step-body { color: var(--smx-muted); }
+  .smx-step--report .smx-step-tags span { color: var(--smx-subtle); }
+  .smx-step--report .smx-step-shot figcaption strong { color: var(--smx-text); }
+  .smx-step--report .smx-step-shot figcaption span { color: var(--smx-subtle); }
+  .smx-step--report .smx-shot-frame { border-color: rgba(255,59,59,.5); box-shadow: 12px 12px 0 rgba(255,59,59,.14); }
+  .smx-step--report .smx-zoom-hint { border-color: rgba(243,244,244,.24); background: #090a0d; color: var(--smx-text); }
+
+  .smx-transition { background: #07090c; border-top: 1px solid var(--smx-line); border-bottom: 1px solid var(--smx-line); color: var(--smx-text); }
+  .smx-transition span { color: var(--smx-oxide); }
+  .smx-transition small { color: var(--smx-subtle); }
+  .smx-transition strong { color: var(--smx-text); }
+  .smx-companion-wrap { background: #090b0e; border-top: 1px solid var(--smx-line); border-bottom: 1px solid var(--smx-line); }
+  .smx-companion-wrap :global(#mobile-companion) { background: #090b0e !important; color: var(--smx-text); }
+  .smx-companion-wrap :global(#mobile-companion > div > div) { border-color: var(--smx-oxide) !important; background: #0b0d10 !important; color: var(--smx-text); }
+  .smx-boundaries { background: #0b0d10; color: var(--smx-text); border-top-color: var(--smx-line); }
+  .smx-boundaries .smx-section-heading h2 { color: var(--smx-text); }
+  .smx-boundaries .smx-section-heading > p:last-child { color: var(--smx-muted); }
+  .smx-boundary-grid { border-top-color: var(--smx-line); border-bottom-color: var(--smx-line); }
+  .smx-boundary-grid article + article { border-left-color: var(--smx-line); }
+  .smx-boundary-grid h3 { color: var(--smx-text); }
+  .smx-boundary-grid p { color: var(--smx-muted); }
+  .smx-trust-line { border-bottom-color: var(--smx-line); }
+  .smx-trust-line strong { color: var(--smx-muted); }
+  .smx-boundaries .smx-eyebrow,
+  .smx-boundaries .smx-section-heading h2 em,
+  .smx-trust-line span { color: var(--smx-oxide); }
+  .smx-state--live,
+  .smx-state--delayed,
+  .smx-state--local { color: var(--smx-oxide); }
+  .smx-finish { background: var(--smx-bg); }
+  .smx-cta-card .smx-eyebrow,
+  .smx-cta-card h2 em,
+  .smx-faq-list summary span { color: var(--smx-oxide); }
+  .smx-cta-primary { background: var(--smx-oxide); border-color: var(--smx-oxide); color: #0b0c0e; }
+  .smx-lightbox__close:hover,
+  .smx-lightbox__close:focus-visible { border-color: var(--smx-oxide); color: var(--smx-oxide); }
+
+  @media (max-width: 820px) {
+    .smx-shell { width: calc(100% - 44px); }
+    .smx-overview-heading,
+    .smx-route-heading,
+    .smx-finish-grid { grid-template-columns: 1fr; gap: 28px; }
+    .smx-overview-proof-strip { grid-template-columns: 1fr; margin-top: 34px; }
+    .smx-route-heading .smx-eyebrow { grid-column: auto; }
+    .smx-route-heading > p:last-child { margin-bottom: 0; }
+    .smx-route-schematic { grid-template-columns: 1fr; gap: 0; padding: 16px 0; }
+    .smx-route-connector { min-height: 38px; flex-direction: column; justify-content: center; gap: 6px; }
+    .smx-route-connector i { flex: 0 0 auto; width: 1px; height: 20px; }
+    .smx-route-connector i::after { top: auto; right: auto; bottom: -1px; left: -3px; transform: rotate(135deg); }
+    .smx-route-grid { grid-template-columns: 1fr; }
+    .smx-route-card,
+    .smx-route-card + .smx-route-card { min-height: 0; padding: 24px; border-right: 1px solid var(--smx-line); border-left: 1px solid var(--smx-line); border-bottom: 1px solid var(--smx-line); }
+    .smx-route-card:last-child { border-bottom: 0; }
+    .smx-route-card h3 { margin-top: 25px; }
+    .smx-route-note { grid-template-columns: 1fr; gap: 8px; }
+    .smx-mode-grid { grid-template-columns: 1fr; }
+    .smx-tour-layout { grid-template-columns: 1fr; }
+    .smx-tour-rail { grid-template-columns: repeat(3, 1fr); border-left: 0; border-top: 1px solid var(--smx-line); }
+    .smx-tour-rail > div { padding: 14px 14px 14px 0; border-bottom: 0; border-right: 1px solid var(--smx-line); }
+    .smx-tour-rail > div:nth-child(3) { border-right: 0; }
+    .smx-tour-rail .smx-tour-proof { display: none; }
+    .smx-boundary-grid { grid-template-columns: 1fr; }
+    .smx-boundary-grid article,
+    .smx-boundary-grid article + article { min-height: 0; padding: 24px 0; border-left: 0; border-bottom: 1px solid var(--smx-line); }
+    .smx-boundary-grid article:last-child { border-bottom: 0; }
+    .smx-transition .smx-shell { grid-template-columns: 1fr; gap: 8px; }
+    .smx-transition small { text-align: left; }
+  }
+
+  @media (max-width: 620px) {
+    .smx-shell { width: calc(100% - 36px); }
+    .smx-overview,
+    .smx-valorant-route,
+    .smx-tour,
+    .smx-playbook,
+    .smx-boundaries,
+    .smx-finish { padding-top: 70px; padding-bottom: 82px; }
+    .smx-overview-top { display: block; }
+    .smx-overview-note { margin-top: 11px; }
+    .smx-overview-heading { margin-top: 26px; }
+    .smx-overview-heading h2 { font-size: clamp(54px, 15vw, 76px); }
+    .smx-overview-heading > p { font-size: 14px; }
+    .smx-overview-proof-card { grid-template-columns: minmax(0, .72fr) minmax(150px, 1fr); gap: 12px; padding: 12px; }
+    .smx-overview-proof-label strong { font-size: 20px; }
+    .smx-overview-proof-shot { min-height: 106px; box-shadow: 5px 5px 0 rgba(255, 59, 59, .1); }
+    .smx-overview-proof-card figcaption { font-size: 7px; }
+    .smx-anchor-nav { gap: 15px 20px; margin-top: 34px; }
+    .smx-anchor-nav a { flex: 1 1 calc(50% - 20px); justify-content: space-between; }
+    .smx-stat-strip { grid-template-columns: repeat(2, 1fr); margin-top: 38px; }
+    .smx-stat-strip div,
+    .smx-stat-strip div:first-child { padding: 14px 10px; }
+    .smx-stat-strip div:nth-child(2) { border-right: 0; }
+    .smx-stat-strip div:nth-child(-n+2) { border-bottom: 1px solid var(--smx-line); }
+    .smx-stat-strip strong { font-size: 25px; }
+    .smx-stat-strip span { font-size: 8px; }
+    .smx-mode-card { min-height: 360px; padding: 25px 22px; }
+    .smx-mode-card::before { right: 12px; bottom: -4px; font-size: 150px; }
+    .smx-mode-intro { grid-template-columns: 1fr; gap: 20px; margin-top: 38px; }
+    .smx-mode-card h3 { margin-top: 0; font-size: 52px; }
+    .smx-mode-proof { max-width: 300px; }
+    .smx-mode-rows div { grid-template-columns: 1fr; gap: 5px; }
+    .smx-route-schematic { margin-top: 38px; }
+    .smx-route-node strong { font-size: 25px; }
+    .smx-route-heading h2 { font-size: clamp(52px, 14vw, 72px); }
+    .smx-section-heading h2 { font-size: clamp(50px, 13vw, 68px); }
+    .smx-section-heading > p:last-child { font-size: 14px; }
+    .smx-tour-rail { grid-template-columns: 1fr; }
+    .smx-tour-rail > div { padding: 13px 0; border-right: 0; border-bottom: 1px solid var(--smx-line); }
+    .smx-tour-rail > div:nth-child(3) { border-bottom: 0; }
+    .smx-step-list { padding-left: 32px; }
+    .smx-step-list::before { left: 8px; }
+    .smx-playbook .smx-section-heading { padding-left: 14px; }
+    .smx-step { display: flex; flex-direction: column; gap: 28px; align-items: stretch; padding: 34px 0; }
+    .smx-step:nth-child(even) .smx-step-copy,
+    .smx-step:nth-child(even) .smx-step-shot { order: initial; }
+    .smx-step::before { top: 48px; left: -1px; width: 15px; height: 15px; }
+    .smx-step h3 { font-size: 42px; }
+    .smx-step--report { margin: 22px 0 22px -32px; padding: 34px 18px 34px 32px; }
+    .smx-step--report::before { left: -1px; }
+    .smx-step-shot figcaption { display: block; }
+    .smx-step-shot figcaption span { display: block; margin-top: 7px; }
+    .smx-trust-line { grid-template-columns: 1fr; gap: 10px; }
+    .smx-cta-actions { display: grid; }
+    .smx-cta-primary,
+    .smx-cta-secondary { justify-content: space-between; }
+    .smx-lightbox { padding: 18px; }
+    .smx-lightbox__stage img { max-width: calc(100vw - 36px); max-height: 80vh; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .smx-shot-frame img { transition: none; }
+    .smx-shot-frame:hover img,
+    .smx-shot-frame:focus-visible img { transform: none; }
+  }
+</style>
