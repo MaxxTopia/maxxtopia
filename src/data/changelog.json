@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-01",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.27",
+    "title": "AdBlock-Maxxer gives YouTube Reclaim normal seeking.",
+    "body": "Reclaim now has familiar 5- and 10-second seek controls for ad-free YouTube playback.",
+    "items": [
+      "Added visible -10 and +10 second buttons to the Reclaim player.",
+      "Left and Right arrows seek 5 seconds, matching YouTube's keyboard behavior.",
+      "J and L seek 10 seconds for quick backward and forward jumps."
+    ]
+  },
+  {
     "date": "2026-10-26",
     "product": "Optimizationmaxxing",
     "productSlug": "optimizationmaxxing",
