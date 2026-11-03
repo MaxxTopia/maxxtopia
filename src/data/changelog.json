@@ -3,6 +3,17 @@
     "date": "2026-11-03",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.117",
+    "title": "Discordmaxxer v0.7.117",
+    "items": [
+      "Makes plugin settings resilient to one broken or outdated plugin definition",
+      "Keeps the full animated profile, widget-skin, theme, and Tournament Mode"
+    ]
+  },
+  {
+    "date": "2026-11-03",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.116",
     "title": "Discordmaxxer v0.7.116",
     "items": [
