@@ -3,6 +3,16 @@
     "date": "2026-11-03",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.119",
+    "title": "Discordmaxxer v0.7.119",
+    "items": [
+      "Publishes the DMHub plugin-settings crash hardening after aligning the overlay with the pinned Vencord `PluginModal` contract."
+    ]
+  },
+  {
+    "date": "2026-11-03",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.117",
     "title": "Discordmaxxer v0.7.117",
     "items": [
