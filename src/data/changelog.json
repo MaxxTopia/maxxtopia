@@ -3,6 +3,19 @@
     "date": "2026-11-03",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.116",
+    "title": "Discordmaxxer v0.7.116",
+    "items": [
+      "Restored the complete development build merge that was missing from the",
+      "DMEmoji now provides Unicode and server-emoji search, an iEmoji keyboard",
+      "Profile presentation keeps the full animated widget/profile experience in",
+      "Shared profile and widget rendering now uses the same owned skin/preset"
+    ]
+  },
+  {
+    "date": "2026-11-03",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.115",
     "title": "Discordmaxxer v0.7.115",
     "items": [
