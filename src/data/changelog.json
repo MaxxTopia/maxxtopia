@@ -3,6 +3,22 @@
     "date": "2026-11-04",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.122",
+    "title": "Discordmaxxer v0.7.122",
+    "items": [
+      "Hardened the image context-menu integration for both native image-context and",
+      "Restored the native attachment click path so clicking a sent image can open",
+      "Added a DMEmoji error boundary around its custom message controls so a",
+      "Made DMProfileCosmetics' Profile gradient (default) / Match profile gradient",
+      "Strengthened DMTrim's sponsored/reward-card handling for Fanduel and similar",
+      "Hardened the pinned Vencord rebrand pipeline so the transitional PluginModal",
+      "Kept the strict selected-window screenshare-audio candidate in this same"
+    ]
+  },
+  {
+    "date": "2026-11-04",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.121",
     "title": "Discordmaxxer v0.7.121",
     "items": [
