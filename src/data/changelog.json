@@ -3,6 +3,19 @@
     "date": "2026-11-04",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.124",
+    "title": "Discordmaxxer v0.7.124",
+    "items": [
+      "Reset confirmation now uses Discordmaxxer branding instead of the inherited",
+      "Reset cleanup is resilient to Windows file-lock and cache errors. A failed",
+      "Development CSS hot reload now catches watcher start and `EPERM`/`ENOENT`",
+      "Installed builds use one stable Chromium session directory across updates."
+    ]
+  },
+  {
+    "date": "2026-11-04",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.123",
     "title": "Discordmaxxer v0.7.123",
     "items": [
