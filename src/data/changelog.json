@@ -3,6 +3,18 @@
     "date": "2026-11-04",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.125",
+    "title": "Discordmaxxer v0.7.125",
+    "items": [
+      "Session migration now checks for actual Chromium session contents instead of",
+      "If an empty or cache-only stable session directory already exists, it is",
+      "Updating the client no longer unnecessarily sends users back to the Discord"
+    ]
+  },
+  {
+    "date": "2026-11-04",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.124",
     "title": "Discordmaxxer v0.7.124",
     "items": [
