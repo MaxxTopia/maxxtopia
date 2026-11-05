@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-05",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.126",
+    "title": "Discordmaxxer v0.7.126",
+    "items": [
+      "Normal text and image message menus stay on Discord's native route, including Reply, Forward, reactions, Pin, Bookmark, Copy Message Link, and related actions.",
+      "DMEmoji's composer picker, mouse-based Send button, and saved-media shelf remain available.",
+      "The release preserves the existing profile flair, widget-skin, theme, tournament-mode, media, and optimization work already included in v0.7.125.",
+      "The overlay is built with the strict rebrand and plugin-integrity checks enabled."
+    ]
+  },
+  {
     "date": "2026-11-04",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
