@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-11-05",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.28",
+    "title": "AdBlock-Maxxer keeps YouTube Live moving through ad gaps.",
+    "body": "YouTube Live Reclaim now skips server-side ad fragments and recovers across live-edge gaps instead of leaving the player stuck reconnecting.",
+    "items": [
+      "Skips marked server-side ad fragments without exposing an ad slot to the player.",
+      "Holds briefly at the live edge while a temporary HLS gap catches up.",
+      "Retries signed live fragments only when the failure is transient, then fails closed.",
+      "Updates the bundled YouTube Companion to v0.4.10."
+    ]
+  },
+  {
     "date": "2026-11-06",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
