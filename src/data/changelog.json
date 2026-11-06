@@ -1,5 +1,20 @@
 [
   {
+    "date": "2026-11-06",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.127",
+    "title": "Discordmaxxer v0.7.127",
+    "items": [
+      "Normal text and image messages retain Discord's native Reply, Forward, reactions, Pin, Bookmark, Copy Message Link, and related actions.",
+      "Full-screen image interactions no longer receive a competing custom context-menu route from the overlay.",
+      "DMEmoji's composer send control no longer matches Gift or Nitro controls, and it can attach an imported/custom emoji image in a direct message instead of sending unsupported custom-emoji markup.",
+      "Widget motion no longer pauses merely because the window focus moved; tournament mode, hidden-document, offscreen, and reduced-motion safeguards remain active.",
+      "Display-name styling uses broader profile/self selectors and preserves the selected gradient with stronger CSS ownership.",
+      "Existing profile flair, widget-skin, theme, tournament-mode, media, and optimization work remains included."
+    ]
+  },
+  {
     "date": "2026-11-05",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
