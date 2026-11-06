@@ -3,6 +3,20 @@
     "date": "2026-11-06",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.128",
+    "title": "Discordmaxxer v0.7.128",
+    "items": [
+      "Restores DMEmoji's mouse-send path and keeps imported media attached to the real Discord composer upload row, with a clickable enlarged preview and lightbox.",
+      "Prevents custom image-menu routing from destabilizing ordinary text messages, inline images, or full-screen image interactions; Discord's native Reply, Forward, reactions, Pin, Bookmark, and copy actions remain authoritative.",
+      "Requests an immediate widget-skin probe when a profile opens so the Playing card is skinned on first visible paint instead of briefly showing the native card.",
+      "Makes the clean pinned-Vencord overlay reproducible by avoiding duplicate upstream helpers and anchoring the ImageZoom safety guard to the actual message-menu route.",
+      "Preserves the existing profile flair, animated widget skins, display-name styling, themes, Tournament Mode, screenshare, and optimization work already shipped through v0.7.127."
+    ]
+  },
+  {
+    "date": "2026-11-06",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.127",
     "title": "Discordmaxxer v0.7.127",
     "items": [
