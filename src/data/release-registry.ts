@@ -55,11 +55,11 @@ export const releaseRegistry = {
   },
 
   streammaxxing: {
-    version: '0.1.74',
+    version: '0.1.76',
     installerUrl:
-      'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.74_x64-setup.exe?sha256=6b4488c6e7a92b94c8733a3e844dbbed7ead9f694b43f2d4403aad8a80a8d6d9',
+        'https://dl.maxxtopia.com/streammaxxing/streammaxxing_0.1.76_x64-setup.exe?sha256=92286afd6b59e835be31ed1bf4872ae778f2bcc6b29260986779d3d421185ebc',
     releasePageUrl: null,
-    publishedAt: '2026-11-06T08:43:31Z',
+    publishedAt: '2026-11-08T09:30:00Z',
     source: 'public-manifest',
   },
 
