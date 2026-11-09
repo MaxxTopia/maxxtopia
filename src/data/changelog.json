@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-11-09",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.130",
+    "title": "Discordmaxxer v0.7.130",
+    "items": [
+      "Restores owner-scoped widget skins on other Discordmaxxer users' profiles and keeps the playing/game cards on the same visual contract.",
+      "Restores native folder expansion and child-server selection by failing open to Discord's own folder interaction path.",
+      "Adds a narrow attachment-image context menu with real `Copy Image`, `Copy Image Link`, and `Save Image As...` actions for thumbnails and fullscreen media without replacing normal message menus.",
+      "Restores the native desktop context menu in the message composer, including Paste, cut, copy, and spellcheck actions, while keeping normal message and image menus on their safe paths.",
+      "Keeps startup recovery, strict overlay validation, safe plugin settings rendering, and status-toast fail-open protections from the accepted candidate."
+    ]
+  },
+  {
     "date": "2026-11-08",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
