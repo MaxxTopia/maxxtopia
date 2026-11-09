@@ -947,7 +947,7 @@ export const products: Product[] = [
     primaryCta: { label: 'Download for Chrome / Brave / Edge', href: installerUrlFor('adblockmaxxer'), external: true },
     secondaryCta: {
       label: 'Get YouTube Companion (Windows)',
-      href: 'https://dl.maxxtopia.com/adblockmaxxer-companion.zip?v=1.6.28',
+      href: 'https://dl.maxxtopia.com/adblockmaxxer-companion.zip?v=1.6.29',
       external: true,
       note: 'This is the component that makes server-enforced YouTube videos play ad-free. Download the ZIP, extract it, and run install-companion.bat once; normal ads still work with just the extension.',
     },

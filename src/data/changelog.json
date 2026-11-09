@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-08",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.29",
+    "title": "AdBlock-Maxxer makes live YouTube Reclaim recover faster.",
+    "body": "A bounded wait after an expired live fragment is now shorter, while genuine provider-side ad windows keep their longer fail-closed protection.",
+    "items": [
+      "Retries sooner when a live fragment expires with HTTP 403.",
+      "Keeps the longer wait for empty provider ad windows.",
+      "Leaves native YouTube untouched when Reclaim cannot recover."
+    ]
+  },
+  {
     "date": "2026-11-07",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
