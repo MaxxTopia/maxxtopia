@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-10",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.131",
+    "title": "Discordmaxxer v0.7.131",
+    "items": [
+      "Isolates the Spotify player and fallback surfaces from DMTrim promotional cleanup so the embedded player remains visible and interactive.",
+      "Makes Spotify partial or unavailable track state fail safe instead of allowing malformed state to break the account panel.",
+      "Adds a discoverable Voice & screen-share keybind shortcut through DMHub.",
+      "Hardens the strict overlay pipeline and release verification around the native composer and message/image context-menu paths."
+    ]
+  },
+  {
     "date": "2026-11-09",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
