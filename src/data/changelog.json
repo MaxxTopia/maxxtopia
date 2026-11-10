@@ -3,6 +3,19 @@
     "date": "2026-11-10",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.132",
+    "title": "Discordmaxxer v0.7.132",
+    "items": [
+      "Adds an opt-in outgoing microphone boost in DMMicMonitor. The processed microphone track is the one Discord sends to voice-call recipients; the local sidetone and level meter remain separate controls.",
+      "Adds a guarded Web Audio fallback: if the runtime refuses the processing graph, Discord keeps the original microphone stream instead of going silent.",
+      "Keeps screen-share video and audio outside the microphone boost path. The Linux compatibility path also marks screen-share capture so microphone-only processing cannot intercept it.",
+      "Keeps the existing single-key voice-keybind support and the v0.7.131 startup, composer, image-menu, folder, widget, Spotify, and DMTrim fixes in the release line."
+    ]
+  },
+  {
+    "date": "2026-11-10",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.131",
     "title": "Discordmaxxer v0.7.131",
     "items": [
