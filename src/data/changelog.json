@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-11",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.134",
+    "title": "Discordmaxxer v0.7.134",
+    "items": [
+      "Keeps DMMicMonitor's local audition aligned with the bounded outgoing boost",
+      "Hardens startup navigation retry formatting and keeps the startup recovery",
+      "Makes the Spotify track, player-state, active-device, and repeat-normalization",
+      "Keeps the verified v0.7.132/v0.7.133 startup, composer, image-menu, folder,"
+    ]
+  },
+  {
     "date": "2026-11-10",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
