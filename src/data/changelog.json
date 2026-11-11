@@ -1,29 +1,10 @@
 [
   {
     "date": "2026-11-11",
-    "product": "Maxxtopia",
-    "productSlug": null,
-    "version": "Discord surfaces + monitoring",
-    "title": "Maxxtopia keeps the suite directory and support paths honest.",
-    "body": "The public Discord surfaces now reflect the current product set, while ticket interactions fail safely and a private monitor reports recovery instead of leaving broken controls unexplained.",
-    "items": [
-      "Reconciles the public product directory and read-only showcase without member posting.",
-      "Adds fail-safe ticket handling with private outage and recovery alerts.",
-      "Keeps Aimmaxer purchaser access role-gated and manual until fulfillment is verified."
-    ]
-  },
-  {
-    "date": "2026-11-11",
     "product": "Aimmaxxer",
     "productSlug": "aimmaxxer",
     "version": "v0.8.22",
-    "title": "Aimmaxxer restores the tested private-practice baseline.",
-    "body": "The user-tested Oct. 26 baseline is now the live private package, with offline practice and manual purchaser access kept explicit.",
-    "items": [
-      "Publishes the verified v0.8.22 package and updater manifest.",
-      "Keeps Aimmaxxer inside the private and offline-practice boundary.",
-      "Leaves separate-install updater delivery and automatic purchaser fulfillment as follow-up checks."
-    ]
+    "title": "Aimmaxer v2 released"
   },
   {
     "date": "2026-11-10",
