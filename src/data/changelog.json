@@ -1,6 +1,214 @@
 [
   {
     "date": "2026-11-11",
+    "product": "Maxxtopia",
+    "productSlug": null,
+    "version": "Discord surfaces + monitoring",
+    "title": "Maxxtopia keeps the suite directory and support paths honest.",
+    "body": "The public Discord surfaces now reflect the current product set, while ticket interactions fail safely and a private monitor reports recovery instead of leaving broken controls unexplained.",
+    "items": [
+      "Reconciles the public product directory and read-only showcase without member posting.",
+      "Adds fail-safe ticket handling with private outage and recovery alerts.",
+      "Keeps Aimmaxer purchaser access role-gated and manual until fulfillment is verified."
+    ]
+  },
+  {
+    "date": "2026-11-11",
+    "product": "Aimmaxxer",
+    "productSlug": "aimmaxxer",
+    "version": "v0.8.22",
+    "title": "Aimmaxxer restores the tested private-practice baseline.",
+    "body": "The user-tested Oct. 26 baseline is now the live private package, with offline practice and manual purchaser access kept explicit.",
+    "items": [
+      "Publishes the verified v0.8.22 package and updater manifest.",
+      "Keeps Aimmaxxer inside the private and offline-practice boundary.",
+      "Leaves separate-install updater delivery and automatic purchaser fulfillment as follow-up checks."
+    ]
+  },
+  {
+    "date": "2026-11-10",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Discover ownership + English filtering",
+    "title": "Playlistmaxxing makes Discover Mix respect ownership and language.",
+    "body": "Discover Mix now filters toward English-language picks, removes songs already owned through the library or named playlists, and keeps dismissed tracks from resurfacing.",
+    "items": [
+      "Adds a bounded English-language classifier to the recommendation flow.",
+      "Blocks duplicate ownership across the library and named playlists.",
+      "Keeps ownership, dismissal, and muted decisions visible in the recommendation toolbar."
+    ]
+  },
+  {
+    "date": "2026-11-10",
+    "product": "Dropmaxxer",
+    "productSlug": "dropmaxxer",
+    "version": "v.CXLVII–v.CXLIX",
+    "title": "Dropmaxxer turns route calibration into evidence.",
+    "body": "The current-season release adds marker diagnostics and calibration logs while removing stale active data and keeping map refreshes fail-closed when metadata is unavailable.",
+    "items": [
+      "Shows directed-geometry and terrain-aware pro-fit diagnostics with uncertainty context.",
+      "Captures JUMPED, GLIDER, CUT, RE-PULL, and LANDED timing in versioned calibration bundles.",
+      "Removes obsolete replay-derived elevation data and records blocked map metadata instead of inventing verification."
+    ]
+  },
+  {
+    "date": "2026-11-10",
+    "product": "Clipmaxxer",
+    "productSlug": "clipmaxxer",
+    "version": "Auth + review flow",
+    "title": "Clipmaxxer keeps uncertain clips in review.",
+    "body": "The live app now carries protected routes through magic-link auth and gives held candidates a visible review lane instead of treating uncertain detections as publishable clips.",
+    "items": [
+      "Preserves the requested destination through sign-in and onboarding.",
+      "Shows held candidates with evidence and no approve or schedule controls.",
+      "Keeps unauthenticated access fail-closed while the review workflow stays explicit."
+    ]
+  },
+  {
+    "date": "2026-11-09",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.79",
+    "title": "Streammaxxing stops paired sessions from expiring mid-run.",
+    "body": "The ten-minute pairing expiry now applies only until first successful pairing; a successful session stays active until the user stops it or the app exits.",
+    "items": [
+      "Keeps the pairing code single-use while separating code lifetime from session lifetime.",
+      "Leaves the active session explicit until a deliberate stop or app exit.",
+      "Publishes the signed installer and updater metadata for the repaired pairing flow."
+    ]
+  },
+  {
+    "date": "2026-11-09",
+    "product": "Streammaxxing",
+    "productSlug": "streammaxxing",
+    "version": "v0.1.78",
+    "title": "Streammaxxing makes two-PC pairing visible.",
+    "body": "The chest tracker now reports the pairing handoff and gaming-PC connection state instead of hiding the important part of setup behind a one-time code.",
+    "items": [
+      "Shows pairing status as the gaming-PC link comes online.",
+      "Keeps the pairing code single-use while preserving an inspectable active session.",
+      "Publishes the signed installer and updater metadata for the pairing-status release."
+    ]
+  },
+  {
+    "date": "2026-11-09",
+    "product": "Viewmaxxing",
+    "productSlug": "viewmaxxing",
+    "version": "Playback proof + catalog guardrails",
+    "title": "Viewmaxxing keeps the catalog honest before it plays.",
+    "body": "The live release separates provider health from native playback proof, so browseable titles remain blocked until identity, language, duration, and advancing-video evidence all pass.",
+    "items": [
+      "Adds title-specific blocked-playback explanations and deferred-search status.",
+      "Keeps pending and codec-incompatible titles browseable but not playable.",
+      "Adds background catalog and admission checks without bypassing provider or codec gates."
+    ]
+  },
+  {
+    "date": "2026-11-07",
+    "product": "Optimizationmaxxing",
+    "productSlug": "optimizationmaxxing",
+    "version": "v0.4.37–v0.4.40",
+    "title": "Optimizationmaxxing turns tuning into an evidence-backed decision.",
+    "body": "Asta now shows what it can actually cover, applies supported settings only after read-back, and keeps higher-risk actions and Fortnite capture claims explicitly gated.",
+    "items": [
+      "Adds one-click apply for supported rig-matched settings after live read-back.",
+      "Separates recommendation-level standby cleanup and P-core experiments from confirmed settings.",
+      "Adds coverage and audit context for core Fortnite capabilities and keeps local proxy evidence distinct from real capture."
+    ]
+  },
+  {
+    "date": "2026-11-07",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Discover playback + recommendations",
+    "title": "Playlistmaxxing makes Discover Mix play and learn.",
+    "body": "Discover now resolves full songs on demand, keeps recommendation state explicit, and falls back to public search when the preferred quota is unavailable.",
+    "items": [
+      "Adds full-song play with normal Save, Playlist, timing, and Remove controls.",
+      "Filters candidates by owned, dismissed, and muted state plus a profile built from the library.",
+      "Rejects interview and Genius results and uses a bounded public-search fallback when the preferred quota is exhausted."
+    ]
+  },
+  {
+    "date": "2026-11-07",
+    "product": "Dropmaxxer",
+    "productSlug": "dropmaxxer",
+    "version": "v.CXLVI",
+    "title": "Dropmaxxer makes competitive routes safer to trust.",
+    "body": "Fastest routes now validate the full dive and canopy sequence, while terrain-backed suggestions, saved-marker provenance, and modeled contest timing stay explicit about uncertainty.",
+    "items": [
+      "Rejects incomplete fastest-route sequences and directs players to Safe mode.",
+      "Uses collision-backed landable surfaces and reports modeled time saved after approach cost.",
+      "Marks saved routes with physics, terrain, and model provenance and fails safely on stale data."
+    ]
+  },
+  {
+    "date": "2026-11-05",
+    "product": "Snipemaxxer",
+    "productSlug": "snipemaxxer",
+    "version": "v0.3.20",
+    "title": "Snipemaxxer turns a full-lobby replay into a room you can inspect.",
+    "body": "The live Replay Room carries a verified replay through map, route, player, zone, and timeline views while labeling fields the packet does not expose.",
+    "items": [
+      "Supports full-lobby reports with player routes, zone history, map controls, and player facts.",
+      "Raises the bounded pop-out payload ceiling so large reports can open without being rejected.",
+      "Keeps inventory and unavailable rule fields labeled NOT CAPTURED or RULE NOT EXPOSED instead of inferring them."
+    ]
+  },
+  {
+    "date": "2026-11-05",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Mobile playback resilience",
+    "title": "Playlistmaxxing keeps mobile playback from fighting itself.",
+    "body": "The mobile player now reasserts its Media Session ownership and recovers from bounded handoff failures without fighting an explicit pause.",
+    "items": [
+      "Refreshes Media Session and keepalive ownership across lifecycle and hardware changes.",
+      "Adds cooldowns to prevent play and pause feedback loops.",
+      "Falls back to library order for Next and Previous when filters hide every card."
+    ]
+  },
+  {
+    "date": "2026-11-03",
+    "product": "Playlistmaxxing",
+    "productSlug": "playlistmaxxing",
+    "version": "Discover Mix + full-song library",
+    "title": "Playlistmaxxing turns Discover Mix into a real library.",
+    "body": "Discover Mix now has normal library cards and full-song controls, while named playlists keep explicit All Playlist membership instead of absorbing every saved track.",
+    "items": [
+      "Adds grid cards with preview, Play, Save, Playlist, timing, and Remove controls.",
+      "Resolves full songs on demand while preview-only discovery stays available.",
+      "Keeps named-playlist membership explicit and reversible."
+    ]
+  },
+  {
+    "date": "2026-10-29",
+    "product": "MontageMaxxer",
+    "productSlug": "montagemaxxer",
+    "version": "Control preview + intake",
+    "title": "MontageMaxxer makes the first cut easier to review.",
+    "body": "The live page now shows the editor controls before intake and keeps the done-for-you handoff tied to a real reviewable workflow.",
+    "items": [
+      "Adds a dedicated control preview without replacing the original controls section.",
+      "Adds the done-for-you intake at /montagemaxxer/apply/.",
+      "Preserves the real showcase video and aspect-ratio-safe fullscreen behavior."
+    ]
+  },
+  {
+    "date": "2026-10-28",
+    "product": "Maxxtopia",
+    "productSlug": null,
+    "version": "Prize context + searchable standings",
+    "title": "Maxxtopia makes tournament results easier to verify.",
+    "body": "The live standings surface now pairs readable player search with official payout context while unavailable event data remains labeled honestly.",
+    "items": [
+      "Shows published cash prize pools and rank payouts when the event provides them.",
+      "Keeps unsupported or missing prize data unavailable instead of guessing.",
+      "Uses provider-backed standings snapshots rather than fabricating a full field."
+    ]
+  },
+  {
+    "date": "2026-11-11",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.134",
