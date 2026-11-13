@@ -3,6 +3,21 @@
     "date": "2026-11-13",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.137",
+    "title": "Discordmaxxer v0.7.137",
+    "items": [
+      "**Top Bar Discordmaxxer Brand Logo & Wordmark**: Added the official Discordmaxxer brand logo (the circular horror-Clyde icon with horns and crimson eyes) alongside the gradient wordmark (\"DISCORDMAXXER\" with `#e25bff` to `#00d4ff` text fill) at the very top left of the Discord top bar.",
+      "Supports modern Discord Visual Refresh (`[data-window-chrome=\"true\"]` / `[class*=\"bar_\"]`) by prepending `#dm-topbar-brand` into the leading navigation container before the back/forward arrows.",
+      "Supports classic titlebar windows (`[class*=\"wordmark\"]`) by replacing the vanilla Discord SVG with the brand icon and gradient text.",
+      "Embedded self-contained base64 PNG data URI for offline reliability with zero external network dependency.",
+      "Single click on the top bar logo opens the Discordmaxxer Hub panel (`#dm-hub-fab`) with fallback to User Settings.",
+      "Re-anchored dynamically via `MutationObserver` to ensure persistence across channel and page transitions."
+    ]
+  },
+  {
+    "date": "2026-11-13",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.136",
     "title": "Discordmaxxer v0.7.136",
     "items": [
