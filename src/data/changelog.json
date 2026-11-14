@@ -1,5 +1,25 @@
 [
   {
+    "date": "2026-11-14",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.149",
+    "title": "Discordmaxxer v0.7.149",
+    "items": [
+      "**Fix Image Click and Enlarge Modal Display**:",
+      "**Isolate ImageZoom Mouse Handlers from Chat Attachments**:",
+      "Guarded `ImageZoom.makeProps` so event handlers (`onMouseDown`, `onMouseUp`, `onMouseOver`, `onMouseOut`) are only attached to the enlarged modal image (`instance?.props?.id === ELEMENT_ID`).",
+      "Chat message image attachments, avatars, and emojis no longer receive `onMouseDown` state mutations (`instance.setState({ mouseDown: true })`) during click gestures.",
+      "Prevents React re-renders between `mousedown` and `mouseup` from swallowing or corrupting native `onClick` / `onZoom` events, restoring 100% reliable opening of Discord's enlarged media viewer modal when clicking any chat image.",
+      "**Safe Magnifier Root Updates in React 18**:",
+      "Updated `updateMagnifier` to re-render directly into the active root (`this.root.render()`) instead of unmounting and calling `createRoot()` synchronously on the same container element, eliminating React 18 root recreation errors.",
+      "Scoped `unMountMagnifier` so unmounting unrelated chat thumbnails or scrolled messages does not destroy the active media viewer magnifier.",
+      "**Resilient Media Viewer Magnifier Mounting**:",
+      "Added defensive null checks and element validation in `Magnifier.tsx` for `elem` and `video` elements within the `waitFor` ready callback, preventing uncaught `TypeError` crashes on animated or dynamically loaded media.",
+      "Added proper event listener cleanup for the video sync listener upon component unmount."
+    ]
+  },
+  {
     "date": "2026-11-13",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
