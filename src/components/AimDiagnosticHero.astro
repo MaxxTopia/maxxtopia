@@ -32,16 +32,16 @@ const { product } = Astro.props;
           <span>TRAINING / AIMMAXXER</span>
           <i>COMING SOON</i>
         </div>
-        <p class="aim-diag__eyebrow"><span></span>~28-second browser diagnostic <b>EVIDENCE RUN</b></p>
-        <h1>Don’t guess what<br />your <span class="aim-word">aim</span> <em>needs.</em></h1>
+        <p class="aim-diag__eyebrow"><span></span>~32-second browser diagnostic <b>OPTIONAL VERIFY</b></p>
+        <h1>Don’t guess what<br />your <span class="aim-word">aim</span><br /><em>needs.</em></h1>
         <p class="aim-diag__lede">
-          Flick. Track. Switch. Aimmaxxer finds the weakest link, then hands you
-          a verified KovaaK’s warm-up for the game you actually play.
+          Flick. Track. Switch. Aimmaxxer finds the clearest first-pass gap,
+          then lets you verify it if you want more confidence.
         </p>
-        <p class="aim-diag__method">~28 seconds · mouse recommended · local only · no account required</p>
+        <p class="aim-diag__method">32-second scan · optional 10-second confirmation · native pointer · local only · no account required</p>
         <div class="aim-diag__expectation">
           <strong>How to play</strong>
-          <span>Click Run the diagnostic, then click the center target to start. Flick: click each target once. Track: move your crosshair over the moving target — do not click or hold. Switch: click the lit target, then move to the next one.</span>
+          <span>Click Run the diagnostic, then click the center target to start. Your native browser pointer stays the reticle. Flick: click each target once. Track: move over the moving target — do not click or hold. Switch: click the lit target, then move to the next one.</span>
         </div>
         <div class="aim-diag__skill-key" aria-label="Diagnostic stages">
           <span data-skill-key="flick"><i></i><b>Flick</b><small>precision</small></span>
@@ -61,7 +61,7 @@ const { product } = Astro.props;
         </div>
         <div class="aim-diag__proof">
           <span><b>6</b> games</span>
-          <span><b>12</b> real routines</span>
+          <span><b>30</b> verified routes</span>
           <span><b>0</b> account required</span>
         </div>
       </div>
@@ -82,8 +82,8 @@ const { product } = Astro.props;
               </select>
             </label>
             <label>
-              GOAL
-              <select data-aim-goal aria-label="Choose what you want to improve">
+              TRAINING PRIORITY
+              <select data-aim-goal aria-label="Choose your training priority">
                 <option value="balanced">Find my limiter</option>
                 <option value="speed">Get faster</option>
                 <option value="control">Get steadier</option>
@@ -98,18 +98,38 @@ const { product } = Astro.props;
           <span data-aim-goal-note>Find my limiter</span>
         </div>
 
+        <div class="aim-diag__rank-meter" data-aim-rank-meter hidden aria-label="Live aim rank">
+          <div class="aim-diag__rank-meter-head">
+            <span><i></i>LIVE RANK</span>
+            <strong data-aim-live-rank>NEEDS WORK</strong>
+            <b data-aim-live-rank-score>0 / 1000</b>
+          </div>
+          <div class="aim-diag__rank-meter-track" data-aim-live-rank-bar role="progressbar" aria-label="Live aim rank progress" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="0" aria-valuetext="Needs Work, 0 out of 1000">
+            <i data-aim-live-rank-fill></i>
+          </div>
+          <div class="aim-diag__rank-meter-tiers" aria-hidden="true">
+            <span>NEEDS WORK</span>
+            <span>APPRENTICE</span>
+            <span>AMATEUR</span>
+            <span>MASTER</span>
+            <span>GOD AIMER</span>
+            <span>AIMMAXXER</span>
+          </div>
+          <small data-aim-live-rank-next>Next: APPRENTICE at 180</small>
+        </div>
+
         <div class="aim-diag__arena" data-aim-arena>
           <div class="aim-diag__gridlines" aria-hidden="true"></div>
           <div class="aim-diag__range-mark" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="aim-diag__course" aria-hidden="true">
             <b hidden>SWITCH COURSE</b>
-            <span hidden data-aim-switch-step>00 / 10</span>
+            <span hidden data-aim-switch-step>00 / 12</span>
             <small hidden data-aim-switch-state>WARMING UP</small>
             <div>
               <i data-switch-gate="0"></i><i data-switch-gate="1"></i><i data-switch-gate="2"></i>
               <i data-switch-gate="3"></i><i data-switch-gate="4"></i><i data-switch-gate="5"></i>
               <i data-switch-gate="6"></i><i data-switch-gate="7"></i><i data-switch-gate="8"></i>
-              <i data-switch-gate="9"></i>
+              <i data-switch-gate="9"></i><i data-switch-gate="10"></i><i data-switch-gate="11"></i>
             </div>
           </div>
           <div class="aim-diag__hud">
@@ -117,7 +137,7 @@ const { product } = Astro.props;
             <div class="aim-diag__hud-readout">
               <span class="aim-diag__hud-score"><i>RUN SCORE</i><b data-aim-live-score>0</b></span>
               <span class="aim-diag__hud-combo" data-aim-combo>COMBO 0</span>
-              <b data-aim-time>28.0</b>
+            <b data-aim-time>32.0</b>
             </div>
           </div>
           <div class="aim-diag__start-guide" data-aim-start-guide hidden>
@@ -134,47 +154,58 @@ const { product } = Astro.props;
           </div>
           <button type="button" class="aim-diag__target aim-diag__target--a" data-aim-target="a" aria-label="Aim target"><i></i><span>A</span></button>
           <button type="button" class="aim-diag__target aim-diag__target--b" data-aim-target="b" aria-label="Second aim target"><i></i><span>B</span></button>
+          <button type="button" class="aim-diag__target aim-diag__target--c" data-aim-target="c" aria-label="Third aim target"><i></i><span>C</span></button>
+          <button type="button" class="aim-diag__target aim-diag__target--d" data-aim-target="d" aria-label="Fourth aim target"><i></i><span>D</span></button>
           <div class="aim-diag__crosshair" data-pointer="preview" aria-hidden="true"><i></i></div>
           <p class="aim-diag__instruction" data-aim-instruction>Click Run the diagnostic, then the center target</p>
 
-          <div class="aim-diag__result" data-aim-result aria-live="polite" aria-atomic="true">
+          <div class="aim-diag__result" data-aim-result aria-live="polite" aria-atomic="true" aria-hidden="true" inert>
             <p data-aim-result-kicker>AWAITING RUN</p>
-            <strong data-aim-result-title>YOUR READ WILL LAND HERE</strong>
-            <span data-aim-result-copy>Complete the ~28-second run to unlock a game-specific warm-up.</span>
+            <h2 data-aim-result-title tabindex="-1">YOUR NEXT EDGE WILL LAND HERE</h2>
+            <span data-aim-result-copy>Complete the 32-second scan to get a first-pass read. The 10-second confirmation is optional.</span>
             <div class="aim-diag__result-rating">
-              <span data-aim-stars aria-label="No result yet">☆☆☆☆☆</span>
-              <b data-aim-priority>AWAITING INPUT</b>
+              <span data-aim-stars aria-label="No result yet">FOCUS PRIORITY · VERIFY</span>
+              <div class="aim-diag__result-rank">
+                <small>PERSONAL RANK</small>
+                <b data-aim-priority>NO RANK YET</b>
+              </div>
             </div>
             <div class="aim-diag__result-plan">
-              <span>NEXT BLOCK</span>
-              <strong data-aim-plan-title>Run the diagnostic first</strong>
-              <small data-aim-plan-meta>A focused routine appears here after enough confirmed input</small>
+              <span data-aim-plan-label>RECOMMENDED KOVAAK'S BLOCK</span>
+              <strong data-aim-plan-title>Finish the read to reveal your warm-up</strong>
+              <small data-aim-plan-meta>Your focused routine appears after enough confirmed input.</small>
             </div>
             <div class="aim-diag__breakdown">
               <span><b>FLICK</b><i data-aim-detail="flick">-- sec · --% accurate</i></span>
               <span><b>TRACK</b><i data-aim-detail="track">--% on target · -- px away</i></span>
               <span><b>SWITCH</b><i data-aim-detail="switch">-- sec · --% accurate</i></span>
             </div>
-            <p class="aim-diag__result-next" data-aim-next-step>Click Run the diagnostic, then the center target; follow the short instructions at the bottom of the arena.</p>
-            <p class="aim-diag__result-why" data-aim-result-why>We will explain what the run measured and why the routine fits before we ask you to copy anything.</p>
-            <p class="aim-diag__result-confidence" data-aim-confidence>Confidence appears after enough confirmed input.</p>
-            <small data-aim-input-note>Local only · no data leaves this tab.</small>
-            <p class="aim-diag__history" data-aim-history>Runs stay on this browser only.</p>
-            <div class="aim-diag__run-summary" data-aim-run-summary hidden>
-              <div><span>RUN SCORE</span><strong data-aim-run-score>0</strong></div>
-              <div><span>CLICK ACCURACY</span><strong data-aim-run-accuracy>--%</strong></div>
-              <div><span>BEST SO FAR</span><strong data-aim-run-best>--</strong></div>
-              <small data-aim-run-summary-note>Compare this score with your own attempts; it is not an overall skill rating.</small>
-            </div>
-            <div class="aim-diag__personal-board">
-              <div class="aim-diag__personal-head"><span>PERSONAL BOARD</span><small>THIS BROWSER</small></div>
-              <ol data-aim-personal-list><li>Complete a full read to set your first score.</li></ol>
-            </div>
+            <p class="aim-diag__result-next" data-aim-next-step>Run the diagnostic, hit the center target, then follow each phase prompt.</p>
+            <details class="aim-diag__result-more" data-aim-result-more>
+              <summary>More evidence <span>analysis, history, and scores</span></summary>
+              <div class="aim-diag__result-more-body">
+                <p class="aim-diag__result-why" data-aim-result-why>Each phase measures a different aim skill so the recommendation is based on what you actually did.</p>
+                <p class="aim-diag__result-confidence" data-aim-confidence>Your read appears after enough confirmed input.</p>
+                <small data-aim-input-note>Local only · no data leaves this tab.</small>
+                <p class="aim-diag__history" data-aim-history>Runs stay on this browser only.</p>
+                <div class="aim-diag__run-summary" data-aim-run-summary hidden>
+                  <div><span>RUN SCORE</span><strong data-aim-run-score>0</strong></div>
+                  <div><span>CLICK ACCURACY</span><strong data-aim-run-accuracy>--%</strong></div>
+                  <div><span>BEST SO FAR</span><strong data-aim-run-best>--</strong></div>
+                  <small class="aim-diag__run-summary-note" data-aim-run-summary-note>Compare this score with your own attempts; it is not an overall skill rating.</small>
+                </div>
+                <div class="aim-diag__personal-board" data-aim-personal-board hidden>
+                  <div class="aim-diag__personal-head"><span>PERSONAL BOARD</span><small>THIS BROWSER</small></div>
+                  <ol data-aim-personal-list><li>Complete a full read to set your first score.</li></ol>
+                </div>
+              </div>
+            </details>
             <span class="aim-diag__score-announcer" data-aim-score-announcer aria-live="polite"></span>
             <div class="aim-diag__result-action">
               <code data-aim-code>Run the diagnostic first</code>
-              <button type="button" data-aim-copy>Copy share code</button>
+              <button type="button" data-aim-copy aria-label="Copy KovaaK's share code">Copy code</button>
               <a href="#aim-warmup-heading" data-aim-result-link>Start this warm-up</a>
+              <button type="button" data-aim-confirm hidden>Verify the read</button>
               <button type="button" data-aim-retest>Retest</button>
             </div>
           </div>
@@ -236,9 +267,9 @@ const { product } = Astro.props;
   .aim-diag__hud{position:absolute;z-index:8;left:12px;right:12px;top:10px;display:flex;justify-content:space-between;color:var(--color-text-mid);font:700 8px/1 var(--font-mono),monospace;letter-spacing:.13em}.aim-diag__hud>span{padding:5px 7px;border-left:2px solid var(--ad-phase);background:rgba(12,4,6,.72)}.aim-diag__hud-readout{display:flex;align-items:center;gap:8px}.aim-diag__hud-readout>b{color:var(--ad-phase);font-size:12px}.aim-diag__hud-score{display:flex;align-items:baseline;gap:5px;padding:5px 7px;border-left:1px solid rgba(255,75,62,.3);background:rgba(12,4,6,.72)}.aim-diag__hud-score i{color:var(--color-muted);font:700 6px/1 var(--font-mono),monospace;font-style:normal;letter-spacing:.1em}.aim-diag__hud-score b{color:var(--ad-cream);font:800 11px/1 var(--font-mono),monospace}.aim-diag__hud-combo{padding:5px 7px;border-left:1px solid rgba(255,75,62,.3);background:rgba(12,4,6,.72);color:var(--ad-phase);font-size:7px}
   .aim-diag__course{display:none}.aim-diag__course>div{display:flex;gap:3px}.aim-diag__course i{width:5px;height:5px;border:1px solid var(--ad-red);border-radius:50%;background:transparent}.aim-diag__course i[data-state="done"]{border-color:var(--ad-ember);background:var(--ad-ember)}.aim-diag__course i[data-state="current"]{border-color:var(--ad-cream);background:var(--ad-switch);box-shadow:0 0 8px var(--ad-switch)}
   .aim-diag__start-guide{position:absolute;z-index:9;left:14px;top:50%;width:min(270px,calc(100% - 28px));padding:13px 14px;border:1px solid rgba(255,75,62,.34);border-left:2px solid var(--ad-ember);background:rgba(12,4,6,.93);box-shadow:0 14px 32px rgba(0,0,0,.38);text-align:left}.aim-diag__start-guide[hidden]{display:none}.aim-diag__start-guide-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.aim-diag__start-guide-head strong{color:var(--ad-cream);font-size:12px}.aim-diag__start-guide-head span{color:var(--ad-ember);font:700 6px/1 var(--font-mono),monospace;letter-spacing:.13em;text-transform:uppercase}.aim-diag__start-guide-list{display:grid;gap:7px;margin-top:11px}.aim-diag__start-guide-list span{display:grid;grid-template-columns:48px 1fr;gap:7px;align-items:baseline}.aim-diag__start-guide-list b{color:var(--ad-phase);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase}.aim-diag__start-guide-list i{color:var(--color-text-mid);font-size:10px;font-style:normal;line-height:1.25}.aim-diag__start-guide p{margin:12px 0 0;padding-top:9px;border-top:1px solid rgba(255,75,62,.18);color:var(--color-muted);font:700 8px/1.35 var(--font-mono),monospace;letter-spacing:.02em}.aim-diag__start-guide p b{color:var(--ad-cream)}
-  .aim-diag__target{position:absolute;z-index:6;left:50%;top:50%;display:grid;place-items:center;width:var(--ad-target-size,58px);height:var(--ad-target-size,58px);margin:0;padding:0;border:2px solid color-mix(in srgb,var(--ad-cyan) 85%,#fff);border-radius:50%;background:radial-gradient(circle,#f4ffff 0 10%,var(--ad-cyan) 11% 25%,#0c0406 26% 43%,color-mix(in srgb,var(--ad-cyan) 66%,#0c0406) 44% 57%,#0c0406 58%);box-shadow:0 0 0 5px rgba(var(--ad-cyan-rgb),.14),0 0 24px rgba(var(--ad-cyan-rgb),.3);cursor:default;transform:translate(-50%,-50%);transition:left .12s ease,top .12s ease,transform .12s}.aim-diag__target::before,.aim-diag__target::after{content:"";position:absolute;background:rgba(244,255,255,.62)}.aim-diag__target::before{left:-8px;right:-8px;top:50%;height:1px}.aim-diag__target::after{top:-8px;bottom:-8px;left:50%;width:1px}.aim-diag__target i{width:7px;height:7px;border:1px solid #fff;border-radius:50%}.aim-diag__target span{position:absolute;color:#f4ffff;font:800 8px/1 var(--font-mono),monospace;letter-spacing:.04em;text-shadow:0 1px 4px #0c0406}.aim-diag__target--b{display:none}[data-state="running"] .aim-diag__target{transition:none}[data-state="calibration"] .aim-diag__target--a{animation:ad-calibrate 1.25s ease-in-out infinite}@keyframes ad-calibrate{50%{box-shadow:0 0 0 12px rgba(var(--ad-cyan-rgb),.08),0 0 32px rgba(var(--ad-cyan-rgb),.42);transform:translate(-50%,-50%) scale(1.06)}}
+  .aim-diag__target{position:absolute;z-index:6;left:50%;top:50%;display:grid;place-items:center;width:var(--ad-target-size,58px);height:var(--ad-target-size,58px);margin:0;padding:0;border:2px solid color-mix(in srgb,var(--ad-cyan) 85%,#fff);border-radius:50%;background:radial-gradient(circle,#f4ffff 0 10%,var(--ad-cyan) 11% 25%,#0c0406 26% 43%,color-mix(in srgb,var(--ad-cyan) 66%,#0c0406) 44% 57%,#0c0406 58%);box-shadow:0 0 0 5px rgba(var(--ad-cyan-rgb),.14),0 0 24px rgba(var(--ad-cyan-rgb),.3);cursor:default;transform:translate(-50%,-50%);transition:left .12s ease,top .12s ease,transform .12s}.aim-diag__target::before,.aim-diag__target::after{content:"";position:absolute;background:rgba(244,255,255,.62)}.aim-diag__target::before{left:-8px;right:-8px;top:50%;height:1px}.aim-diag__target::after{top:-8px;bottom:-8px;left:50%;width:1px}.aim-diag__target i{width:7px;height:7px;border:1px solid #fff;border-radius:50%}.aim-diag__target span{position:absolute;color:#f4ffff;font:800 8px/1 var(--font-mono),monospace;letter-spacing:.04em;text-shadow:0 1px 4px #0c0406}.aim-diag__target--b,.aim-diag__target--c,.aim-diag__target--d{display:none}[data-state="running"] .aim-diag__target{transition:none}[data-state="calibration"] .aim-diag__target--a{animation:ad-calibrate 1.25s ease-in-out infinite}@keyframes ad-calibrate{50%{box-shadow:0 0 0 12px rgba(var(--ad-cyan-rgb),.08),0 0 32px rgba(var(--ad-cyan-rgb),.42);transform:translate(-50%,-50%) scale(1.06)}}
   .aim-diag__score-pop{position:absolute;z-index:10;pointer-events:none;transform:translate(-50%,4px) scale(.82);color:#fff4f2;font:800 11px/1 var(--font-mono),monospace;letter-spacing:.04em;text-shadow:0 2px 8px #0c0406;animation:ad-score-pop .72s ease-out forwards}.aim-diag__score-pop[data-kind="negative"]{color:#ff9f98}.aim-diag__score-pop[data-kind="combo"]{color:var(--ad-cream);font-size:9px}@keyframes ad-score-pop{0%{opacity:0;transform:translate(-50%,5px) scale(.82)}20%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-30px) scale(1)}}
-  .aim-diag__crosshair{position:absolute;z-index:7;left:50%;top:50%;width:34px;height:34px;margin:-17px;pointer-events:none;transition:left .04s linear,top .04s linear}.aim-diag__crosshair::before,.aim-diag__crosshair::after,.aim-diag__crosshair i::before,.aim-diag__crosshair i::after{content:"";position:absolute;background:#fff;box-shadow:0 0 4px #000}.aim-diag__crosshair::before{left:0;top:16px;width:11px;height:2px}.aim-diag__crosshair::after{right:0;top:16px;width:11px;height:2px}.aim-diag__crosshair i{position:absolute;left:15px;top:15px;width:4px;height:4px;border:1px solid var(--ad-phase);border-radius:50%;background:#fff;box-shadow:0 0 5px var(--ad-phase)}.aim-diag__crosshair i::before{left:1px;top:-15px;width:2px;height:11px}.aim-diag__crosshair i::after{left:1px;bottom:-15px;width:2px;height:11px}.aim-diag__crosshair.is-pointer{animation:none!important}.aim-diag__crosshair[data-pointer="hidden"]{display:none}
+  .aim-diag__crosshair{position:absolute;z-index:7;left:50%;top:50%;width:24px;height:24px;margin:-12px;pointer-events:none;transition:none;will-change:transform}.aim-diag__crosshair::before,.aim-diag__crosshair::after,.aim-diag__crosshair i::before,.aim-diag__crosshair i::after{content:"";position:absolute;background:#fff;box-shadow:0 0 3px #000}.aim-diag__crosshair::before{left:0;top:11px;width:7px;height:1px}.aim-diag__crosshair::after{right:0;top:11px;width:7px;height:1px}.aim-diag__crosshair i{position:absolute;left:10px;top:10px;width:4px;height:4px;border:1px solid var(--ad-phase);border-radius:50%;background:#fff;box-shadow:0 0 4px var(--ad-phase)}.aim-diag__crosshair i::before{left:1px;top:-8px;width:1px;height:6px}.aim-diag__crosshair i::after{left:1px;bottom:-8px;width:1px;height:6px}.aim-diag__crosshair.is-pointer{left:0;top:0;transform:translate3d(var(--aim-pointer-x),var(--aim-pointer-y),0);animation:none!important}.aim-diag__crosshair[data-pointer="hidden"]{display:none}
   [data-state="idle"] .aim-diag__target--a{animation:ad-target-demo 6s cubic-bezier(.4,0,.2,1) infinite}[data-state="idle"] .aim-diag__crosshair{animation:ad-cross-demo 6s cubic-bezier(.2,.8,.2,1) infinite}
   @keyframes ad-target-demo{0%,12%{left:26%;top:33%}25%,38%{left:72%;top:62%}50%,63%{left:62%;top:27%}75%,88%{left:34%;top:69%}100%{left:26%;top:33%}}
   @keyframes ad-cross-demo{0%,8%{left:50%;top:50%}16%,23%{left:26%;top:33%}31%,46%{left:72%;top:62%}54%,69%{left:62%;top:27%}77%,94%{left:34%;top:69%}100%{left:50%;top:50%}}
@@ -246,9 +277,12 @@ const { product } = Astro.props;
   .aim-diag__scores{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--color-line);border-bottom:1px solid var(--color-line)}.aim-diag__scores>div{position:relative;padding:11px 13px 12px}.aim-diag__scores>div+div{border-left:1px solid var(--color-line)}.aim-diag__scores span{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.14em}.aim-diag__scores b{float:right;color:var(--color-text-mid);font:800 12px/1 var(--font-mono),monospace}.aim-diag__scores i{position:absolute;left:13px;right:13px;bottom:6px;height:2px;overflow:hidden;background:#3c060a}.aim-diag__scores em{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--ad-red),var(--ad-phase));box-shadow:0 0 6px var(--ad-phase);transition:width .4s}
   .aim-diag__machine-bottom{height:31px}.aim-diag__machine-bottom button{position:relative;z-index:21;border:0;background:none;color:var(--color-muted);font:700 7px var(--font-mono),monospace;letter-spacing:.12em;cursor:pointer}.aim-diag__machine-bottom button:hover{color:var(--ad-ember)}
   .aim-diag__result{position:absolute;z-index:12;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;opacity:0;pointer-events:none;overflow:auto;background:radial-gradient(circle,rgba(var(--ad-phase-rgb),.16),rgba(12,4,6,.97) 72%);transform:scale(1.03);transition:opacity .35s,transform .5s}.aim-diag__result p{margin:0 0 8px;color:var(--ad-phase);font:700 8px var(--font-mono),monospace;letter-spacing:.18em}.aim-diag__result>strong{color:var(--color-text);font:750 clamp(22px,2.7vw,35px)/1 var(--font-display),sans-serif;letter-spacing:.01em}.aim-diag__result>span{margin-top:7px;color:var(--color-text-mid);font-size:11px}.aim-diag__result-rating{display:flex;align-items:center;gap:9px;margin-top:10px}.aim-diag__result-rating span{color:var(--ad-ember);font:800 12px/1 var(--font-mono),monospace;letter-spacing:.08em;text-shadow:0 0 10px rgba(255,75,62,.3)}.aim-diag__result-rating b{color:var(--color-muted);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.12em}.aim-diag__result-plan{display:grid;gap:4px;width:min(520px,100%);margin-top:13px;padding:10px 12px;border:1px solid rgba(255,75,62,.28);border-left:2px solid var(--ad-phase);text-align:left;background:rgba(12,4,6,.72)}.aim-diag__result-plan span{color:var(--ad-phase);font:700 7px/1 var(--font-mono),monospace;letter-spacing:.16em}.aim-diag__result-plan strong{color:var(--color-text);font-size:14px;line-height:1.2}.aim-diag__result-plan small{color:var(--color-text-mid);font-size:10px;line-height:1.35}.aim-diag__breakdown{display:grid;grid-template-columns:repeat(3,1fr);width:min(480px,100%);margin-top:13px;border:1px solid var(--color-line-strong);border-radius:5px;background:rgba(12,4,6,.76)}.aim-diag__breakdown span{padding:7px 8px}.aim-diag__breakdown span+span{border-left:1px solid var(--color-line-strong)}.aim-diag__breakdown b,.aim-diag__breakdown i{display:block;font-family:var(--font-mono),monospace}.aim-diag__breakdown b{color:var(--ad-phase);font-size:7px;letter-spacing:.12em}.aim-diag__breakdown i{margin-top:4px;color:var(--color-text-mid);font-size:7px;font-style:normal;white-space:nowrap}.aim-diag__result-next{max-width:520px;margin:10px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result-why{max-width:520px;margin:7px 0 0!important;color:var(--color-text-mid)!important;font-size:10px!important;line-height:1.45}.aim-diag__result-confidence{max-width:520px;margin:6px 0 0!important;color:var(--color-muted)!important;font:7px/1.45 var(--font-mono),monospace!important;letter-spacing:.03em}.aim-diag__result>small{margin-top:7px;color:var(--color-muted);font:6px var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__history{max-width:520px;margin:6px 0 0!important;color:var(--color-muted)!important;font:7px/1.35 var(--font-mono),monospace!important;letter-spacing:.02em}.aim-diag__run-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:min(520px,100%);margin-top:10px;padding:9px;border:1px solid rgba(255,75,62,.28);background:rgba(12,4,6,.72)}.aim-diag__run-summary>div{display:grid;gap:4px;text-align:left}.aim-diag__run-summary span,.aim-diag__personal-head span{color:var(--ad-phase);font:700 6px/1 var(--font-mono),monospace;letter-spacing:.12em}.aim-diag__run-summary strong{color:var(--ad-cream);font:800 14px/1 var(--font-mono),monospace}.aim-diag__run-summary-note{grid-column:1/-1;margin:2px 0 0;color:var(--color-muted);font:6px/1.3 var(--font-mono),monospace;letter-spacing:.03em}.aim-diag__personal-board{width:min(520px,100%);margin-top:8px;padding:9px;border:1px solid var(--color-line-strong);background:rgba(12,4,6,.6);text-align:left}.aim-diag__personal-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.aim-diag__personal-head small{color:var(--color-muted);font:6px/1 var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__personal-board ol{display:grid;gap:4px;margin:7px 0 0;padding:0;list-style:none}.aim-diag__personal-board li{display:grid;grid-template-columns:22px 1fr auto;align-items:baseline;gap:7px;color:var(--color-text-mid);font:7px/1.2 var(--font-mono),monospace}.aim-diag__personal-board li+li{padding-top:4px;border-top:1px solid rgba(255,75,62,.12)}.aim-diag__personal-board li b{color:var(--ad-phase)}.aim-diag__personal-board li strong{color:var(--ad-cream);font-size:9px}.aim-diag__personal-board li small{color:var(--color-muted);font-size:6px;text-align:left;line-height:1.35}.aim-diag__score-announcer{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}.aim-diag__result-action{display:flex;align-items:center;gap:7px;margin-top:12px}.aim-diag__result code{padding:8px 10px;border:1px solid #5a0b10;border-radius:5px;background:#0c0406;color:var(--color-text-mid);font:10px var(--font-mono),monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}.aim-diag__result button,.aim-diag__result-action a{padding:9px 11px;border:1px solid var(--ad-phase);border-radius:5px;background:var(--ad-phase);color:#1c0305;font:800 9px var(--font-mono),monospace;cursor:pointer;text-decoration:none}.aim-diag__result-action a{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button[data-aim-retest]{border-color:#5a0b10;background:transparent;color:var(--ad-cream)}.aim-diag__result button.is-copied{background:#73d89f;border-color:#73d89f}
+  .aim-diag__result{justify-content:flex-start;scrollbar-color:var(--ad-phase) rgba(12,4,6,.9);scrollbar-width:thin;padding:clamp(20px,3vw,34px) clamp(18px,3vw,34px)}.aim-diag__result>strong{max-width:620px;font:800 clamp(25px,3.3vw,42px)/.94 var(--font-display),sans-serif;letter-spacing:.01em;text-wrap:balance}.aim-diag__result>span{max-width:520px;margin-top:10px;font:500 12px/1.45 var(--font-sans),sans-serif}.aim-diag__result-rating{gap:11px;margin-top:15px;padding:9px 12px;border:1px solid rgba(255,75,62,.28);border-left:2px solid var(--ad-ember);background:rgba(12,4,6,.78);box-shadow:0 7px 20px rgba(0,0,0,.18);text-align:left}.aim-diag__result-rank{display:grid;gap:4px}.aim-diag__result-rank small{color:var(--color-muted);font:700 6px/1 var(--font-mono),monospace;letter-spacing:.15em}.aim-diag__result-rating b{color:var(--ad-cream);font:900 11px/1 var(--font-mono),monospace;letter-spacing:.08em}.aim-diag__result-plan{gap:5px;margin-top:13px;padding:13px 15px;border-left-width:3px;background:rgba(12,4,6,.78);box-shadow:0 10px 24px rgba(0,0,0,.18)}.aim-diag__result-plan strong{color:var(--ad-cream);font:800 clamp(17px,2.2vw,26px)/1.05 var(--font-display),sans-serif;letter-spacing:.02em}.aim-diag__result-plan small{font:500 10px/1.4 var(--font-sans),sans-serif}.aim-diag__run-summary-note{grid-column:1/-1}
   .aim-diag__result button:disabled{border-color:#5a0b10;background:#241014;color:var(--color-muted);cursor:not-allowed;opacity:.72}
   [data-state="result"] .aim-diag__result{opacity:1;pointer-events:auto;transform:scale(1)}[data-state="result"] .aim-diag__crosshair{display:none}[data-state="result"] .aim-diag__target{display:none!important}
   [data-phase="switch"][data-active-target="a"] .aim-diag__target--a,[data-phase="switch"][data-active-target="b"] .aim-diag__target--b{z-index:8}[data-phase="switch"] .aim-diag__target[aria-hidden="true"]{display:none!important}
+  [data-phase="switch"] .aim-diag__target[aria-hidden="true"]{display:grid!important;opacity:.24;filter:grayscale(.7);transform:translate(-50%,-50%) scale(.75);pointer-events:auto}
+  [data-phase="switch"] .aim-diag__target:not([aria-hidden="true"]){display:grid!important;opacity:1;filter:none;transform:translate(-50%,-50%) scale(1);pointer-events:auto;z-index:8}
   html.aim-diagnostic-active,html.aim-diagnostic-active body{cursor:auto!important}html.aim-diagnostic-active body{overflow:hidden}html.aim-diagnostic-active .custom-cursor{display:none!important}html.aim-diagnostic-active a,html.aim-diagnostic-active button,html.aim-diagnostic-active select{cursor:pointer!important}html.aim-diagnostic-active [data-state="calibration"] .aim-diag__arena,html.aim-diagnostic-active [data-state="running"] .aim-diag__arena,html.aim-diagnostic-active [data-state="calibration"] .aim-diag__target,html.aim-diagnostic-active [data-state="running"] .aim-diag__target{cursor:none!important}html.aim-diagnostic-active [data-state="result"] .aim-diag__arena{cursor:default!important}
   .aim-diagnostic.is-immersive{position:fixed;inset:0;z-index:2147483000;width:100%;height:100svh;min-height:100svh;max-height:none;overflow:auto;border-bottom:0}
   .aim-diagnostic.is-immersive .aim-diag__shell{display:flex;flex-direction:column;justify-content:center;min-height:100%;padding-block:clamp(58px,7vh,78px)}
@@ -272,7 +306,8 @@ const { product } = Astro.props;
   .aim-diag__grid { grid-template-columns: minmax(390px, .84fr) minmax(620px, 1.16fr); gap: clamp(52px, 6.5vw, 104px); }
   .aim-diag__copy {
     padding-left: 20px;
-    border-left: 2px solid rgba(209, 24, 32, .6);
+    border-left: 2px solid #d11820;
+    box-shadow: -1px 0 0 rgba(255, 72, 79, .12);
   }
   .aim-diag__machine {
     border-radius: 18px;
@@ -301,15 +336,609 @@ const { product } = Astro.props;
   @media(prefers-reduced-motion:reduce){.aim-diag__score-pop{animation:none;opacity:1;transform:translate(-50%,-8px)}.aim-diag__result{transition:none}.aim-diag__target{transition:none}}
   .aim-diag__personal-board li.is-empty{display:block;color:var(--color-muted);line-height:1.4}
   @media(max-width:620px){.aim-diagnostic{min-height:0}.aim-diagnostic::after{display:none}.aim-diag__shell{padding:76px 18px 46px}.aim-diag__back{margin-bottom:25px}.aim-diag__grid{gap:38px}.aim-diag__machine{order:-1;border-radius:14px}.aim-diag__copy h1{font-size:clamp(48px,14vw,68px)}.aim-diag__lede{font-size:15px}.aim-diag__method{font-size:7px;line-height:1.55}.aim-diag__expectation{margin-top:13px}.aim-diag__brand{margin-bottom:24px}.aim-diag__brand i{display:none}.aim-diag__arena{aspect-ratio:4/3}.aim-diag__target{--ad-target-size:52px}.aim-diag__start-guide{left:12px;top:12px;width:calc(100% - 24px);transform:none;padding:11px 12px}.aim-diag__start-guide-list{gap:5px;margin-top:8px}.aim-diag__start-guide-list span{grid-template-columns:43px 1fr}.aim-diag__start-guide-list i{font-size:9px}.aim-diag__start-guide p{margin-top:9px;padding-top:7px;font-size:7px}.aim-diag__skill-key{margin-top:18px}.aim-diag__skill-key span{padding-inline:7px}.aim-diag__skill-key b{font-size:7px}.aim-diag__skill-key small{font-size:6px}.aim-diag__instruction{font-size:6px}.aim-diag__selectors{gap:5px}.aim-diag__machine-top{height:auto;min-height:39px;gap:8px;padding-block:7px}.aim-diag__machine-top>span{flex-shrink:0}.aim-diag__machine-label small{display:none}.aim-diag__machine-top label{gap:4px;font-size:6px}.aim-diag__machine-top select{max-width:88px;height:23px;padding-left:5px;font-size:7px}.aim-diag__loadout{font-size:6px}.aim-diag__course{right:8px;bottom:8px;gap:5px;padding:5px}.aim-diag__course>b,.aim-diag__course small{display:none}.aim-diag__hud-readout{gap:4px}.aim-diag__hud-score{gap:3px;padding-inline:5px}.aim-diag__hud-score i{display:none}.aim-diag__hud-combo{padding-inline:5px}.aim-diag__result{justify-content:flex-start;padding:13px 11px 15px}.aim-diag__result-rating{margin-top:8px}.aim-diag__result-plan{margin-top:9px}.aim-diag__breakdown{grid-template-columns:1fr}.aim-diag__breakdown span{display:flex;justify-content:space-between;gap:8px;padding:4px 7px}.aim-diag__breakdown span+span{border-top:1px solid #5a0b10;border-left:0}.aim-diag__breakdown i{margin-top:0}.aim-diag__result-action{flex-direction:column;width:min(240px,100%)}.aim-diag__result code{max-width:100%;font-size:8px}.aim-diag__result button,.aim-diag__result-action a{width:100%}.aim-diag__proof{margin-top:29px}.aim-diagnostic.is-immersive .aim-diag__shell{justify-content:flex-start;padding:64px 18px 32px}.aim-diagnostic.is-immersive .aim-diag__exit{top:max(10px,env(safe-area-inset-top));right:18px}.aim-diagnostic.is-immersive .aim-diag__grid{gap:28px}}
+  /* The diagnostic result is a real state transition: keep it out of the
+     focus order until the scan or confirmation has actually finished. */
+  .aim-diag__result[aria-hidden="true"] { visibility: hidden; }
+  .aim-diag__result[aria-hidden="false"] { visibility: visible; }
+  .aim-diag__result > h2 { max-width: 620px; margin: 0; color: var(--color-text); font: 800 clamp(25px,3.3vw,42px)/.94 var(--font-display),sans-serif; letter-spacing: .01em; text-wrap: balance; }
+  .aim-diag__result > h2:focus-visible { outline: 2px solid var(--ad-cream); outline-offset: 5px; }
+  .aim-diag__result-rating span { max-width: 170px; color: var(--ad-ember); font-size: 7px; line-height: 1.25; letter-spacing: .12em; }
+  .aim-diag__result-next, .aim-diag__result-why { font: 500 10px/1.45 var(--font-sans),sans-serif !important; letter-spacing: normal !important; }
+  .aim-diag__result-confidence { font-family: var(--font-mono),monospace !important; }
+  .aim-diag__result button[data-aim-confirm] { order: -1; }
+  .aim-diag__personal-board[hidden] { display: none; }
+
+  /* v2 range-console pass: the pointer stays native; the UI carries the signal. */
+  .aim-diagnostic {
+    --ad-ink: #f4f7ff;
+    --ad-muted-ink: #9aabc1;
+    --ad-cyan: #62e7f5;
+    --ad-blue: #8da9ff;
+    --ad-violet: #b998ff;
+    --ad-amber: #f4c56b;
+    --ad-coral: #ff7181;
+    --ad-bg: #07101b;
+    --ad-panel: #0b1727;
+    --ad-panel-raised: #102137;
+    color: var(--ad-ink);
+    background:
+      radial-gradient(65% 78% at 77% 9%, rgba(98, 231, 245, .14), transparent 68%),
+      radial-gradient(46% 60% at 8% 74%, rgba(185, 152, 255, .11), transparent 73%),
+      linear-gradient(135deg, #050b13 0%, #091524 52%, #06101c 100%);
+    isolation: isolate;
+  }
+  .aim-diagnostic::before {
+    display: block;
+    z-index: -1;
+    opacity: .52;
+    background-image:
+      linear-gradient(rgba(132, 168, 211, .08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(132, 168, 211, .08) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(to bottom, #000, transparent 88%);
+  }
+  .aim-diagnostic::after {
+    display: block;
+    z-index: -1;
+    opacity: .42;
+    background: radial-gradient(30% 24% at 48% 28%, rgba(255, 255, 255, .06), transparent 70%);
+  }
+  .aim-diag__shell { max-width: 1480px; }
+  .aim-diag__grid { grid-template-columns: minmax(380px, .8fr) minmax(640px, 1.2fr); gap: clamp(50px, 7vw, 116px); }
+  .aim-diag__copy { border-left-color: rgba(98, 231, 245, .68); }
+  .aim-diag__brand span,
+  .aim-diag__eyebrow,
+  .aim-diag__method,
+  .aim-diag__proof,
+  .aim-diag__machine-label,
+  .aim-diag__selectors,
+  .aim-diag__loadout,
+  .aim-diag__hud,
+  .aim-diag__course,
+  .aim-diag__instruction,
+  .aim-diag__machine-bottom,
+  .aim-diag__result-confidence,
+  .aim-diag__history,
+  .aim-diag__result code {
+    font-family: var(--font-mono), ui-monospace, monospace;
+  }
+  .aim-diag__brand span { color: var(--ad-blue); letter-spacing: .16em; }
+  .aim-diag__brand i { border-color: rgba(98, 231, 245, .44); color: var(--ad-cyan); background: rgba(98, 231, 245, .08); }
+  .aim-diag__eyebrow { color: var(--ad-amber); }
+  .aim-diag__eyebrow b { color: var(--ad-cyan); }
+  .aim-diag__copy h1 { color: var(--ad-ink); letter-spacing: -.055em; text-shadow: 0 16px 38px rgba(0, 0, 0, .34); }
+  .aim-diag__copy h1 .aim-word { color: var(--ad-coral); text-shadow: 0 0 34px rgba(255, 113, 129, .24); }
+  .aim-diag__copy h1 em { color: var(--ad-cyan); text-shadow: 0 0 34px rgba(98, 231, 245, .2); }
+  .aim-diag__lede { color: #c3d0e4; max-width: 46ch; }
+  .aim-diag__method { color: #6f87a6; }
+  .aim-diag__expectation { border-left-color: var(--ad-amber); background: linear-gradient(90deg, rgba(244, 197, 107, .09), rgba(244, 197, 107, .02)); }
+  .aim-diag__expectation strong { color: var(--ad-amber); }
+  .aim-diag__expectation span { color: #bfcee1; }
+  .aim-diag__skill-key { border-color: rgba(141, 169, 255, .42); background: rgba(8, 18, 31, .58); }
+  .aim-diag__skill-key span + span { border-left-color: rgba(141, 169, 255, .28); }
+  .aim-diag__skill-key span[data-skill-key="flick"] i { background: var(--ad-coral); box-shadow: 0 0 12px rgba(255, 113, 129, .8); }
+  .aim-diag__skill-key span[data-skill-key="track"] i { background: var(--ad-cyan); box-shadow: 0 0 12px rgba(98, 231, 245, .8); }
+  .aim-diag__skill-key span[data-skill-key="switch"] i { background: var(--ad-violet); box-shadow: 0 0 12px rgba(185, 152, 255, .8); }
+  .aim-diag__skill-key b { color: var(--ad-ink); }
+  .aim-diag__skill-key small { color: #7389a5; }
+  .aim-diag__start { background: linear-gradient(135deg, #5fe7f2, #8da9ff); border-color: transparent; color: #06111d; box-shadow: 0 13px 34px rgba(98, 231, 245, .2); }
+  .aim-diag__start:hover { box-shadow: 0 16px 42px rgba(98, 231, 245, .34); filter: saturate(1.08) brightness(1.04); }
+  .aim-diag__notify { border-color: rgba(185, 152, 255, .55); color: var(--ad-violet); background: rgba(185, 152, 255, .06); }
+  .aim-diag__browse { color: var(--ad-cyan); }
+  .aim-diag__proof { color: #7187a2; }
+  .aim-diag__proof span + span { border-left-color: rgba(141, 169, 255, .26); }
+  .aim-diag__proof b { color: var(--ad-ink); }
+  .aim-diag__machine { border-color: rgba(98, 231, 245, .38); border-radius: 22px; background: linear-gradient(145deg, #0e2034, #081322 52%, #07101b); box-shadow: 0 40px 110px rgba(0, 0, 0, .68), 0 0 0 1px rgba(255, 255, 255, .045) inset, 0 0 90px rgba(98, 231, 245, .11); }
+  .aim-diag__machine::before { border-color: rgba(98, 231, 245, .12); border-radius: 14px; }
+  .aim-diag__machine::after { box-shadow: inset 0 0 38px rgba(2, 8, 15, .55); }
+  .aim-diag__machine-top { background: linear-gradient(180deg, #142a42, #0a1728); border-bottom-color: rgba(98, 231, 245, .16); }
+  .aim-diag__machine-top i, .aim-diag__machine-bottom i { background: var(--ad-cyan); box-shadow: 0 0 9px var(--ad-cyan); }
+  .aim-diag__machine-label { color: #9eb2cc; }
+  .aim-diag__machine-label small { color: var(--ad-cyan); }
+  .aim-diag__machine-top select { border-color: rgba(141, 169, 255, .38); background: #0a1728; color: var(--ad-ink); }
+  .aim-diag__loadout { border-bottom-color: rgba(98, 231, 245, .18); background: linear-gradient(90deg, #0e2034, #0a1728); color: #7f99b8; }
+  .aim-diag__loadout span:last-child { color: var(--ad-amber); }
+  .aim-diag__arena { background: radial-gradient(circle at 50% 46%, rgba(98, 231, 245, .07), transparent 28%), linear-gradient(180deg, rgba(6, 17, 29, .58), rgba(4, 11, 20, .96)); touch-action: none; user-select: none; }
+  .aim-diag__arena::before { background: linear-gradient(90deg, transparent 49.8%, rgba(98, 231, 245, .16) 50%, transparent 50.2%), linear-gradient(0deg, transparent 49.8%, rgba(98, 231, 245, .16) 50%, transparent 50.2%); }
+  .aim-diag__gridlines { opacity: .54; background-image: linear-gradient(rgba(98, 231, 245, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(98, 231, 245, .08) 1px, transparent 1px); }
+  .aim-diag__range-mark { opacity: .75; border-color: rgba(98, 231, 245, .23); }
+  .aim-diag__range-mark i { border-color: rgba(98, 231, 245, .17); }
+  .aim-diag__hud { color: #8ca4c1; }
+  .aim-diag__hud-readout { color: var(--ad-ink); }
+  .aim-diag__hud-score, .aim-diag__hud-combo { border-color: rgba(141, 169, 255, .28); background: rgba(8, 18, 31, .76); }
+  .aim-diag__hud-score i { color: #7189a7; }
+  .aim-diag__hud-score b, .aim-diag__hud-readout > b { color: var(--ad-cyan); }
+  .aim-diag__hud-combo { color: var(--ad-amber); }
+  .aim-diag__course { border-color: rgba(185, 152, 255, .28); background: rgba(7, 15, 27, .75); }
+  .aim-diag__course i { border-color: rgba(185, 152, 255, .32); }
+  .aim-diag__course i.is-complete { border-color: var(--ad-cyan); background: var(--ad-cyan); box-shadow: 0 0 10px rgba(98, 231, 245, .45); }
+  .aim-diag__instruction { color: #8fa6c0; }
+  .aim-diag__target { border-color: rgba(98, 231, 245, .8); background: radial-gradient(circle, rgba(98, 231, 245, .25), rgba(98, 231, 245, .04) 56%, transparent 58%); box-shadow: 0 0 0 1px rgba(98, 231, 245, .14) inset, 0 0 22px rgba(98, 231, 245, .22); cursor: crosshair !important; }
+  .aim-diag__target::before, .aim-diag__target::after { background: var(--ad-cyan); }
+  .aim-diag__target i { border-color: var(--ad-amber); background: rgba(244, 197, 107, .18); box-shadow: 0 0 12px rgba(244, 197, 107, .48); }
+  .aim-diag__target span { color: var(--ad-ink); }
+  .aim-diag__target--b { border-color: rgba(185, 152, 255, .82); }
+  .aim-diag__target--b::before, .aim-diag__target--b::after { background: var(--ad-violet); }
+  .aim-diag__target--c { border-color: rgba(255, 113, 129, .82); }
+  .aim-diag__target--c::before, .aim-diag__target--c::after { background: var(--ad-coral); }
+  .aim-diag__target--d { border-color: rgba(244, 197, 107, .82); }
+  .aim-diag__target--d::before, .aim-diag__target--d::after { background: var(--ad-amber); }
+  .aim-diag__crosshair { width: 16px; height: 16px; margin: -8px; opacity: .32; mix-blend-mode: screen; }
+  .aim-diag__crosshair::before { top: 7px; width: 5px; background: var(--ad-ink); box-shadow: 0 0 3px #000; }
+  .aim-diag__crosshair::after { top: 7px; width: 5px; background: var(--ad-ink); box-shadow: 0 0 3px #000; }
+  .aim-diag__crosshair i { left: 6px; top: 6px; width: 4px; height: 4px; border-color: var(--ad-cyan); background: var(--ad-cyan); box-shadow: 0 0 7px var(--ad-cyan); }
+  .aim-diag__crosshair i::before { left: 1px; top: -5px; height: 4px; background: var(--ad-ink); }
+  .aim-diag__crosshair i::after { left: 1px; bottom: -5px; height: 4px; background: var(--ad-ink); }
+  .aim-diag__result { align-items: center; background: radial-gradient(75% 70% at 50% 0%, rgba(98, 231, 245, .13), rgba(7, 16, 28, .98) 74%); }
+  .aim-diag__result [data-aim-result-kicker] { color: var(--ad-amber); font-size: 9px; letter-spacing: .16em; }
+  .aim-diag__result > h2 { max-width: 720px; color: var(--ad-ink); font-size: clamp(32px, 4.6vw, 64px); line-height: .92; letter-spacing: -.035em; text-shadow: 0 13px 32px rgba(0, 0, 0, .34); }
+  .aim-diag__result > span { max-width: 600px; color: #c4d2e5; font-size: 13px; line-height: 1.5; }
+  .aim-diag__result-rating { width: min(600px, 100%); justify-content: space-between; margin-top: 18px; padding: 13px 15px; border: 1px solid rgba(98, 231, 245, .32); border-left: 3px solid var(--ad-cyan); border-radius: 12px; background: linear-gradient(100deg, rgba(98, 231, 245, .1), rgba(185, 152, 255, .06)); box-shadow: 0 12px 30px rgba(0, 0, 0, .22); }
+  .aim-diag__result-rating span { max-width: none; color: var(--ad-cyan); font-size: 8px; }
+  .aim-diag__result-rank { padding-left: 15px; border-left: 1px solid rgba(141, 169, 255, .24); text-align: right; }
+  .aim-diag__result-rank small { color: #7f95b0; }
+  .aim-diag__result-rating b { color: var(--ad-amber); font-size: 13px; letter-spacing: .06em; }
+  .aim-diag__result-plan { width: min(600px, 100%); margin-top: 14px; padding: 15px 17px; border: 1px solid rgba(185, 152, 255, .28); border-left: 3px solid var(--ad-violet); border-radius: 12px; background: rgba(10, 24, 41, .88); box-shadow: 0 12px 30px rgba(0, 0, 0, .18); }
+  .aim-diag__result-plan span { color: var(--ad-violet); font-size: 8px; }
+  .aim-diag__result-plan strong { color: var(--ad-ink); font-size: clamp(18px, 2.4vw, 28px); line-height: 1.05; }
+  .aim-diag__result-plan small { color: #aebdd1; font-size: 11px; }
+  .aim-diag__breakdown { width: min(600px, 100%); margin-top: 14px; border-color: rgba(141, 169, 255, .24); border-radius: 12px; background: rgba(6, 15, 27, .78); }
+  .aim-diag__breakdown span + span { border-left-color: rgba(141, 169, 255, .2); }
+  .aim-diag__breakdown b { color: var(--ad-cyan); }
+  .aim-diag__breakdown i { color: #c0ccdc; font-size: 8px; }
+  .aim-diag__result-next, .aim-diag__result-why { width: min(600px, 100%); padding: 11px 14px; border-radius: 9px; background: rgba(141, 169, 255, .07); }
+  .aim-diag__result-next { margin-top: 13px !important; border-left: 3px solid var(--ad-amber); color: var(--ad-ink) !important; }
+  .aim-diag__result-next::before { content: 'START HERE'; display: block; margin-bottom: 4px; color: var(--ad-amber); font: 800 8px/1 var(--font-mono), monospace; letter-spacing: .14em; }
+  .aim-diag__result-why { margin-top: 8px !important; border-left: 3px solid var(--ad-coral); background: rgba(255, 113, 129, .06); color: #c3cede !important; }
+  .aim-diag__result-why::before { content: 'WHY THIS IS THE GAP'; display: block; margin-bottom: 4px; color: var(--ad-coral); font: 800 8px/1 var(--font-mono), monospace; letter-spacing: .12em; }
+  .aim-diag__result-confidence { width: min(600px, 100%); color: #8fa4bd !important; }
+  .aim-diag__history { width: min(600px, 100%); color: #7189a5 !important; }
+  .aim-diag__run-summary { width: min(600px, 100%); border-color: rgba(98, 231, 245, .25); border-radius: 12px; background: rgba(8, 20, 34, .76); }
+  .aim-diag__run-summary span, .aim-diag__personal-head span { color: var(--ad-cyan); }
+  .aim-diag__run-summary strong { color: var(--ad-ink); }
+  .aim-diag__personal-board { width: min(600px, 100%); border-color: rgba(141, 169, 255, .24); border-radius: 12px; background: rgba(8, 20, 34, .62); }
+  .aim-diag__personal-board li + li { border-top-color: rgba(141, 169, 255, .14); }
+  .aim-diag__result code { border-color: rgba(141, 169, 255, .35); border-radius: 8px; background: #081321; color: #b9c9de; }
+  .aim-diag__result button, .aim-diag__result-action a { border-color: var(--ad-cyan); border-radius: 8px; background: var(--ad-cyan); color: #06111d; }
+  .aim-diag__result-action a { border-color: rgba(185, 152, 255, .45); background: rgba(185, 152, 255, .08); color: var(--ad-violet); }
+  .aim-diag__result button[data-aim-retest] { border-color: rgba(141, 169, 255, .35); background: transparent; color: var(--ad-ink); }
+  .aim-diag__result button.is-copied { border-color: var(--ad-amber); background: var(--ad-amber); }
+  .aim-diag__result-action { width: min(600px, 100%); }
+  html.aim-diagnostic-active [data-state="calibration"] .aim-diag__arena,
+  html.aim-diagnostic-active [data-state="running"] .aim-diag__arena,
+  html.aim-diagnostic-active [data-state="calibration"] .aim-diag__target,
+  html.aim-diagnostic-active [data-state="running"] .aim-diag__target { cursor: crosshair !important; }
+  html.aim-diagnostic-active [data-state="calibration"] .aim-diag__crosshair,
+  html.aim-diagnostic-active [data-state="running"] .aim-diag__crosshair { opacity: .28; }
+
+  @media (max-width: 1060px) {
+    .aim-diag__copy { border-left: 0; }
+    .aim-diag__grid { gap: 40px; }
+  }
+  @media (max-width: 620px) {
+    .aim-diagnostic::before { background-size: 36px 36px; }
+    .aim-diag__machine { border-radius: 16px; }
+    .aim-diag__result-rating { align-items: flex-start; gap: 10px; }
+    .aim-diag__result-rank { padding-left: 10px; }
+    .aim-diag__result > h2 { font-size: clamp(30px, 11vw, 48px); }
+    .aim-diag__result > span { font-size: 12px; }
+    .aim-diag__result-action { align-items: stretch; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .aim-diagnostic::before { opacity: .28; }
+    .aim-diag__crosshair { transition: none !important; }
+  }
+
+  /* Restore the surrounding Aimmaxxer shell; the diagnostic console above stays v2. */
+  .aim-diagnostic {
+    color: var(--ad-cream);
+    background:
+      radial-gradient(58% 74% at 82% 34%, rgba(209, 24, 32, .12), transparent 70%),
+      radial-gradient(36% 48% at 18% 12%, rgba(243, 175, 25, .05), transparent 74%),
+      linear-gradient(135deg, #080705 0%, #130507 52%, #050304 100%);
+  }
+  .aim-diagnostic::before,
+  .aim-diagnostic::after { display: none; }
+  .aim-diag__shell { max-width: 1440px; }
+  .aim-diag__grid {
+    grid-template-columns: minmax(390px, .84fr) minmax(620px, 1.16fr);
+    gap: clamp(52px, 6.5vw, 104px);
+  }
+  .aim-diag__copy {
+    padding-left: 20px;
+    border-left: 2px solid rgba(209, 24, 32, .6);
+  }
+  .aim-diag__brand span { color: var(--color-text-mid); letter-spacing: .11em; }
+  .aim-diag__brand i {
+    border-color: rgba(243, 175, 25, .35);
+    color: var(--ad-ember);
+    background: transparent;
+  }
+  .aim-diag__eyebrow { color: var(--ad-ember); }
+  .aim-diag__eyebrow b { color: var(--color-text); }
+  .aim-diag__copy h1 {
+    color: var(--color-text);
+    letter-spacing: -.06em;
+    text-shadow: none;
+  }
+  .aim-diag__copy h1 .aim-word {
+    color: var(--ad-logo-red);
+    text-shadow: 0 0 35px rgba(209, 24, 32, .22);
+  }
+  .aim-diag__copy h1 em {
+    color: var(--ad-green);
+    text-shadow: 0 0 35px rgba(57, 214, 110, .24);
+  }
+  .aim-diag__lede { max-width: 540px; color: var(--color-text-mid); }
+  .aim-diag__method { max-width: 540px; color: var(--color-muted); }
+  .aim-diag__expectation {
+    border-left-color: var(--ad-ember);
+    background: rgba(243, 175, 25, .045);
+  }
+  .aim-diag__expectation strong { color: var(--color-text); }
+  .aim-diag__expectation span { color: var(--color-text-mid); }
+  .aim-diag__skill-key {
+    border-color: var(--color-line-strong);
+    background: rgba(12, 4, 6, .68);
+  }
+  .aim-diag__skill-key span + span { border-left-color: var(--skill-color); }
+  .aim-diag__skill-key span[data-skill-key="flick"] i,
+  .aim-diag__skill-key span[data-skill-key="track"] i,
+  .aim-diag__skill-key span[data-skill-key="switch"] i {
+    background: transparent;
+    box-shadow: 0 0 9px color-mix(in srgb, var(--skill-color) 55%, transparent);
+  }
+  .aim-diag__skill-key b { color: var(--color-text-mid); }
+  .aim-diag__skill-key small { color: var(--color-muted); }
+
+  /* Keep the original dark red secondary CTA; the blue primary CTA and browse link stay. */
+  .aim-diag__notify {
+    border-color: rgba(209, 24, 32, .86);
+    background: linear-gradient(180deg, rgba(44, 8, 13, .98), rgba(17, 4, 6, .98));
+    color: var(--ad-cream);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 244, 222, .06),
+      0 10px 24px rgba(0, 0, 0, .2),
+      0 0 22px rgba(209, 24, 32, .28),
+      0 0 42px rgba(209, 24, 32, .1);
+  }
+  .aim-diag__notify::before {
+    background: linear-gradient(180deg, rgba(209, 24, 32, .23), rgba(209, 24, 32, .08));
+  }
+  .aim-diag__notify span { color: var(--ad-cream); }
+  .aim-diag__notify:hover {
+    border-color: #e24a4f;
+    background: linear-gradient(180deg, rgba(57, 9, 14, .98), rgba(24, 5, 8, .98));
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 244, 222, .06),
+      0 14px 28px rgba(159, 17, 24, .22),
+      0 0 25px rgba(209, 24, 32, .2);
+  }
+  .aim-diag__proof { color: var(--color-muted); }
+  .aim-diag__proof span + span { border-left-color: var(--color-line-strong); }
+  .aim-diag__proof b { color: var(--color-text); }
+
+  @media (max-width: 1060px) {
+    .aim-diag__copy { padding-left: 14px; border-left: 2px solid #d11820; }
+    .aim-diag__grid { grid-template-columns: 1fr; gap: 45px; }
+  }
+
+  /* Live rank feedback belongs to the diagnostic surface, not the surrounding shell. */
+  .aim-diag__rank-meter[hidden] { display: none; }
+  .aim-diag__rank-meter {
+    display: grid;
+    gap: 6px;
+    padding: 8px 13px 9px;
+    border-bottom: 1px solid rgba(141, 169, 255, .22);
+    background: rgba(8, 18, 31, .82);
+    color: var(--ad-ink);
+  }
+  .aim-diag__rank-meter-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+    font: 700 7px/1 var(--font-mono), monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .aim-diag__rank-meter-head > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #8fa6c0;
+    white-space: nowrap;
+  }
+  .aim-diag__rank-meter-head > span i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ad-cyan);
+    box-shadow: 0 0 8px var(--ad-cyan);
+  }
+  .aim-diag__rank-meter-head strong {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ad-cyan);
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .aim-diag__rank-meter-head b {
+    color: var(--ad-ink);
+    font-size: 8px;
+    white-space: nowrap;
+  }
+  .aim-diag__rank-meter-track {
+    position: relative;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(141, 169, 255, .28);
+    border-radius: 999px;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 calc(16.666% - 1px), rgba(141, 169, 255, .3) calc(16.666% - 1px) 16.666%),
+      #06111d;
+  }
+  .aim-diag__rank-meter-track::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(98, 231, 245, .08), transparent 42%, rgba(185, 152, 255, .08));
+  }
+  .aim-diag__rank-meter-track > i {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--ad-coral), var(--ad-cyan) 62%, var(--ad-violet));
+    box-shadow: 0 0 12px rgba(98, 231, 245, .45);
+    transition: width .16s linear;
+  }
+  .aim-diag__rank-meter-tiers {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 4px;
+    color: #7189a5;
+    font: 700 5px/1 var(--font-mono), monospace;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .aim-diag__rank-meter-tiers span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .aim-diag__rank-meter-tiers span:not(:first-child) { text-align: center; }
+  .aim-diag__rank-meter-tiers span:last-child { text-align: right; color: var(--ad-violet); }
+  .aim-diag__rank-meter > small {
+    color: #8fa6c0;
+    font: 600 6px/1 var(--font-mono), monospace;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 620px) {
+    .aim-diag__rank-meter { padding-inline: 10px; }
+    .aim-diag__rank-meter-head { gap: 7px; }
+    .aim-diag__rank-meter-head > span { font-size: 6px; }
+    .aim-diag__rank-meter-head strong { font-size: 8px; }
+    .aim-diag__rank-meter-head b { font-size: 7px; }
+    .aim-diag__rank-meter-tiers { font-size: 4px; letter-spacing: .02em; }
+  }
+
+  /* Result states should answer one question at a glance. Keep supporting evidence available,
+     but remove the duplicate telemetry and tier labels from the first read. */
+  [data-state="result"] .aim-diag__scores,
+  [data-state="result"] .aim-diag__machine-bottom { display: none; }
+  [data-state="result"] .aim-diag__rank-meter {
+    gap: 4px;
+    padding: 6px 12px 7px;
+  }
+  [data-state="result"] .aim-diag__rank-meter-tiers,
+  [data-state="result"] .aim-diag__rank-meter > small { display: none; }
+  .aim-diag__result-more {
+    width: min(600px, 100%);
+    margin-top: 10px;
+    border-top: 1px solid rgba(141, 169, 255, .24);
+  }
+  .aim-diag__result-more summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 2px 2px;
+    color: var(--ad-cyan);
+    font: 800 8px/1.2 var(--font-mono), monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    list-style: none;
+  }
+  .aim-diag__result-more summary::-webkit-details-marker { display: none; }
+  .aim-diag__result-more summary::after {
+    content: '+';
+    flex: 0 0 auto;
+    color: var(--ad-amber);
+    font-size: 15px;
+    line-height: 1;
+  }
+  .aim-diag__result-more[open] summary::after { content: '−'; }
+  .aim-diag__result-more summary span {
+    margin-left: auto;
+    color: #8095b0;
+    font: 500 9px/1.25 var(--font-sans), sans-serif;
+    letter-spacing: normal;
+    text-align: right;
+    text-transform: none;
+  }
+  .aim-diag__result-more-body { display: grid; gap: 8px; padding-top: 4px; }
+  [data-state="result"] .aim-diag__result-next {
+    width: min(600px, 100%);
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  [data-state="result"] .aim-diag__result-next::before { margin-bottom: 3px; }
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__rank-meter,
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-plan,
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-more,
+  [data-state="result"][data-result-stage="inconclusive"] [data-aim-code],
+  [data-state="result"][data-result-stage="inconclusive"] [data-aim-copy],
+  [data-state="result"][data-result-stage="inconclusive"] [data-aim-result-link],
+  [data-state="result"][data-result-stage="inconclusive"] [data-aim-confirm] { display: none !important; }
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-rating {
+    width: min(600px, 100%);
+    justify-content: flex-start;
+    margin-top: 12px;
+    padding: 7px 10px;
+    border-left: 2px solid var(--ad-coral);
+    background: rgba(255, 113, 129, .06);
+    box-shadow: none;
+  }
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-rating > span { display: none; }
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-rank {
+    padding-left: 0;
+    border-left: 0;
+    text-align: left;
+  }
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-next { margin-top: 12px !important; }
+  @media (max-width: 620px) {
+    .aim-diag__result-more summary { align-items: flex-start; }
+    .aim-diag__result-more summary span { text-align: right; }
+    [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result { justify-content: flex-start; }
+  }
+
+  /* The result is a handoff: keep the verdict quiet, make the warm-up obvious,
+     and give utilities enough room to stay legible. */
+  [data-state="result"] .aim-diag__hud,
+  [data-state="result"] .aim-diag__instruction { visibility: hidden; }
+  [data-state="result"]:not([data-result-stage="inconclusive"]) .aim-diag__result-rank { display: none; }
+  [data-state="result"]:not([data-result-stage="inconclusive"]) .aim-diag__result-rating {
+    width: fit-content;
+    max-width: 100%;
+    align-self: center;
+    justify-content: flex-start;
+    padding-block: 10px;
+  }
+  [data-state="result"]:not([data-result-stage="inconclusive"]) .aim-diag__result-rating > span { white-space: nowrap; }
+  [data-state="result"] .aim-diag__result-action {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    grid-template-areas:
+      "code code code code"
+      "primary verify copy retest";
+    gap: 8px;
+    width: min(600px, 100%);
+    margin-top: 13px;
+  }
+  [data-state="result"] .aim-diag__result-action [data-aim-code] {
+    grid-area: code;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    overflow-x: auto;
+    text-overflow: clip;
+    scrollbar-width: thin;
+  }
+  [data-state="result"] .aim-diag__result-action [data-aim-result-link] {
+    grid-area: primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    border-color: var(--ad-violet);
+    background: var(--ad-violet);
+    color: #06111d;
+    box-shadow: 0 0 16px rgba(185, 152, 255, .2);
+  }
+  [data-state="result"] .aim-diag__result-action [data-aim-confirm] {
+    grid-area: verify;
+    background: rgba(98, 231, 245, .08);
+    color: var(--ad-cyan);
+  }
+  [data-state="result"] .aim-diag__result-action [data-aim-copy] {
+    grid-area: copy;
+    white-space: nowrap;
+  }
+  [data-state="result"] .aim-diag__result-action [data-aim-retest] {
+    grid-area: retest;
+    justify-self: end;
+    white-space: nowrap;
+  }
+  [data-state="result"] .aim-diag__result-action [data-aim-copy],
+  [data-state="result"] .aim-diag__result-action [data-aim-retest] { color: #b9c9de; }
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-action {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "retest";
+  }
+  [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-action [data-aim-retest] {
+    justify-self: center;
+    min-width: 120px;
+  }
+  @media (max-width: 620px) {
+    [data-state="result"] .aim-diag__result-action {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "code code"
+        "primary primary"
+        "verify retest"
+        "copy copy";
+    }
+    [data-state="result"][data-result-stage="inconclusive"] .aim-diag__result-action {
+      grid-template-columns: 1fr;
+      grid-template-areas: "retest";
+    }
+    [data-state="result"] .aim-diag__result-action [data-aim-result-link],
+    [data-state="result"] .aim-diag__result-action [data-aim-confirm],
+    [data-state="result"] .aim-diag__result-action [data-aim-copy],
+    [data-state="result"] .aim-diag__result-action [data-aim-retest] {
+      width: 100%;
+      justify-self: stretch;
+    }
+    [data-state="result"]:not([data-result-stage="inconclusive"]) .aim-diag__result-rating {
+      width: min(100%, 600px);
+    }
+    [data-state="result"]:not([data-result-stage="inconclusive"]) .aim-diag__result-rating > span {
+      white-space: normal;
+    }
+  }
 </style>
 
 <script>
   document.getElementById('daily-quote')?.setAttribute('hidden', 'true');
 
   type SkillKey = 'flick' | 'track' | 'switch';
+  type TargetKey = 'a' | 'b' | 'c' | 'd';
   type TrainingGoal = 'balanced' | 'speed' | 'control' | 'consistency';
   type Routine = { name: string; code: string; focus: string };
   type SkillPlan = { label: string; duration: string; difficulty: string; useWhen: string };
+  type RunStage = 'scan' | 'confirm';
+  type TrackingStats = { totalMs: number; insideMs: number; errorPxMs: number; closenessMs: number };
+  type ReadSnapshot = {
+    scores: Record<SkillKey, number>;
+    flickTimes: number[];
+    flickMisses: number;
+    switchTimes: number[];
+    switchMisses: number;
+    track: TrackingStats;
+    flickMedian: number;
+    switchMedian: number;
+    flickAccuracy: number;
+    switchAccuracy: number;
+    trackContact: number;
+    trackError: number;
+    trackCloseness: number;
+    trackSeconds: number;
+    clickHits: number;
+    clickMisses: number;
+    clickAccuracy: number;
+    evidenceGaps: string[];
+    sufficient: boolean;
+  };
+  type FocusDecision = {
+    weak: SkillKey;
+    runnerUp: SkillKey;
+    gap: number;
+    balanced: boolean;
+    focusSkill: SkillKey;
+  };
 
   const gameNames = {
     fortnite: 'Fortnite', valorant: 'Valorant', cs2: 'CS2',
@@ -328,6 +957,12 @@ const { product } = Astro.props;
     speed: 'Get faster',
     control: 'Get steadier',
     consistency: 'Clean up misses',
+  };
+  const goalDescriptions: Record<TrainingGoal, string> = {
+    balanced: 'Use the measured lowest skill as the starting point.',
+    speed: 'When skills are close, prioritize faster transfers.',
+    control: 'When skills are close, prioritize smoother tracking.',
+    consistency: 'When skills are close, prioritize repeatable clean contacts.',
   };
 
   const skillPlans: Record<SkillKey, SkillPlan> = {
@@ -369,15 +1004,23 @@ const { product } = Astro.props;
   document.querySelectorAll<HTMLElement>('[data-aim-diagnostic]').forEach((root) => {
     const keys: SkillKey[] = ['flick', 'track', 'switch'];
     const arena = root.querySelector<HTMLElement>('[data-aim-arena]')!;
+    const resultPanel = root.querySelector<HTMLElement>('[data-aim-result]')!;
     const crosshair = root.querySelector<HTMLElement>('.aim-diag__crosshair')!;
     const targets = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-aim-target]'));
     const startButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-aim-start],[data-aim-replay]'));
     const exitButton = root.querySelector<HTMLButtonElement>('[data-aim-exit]')!;
     const game = root.querySelector<HTMLSelectElement>('[data-aim-game]')!;
+    const modeEl = root.querySelector<HTMLElement>('[data-aim-mode]')!;
     const phaseEl = root.querySelector<HTMLElement>('[data-aim-phase]')!;
     const timeEl = root.querySelector<HTMLElement>('[data-aim-time]')!;
     const liveScoreEl = root.querySelector<HTMLElement>('[data-aim-live-score]')!;
     const comboEl = root.querySelector<HTMLElement>('[data-aim-combo]')!;
+    const rankMeter = root.querySelector<HTMLElement>('[data-aim-rank-meter]')!;
+    const liveRankEl = root.querySelector<HTMLElement>('[data-aim-live-rank]')!;
+    const liveRankScoreEl = root.querySelector<HTMLElement>('[data-aim-live-rank-score]')!;
+    const liveRankBar = root.querySelector<HTMLElement>('[data-aim-live-rank-bar]')!;
+    const liveRankFill = root.querySelector<HTMLElement>('[data-aim-live-rank-fill]')!;
+    const liveRankNextEl = root.querySelector<HTMLElement>('[data-aim-live-rank-next]')!;
     const instruction = root.querySelector<HTMLElement>('[data-aim-instruction]')!;
     const startGuide = root.querySelector<HTMLElement>('[data-aim-start-guide]')!;
     const status = root.querySelector<HTMLElement>('[data-aim-status]')!;
@@ -389,6 +1032,7 @@ const { product } = Astro.props;
     const resultCopy = root.querySelector<HTMLElement>('[data-aim-result-copy]')!;
     const starsEl = root.querySelector<HTMLElement>('[data-aim-stars]')!;
     const priorityEl = root.querySelector<HTMLElement>('[data-aim-priority]')!;
+    const planLabelEl = root.querySelector<HTMLElement>('[data-aim-plan-label]')!;
     const planTitle = root.querySelector<HTMLElement>('[data-aim-plan-title]')!;
     const planMeta = root.querySelector<HTMLElement>('[data-aim-plan-meta]')!;
     const nextStepEl = root.querySelector<HTMLElement>('[data-aim-next-step]')!;
@@ -397,6 +1041,7 @@ const { product } = Astro.props;
     const inputNote = root.querySelector<HTMLElement>('[data-aim-input-note]')!;
     const historyEl = root.querySelector<HTMLElement>('[data-aim-history]')!;
     const runSummaryEl = root.querySelector<HTMLElement>('[data-aim-run-summary]')!;
+    const personalBoardEl = root.querySelector<HTMLElement>('[data-aim-personal-board]')!;
     const runScoreEl = root.querySelector<HTMLElement>('[data-aim-run-score]')!;
     const runAccuracyEl = root.querySelector<HTMLElement>('[data-aim-run-accuracy]')!;
     const runBestEl = root.querySelector<HTMLElement>('[data-aim-run-best]')!;
@@ -406,6 +1051,7 @@ const { product } = Astro.props;
     const codeEl = root.querySelector<HTMLElement>('[data-aim-code]')!;
     const copyButton = root.querySelector<HTMLButtonElement>('[data-aim-copy]')!;
     const resultLink = root.querySelector<HTMLAnchorElement>('[data-aim-result-link]')!;
+    const confirmButton = root.querySelector<HTMLButtonElement>('[data-aim-confirm]')!;
     const retestButton = root.querySelector<HTMLButtonElement>('[data-aim-retest]')!;
     const courseGates = Array.from(root.querySelectorAll<HTMLElement>('[data-switch-gate]'));
     const switchStepEl = root.querySelector<HTMLElement>('[data-aim-switch-step]')!;
@@ -414,14 +1060,18 @@ const { product } = Astro.props;
     const fillEls = Object.fromEntries(keys.map(k => [k, root.querySelector<HTMLElement>(`[data-aim-fill="${k}"]`)!])) as Record<SkillKey, HTMLElement>;
     const detailEls = Object.fromEntries(keys.map(k => [k, root.querySelector<HTMLElement>(`[data-aim-detail="${k}"]`)!])) as Record<SkillKey, HTMLElement>;
 
-    const hardened = { flickSize: 48, trackSize: 44 } as const;
+    const hardened = { flickSize: 42, trackSize: 36 } as const;
     const readPlan = {
-      totalMs: 28000,
-      flickEndsAt: 8000,
-      trackEndsAt: 18000,
-      minFlickHits: 5,
-      minSwitchHits: 6,
-      minTrackMs: 8000,
+      scanTotalMs: 32000,
+      flickEndsAt: 8500,
+      trackEndsAt: 21000,
+      minFlickHits: 7,
+      minSwitchHits: 8,
+      minTrackMs: 9000,
+      confirmMs: 10000,
+      minConfirmFlickHits: 4,
+      minConfirmSwitchHits: 5,
+      minConfirmTrackMs: 7000,
     } as const;
     const scoring = {
       flickHit: 100,
@@ -433,29 +1083,51 @@ const { product } = Astro.props;
       trackCadenceMs: 700,
       trackFeedbackMs: 1400,
     } as const;
-    const switchLayouts = [
-      { x: 17, y: 29, size: 44 },
-      { x: 83, y: 71, size: 42 },
-      { x: 74, y: 23, size: 40 },
-      { x: 28, y: 77, size: 38 },
-      { x: 24, y: 72, size: 36 },
-      { x: 76, y: 31, size: 34 },
-      { x: 64, y: 18, size: 32 },
-      { x: 19, y: 64, size: 31 },
-      { x: 16, y: 47, size: 30 },
-      { x: 84, y: 55, size: 29 },
+    const flickLayouts = [
+      { x: 16, y: 24 }, { x: 50, y: 20 }, { x: 84, y: 28 }, { x: 27, y: 43 },
+      { x: 73, y: 40 }, { x: 42, y: 60 }, { x: 87, y: 63 }, { x: 14, y: 72 },
+      { x: 58, y: 34 }, { x: 34, y: 77 }, { x: 68, y: 78 }, { x: 51, y: 52 },
+      { x: 20, y: 54 }, { x: 80, y: 51 }, { x: 38, y: 29 }, { x: 63, y: 68 },
     ] as const;
-    let frame = 0, started = 0, phaseStarted = 0, lastSpawn = 0, lastFrame = 0, active = 'a';
+    const switchField: Record<TargetKey, { x: number; y: number; size: number }> = {
+      a: { x: 18, y: 25, size: 38 },
+      b: { x: 82, y: 24, size: 36 },
+      c: { x: 22, y: 76, size: 35 },
+      d: { x: 79, y: 73, size: 33 },
+    };
+    const switchSequence: TargetKey[] = ['a', 'c', 'b', 'd', 'b', 'a', 'd', 'c', 'a', 'd', 'b', 'c'];
+    let frame = 0, started = 0, phaseStarted = 0, lastSpawn = 0, lastFrame = 0, active: TargetKey = 'a';
+    let stage: RunStage = 'scan';
+    let confirmSkill: SkillKey | null = null;
+    let scanSnapshot: ReadSnapshot | null = null;
+    let scanDecision: FocusDecision | null = null;
+    let patternOffset = 0;
+    let flickStep = 0;
     let switchStep = 0;
-    let pointerX = -999, pointerY = -999;
+    let confirmFlickStep = 0;
+    let confirmSwitchStep = 0;
+    let pointerX = -999, pointerY = -999, pointerFrame = 0;
     let flickMisses = 0, switchMisses = 0;
     let trackTotalMs = 0, trackInsideMs = 0, trackErrorPxMs = 0, trackClosenessMs = 0;
     let flickTimes: number[] = [], switchTimes: number[] = [];
+    let confirmFlickTimes: number[] = [], confirmSwitchTimes: number[] = [];
+    let confirmFlickMisses = 0, confirmSwitchMisses = 0;
+    let confirmTrackTotalMs = 0, confirmTrackInsideMs = 0, confirmTrackErrorPxMs = 0, confirmTrackClosenessMs = 0;
     let immersive = false, previousFocus: HTMLElement | null = null, pauseStarted = 0, pausedMs = 0;
     let runScore = 0, combo = 0, maxCombo = 0;
     let lastTrackScoreAt = 0, lastTrackFeedbackAt = 0, lastTrackInside: boolean | null = null;
 
-    const clamp = (n: number) => Math.max(0, Math.min(99, Math.round(n)));
+    const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
+    const clampScore = (n: number) => Math.max(0, Math.min(1000, Math.round(n)));
+    const rankLadder = [
+      { min: 0, title: 'NEEDS WORK' },
+      { min: 180, title: 'APPRENTICE' },
+      { min: 360, title: 'AMATEUR' },
+      { min: 560, title: 'MASTER' },
+      { min: 760, title: 'GOD AIMER' },
+      { min: 920, title: 'AIMMAXXER' },
+    ] as const;
+    const rankFor = (score: number) => [...rankLadder].reverse().find(entry => score >= entry.min) || rankLadder[0];
     const median = (values: number[]) => {
       if (!values.length) return 999;
       const sorted = [...values].sort((a, b) => a - b);
@@ -464,14 +1136,14 @@ const { product } = Astro.props;
     };
     const accuracy = (hits: number, misses: number) => Math.round((hits / Math.max(1, hits + misses)) * 100);
     const formatSeconds = (milliseconds: number) => `${(milliseconds / 1000).toFixed(2)} sec`;
-    const clickScore = (times: number[], misses: number) => {
+    const clickScore = (times: number[], misses: number, minSamples = readPlan.minSwitchHits) => {
       if (!times.length) return 0;
       const speed = clamp(100 - Math.max(0, median(times) - 180) / 5.2);
       const acc = accuracy(times.length, misses);
       const raw = clamp(speed * .72 + acc * .28);
       // A tiny sample should not be able to look like a perfect read. Once the
       // minimum sample is reached, the measured score is allowed through.
-      const sampleWeight = Math.min(1, times.length / readPlan.minSwitchHits);
+      const sampleWeight = Math.min(1, times.length / Math.max(1, minSamples));
       return clamp(50 + (raw - 50) * sampleWeight);
     };
     const setTargetSize = (target: HTMLElement, size: number) => {
@@ -482,13 +1154,19 @@ const { product } = Astro.props;
       const goalKey = (goal.value || 'balanced') as TrainingGoal;
       gameNote.textContent = `${gameNames[gameKey] || 'Your game'} · ${gameNotes[gameKey] || 'mixed aim profile'}`;
       goalNote.textContent = goalNames[goalKey] || goalNames.balanced;
+      goalNote.title = goalDescriptions[goalKey] || goalDescriptions.balanced;
+      goalNote.setAttribute('aria-label', `${goalNote.textContent}. ${goalNote.title}`);
     };
-    const place = (target: HTMLElement, size = hardened.flickSize) => {
+    const place = (target: HTMLElement, size = hardened.flickSize, currentStage: RunStage = 'scan') => {
+      const step = currentStage === 'confirm' ? confirmFlickStep++ : flickStep++;
+      const layout = flickLayouts[(step + patternOffset + (currentStage === 'confirm' ? 3 : 0)) % flickLayouts.length];
       setTargetSize(target, size);
-      target.style.left = `${14 + Math.random() * 72}%`;
-      target.style.top = `${22 + Math.random() * 56}%`;
+      target.style.left = `${layout.x}%`;
+      target.style.top = `${layout.y}%`;
       lastSpawn = performance.now();
     };
+    const activeSwitchAt = (step: number, offset = 0): TargetKey =>
+      switchSequence[(step + offset) % switchSequence.length];
     const setActiveSwitchTarget = () => {
       root.dataset.activeTarget = active;
       targets.forEach(target => {
@@ -505,30 +1183,33 @@ const { product } = Astro.props;
       });
     };
     const applySwitchLayout = () => {
-      const layout = switchLayouts[switchStep % switchLayouts.length];
       targets.forEach(target => {
+        const key = target.dataset.aimTarget as TargetKey;
+        const layout = switchField[key];
         target.style.left = `${layout.x}%`;
         target.style.top = `${layout.y}%`;
-        setTargetSize(target, layout.size);
+        setTargetSize(target, layout.size + (key === active ? 4 : 0));
       });
       setActiveSwitchTarget();
     };
     const updateSwitchCourse = () => {
-      const total = courseGates.length || switchLayouts.length;
-      const completed = Math.min(switchStep, total);
-      const current = Math.min(switchStep, total - 1);
+      const total = courseGates.length || switchSequence.length;
+      const currentStep = stage === 'confirm' ? confirmSwitchStep : switchStep;
+      const minimum = stage === 'confirm' ? readPlan.minConfirmSwitchHits : readPlan.minSwitchHits;
+      const completed = Math.min(currentStep, total);
+      const current = Math.min(currentStep, total - 1);
       switchStepEl.textContent = `${String(completed).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
       if (root.dataset.state !== 'running' || root.dataset.phase !== 'switch') {
         switchStateEl.textContent = 'WARMING UP';
-      } else if (switchStep >= total) {
+      } else if (currentStep >= total) {
         switchStateEl.textContent = 'KEEP GOING';
-      } else if (switchStep >= readPlan.minSwitchHits) {
+      } else if (currentStep >= minimum) {
         switchStateEl.textContent = 'ENOUGH · KEEP GOING';
       } else {
-        switchStateEl.textContent = `${readPlan.minSwitchHits - switchStep} MORE NEEDED`;
+        switchStateEl.textContent = `${minimum - currentStep} MORE NEEDED`;
       }
       courseGates.forEach((gate, index) => {
-        gate.dataset.state = index < switchStep ? 'done' : index === current && switchStep < total ? 'current' : 'upcoming';
+        gate.dataset.state = index < currentStep ? 'done' : index === current && currentStep < total ? 'current' : 'upcoming';
       });
     };
     const setScore = (key: SkillKey, value: number) => {
@@ -540,7 +1221,9 @@ const { product } = Astro.props;
 
     const routineAnchor = (routine: Routine) => {
       const card = Array.from(document.querySelectorAll<HTMLElement>('[data-aim-routine-code]'))
-        .find((candidate) => candidate.dataset.aimRoutineCode === routine.code);
+        .find((candidate) => candidate.dataset.aimRoutineCode === routine.code && candidate.dataset.aimRoutineName === routine.name)
+        || Array.from(document.querySelectorAll<HTMLElement>('[data-aim-routine-code]'))
+          .find((candidate) => candidate.dataset.aimRoutineCode === routine.code);
       return card?.id ? `#${card.id}` : '#aim-warmup-heading';
     };
     type StoredRead = { game?: string; skill?: SkillKey; score?: number; mode?: 'limiter' | 'balanced' };
@@ -582,11 +1265,55 @@ const { product } = Astro.props;
       combo: number;
       createdAt: number;
     };
-    const personalBoardKey = 'aimmaxxer:personal-board:v1';
+    const personalBoardKey = 'aimmaxxer:personal-board:v2';
     const formatScore = (value: number) => Math.max(0, Math.round(value)).toLocaleString('en-US');
+    const provisionalRankScore = () => {
+      const currentMinimums = stage === 'confirm'
+        ? { flick: readPlan.minConfirmFlickHits, switch: readPlan.minConfirmSwitchHits }
+        : { flick: readPlan.minFlickHits, switch: readPlan.minSwitchHits };
+      const currentFlickTimes = stage === 'confirm' ? confirmFlickTimes : flickTimes;
+      const currentFlickMisses = stage === 'confirm' ? confirmFlickMisses : flickMisses;
+      const currentSwitchTimes = stage === 'confirm' ? confirmSwitchTimes : switchTimes;
+      const currentSwitchMisses = stage === 'confirm' ? confirmSwitchMisses : switchMisses;
+      const currentTrackTotalMs = stage === 'confirm' ? confirmTrackTotalMs : trackTotalMs;
+      const currentTrackInsideMs = stage === 'confirm' ? confirmTrackInsideMs : trackInsideMs;
+      const currentTrackClosenessMs = stage === 'confirm' ? confirmTrackClosenessMs : trackClosenessMs;
+      const samples: number[] = [];
+      if (currentFlickTimes.length || currentFlickMisses) {
+        samples.push(clickScore(currentFlickTimes, currentFlickMisses, currentMinimums.flick));
+      }
+      if (currentTrackTotalMs > 0) {
+        const contact = (currentTrackInsideMs / Math.max(1, currentTrackTotalMs)) * 100;
+        const closeness = (currentTrackClosenessMs / Math.max(1, currentTrackTotalMs)) * 100;
+        samples.push(clamp(contact * .62 + closeness * .38));
+      }
+      if (currentSwitchTimes.length || currentSwitchMisses) {
+        samples.push(clickScore(currentSwitchTimes, currentSwitchMisses, currentMinimums.switch));
+      }
+      if (!samples.length) return 0;
+      const coverage = samples.length / keys.length;
+      const quality = samples.reduce((sum, value) => sum + value, 0) / samples.length;
+      const comboBoost = Math.min(10, Math.round(maxCombo / 20 * 10));
+      return clampScore(quality * 10 * coverage + comboBoost);
+    };
+    const updateRankMeter = (score = provisionalRankScore()) => {
+      const safeScore = clampScore(score);
+      const rank = rankFor(safeScore);
+      const rankIndex = rankLadder.findIndex(entry => entry.title === rank.title);
+      const nextRank = rankLadder[rankIndex + 1];
+      liveRankEl.textContent = rank.title;
+      liveRankScoreEl.textContent = `${formatScore(safeScore)} / 1000`;
+      liveRankFill.style.width = `${safeScore / 10}%`;
+      liveRankBar.setAttribute('aria-valuenow', String(safeScore));
+      liveRankBar.setAttribute('aria-valuetext', `${rank.title}, ${safeScore} out of 1000`);
+      liveRankNextEl.textContent = nextRank
+        ? `Next: ${nextRank.title} at ${nextRank.min}`
+        : 'MAX TIER · AIMMAXXER';
+    };
     const updateRunScore = () => {
       liveScoreEl.textContent = formatScore(runScore);
       comboEl.textContent = `COMBO ${combo}`;
+      updateRankMeter();
     };
     const showScorePop = (points: number, target: HTMLElement | null = null, kind: 'positive' | 'negative' | 'track' = 'positive') => {
       const arenaRect = arena.getBoundingClientRect();
@@ -690,13 +1417,14 @@ const { product } = Astro.props;
         score.textContent = `SCORE ${formatScore(entry.score)}`;
         const hitLabel = `${entry.hits} hit${entry.hits === 1 ? '' : 's'}`;
         const missLabel = `${entry.misses} miss${entry.misses === 1 ? '' : 'es'}`;
-        meta.textContent = `${gameNames[entry.game as keyof typeof gameNames] || entry.game} · ${hitLabel} · ${missLabel} · best combo ${entry.combo}x`;
+        meta.textContent = `${rankFor(entry.score).title} · ${gameNames[entry.game as keyof typeof gameNames] || entry.game} · ${hitLabel} · ${missLabel} · best combo ${entry.combo}x`;
         item.append(rank, score, meta);
         personalListEl.append(item);
       });
     };
     const updateRunSummary = (clickAccuracy: number, board: PersonalRun[], note: string) => {
       runSummaryEl.hidden = false;
+      personalBoardEl.hidden = false;
       runScoreEl.textContent = formatScore(runScore);
       runAccuracyEl.textContent = `${clickAccuracy}%`;
       runBestEl.textContent = board[0] ? formatScore(board[0].score) : '--';
@@ -712,8 +1440,20 @@ const { product } = Astro.props;
       lastTrackInside = null;
       updateRunScore();
       runSummaryEl.hidden = true;
+      personalBoardEl.hidden = true;
       scoreAnnouncerEl.textContent = '';
       renderPersonalBoard();
+      updateRankMeter(0);
+    };
+
+    const resetResultScroll = () => {
+      arena.scrollTop = 0;
+      resultPanel.scrollTop = 0;
+    };
+
+    const setResultAccessibility = (visible: boolean) => {
+      resultPanel.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      resultPanel.toggleAttribute('inert', !visible);
     };
 
     const resetScores = () => {
@@ -727,14 +1467,33 @@ const { product } = Astro.props;
     const resetSurface = () => {
       cancelAnimationFrame(frame);
       frame = 0;
+      resetResultScroll();
+      setResultAccessibility(false);
       pauseStarted = 0;
       pausedMs = 0;
+      stage = 'scan';
+      confirmSkill = null;
+      scanSnapshot = null;
+      scanDecision = null;
+      confirmFlickTimes = [];
+      confirmSwitchTimes = [];
+      confirmFlickMisses = confirmSwitchMisses = 0;
+      confirmTrackTotalMs = confirmTrackInsideMs = confirmTrackErrorPxMs = confirmTrackClosenessMs = 0;
+      flickTimes = [];
+      switchTimes = [];
+      flickMisses = switchMisses = 0;
+      trackTotalMs = trackInsideMs = trackErrorPxMs = trackClosenessMs = 0;
       root.dataset.state = 'idle';
       root.removeAttribute('data-phase');
       root.removeAttribute('data-active-target');
+      rankMeter.hidden = true;
+      flickStep = 0;
       switchStep = 0;
+      confirmFlickStep = 0;
+      confirmSwitchStep = 0;
+      modeEl.textContent = 'SCAN';
       phaseEl.textContent = 'READY';
-      timeEl.textContent = (readPlan.totalMs / 1000).toFixed(1);
+      timeEl.textContent = (readPlan.scanTotalMs / 1000).toFixed(1);
       instruction.textContent = 'Click Run the diagnostic, then the center target';
       startGuide.hidden = true;
       status.textContent = 'AUTO CALIBRATION';
@@ -747,24 +1506,27 @@ const { product } = Astro.props;
       crosshair.style.removeProperty('left');
       crosshair.style.removeProperty('top');
       resultKicker.textContent = 'AWAITING RUN';
-      resultTitle.textContent = 'YOUR READ WILL LAND HERE';
-      resultCopy.textContent = `Complete the ~${readPlan.totalMs / 1000}-second run to unlock a game-specific warm-up.`;
-      starsEl.textContent = '☆☆☆☆☆';
+      resultTitle.textContent = 'YOUR NEXT EDGE WILL LAND HERE';
+      resultCopy.textContent = `Complete the ${readPlan.scanTotalMs / 1000}-second scan to get a first-pass read. The ${readPlan.confirmMs / 1000}-second confirmation is optional.`;
+      starsEl.textContent = 'FOCUS PRIORITY · VERIFY';
       starsEl.setAttribute('aria-label', 'No result yet');
-      priorityEl.textContent = 'AWAITING INPUT';
-      planTitle.textContent = 'Run the diagnostic first';
-      planMeta.textContent = 'A focused routine appears after enough confirmed input.';
-      nextStepEl.textContent = 'Click Run the diagnostic, then the center target; follow the short instructions at the bottom of the arena.';
-      resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
-      confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
+      priorityEl.textContent = 'NO RANK YET';
+      planLabelEl.textContent = "RECOMMENDED KOVAAK'S BLOCK";
+      planTitle.textContent = 'Finish the read to reveal your warm-up';
+      planMeta.textContent = 'Your focused routine appears after enough confirmed input.';
+      nextStepEl.textContent = 'Run the diagnostic, hit the center target, then follow each phase prompt.';
+      resultWhy.textContent = 'Each phase measures a different aim skill so the recommendation is based on what you actually did.';
+      confidenceEl.textContent = 'Your read appears after enough confirmed input.';
       inputNote.textContent = 'Local only · no data leaves this tab.';
       renderHistory();
       codeEl.textContent = 'Run the diagnostic first';
       copyButton.disabled = true;
-      copyButton.textContent = 'Copy share code';
+      copyButton.textContent = 'Copy code';
       copyButton.classList.remove('is-copied');
       resultLink.textContent = 'Start this warm-up';
       resultLink.href = '#aim-warmup-heading';
+      confirmButton.hidden = true;
+      confirmButton.disabled = false;
       retestButton.disabled = false;
       targets.forEach(target => {
         target.style.display = '';
@@ -811,6 +1573,22 @@ const { product } = Astro.props;
     };
 
     const setPhaseInstruction = (phase: SkillKey) => {
+      if (stage === 'confirm') {
+        if (phase === 'flick') {
+          instruction.textContent = confirmFlickTimes.length >= readPlan.minConfirmFlickHits
+            ? 'Confirmation flicks locked · keep the clicks clean'
+            : `Confirm the flick read · ${readPlan.minConfirmFlickHits - confirmFlickTimes.length} more clean hits needed`;
+          return;
+        }
+        if (phase === 'track') {
+          instruction.textContent = 'Confirm tracking · stay connected to the moving target · no click or hold';
+          return;
+        }
+        instruction.textContent = confirmSwitchStep >= readPlan.minConfirmSwitchHits
+          ? 'Confirmation transfers locked · keep the hand-offs clean'
+          : `Confirm switching · ${readPlan.minConfirmSwitchHits - confirmSwitchStep} more transfers needed`;
+        return;
+      }
       instruction.textContent = phase === 'flick'
         ? flickTimes.length >= readPlan.minFlickHits
           ? 'Click each target once · sample met · keep going'
@@ -822,61 +1600,113 @@ const { product } = Astro.props;
             : `Click the lit target, then find the next · ${readPlan.minSwitchHits - switchStep} more needed`;
     };
 
-    const finish = () => {
-      cancelAnimationFrame(frame);
-      const flickMedian = Math.round(median(flickTimes));
-      const switchMedian = Math.round(median(switchTimes));
-      const flickAccuracy = accuracy(flickTimes.length, flickMisses);
-      const switchAccuracy = accuracy(switchTimes.length, switchMisses);
-      const clickHits = flickTimes.length + switchTimes.length;
-      const clickMisses = flickMisses + switchMisses;
-      const clickAccuracy = accuracy(clickHits, clickMisses);
-      const trackContact = Math.round((trackInsideMs / Math.max(1, trackTotalMs)) * 100);
-      const trackError = Math.round(trackErrorPxMs / Math.max(1, trackTotalMs));
-      const trackCloseness = (trackClosenessMs / Math.max(1, trackTotalMs)) * 100;
-      const trackSeconds = Math.round(trackTotalMs / 1000);
-      const scores: Record<SkillKey, number> = {
-        flick: clickScore(flickTimes, flickMisses),
-        track: clamp(trackContact * .62 + trackCloseness * .38),
-        switch: clickScore(switchTimes, switchMisses),
-      };
-      keys.forEach(key => setScore(key, scores[key]));
-      detailEls.flick.textContent = `${flickTimes.length ? formatSeconds(flickMedian) : '--'} · ${flickAccuracy}% accurate`;
-      detailEls.track.textContent = `${trackContact}% on target · ~${trackError} px away`;
-      detailEls.switch.textContent = `${switchTimes.length ? formatSeconds(switchMedian) : '--'} · ${switchAccuracy}% accurate`;
+    const revealResult = (phase?: SkillKey, resultStage: 'first-pass' | 'scan' | 'final' | 'inconclusive' = 'final') => {
+      resetResultScroll();
+      setResultAccessibility(true);
+      root.dataset.state = 'result';
+      root.dataset.resultStage = resultStage;
+      if (phase) root.dataset.phase = phase;
+      else root.removeAttribute('data-phase');
+      window.setTimeout(() => resultTitle.focus({ preventScroll: true }), 0);
+    };
+
+    const trackingFor = (currentStage: RunStage): TrackingStats =>
+      currentStage === 'confirm'
+        ? {
+            totalMs: confirmTrackTotalMs,
+            insideMs: confirmTrackInsideMs,
+            errorPxMs: confirmTrackErrorPxMs,
+            closenessMs: confirmTrackClosenessMs,
+          }
+        : {
+            totalMs: trackTotalMs,
+            insideMs: trackInsideMs,
+            errorPxMs: trackErrorPxMs,
+            closenessMs: trackClosenessMs,
+          };
+
+    const trackScore = (stats: TrackingStats) => {
+      const contact = (stats.insideMs / Math.max(1, stats.totalMs)) * 100;
+      const closeness = (stats.closenessMs / Math.max(1, stats.totalMs)) * 100;
+      return clamp(contact * .62 + closeness * .38);
+    };
+
+    const snapshotFrom = (
+      flickValues: number[],
+      flickMissCount: number,
+      switchValues: number[],
+      switchMissCount: number,
+      trackStats: TrackingStats,
+      minimums: { flick: number; switch: number; track: number; required?: SkillKey },
+    ): ReadSnapshot => {
+      const flickMedian = Math.round(median(flickValues));
+      const switchMedian = Math.round(median(switchValues));
+      const flickAccuracy = accuracy(flickValues.length, flickMissCount);
+      const switchAccuracy = accuracy(switchValues.length, switchMissCount);
+      const trackContact = Math.round((trackStats.insideMs / Math.max(1, trackStats.totalMs)) * 100);
+      const trackError = Math.round(trackStats.errorPxMs / Math.max(1, trackStats.totalMs));
+      const trackCloseness = (trackStats.closenessMs / Math.max(1, trackStats.totalMs)) * 100;
+      const clickHits = flickValues.length + switchValues.length;
+      const clickMisses = flickMissCount + switchMissCount;
       const evidenceGaps: string[] = [];
-      if (flickTimes.length < readPlan.minFlickHits) evidenceGaps.push(`${readPlan.minFlickHits - flickTimes.length} more flick hits`);
-      if (switchTimes.length < readPlan.minSwitchHits) evidenceGaps.push(`${readPlan.minSwitchHits - switchTimes.length} more transfers`);
-      if (trackTotalMs < readPlan.minTrackMs) evidenceGaps.push(`${Math.ceil((readPlan.minTrackMs - trackTotalMs) / 1000)} more seconds tracking`);
-      const hasEnoughInput = evidenceGaps.length === 0;
-      if (!hasEnoughInput) {
-        instruction.textContent = 'Not enough confirmed input — retest with the full timer';
-        resultKicker.textContent = 'DIAGNOSTIC COMPLETE';
-        resultTitle.textContent = 'RUN IT AGAIN FOR A CLEAN READ';
-        resultCopy.textContent = 'This run ended before we had enough confirmed input to choose a useful focus.';
-        starsEl.textContent = '☆☆☆☆☆';
-        starsEl.setAttribute('aria-label', 'No confidence yet');
-        priorityEl.textContent = 'RETRY FOR A READ';
-        planTitle.textContent = 'No routine selected yet';
-        planMeta.textContent = `Need ${readPlan.minFlickHits} flick hits · ${readPlan.minSwitchHits} transfers · ${readPlan.minTrackMs / 1000} seconds on target.`;
-        nextStepEl.textContent = `Run it again and keep interacting through the full timer. Still needed: ${evidenceGaps.join(' · ')}.`;
-        resultWhy.textContent = 'This result is intentionally inconclusive. Picking a weakness from too little input would be misleading.';
-        confidenceEl.textContent = `Evidence collected: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${trackSeconds}s tracking. Missing: ${evidenceGaps.join(' · ')}.`;
-        inputNote.textContent = 'Not enough target confirmations · no routine selected.';
-        historyEl.textContent = 'No local history saved from an inconclusive read. Complete the next run to compare later.';
-        updateRunSummary(clickAccuracy, readPersonalBoard(), 'Not saved · complete the full evidence window to set a personal best.');
-        codeEl.textContent = 'Run again to unlock a routine';
-        copyButton.disabled = true;
-        resultLink.textContent = 'Browse routines';
-        resultLink.href = '#aim-warmup-heading';
-        retestButton.disabled = false;
-        phaseEl.textContent = 'COMPLETE';
-        timeEl.textContent = '0.0';
-        status.textContent = 'MORE INPUT NEEDED';
-        root.dataset.state = 'result';
-        root.removeAttribute('data-phase');
-        return;
-      }
+      const requiredSkills: SkillKey[] = minimums.required ? [minimums.required] : keys;
+      if (requiredSkills.includes('flick') && flickValues.length < minimums.flick) evidenceGaps.push(`${minimums.flick - flickValues.length} more flick hits`);
+      if (requiredSkills.includes('switch') && switchValues.length < minimums.switch) evidenceGaps.push(`${minimums.switch - switchValues.length} more transfers`);
+      if (requiredSkills.includes('track') && trackStats.totalMs < minimums.track) evidenceGaps.push(`${Math.ceil((minimums.track - trackStats.totalMs) / 1000)} more seconds tracking`);
+      return {
+        scores: {
+          flick: clickScore(flickValues, flickMissCount, minimums.flick),
+          track: trackScore(trackStats),
+          switch: clickScore(switchValues, switchMissCount, minimums.switch),
+        },
+        flickTimes: [...flickValues],
+        flickMisses: flickMissCount,
+        switchTimes: [...switchValues],
+        switchMisses: switchMissCount,
+        track: { ...trackStats },
+        flickMedian,
+        switchMedian,
+        flickAccuracy,
+        switchAccuracy,
+        trackContact,
+        trackError,
+        trackCloseness,
+        trackSeconds: Math.round(trackStats.totalMs / 1000),
+        clickHits,
+        clickMisses,
+        clickAccuracy: accuracy(clickHits, clickMisses),
+        evidenceGaps,
+        sufficient: evidenceGaps.length === 0,
+      };
+    };
+
+    const buildSnapshot = (currentStage: RunStage): ReadSnapshot =>
+      currentStage === 'confirm'
+        ? snapshotFrom(
+            confirmFlickTimes,
+            confirmFlickMisses,
+            confirmSwitchTimes,
+            confirmSwitchMisses,
+            trackingFor('confirm'),
+            { flick: readPlan.minConfirmFlickHits, switch: readPlan.minConfirmSwitchHits, track: readPlan.minConfirmTrackMs, required: confirmSkill || 'track' },
+          )
+        : snapshotFrom(
+            flickTimes,
+            flickMisses,
+            switchTimes,
+            switchMisses,
+            trackingFor('scan'),
+            { flick: readPlan.minFlickHits, switch: readPlan.minSwitchHits, track: readPlan.minTrackMs },
+          );
+
+    const renderSnapshot = (snapshot: ReadSnapshot) => {
+      keys.forEach(key => setScore(key, snapshot.scores[key]));
+      detailEls.flick.textContent = `${snapshot.flickTimes.length ? formatSeconds(snapshot.flickMedian) : '--'} · ${snapshot.flickAccuracy}% accurate`;
+      detailEls.track.textContent = `${snapshot.trackContact}% on target · about ${snapshot.trackError} px away`;
+      detailEls.switch.textContent = `${snapshot.switchTimes.length ? formatSeconds(snapshot.switchMedian) : '--'} · ${snapshot.switchAccuracy}% accurate`;
+    };
+
+    const chooseFocus = (scores: Record<SkillKey, number>): FocusDecision => {
       const goalKey = (goal.value || 'balanced') as TrainingGoal;
       const tieOrder: SkillKey[] = goalKey === 'speed'
         ? ['switch', 'flick', 'track']
@@ -885,144 +1715,389 @@ const { product } = Astro.props;
           : goalKey === 'consistency'
             ? ['flick', 'switch', 'track']
             : keys;
-      const weak = [...keys].sort((a, b) => {
+      const ordered = [...keys].sort((a, b) => {
         const difference = scores[a] - scores[b];
         return Math.abs(difference) <= 7 ? tieOrder.indexOf(a) - tieOrder.indexOf(b) : difference;
-      })[0] || 'track';
-      const ordered = [...keys].sort((a, b) => scores[a] - scores[b]);
+      });
+      const weak = ordered[0] || 'track';
       const runnerUp = ordered[1] || weak;
       const gap = Math.max(0, scores[runnerUp] - scores[weak]);
-      const balancedRead = gap <= 8;
-      const balancedSkill: SkillKey = goalKey === 'speed' ? 'switch' : goalKey === 'control' ? 'track' : 'flick';
-      const focusSkill = balancedRead ? balancedSkill : weak;
-      const routine = routineFor(focusSkill);
+      const balanced = gap <= 8;
+      const balancedSkill: SkillKey = goalKey === 'speed'
+        ? 'switch'
+        : goalKey === 'control'
+          ? 'track'
+          : goalKey === 'consistency'
+            ? 'flick'
+            : weak;
+      return { weak, runnerUp, gap, balanced, focusSkill: balanced ? balancedSkill : weak };
+    };
+
+    const mergeTracking = (first: TrackingStats, second: TrackingStats): TrackingStats => ({
+      totalMs: first.totalMs + second.totalMs,
+      insideMs: first.insideMs + second.insideMs,
+      errorPxMs: first.errorPxMs + second.errorPxMs,
+      closenessMs: first.closenessMs + second.closenessMs,
+    });
+
+    const buildFinalSnapshot = (confirmation: ReadSnapshot): ReadSnapshot => {
+      if (!scanSnapshot || !confirmSkill) return confirmation;
+      const merged = snapshotFrom(
+        [...scanSnapshot.flickTimes, ...confirmation.flickTimes],
+        scanSnapshot.flickMisses + confirmation.flickMisses,
+        [...scanSnapshot.switchTimes, ...confirmation.switchTimes],
+        scanSnapshot.switchMisses + confirmation.switchMisses,
+        mergeTracking(scanSnapshot.track, confirmation.track),
+        { flick: readPlan.minFlickHits, switch: readPlan.minSwitchHits, track: readPlan.minTrackMs },
+      );
+      const scores: Record<SkillKey, number> = { ...scanSnapshot.scores };
+      scores[confirmSkill] = clamp(scanSnapshot.scores[confirmSkill] * .45 + confirmation.scores[confirmSkill] * .55);
+      return { ...merged, scores };
+    };
+
+    const setNoRoutineAction = (message: string) => {
+      codeEl.textContent = message;
+      copyButton.disabled = true;
+      copyButton.textContent = 'Copy code';
+      copyButton.classList.remove('is-copied');
+      resultLink.textContent = 'Browse routines';
+      resultLink.href = '#aim-warmup-heading';
+    };
+
+    const showScanInconclusive = (snapshot: ReadSnapshot) => {
+      const missing = snapshot.evidenceGaps.join(' · ');
+      instruction.textContent = 'Not enough confirmed input — retest with the full scan';
+      resultKicker.textContent = 'SCAN INCOMPLETE';
+      resultTitle.textContent = 'FINISH THE FULL SCAN';
+      resultCopy.textContent = 'This attempt stopped before we had enough clean evidence to score your aim. No rank or routine yet.';
+      starsEl.textContent = 'NO SCORE YET';
+      starsEl.setAttribute('aria-label', 'No score yet');
+      priorityEl.textContent = 'FULL SCAN REQUIRED';
+      planLabelEl.textContent = 'NO ROUTINE YET';
+      planTitle.textContent = 'Finish the full scan';
+      planMeta.textContent = missing ? `Still needed: ${missing}.` : 'Keep moving through every phase.';
+      nextStepEl.textContent = missing
+        ? `Still needed: ${missing}. Retest and complete every phase.`
+        : 'Retest and complete every phase for a clean read.';
+      resultWhy.textContent = 'A fair read needs a usable sample from flicking, tracking, and switching. Partial evidence stays inconclusive.';
+      confidenceEl.textContent = `Evidence collected: ${snapshot.flickTimes.length} flicks · ${snapshot.switchTimes.length} transfers · ${snapshot.trackSeconds}s tracking. Missing: ${missing}.`;
+      inputNote.textContent = 'Partial read · no routine selected and nothing uploaded.';
+      historyEl.textContent = 'No local history saved from an inconclusive read. Complete the next run to compare later.';
+      setNoRoutineAction('Run again to unlock a routine');
+      confirmButton.hidden = true;
+      confirmButton.disabled = false;
+      resetRunScore();
+      phaseEl.textContent = 'COMPLETE';
+      timeEl.textContent = '0.0';
+      status.textContent = 'MORE INPUT NEEDED';
+      revealResult(undefined, 'inconclusive');
+    };
+
+    const finishResolvedRead = (
+      finalSnapshot: ReadSnapshot,
+      focusSkill: SkillKey,
+      confirmedLimiter: boolean,
+      firstPass: boolean,
+      persist: boolean = true,
+    ) => {
+      renderSnapshot(finalSnapshot);
+      const finalDecision = chooseFocus(finalSnapshot.scores);
+      const evidenceDecision = scanDecision || finalDecision;
+      const hasCandidate = !evidenceDecision.balanced;
       const selectedGame = gameNames[game.value as keyof typeof gameNames] || 'your game';
+      const routine = routineFor(focusSkill);
       const plan = skillPlans[focusSkill];
+      const focusLabel = plan.label;
+      const runScoreValue = finalSnapshot.scores.flick * .34 + finalSnapshot.scores.track * .33 + finalSnapshot.scores.switch * .33;
+      runScore = clampScore(runScoreValue * 10 + Math.min(10, Math.round(maxCombo / 20 * 10)));
+      updateRunScore();
+      const skillRank = rankFor(runScore);
       const titles: Record<SkillKey, string> = {
-        flick: 'FLICKING IS YOUR BIGGEST GAP',
-        track: 'TRACKING IS YOUR BIGGEST GAP',
-        switch: 'SWITCHING IS YOUR BIGGEST GAP',
+        flick: 'YOUR GAP: FLICKING',
+        track: 'YOUR GAP: TRACKING',
+        switch: 'YOUR GAP: SWITCHING',
       };
-      const focusLevel = balancedRead ? 2 : Math.max(1, Math.min(5, Math.ceil((100 - scores[weak]) / 20)));
       const nextSteps: Record<SkillKey, string> = {
-        flick: 'Run one controlled block. Keep the target small and stop adding speed until your hit rate stays clean.',
-        track: 'Run one control block. Stay smooth first; add speed only after the cursor stays connected.',
-        switch: 'Run one transfer block. Confirm the lit target first, then chase faster hand-offs between targets.',
+        flick: 'Run one focused block. Keep first clicks clean; add speed only when accuracy holds.',
+        track: 'Run one smoothness block. Stay connected; add speed only when you can hold the target.',
+        switch: 'Run one transfer block. Confirm each target, then add speed between clean hand-offs.',
       };
+      const goalKey = (goal.value || 'balanced') as TrainingGoal;
       const goalAdvice: Record<TrainingGoal, string> = {
-        balanced: 'Run this block first; a retest can reveal a clearer limiter.',
-        speed: 'Push pace only after the first clean set; speed without confirmation just adds misses.',
-        control: 'Use the routine at a calm pace and protect smoothness before chasing a faster score.',
+        balanced: 'Retest after the block to see if the gap closes.',
+        speed: 'Add pace after the first clean set; speed without confirmation adds misses.',
+        control: 'Protect smoothness before chasing a faster score.',
         consistency: 'Prioritize clean contacts and repeatable stops before increasing difficulty.',
       };
+      const goalReason = evidenceDecision.balanced && goalKey !== 'balanced'
+        ? `${goalNames[goalKey]} selected ${focusLabel.toLowerCase()} as the practice priority because the measured skills are close; it changes the training emphasis, not the raw score.`
+        : `The measured scores selected ${focusLabel.toLowerCase()} as the current starting point; ${goalNames[goalKey].toLowerCase()} shapes the coaching around it.`;
       const metricWhy: Record<SkillKey, string> = {
-        flick: `about ${formatSeconds(flickMedian)} per hit and ${flickAccuracy}% clean clicks`,
-        track: `${trackContact}% of the run on target and about ${trackError} screen pixels away on average`,
-        switch: `about ${formatSeconds(switchMedian)} per transfer and ${switchAccuracy}% clean transfers`,
+        flick: `Your clicks averaged ${formatSeconds(finalSnapshot.flickMedian)} with ${finalSnapshot.flickAccuracy}% accuracy`,
+        track: `You held the target for ${finalSnapshot.trackContact}% of the run and stayed about ${finalSnapshot.trackError}px away on average`,
+        switch: `Your transfers averaged ${formatSeconds(finalSnapshot.switchMedian)} with ${finalSnapshot.switchAccuracy}% accuracy`,
       };
       const plainWhy: Record<SkillKey, string> = {
-        flick: 'In plain English: your first click is taking longer than your other skills.',
-        track: 'In plain English: your cursor frequently lost the moving target.',
-        switch: 'In plain English: you found the target but took longer to move to the next one.',
+        flick: 'That points to first-click speed and micro-correction control.',
+        track: 'That points to smoothness and keeping the crosshair connected.',
+        switch: 'That points to transfer speed after the first target is confirmed.',
       };
-      instruction.textContent = 'Read complete — review your recommended warm-up below';
-      resultKicker.textContent = 'DIAGNOSTIC COMPLETE';
-      resultTitle.textContent = balancedRead ? 'NO SINGLE LIMITER STOOD OUT' : titles[weak];
-      resultCopy.textContent = balancedRead
-        ? `${routine.name} is a balanced starting block for ${selectedGame}; your three scores are close.`
-        : `${routine.name} · ${routine.focus} for ${selectedGame}.`;
-      starsEl.textContent = `${'★'.repeat(focusLevel)}${'☆'.repeat(5 - focusLevel)}`;
-      starsEl.setAttribute('aria-label', `${focusLevel} of 5 focus level`);
-      priorityEl.textContent = balancedRead ? 'BALANCED READ' : focusLevel >= 4 ? 'HIGH-LEVERAGE FIX' : focusLevel >= 3 ? 'WORTH A BLOCK' : 'MAINTENANCE FOCUS';
-      planTitle.textContent = balancedRead ? `${routine.name} · Balanced block` : `${routine.name} · ${plan.label}`;
-      planMeta.textContent = `${plan.duration.replace(' min', ' minutes')} · ${plan.difficulty} · copy the code into KovaaK's`;
-      nextStepEl.textContent = `${balancedRead ? 'All three skills landed in a similar range, so use this block as your baseline and retest after training.' : nextSteps[weak]} ${goalAdvice[goalKey]}`;
-      resultWhy.textContent = balancedRead
-        ? `Your scores were close: flick ${scores.flick}, track ${scores.track}, switch ${scores.switch}. All three skills landed in a similar range, so this run did not isolate one clear limiter yet. Balanced means no single skill stood out; it does not mean every score is strong. Use this as your baseline, then retest after the block.`
-        : `Your ${plan.label.toLowerCase()} score was ${scores[weak]}/100. Your next-highest score was ${scores[runnerUp]}/100, so ${plan.label.toLowerCase()} was ${gap} points behind. ${metricWhy[weak]}. ${plainWhy[weak]} ${plan.useWhen}`;
-      confidenceEl.textContent = `Useful sample: ${flickTimes.length} flicks · ${switchTimes.length} transfers · ${trackSeconds}s tracking. ${balancedRead ? 'Enough input for a balanced starting block — not a permanent rating.' : 'Enough input for a starting practice block — not a permanent rating.'}`;
+      instruction.textContent = firstPass
+        ? 'First pass complete — review the evidence and start the recommended warm-up'
+        : 'Read complete — review the evidence and recommended warm-up below';
+      resultKicker.textContent = firstPass
+        ? hasCandidate ? 'FIRST PASS · CANDIDATE GAP' : 'FIRST PASS · BALANCED READ'
+        : confirmedLimiter ? 'GAP FOUND · CONFIRMED TWICE' : 'BASELINE · NO SINGLE GAP';
+      resultTitle.textContent = firstPass
+        ? hasCandidate ? titles[focusSkill] : 'YOUR AIM PROFILE IS CLOSE'
+        : confirmedLimiter ? titles[focusSkill] : 'YOUR AIM PROFILE IS BALANCED';
+      resultCopy.textContent = firstPass
+        ? hasCandidate
+          ? `${focusLabel} is the clearest first-pass next win for ${selectedGame}. Start here now; the 10-second confirmation is optional. You already have a usable read.`
+          : `Your first pass is close across all three skills for ${selectedGame}. Start with the balanced block; optional confirmation can check for a hidden limiter.`
+        : confirmedLimiter
+          ? `${focusLabel} is the clearest next win for ${selectedGame}. Here is the evidence and the first fix.`
+          : `The scan and confirmation set a useful ${selectedGame} baseline, but no single weakness held up twice.`;
+      starsEl.textContent = firstPass
+        ? hasCandidate ? 'FOCUS PRIORITY · FIRST PASS' : 'BASELINE READ · FIRST PASS'
+        : confirmedLimiter ? 'FOCUS PRIORITY · HIGH' : 'BASELINE · RETEST OPTIONAL';
+      starsEl.setAttribute('aria-label', firstPass ? 'First-pass read' : confirmedLimiter ? 'Confirmed focus priority' : 'Baseline read, optional retest');
+      priorityEl.textContent = skillRank.title;
+      planLabelEl.textContent = firstPass
+        ? `FIRST-PASS KOVAAK'S BLOCK`
+        : confirmedLimiter ? `RECOMMENDED KOVAAK'S BLOCK` : `BASELINE KOVAAK'S BLOCK`;
+      planTitle.textContent = routine.name;
+      planMeta.textContent = `${plan.label} · ${plan.duration.replace(' min', ' minutes')} · ${plan.difficulty} · paste the code into KovaaK's`;
+      nextStepEl.textContent = firstPass
+        ? `${nextSteps[focusSkill]} ${goalAdvice[goalKey]}`
+        : confirmedLimiter
+          ? `${nextSteps[focusSkill]} ${goalAdvice[goalKey]}`
+          : `Use one balanced block before changing settings. ${goalAdvice[goalKey]} Retest after the block to see whether the same pattern repeats.`;
+      resultWhy.textContent = firstPass
+        ? `${hasCandidate ? 'Why this block' : 'Why this baseline'}: ${plan.label} scored ${finalSnapshot.scores[focusSkill]}/100, ${evidenceDecision.gap} points behind ${skillPlans[evidenceDecision.runnerUp].label.toLowerCase()} at ${finalSnapshot.scores[evidenceDecision.runnerUp]}/100. ${metricWhy[focusSkill]}. ${plainWhy[focusSkill]} ${goalReason} This is a first-pass practice recommendation, not a permanent rating.`
+        : confirmedLimiter
+          ? `Why this block: ${plan.label} scored ${finalSnapshot.scores[focusSkill]}/100, ${scanDecision?.gap || 0} points behind ${skillPlans[scanDecision?.runnerUp || focusSkill].label.toLowerCase()} at ${finalSnapshot.scores[scanDecision?.runnerUp || focusSkill]}/100. ${metricWhy[focusSkill]}. ${plainWhy[focusSkill]} ${goalReason}`
+          : `Why no limiter: flick ${finalSnapshot.scores.flick}, track ${finalSnapshot.scores.track}, switch ${finalSnapshot.scores.switch}. The candidate did not separate and hold through both stages, so this block is a baseline rather than a permanent diagnosis. ${goalReason}`;
+      confidenceEl.textContent = firstPass
+        ? `First-pass evidence: ${finalSnapshot.flickTimes.length} flicks · ${finalSnapshot.switchTimes.length} transfers · ${finalSnapshot.trackSeconds}s tracking. ${hasCandidate ? 'The lowest score is the current candidate gap.' : 'The scores are close, so no single gap stands out yet.'} Optional verification can test stability. Training priority: ${goalNames[goalKey]}. ${goalDescriptions[goalKey]} This is a practice recommendation, not a permanent rating.`
+        : `Confirmed read: ${finalSnapshot.flickTimes.length} flicks · ${finalSnapshot.switchTimes.length} transfers · ${finalSnapshot.trackSeconds}s tracking. ${confirmedLimiter ? 'The candidate held across scan and confirmation.' : 'The two stages did not support a single stable limiter.'} Training priority: ${goalNames[goalKey]}. ${goalDescriptions[goalKey]} This is a practice recommendation, not a permanent rating.`;
       inputNote.textContent = matchMedia('(pointer: coarse)').matches
         ? 'Touch preview only · desktop mouse scores are not comparable.'
         : 'Measured on this mouse session · nothing is uploaded.';
-      historyEl.textContent = 'Saving this read only on this browser so you can compare after the block.';
+      historyEl.textContent = firstPass
+        ? 'Saved as a first-pass baseline locally. Verify or retest after the block to compare.'
+        : 'Saved locally so you can compare future attempts on this browser.';
       codeEl.textContent = routine.code;
+      codeEl.title = routine.code;
       copyButton.disabled = false;
+      copyButton.textContent = 'Copy code';
       resultLink.textContent = 'Start this warm-up';
       resultLink.href = routineAnchor(routine);
       retestButton.disabled = false;
-      rememberRun(focusSkill, scores[focusSkill], balancedRead ? 'balanced' : 'limiter');
-      const runId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      const previousBoard = readPersonalBoard();
-      const board = savePersonalRun({
-        id: runId,
-        score: runScore,
-        game: game.value,
-        hits: clickHits,
-        misses: clickMisses,
-        accuracy: clickAccuracy,
-        combo: maxCombo,
-        createdAt: Date.now(),
-      });
-      const rank = board.findIndex((entry) => entry.id === runId) + 1;
-      const summaryNote = previousBoard.length === 0
-        ? 'FIRST SAVED RUN · use this as your baseline.'
-        : rank === 1
-          ? 'NEW PERSONAL BEST · saved to this browser.'
-          : `#${rank} THIS BROWSER · best combo ${maxCombo}x.`;
-      updateRunSummary(clickAccuracy, board, summaryNote);
+      if (persist) {
+        rememberRun(focusSkill, finalSnapshot.scores[focusSkill], confirmedLimiter || hasCandidate ? 'limiter' : 'balanced');
+        const runId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const previousBoard = readPersonalBoard();
+        const board = savePersonalRun({
+          id: runId,
+          score: runScore,
+          game: game.value,
+          hits: finalSnapshot.clickHits,
+          misses: finalSnapshot.clickMisses,
+          accuracy: finalSnapshot.clickAccuracy,
+          combo: maxCombo,
+          createdAt: Date.now(),
+        });
+        const rank = board.findIndex((entry) => entry.id === runId) + 1;
+        const summaryNote = firstPass
+          ? `${skillRank.title} · FIRST-PASS BASELINE · optional verify available.`
+          : previousBoard.length === 0
+            ? `${skillRank.title} · FIRST SAVED RUN · use this as your baseline.`
+            : rank === 1
+              ? `${skillRank.title} · NEW PERSONAL BEST · saved to this browser.`
+              : `${skillRank.title} · #${rank} THIS BROWSER · best combo ${maxCombo}x.`;
+        updateRunSummary(finalSnapshot.clickAccuracy, board, summaryNote);
+      }
+      confirmButton.textContent = `Verify ${focusLabel} read`;
+      confirmButton.hidden = !firstPass;
+      confirmButton.disabled = false;
       phaseEl.textContent = 'COMPLETE';
       timeEl.textContent = '0.0';
-      status.textContent = 'ROUTINE RESOLVED';
-      root.dataset.state = 'result';
-      root.dataset.phase = focusSkill;
+      modeEl.textContent = firstPass ? 'SCAN COMPLETE' : 'COMPLETE';
+      status.textContent = firstPass ? 'FIRST-PASS READ READY' : confirmedLimiter ? 'ROUTINE RESOLVED' : 'BASELINE SAVED';
+      revealResult(focusSkill, firstPass ? 'first-pass' : 'final');
+    };
+
+    const finishScan = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      const snapshot = buildSnapshot('scan');
+      scanSnapshot = snapshot;
+      if (!snapshot.sufficient) {
+        renderSnapshot(snapshot);
+        showScanInconclusive(snapshot);
+        return;
+      }
+      scanDecision = chooseFocus(snapshot.scores);
+      confirmSkill = scanDecision.focusSkill;
+      finishResolvedRead(snapshot, confirmSkill, false, true);
+    };
+
+    const showConfirmationInconclusive = (snapshot: ReadSnapshot) => {
+      const scan = scanSnapshot || snapshot;
+      const decision = scanDecision || chooseFocus(scan.scores);
+      const focus = confirmSkill || decision.focusSkill;
+      scanDecision = decision;
+      confirmSkill = focus;
+      finishResolvedRead(scan, focus, false, true, false);
+      const focusLabel = skillPlans[focus].label;
+      const confirmationEvidence = focus === 'flick'
+        ? `${snapshot.flickTimes.length} flick hits`
+        : focus === 'switch'
+          ? `${snapshot.switchTimes.length} transfers`
+          : `${snapshot.trackSeconds}s tracking`;
+      instruction.textContent = 'Optional verification was incomplete — your first-pass read is still ready';
+      resultKicker.textContent = 'FIRST PASS · VERIFY INCOMPLETE';
+      resultCopy.textContent = `The first pass already gave you a usable ${focusLabel.toLowerCase()} read. The optional verification ended after ${confirmationEvidence}; use the routine now or retest when ready.`;
+      starsEl.textContent = 'FIRST-PASS READ · READY';
+      starsEl.setAttribute('aria-label', 'First-pass read ready; optional verification incomplete');
+      planLabelEl.textContent = `FIRST-PASS KOVAAK'S BLOCK`;
+      nextStepEl.textContent = `Start the ${focusLabel.toLowerCase()} block now. If you want more confidence later, run the optional verification again and complete it without leaving the arena.`;
+      resultWhy.textContent = `The first pass identified ${focusLabel.toLowerCase()} as the clearest current gap. The optional verification did not collect enough input to confirm or overturn it, so your original routine remains available.`;
+      confidenceEl.textContent = `First-pass evidence remains: ${scan.flickTimes.length} flicks · ${scan.switchTimes.length} transfers · ${scan.trackSeconds}s tracking. Optional verification collected ${confirmationEvidence} and was not used to replace the first read.`;
+      inputNote.textContent = 'First-pass read saved locally · optional verification incomplete · nothing uploaded.';
+      historyEl.textContent = 'First-pass baseline remains saved locally. Complete a later verification or retest to compare future attempts.';
+      phaseEl.textContent = 'COMPLETE';
+      timeEl.textContent = '0.0';
+      status.textContent = 'FIRST-PASS READ READY';
+      revealResult(focus, 'first-pass');
+    };
+
+    const finishConfirmation = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      if (!scanSnapshot || !confirmSkill) {
+        finishScan();
+        return;
+      }
+      const confirmation = buildSnapshot('confirm');
+      if (!confirmation.sufficient) {
+        showConfirmationInconclusive(confirmation);
+        return;
+      }
+      const finalSnapshot = buildFinalSnapshot(confirmation);
+      const finalDecision = chooseFocus(finalSnapshot.scores);
+      const scanCandidate = confirmSkill;
+      const stable = Math.abs(confirmation.scores[scanCandidate] - scanSnapshot.scores[scanCandidate]) <= 20;
+      const confirmedLimiter = !scanDecision?.balanced
+        && (scanDecision?.gap || 0) >= 12
+        && finalDecision.focusSkill === scanCandidate
+        && stable;
+      const focusSkill = confirmedLimiter ? scanCandidate : finalDecision.focusSkill;
+      finishResolvedRead(finalSnapshot, focusSkill, confirmedLimiter, false);
+    };
+
+    const trackingPoint = (elapsedMs: number, variant: number) => {
+      const seconds = elapsedMs / 1000;
+      const phase = variant * .45;
+      return {
+        x: 50 + Math.sin(seconds * 2.15 + phase) * 23 + Math.sin(seconds * 5.3 + .8 + phase) * 8 + Math.sin(seconds * .82) * 5,
+        y: 50 + Math.sin(seconds * 1.52 + phase) * 16 + Math.cos(seconds * 4.35 + phase) * 7,
+      };
+    };
+
+    const sampleTracking = (elapsedMs: number, dt: number, currentStage: RunStage) => {
+      const point = trackingPoint(elapsedMs, currentStage === 'confirm' ? 1 : 0);
+      targets[0].style.left = `${Math.max(14, Math.min(86, point.x))}%`;
+      targets[0].style.top = `${Math.max(22, Math.min(78, point.y))}%`;
+      const rect = targets[0].getBoundingClientRect();
+      const distance = Math.hypot(pointerX - (rect.left + rect.width / 2), pointerY - (rect.top + rect.height / 2));
+      const radius = rect.width / 2;
+      const inside = distance <= radius;
+      if (currentStage === 'confirm') {
+        confirmTrackTotalMs += dt;
+        if (inside) confirmTrackInsideMs += dt;
+        confirmTrackErrorPxMs += Math.min(distance, radius * 4) * dt;
+        confirmTrackClosenessMs += Math.max(0, 1 - distance / (radius * 2.5)) * dt;
+      } else {
+        trackTotalMs += dt;
+        if (inside) trackInsideMs += dt;
+        trackErrorPxMs += Math.min(distance, radius * 4) * dt;
+        trackClosenessMs += Math.max(0, 1 - distance / (radius * 2.5)) * dt;
+      }
+      awardTrackTick(inside, targets[0]);
+    };
+
+    const configurePhase = (phase: SkillKey) => {
+      if (phase !== 'switch') {
+        targets.forEach((target, index) => {
+          const primary = index === 0;
+          if (!primary && document.activeElement === target) target.blur();
+          target.style.display = primary ? 'grid' : 'none';
+          target.tabIndex = primary ? 0 : -1;
+          if (primary) target.removeAttribute('aria-hidden');
+          else target.setAttribute('aria-hidden', 'true');
+          target.style.opacity = '';
+          target.style.transform = '';
+          target.style.removeProperty('left');
+          target.style.removeProperty('top');
+        });
+      }
+      targets[0].style.display = 'grid';
+      if (phase === 'flick') {
+        targets[0].setAttribute('aria-label', stage === 'confirm' ? 'Confirmation flick target' : 'Flick target');
+        place(targets[0], hardened.flickSize, stage);
+        status.textContent = stage === 'confirm' ? 'CONFIRM FLICK' : 'FLICK PHASE';
+        return;
+      }
+      if (phase === 'track') {
+        setTargetSize(targets[0], hardened.trackSize);
+        targets[0].setAttribute('aria-label', stage === 'confirm' ? 'Confirmation tracking target' : 'Tracking target');
+        status.textContent = stage === 'confirm' ? 'CONFIRM TRACKING' : 'TRACKING SAMPLE';
+        return;
+      }
+      confirmSwitchStep = 0;
+      switchStep = 0;
+      active = activeSwitchAt(0, patternOffset + (stage === 'confirm' ? 3 : 0));
+      applySwitchLayout();
+      updateSwitchCourse();
+      lastSpawn = performance.now();
+      status.textContent = stage === 'confirm' ? 'CONFIRM SWITCHING' : 'SWITCH PHASE';
     };
 
     const loop = (now: number) => {
       const elapsed = now - started - pausedMs;
       const dt = Math.min(50, Math.max(0, now - lastFrame));
       lastFrame = now;
-      const phase: SkillKey = elapsed < readPlan.flickEndsAt ? 'flick' : elapsed < readPlan.trackEndsAt ? 'track' : 'switch';
-      root.dataset.phase = phase;
-      phaseEl.textContent = phase.toUpperCase();
-      timeEl.textContent = Math.max(0, (readPlan.totalMs - elapsed) / 1000).toFixed(1);
-      setPhaseInstruction(phase);
-      const phaseIndex = phase === 'flick' ? 1 : phase === 'track' ? 2 : 3;
+      const currentPhase: SkillKey = stage === 'confirm'
+        ? (confirmSkill || 'track')
+        : elapsed < readPlan.flickEndsAt
+          ? 'flick'
+          : elapsed < readPlan.trackEndsAt
+            ? 'track'
+            : 'switch';
+      const totalMs = stage === 'confirm' ? readPlan.confirmMs : readPlan.scanTotalMs;
+      const phaseIndex = stage === 'confirm' ? 10 + keys.indexOf(currentPhase) : 1 + keys.indexOf(currentPhase);
+      root.dataset.phase = currentPhase;
+      modeEl.textContent = stage === 'confirm' ? `CONFIRM ${currentPhase.toUpperCase()}` : 'SCAN';
+      phaseEl.textContent = currentPhase.toUpperCase();
+      timeEl.textContent = Math.max(0, (totalMs - elapsed) / 1000).toFixed(1);
+      setPhaseInstruction(currentPhase);
       if (phaseStarted !== phaseIndex) {
         phaseStarted = phaseIndex;
-        if (phase === 'track') {
-          targets[1].style.display = 'none';
-          setTargetSize(targets[0], hardened.trackSize);
-          targets[0].setAttribute('aria-label', 'Tracking target');
-          status.textContent = 'TRACKING SAMPLE';
-        }
-        if (phase === 'switch') {
-          switchStep = 0;
-          active = 'a';
-          applySwitchLayout();
-          updateSwitchCourse();
-          lastSpawn = performance.now();
-          status.textContent = 'SWITCH PHASE';
-        }
+        configurePhase(currentPhase);
       }
-      if (phase === 'flick' && flickTimes.length >= readPlan.minFlickHits) status.textContent = 'FLICK SAMPLE LOCKED';
-      if (phase === 'switch' && switchStep >= readPlan.minSwitchHits) status.textContent = 'SAMPLE LOCKED · KEEP AIMING';
-      if (phase === 'track') {
-        const t = elapsed - readPlan.flickEndsAt;
-        const x = 50 + Math.sin(t / 430) * 28 + Math.sin(t / 860 + .8) * 10;
-        const y = 50 + Math.sin(t / 285) * 18 + Math.cos(t / 620) * 8;
-        targets[0].style.left = `${Math.max(14, Math.min(86, x))}%`;
-        targets[0].style.top = `${Math.max(22, Math.min(78, y))}%`;
-        const r = targets[0].getBoundingClientRect();
-        const distance = Math.hypot(pointerX - (r.left + r.width / 2), pointerY - (r.top + r.height / 2));
-        const radius = r.width / 2;
-        trackTotalMs += dt;
-        const inside = distance <= radius;
-        if (inside) trackInsideMs += dt;
-        trackErrorPxMs += Math.min(distance, radius * 4) * dt;
-        trackClosenessMs += Math.max(0, 1 - distance / (radius * 2.5)) * dt;
-        awardTrackTick(inside, targets[0]);
-      }
-      if (elapsed >= readPlan.totalMs) return finish();
+      if (stage === 'scan' && currentPhase === 'flick' && flickTimes.length >= readPlan.minFlickHits) status.textContent = 'FLICK SAMPLE LOCKED';
+      if (stage === 'scan' && currentPhase === 'switch' && switchStep >= readPlan.minSwitchHits) status.textContent = 'SAMPLE LOCKED · KEEP GOING';
+      if (stage === 'confirm' && currentPhase === 'flick' && confirmFlickTimes.length >= readPlan.minConfirmFlickHits) status.textContent = 'CONFIRMATION SAMPLE LOCKED';
+      if (stage === 'confirm' && currentPhase === 'switch' && confirmSwitchStep >= readPlan.minConfirmSwitchHits) status.textContent = 'CONFIRMATION LOCKED · KEEP GOING';
+      if (currentPhase === 'track') sampleTracking(
+        stage === 'confirm' ? elapsed : elapsed - readPlan.flickEndsAt,
+        dt,
+        stage,
+      );
+      updateRankMeter();
+      if (elapsed >= totalMs) return stage === 'confirm' ? finishConfirmation() : finishScan();
       frame = requestAnimationFrame(loop);
     };
 
@@ -1031,81 +2106,115 @@ const { product } = Astro.props;
       root.dataset.state = 'running';
       root.dataset.phase = 'flick';
       root.dataset.activeTarget = 'a';
-      phaseStarted = 0; active = 'a';
+      modeEl.textContent = 'SCAN';
+      phaseStarted = 0;
+      active = activeSwitchAt(0, patternOffset);
+      flickStep = 0;
       switchStep = 0;
+      confirmFlickStep = 0;
+      confirmSwitchStep = 0;
       updateSwitchCourse();
       pauseStarted = 0;
       pausedMs = 0;
       targets[1].style.display = 'none';
+      targets[0].style.display = 'grid';
       targets[0].setAttribute('aria-label', 'Flick target');
-      place(targets[0], hardened.flickSize);
+      lastTrackScoreAt = 0;
+      lastTrackFeedbackAt = 0;
+      lastTrackInside = null;
       started = lastFrame = performance.now();
-      status.textContent = 'TEST RUNNING';
+      status.textContent = stage === 'confirm' ? 'CONFIRMATION RUNNING' : 'TEST RUNNING';
       frame = requestAnimationFrame(loop);
     };
 
     const prepare = () => {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      pauseStarted = 0;
-      pausedMs = 0;
-      document.getElementById('daily-quote-close')?.click();
+      resetSurface();
+      patternOffset = Math.floor(Math.random() * flickLayouts.length);
       root.dataset.state = 'calibration';
       root.dataset.phase = 'calibration';
       root.dataset.activeTarget = 'a';
-      flickTimes = []; switchTimes = [];
-      switchStep = 0;
-      flickMisses = switchMisses = 0;
-      trackTotalMs = trackInsideMs = trackErrorPxMs = trackClosenessMs = 0;
-      pointerX = pointerY = -999;
-      resetScores();
-      resetRunScore();
-      resultKicker.textContent = 'AWAITING RUN';
-      resultTitle.textContent = 'YOUR READ WILL LAND HERE';
-      resultCopy.textContent = `Complete the ~${readPlan.totalMs / 1000}-second run to unlock a game-specific warm-up.`;
-      starsEl.textContent = '☆☆☆☆☆';
-      starsEl.setAttribute('aria-label', 'No result yet');
-      priorityEl.textContent = 'AWAITING INPUT';
-      planTitle.textContent = 'Run the diagnostic first';
-      planMeta.textContent = 'A focused routine appears after enough confirmed input.';
-      nextStepEl.textContent = 'Click Run the diagnostic, then the center target; follow the short instructions at the bottom of the arena.';
-      resultWhy.textContent = 'We will explain what the run measured and why the routine fits before we ask you to copy anything.';
-      confidenceEl.textContent = 'Confidence appears after enough confirmed input.';
-      inputNote.textContent = 'Local only · no data leaves this tab.';
-      historyEl.textContent = 'Read in progress. Your result stays on this browser only.';
-      codeEl.textContent = 'Run the diagnostic first';
-      copyButton.disabled = true;
-      copyButton.textContent = 'Copy share code';
-      copyButton.classList.remove('is-copied');
-      resultLink.textContent = 'Start this warm-up';
-      resultLink.href = '#aim-warmup-heading';
-      retestButton.disabled = false;
+      stage = 'scan';
+      confirmSkill = null;
+      phaseStarted = 0;
+      rankMeter.hidden = false;
+      updateRankMeter(0);
+      targets[1].style.display = 'none';
+      targets[0].style.display = 'grid';
+      targets[0].setAttribute('aria-label', 'Calibration target');
+      targets[0].style.left = '50%';
+      targets[0].style.top = '50%';
+      phaseEl.textContent = 'CALIBRATE';
+      modeEl.textContent = 'SCAN';
+      timeEl.textContent = (readPlan.scanTotalMs / 1000).toFixed(1);
       startGuide.hidden = false;
       crosshair.dataset.pointer = 'hidden';
       crosshair.classList.remove('is-pointer');
       crosshair.style.removeProperty('left');
       crosshair.style.removeProperty('top');
-      targets.forEach(t => { t.style.display = ''; t.style.opacity = ''; t.style.transform = ''; t.style.removeProperty('--ad-target-size'); });
-      targets[1].style.display = 'none';
-      targets[0].setAttribute('aria-label', 'Calibration target');
-      targets[0].style.left = '50%'; targets[0].style.top = '50%';
-      phaseEl.textContent = 'CALIBRATE';
-      timeEl.textContent = (readPlan.totalMs / 1000).toFixed(1);
       instruction.textContent = 'Click the center target when your pointer is ready';
       status.textContent = matchMedia('(pointer: coarse)').matches ? 'TOUCH PREVIEW' : 'MOUSE CALIBRATION';
       focusCalibrationTarget();
     };
 
-    const updatePointer = (event: PointerEvent) => {
-      pointerX = event.clientX;
-      pointerY = event.clientY;
+    const renderPointer = () => {
+      pointerFrame = 0;
       if (root.dataset.state !== 'calibration' && root.dataset.state !== 'running') return;
       const arenaRect = arena.getBoundingClientRect();
       if (!arenaRect.width || !arenaRect.height) return;
+      crosshair.style.setProperty('--aim-pointer-x', `${pointerX - arenaRect.left}px`);
+      crosshair.style.setProperty('--aim-pointer-y', `${pointerY - arenaRect.top}px`);
+    };
+    const updatePointer = (event: PointerEvent) => {
+      const coalesced = event.getCoalescedEvents?.();
+      const sample = coalesced?.[coalesced.length - 1] || event;
+      pointerX = sample.clientX;
+      pointerY = sample.clientY;
+      if (root.dataset.state !== 'calibration' && root.dataset.state !== 'running') return;
       crosshair.dataset.pointer = 'visible';
       crosshair.classList.add('is-pointer');
-      crosshair.style.left = `${event.clientX - arenaRect.left}px`;
-      crosshair.style.top = `${event.clientY - arenaRect.top}px`;
+      if (!pointerFrame) pointerFrame = requestAnimationFrame(renderPointer);
+    };
+
+    const startConfirmation = () => {
+      if (!scanSnapshot || !confirmSkill) return;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      const scanBestCombo = maxCombo;
+      stage = 'confirm';
+      root.dataset.state = 'running';
+      root.dataset.phase = confirmSkill;
+      root.dataset.activeTarget = 'a';
+      root.removeAttribute('data-result-stage');
+      setResultAccessibility(false);
+      rankMeter.hidden = false;
+      updateRankMeter(0);
+      startGuide.hidden = true;
+      confirmButton.hidden = true;
+      confirmButton.disabled = true;
+      confirmFlickTimes = [];
+      confirmSwitchTimes = [];
+      confirmFlickMisses = confirmSwitchMisses = 0;
+      confirmTrackTotalMs = confirmTrackInsideMs = confirmTrackErrorPxMs = confirmTrackClosenessMs = 0;
+      confirmFlickStep = 0;
+      confirmSwitchStep = 0;
+      flickStep = 0;
+      switchStep = 0;
+      phaseStarted = 0;
+      active = activeSwitchAt(0, patternOffset + 3);
+      resetRunScore();
+      maxCombo = scanBestCombo;
+      lastTrackScoreAt = 0;
+      lastTrackFeedbackAt = 0;
+      lastTrackInside = null;
+      pauseStarted = 0;
+      pausedMs = 0;
+      modeEl.textContent = `CONFIRM ${skillPlans[confirmSkill].label.toUpperCase()}`;
+      phaseEl.textContent = confirmSkill.toUpperCase();
+      timeEl.textContent = (readPlan.confirmMs / 1000).toFixed(1);
+      instruction.textContent = `Confirm ${skillPlans[confirmSkill].label.toLowerCase()} with a clean, deliberate pass`;
+      status.textContent = 'CONFIRMATION RUNNING';
+      started = lastFrame = performance.now();
+      frame = requestAnimationFrame(loop);
     };
 
     targets.forEach((target) => target.addEventListener('click', () => {
@@ -1113,41 +2222,53 @@ const { product } = Astro.props;
       if (root.dataset.state !== 'running') return;
       const phase = root.dataset.phase as SkillKey;
       if (phase === 'flick' && target.dataset.aimTarget === 'a') {
-        flickTimes.push(performance.now() - lastSpawn);
+        const elapsed = performance.now() - lastSpawn;
+        if (stage === 'confirm') confirmFlickTimes.push(elapsed);
+        else flickTimes.push(elapsed);
         awardHit(scoring.flickHit, target);
-        place(target, hardened.flickSize);
+        place(target, hardened.flickSize, stage);
       } else if (phase === 'switch' && target.dataset.aimTarget === active) {
-        switchTimes.push(performance.now() - lastSpawn);
+        const elapsed = performance.now() - lastSpawn;
+        if (stage === 'confirm') confirmSwitchTimes.push(elapsed);
+        else switchTimes.push(elapsed);
         awardHit(scoring.switchHit, target);
-        active = active === 'a' ? 'b' : 'a';
-        switchStep++;
+        if (stage === 'confirm') confirmSwitchStep++;
+        else switchStep++;
+        const step = stage === 'confirm' ? confirmSwitchStep : switchStep;
+        active = activeSwitchAt(step, patternOffset + (stage === 'confirm' ? 3 : 0));
         applySwitchLayout();
         updateSwitchCourse();
         lastSpawn = performance.now();
       }
     }));
-    arena.addEventListener('pointermove', updatePointer);
+    arena.addEventListener('pointermove', updatePointer, { passive: true });
+    arena.addEventListener('pointerrawupdate', updatePointer, { passive: true });
     arena.addEventListener('pointerdown', (event) => {
       updatePointer(event);
       if (root.dataset.state !== 'running') return;
       const clickedTarget = (event.target as HTMLElement).closest('[data-aim-target]') as HTMLElement | null;
+      const phase = root.dataset.phase as SkillKey;
       if (clickedTarget) {
-        if (root.dataset.phase === 'flick' && clickedTarget.dataset.aimTarget !== 'a') {
-          flickMisses++;
+        if (phase === 'flick' && clickedTarget.dataset.aimTarget !== 'a') {
+          if (stage === 'confirm') confirmFlickMisses++;
+          else flickMisses++;
           registerMiss(scoring.flickMiss, clickedTarget);
         }
-        if (root.dataset.phase === 'switch' && clickedTarget.dataset.aimTarget !== active) {
-          switchMisses++;
+        if (phase === 'switch' && clickedTarget.dataset.aimTarget !== active) {
+          if (stage === 'confirm') confirmSwitchMisses++;
+          else switchMisses++;
           registerMiss(scoring.switchMiss, clickedTarget);
         }
         return;
       }
-      if (root.dataset.phase === 'flick') {
-        flickMisses++;
+      if (phase === 'flick') {
+        if (stage === 'confirm') confirmFlickMisses++;
+        else flickMisses++;
         registerMiss(scoring.flickMiss);
       }
-      if (root.dataset.phase === 'switch') {
-        switchMisses++;
+      if (phase === 'switch') {
+        if (stage === 'confirm') confirmSwitchMisses++;
+        else switchMisses++;
         registerMiss(scoring.switchMiss);
       }
     });
@@ -1156,6 +2277,8 @@ const { product } = Astro.props;
       if (root.dataset.state === 'calibration' || root.dataset.state === 'running') {
         crosshair.dataset.pointer = 'hidden';
         crosshair.classList.remove('is-pointer');
+        crosshair.style.removeProperty('--aim-pointer-x');
+        crosshair.style.removeProperty('--aim-pointer-y');
       }
     });
     const onVisibilityChange = () => {
@@ -1175,7 +2298,7 @@ const { product } = Astro.props;
       pauseStarted = 0;
       lastFrame = performance.now();
       phaseEl.textContent = (root.dataset.phase || 'flick').toUpperCase();
-      status.textContent = 'TEST RUNNING';
+      status.textContent = stage === 'confirm' ? 'CONFIRMATION RUNNING' : 'TEST RUNNING';
       frame = requestAnimationFrame(loop);
     };
     const onKeyDown = (event: KeyboardEvent) => {
@@ -1197,6 +2320,7 @@ const { product } = Astro.props;
       enterImmersive();
       prepare();
     });
+    confirmButton.addEventListener('click', startConfirmation);
     resultLink.addEventListener('click', (event) => {
       const href = resultLink.getAttribute('href');
       if (!href?.startsWith('#')) return;
@@ -1210,11 +2334,19 @@ const { product } = Astro.props;
       }, 0);
     });
     copyButton.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(codeEl.textContent || ''); } catch {}
+      try {
+        await navigator.clipboard.writeText(codeEl.textContent || '');
+      } catch {
+        copyButton.textContent = 'Copy failed — select code';
+        inputNote.textContent = "Clipboard access was blocked. Select the share code and copy it manually.";
+        window.setTimeout(() => { copyButton.textContent = 'Copy code'; }, 2200);
+        return;
+      }
       copyButton.textContent = "Copied — paste in KovaaK's"; copyButton.classList.add('is-copied');
       inputNote.textContent = "Copied. Paste the share code into KovaaK's Online Playlists.";
-      window.setTimeout(() => { copyButton.textContent = 'Copy share code'; copyButton.classList.remove('is-copied'); }, 1800);
+      window.setTimeout(() => { copyButton.textContent = 'Copy code'; copyButton.classList.remove('is-copied'); }, 1800);
     });
+    setResultAccessibility(false);
     updateSelectionSummary();
     updateSwitchCourse();
   });
