@@ -74,9 +74,10 @@ const isActive = (p: string) => path === p || path.startsWith(p + '/');
       0 0 50px rgba(0, 212, 255, 0.18);
   }
 
-  /* The product shortcuts are desktop-only; keep the component display rule
-     from overriding the responsive hidden utility on narrow screens. */
-  @media (max-width: 767px) {
+  /* The product shortcuts need a little more room than a tablet header has;
+     keep the component display rule from overriding the responsive hidden
+     utility and avoid clipping the primary CTA at 768px. */
+  @media (max-width: 900px) {
     .header-product-btn {
       display: none;
     }

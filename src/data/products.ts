@@ -535,7 +535,7 @@ export const products: Product[] = [
     icon: '/logos/dropmaxxer-icon.svg',
     accentHex: '#4c51f7',
     accent2Hex: '#ffb454',
-    screenshots: ['/screenshots/dropmaxxer/season42-override-map.webp'],
+    screenshots: ['/screenshots/dropmaxxer/season43-treasure-hunters-map.webp'],
     heroStat: { value: '2', label: 'routes per drop · fastest + safe' },
     zones: [
       {
@@ -569,8 +569,8 @@ export const products: Product[] = [
         body: 'POIs are sourced from the current same-origin season bundle and refreshed with the map build. No legacy names. No arrows pointing at last-chapter rubble.',
         visual: {
           kind: 'image',
-          src: '/screenshots/dropmaxxer/season42-override-map.webp',
-          alt: 'Current Fortnite Chapter 7 Season 4 Override map with labeled POIs',
+          src: '/screenshots/dropmaxxer/season43-treasure-hunters-map.webp',
+          alt: 'Current Fortnite Chapter 7 Season 5 Treasure Hunters map with labeled POIs',
         },
       },
     ],

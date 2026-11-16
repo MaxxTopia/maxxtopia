@@ -16,8 +16,8 @@ const icon = product.icon ?? product.logo;
 const heroStat = product.heroStat ?? { value: '2', label: 'routes per drop · fastest + safe' };
 
 // This is a deliberately static hero example, but its points are copied from
-// the current calculator's route model: map-pois.json (map 42.00), the search
-// bar's 1200px bus extension, and pro-fit jump/deploy/glider-cut output.
+// the current calculator's route model: map-pois.json (map 43.00), a west-to-
+// east bus line, and the current pro-fit jump/deploy/glider-cut output.
 type MapPoint = { x: number; y: number };
 const MAP_SIZE = 2048;
 const toFlightPoint = (point: MapPoint) => ({
@@ -26,16 +26,16 @@ const toFlightPoint = (point: MapPoint) => ({
 });
 const line = (from: ReturnType<typeof toFlightPoint>, to: ReturnType<typeof toFlightPoint>) =>
   `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
-const heroMapVersion = '42.00';
-const heroMapAsset = '/screenshots/dropmaxxer/season42-override-map.webp';
+const heroMapVersion = '43.00';
+const heroMapAsset = '/screenshots/dropmaxxer/season43-treasure-hunters-map.webp';
 const heroMap = {
-  // Chopped Shop -> Latte Landing, with the search bar's clipped bus extension.
-  busStart: { x: 0, y: 1037.945514 },
-  busEnd: { x: 2048, y: 1849.254486 },
-  jump: { x: 1082.703509, y: 1466.855217 },
-  deploy: { x: 1132.101282, y: 1526.390683 },
-  cut: { x: 1143.090641, y: 1539.635342 },
-  target: { x: 1154.08, y: 1552.88 },
+  // West -> east bus line -> The $.$. Rocky (map-pois.json, map 43.00).
+  busStart: { x: 0, y: 1020 },
+  busEnd: { x: 2048, y: 1020 },
+  jump: { x: 1377.905412, y: 1020 },
+  deploy: { x: 1459.099191, y: 860.1 },
+  cut: { x: 1474.208075, y: 830.345126 },
+  target: { x: 1482, y: 815 },
 };
 const heroFlight = {
   busStart: toFlightPoint(heroMap.busStart),
@@ -45,7 +45,7 @@ const heroFlight = {
   cut: toFlightPoint(heroMap.cut),
   target: toFlightPoint(heroMap.target),
 };
-const heroTimings = { fastest: '43.9', safe: '45.9' };
+const heroTimings = { fastest: '46.7', safe: '48.7' };
 ---
 
 <section
@@ -68,7 +68,7 @@ const heroTimings = { fastest: '43.9', safe: '45.9' };
     --dmx-cut-y: ${heroFlight.cut.y}%;
     --dmx-target-x: ${heroFlight.target.x}%;
     --dmx-target-y: ${heroFlight.target.y}%;
-    --dmx-bus-angle: -21.6deg;
+    --dmx-bus-angle: 0deg;
   `}
 >
   <div class="dmx-atmosphere" aria-hidden="true">
@@ -104,7 +104,7 @@ const heroTimings = { fastest: '43.9', safe: '45.9' };
                 <div class="dmx-map-surface">
                   <img
                     src={heroMapAsset}
-                    alt="Current Fortnite Chapter 7 Season 4 Override map with a Chopped Shop to Latte Landing flight plan"
+                    alt="Current Fortnite Chapter 7 Season 5 Treasure Hunters map with a west-to-east bus line and The $.$. Rocky flight plan"
                     loading="eager"
                     decoding="async"
                   />
@@ -154,7 +154,7 @@ const heroTimings = { fastest: '43.9', safe: '45.9' };
                     <span>re-pull + slide in</span>
                   </div>
                   <div class="dmx-label dmx-label--target">
-                    <b>LATTE LANDING</b>
+                    <b>THE $.$. ROCKY</b>
                     <span>exact target</span>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ const heroTimings = { fastest: '43.9', safe: '45.9' };
 
         <div class="dmx-stage__caption">
           <span class="dmx-caption__status"><i></i> MAP {heroMapVersion} / CURRENT POIS</span>
-          <span class="dmx-caption__route">CHOPPED SHOP → LATTE LANDING</span>
+          <span class="dmx-caption__route">W→E BUS → THE $.$. ROCKY</span>
           <span class="dmx-caption__hint">Move across the scene</span>
         </div>
 
