@@ -37,13 +37,22 @@ worktree branch.
   timings, no old Season 4 references in active HTML, no console errors or
   failed requests, and no horizontal overflow. The tablet-only header shortcut
   overflow was fixed by hiding product shortcuts below 900px.
-- This branch is not committed, pushed, deployed, or verified on
-  `maxxtopia.com` yet. Production publication still requires Diggy's explicit
-  approval.
+- Published in commit `f51190d` on `origin/main`; GitHub Actions deploy run
+  `43835604785` completed successfully and promoted the build to Cloudflare
+  Pages production.
+- Cache-busted live checks returned HTTP 200 for `/dropmaxxer/` and the new
+  asset (253260 bytes). Live HTML contains map 43, The $.$. Rocky, and the
+  46.7/48.7 timings without the old Season 4 asset. Live browser checks at
+  768px and 1440px confirmed the image is 2048x2048, no horizontal overflow,
+  and the expected tablet/desktop composition.
+- Live console inspection also exposes a pre-existing global CSP warning:
+  `public/_headers` does not allow `data:` fonts while the @fontsource Geist
+  Mono CSS emits some data-URI subsets. It does not block the map or layout;
+  fix font packaging/CSP separately if a console-clean site-wide gate is
+  required.
 
 ## Next action
 
-Ask Diggy whether to commit and publish this isolated change. If approved,
-push the intended branch changes through the normal `main` deployment flow,
-watch the deployment, and verify the live route and asset after Cloudflare
-serves it.
+No user-owed test remains for this map refresh. The next optional hardening
+task is to remove the site-wide data-font CSP warnings without broadening the
+font policy unnecessarily.
