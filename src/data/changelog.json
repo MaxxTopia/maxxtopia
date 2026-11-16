@@ -1,5 +1,23 @@
 [
   {
+    "date": "2026-11-16",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.152",
+    "title": "Discordmaxxer v0.7.152",
+    "items": [
+      "**Keep the account bar intact in Streamer Mode:** narrowed the Quest-ad cleanup selectors so they cannot collide with Discord's account panel, and constrained the DMHub quick-toggle slot to its intended 32px surface.",
+      "**Make widget refresh honest and safer:** live stats use the owner-controlled stats service when available, personal provider keys remain an explicit fallback, and Update/Deploy reports whether Discord actually refreshed the current profile or tells the user exactly when to reopen it or press `Ctrl+R`.",
+      "**Harden renderer recovery:** a renderer that dies after startup now gets bounded reload attempts before Discordmaxxer opens its existing recovery screen instead of leaving a Chromium crash page visible.",
+      "**Recover the theme-only blank route:** after startup, a bounded liveness probe checks for a visible Discord surface and uses the existing limited renderer recovery path after three consecutive unhealthy checks.",
+      "**Keep attachment previews visible before send:** DMEmoji now keeps upload identity stable, waits for real media readiness, and refreshes native-preview detection when Discord finishes decoding an image or video.",
+      "**Restore deleted-message history actions:** MessageLogger resolves the full MessageStore record before adding its remove-history/toggle-highlight actions, and fails closed while a route is being torn down.",
+      "**Keep DMHub in the bottom account bar:** the quick-toggle button now anchors only to Discord's real account-panel toolbar, survives wrapper-shape changes, and is reinserted when Discord re-renders that bar.",
+      "**Respect video-only screen shares:** application audio is not injected when the actual capture request explicitly asks for video only.",
+      "**Hide the arRPC scan console:** the Windows process probe no longer flashes a console window during Rich Presence discovery."
+    ]
+  },
+  {
     "date": "2026-11-15",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
