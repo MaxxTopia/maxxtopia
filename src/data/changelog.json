@@ -1,5 +1,16 @@
 [
   {
+    "date": "2026-11-17",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.153",
+    "title": "This maintenance release keeps Rich Presence process scans out of visible Windows console hosts. Rich Presence remains enabled, while the background process lookup now uses the native Windows process API instead of launching WMIC or another console utility.",
+    "items": [
+      "Fixed intermittent blank black Terminal/CMD windows appearing while",
+      "Kept the existing Rich Presence detection and activity behavior intact."
+    ]
+  },
+  {
     "date": "2026-11-16",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
