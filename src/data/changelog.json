@@ -1,6 +1,18 @@
 [
   {
     "date": "2026-11-17",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.30",
+    "title": "AdBlock-Maxxer keeps YouTube Live playback moving through silent pauses.",
+    "items": [
+      "Detects unexpected pauses after playback starts, even when YouTube reports no media error.",
+      "Tries a normal resume before escalating through bounded HLS and progressive recovery.",
+      "Preserves explicit pauses and source handoffs so recovery does not fight the viewer."
+    ]
+  },
+  {
+    "date": "2026-11-17",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.153",
