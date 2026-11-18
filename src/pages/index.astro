@@ -16,6 +16,54 @@ const liveOrder = ['adblockmaxxer', 'discordmaxxer', 'optimizationmaxxing', 'pla
 const liveSorted = [...liveProducts].sort(
   (a, b) => liveOrder.indexOf(a.slug) - liveOrder.indexOf(b.slug),
 );
+
+// Problem-first routing gives search visitors a useful starting point even if
+// they do not know a product name yet. Keep the copy concrete and point at
+// existing pages only; this is navigation, not a second product catalog.
+const problemRoutes = [
+  {
+    need: 'Reduce Discord RAM usage on Windows',
+    body: 'Start with the settings that matter, then use Tournament Mode for game sessions.',
+    productSlug: 'discordmaxxer',
+    guideHref: '/guides/reduce-discord-ram-usage/',
+    guideLabel: 'Read the RAM guide',
+  },
+  {
+    need: 'Tune Windows gaming performance',
+    body: 'Measure first, keep the reversible tweaks that move the needle, and skip registry folklore.',
+    productSlug: 'optimizationmaxxing',
+    guideHref: '/guides/do-windows-gaming-tweaks-boost-fps/',
+    guideLabel: 'See what actually helps',
+  },
+  {
+    need: 'Reduce input lag on PC',
+    body: 'Work through the big three: Reflex, sync settings, and a real refresh-rate-aware FPS cap.',
+    productSlug: 'optimizationmaxxing',
+    guideHref: '/guides/reduce-input-lag-pc-gaming/',
+    guideLabel: 'Follow the input-lag checklist',
+  },
+  {
+    need: 'Block YouTube ads for free',
+    body: 'Use one browser extension across Chrome, Brave, Edge, and Firefox, with honest ad-wall caveats.',
+    productSlug: 'adblockmaxxer',
+    guideHref: '/guides/block-youtube-ads-free/',
+    guideLabel: 'Read the install guide',
+  },
+  {
+    need: 'Plan a better Fortnite drop',
+    body: 'Compare the bus line, POI options, and a rotation plan before the match starts.',
+    productSlug: 'dropmaxxer',
+    guideHref: '/guides/best-fortnite-landing-spots/',
+    guideLabel: 'Read the landing guide',
+  },
+  {
+    need: 'Run stream alerts locally',
+    body: 'Keep the broadcast command center on your PC instead of adding another cloud hop.',
+    productSlug: 'streammaxxing',
+    guideHref: undefined,
+    guideLabel: undefined,
+  },
+] as const;
 ---
 
 <Layout>
@@ -85,6 +133,51 @@ const liveSorted = [...liveProducts].sort(
           </div>
         </div>
       )}
+    </div>
+  </section>
+
+  <!-- Problem-first routing: answer the visitor's need before asking them to
+       know the suite's product names. Each route also strengthens the
+       product ↔ guide internal-link graph without adding duplicate copy. -->
+  <section class="relative border-y border-[var(--color-line)]">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-24">
+      <div class="max-w-2xl">
+        <p class="text-[12px] uppercase tracking-[0.1em] text-[var(--color-cyan)] font-mono">Find your fix</p>
+        <h2 class="mt-3 text-[38px] sm:text-[54px] font-semibold tracking-[-0.035em] leading-[1.02]">
+          Start with the problem.
+        </h2>
+        <p class="mt-5 text-[16px] leading-relaxed text-[var(--color-text-mid)]">
+          You do not need to know the app name first. Pick the thing you want to fix and we will take you to the useful page.
+        </p>
+      </div>
+
+      <ul class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-x-12" role="list">
+        {problemRoutes.map((route) => {
+          const product = products.find((p) => p.slug === route.productSlug);
+          if (!product) return null;
+          return (
+            <li class="border-t border-[var(--color-line)]">
+              <div class="py-6">
+                <a href={`/${product.slug}/`} class="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-cyan)]">
+                  <div class="flex items-start justify-between gap-5">
+                    <h3 class="text-[19px] sm:text-[21px] font-semibold tracking-[-0.02em] group-hover:text-[var(--color-cyan)] transition-colors">
+                      {route.need}
+                    </h3>
+                    <span class="shrink-0 pt-0.5 text-[var(--color-cyan)]" aria-hidden="true">↗</span>
+                  </div>
+                  <p class="mt-2.5 max-w-xl text-[14.5px] leading-relaxed text-[var(--color-text-mid)]">{route.body}</p>
+                  <span class="mt-4 inline-block text-[11px] uppercase tracking-[0.08em] font-mono text-[var(--color-magenta)]">{product.name}</span>
+                </a>
+                {route.guideHref && (
+                  <a href={route.guideHref} class="mt-2 inline-block text-[11px] uppercase tracking-[0.08em] font-mono text-[var(--color-subtle)] hover:text-[var(--color-text)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-cyan)]">
+                    {route.guideLabel} ↗
+                  </a>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   </section>
 

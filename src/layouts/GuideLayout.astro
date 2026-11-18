@@ -9,6 +9,13 @@ const { slug } = Astro.props;
 const guide = getGuide(slug);
 if (!guide) throw new Error(`GuideLayout: no guide found for slug "${slug}"`);
 const product = guide.product ? getProduct(guide.product) : undefined;
+const guideDate = guide.updated ?? guide.date;
+const guideDateLabel = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(new Date(`${guideDate}T00:00:00Z`));
 
 const canonical = new URL(`/guides/${guide.slug}/`, Astro.site).toString();
 
@@ -63,6 +70,7 @@ const breadcrumbSchema = {
       <div class="guide__meta">
         {product && <a class="guide__tag" href={`/${product.slug}/`}>{product.name}</a>}
         <span class="guide__mins">{guide.readMins} min read</span>
+        <span class="guide__updated">Updated <time datetime={guideDate}>{guideDateLabel}</time></span>
       </div>
       <h1 class="guide__title">{guide.title}</h1>
     </header>
@@ -91,14 +99,14 @@ const breadcrumbSchema = {
     display: flex; gap: 0.5rem; margin-bottom: 2rem;
   }
   .guide__crumbs a { color: var(--accent, #e25bff); text-decoration: none; }
-  .guide__meta { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+  .guide__meta { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
   .guide__tag {
     font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em;
     text-transform: uppercase; color: var(--accent, #e25bff); text-decoration: none;
     border: 1px solid color-mix(in srgb, var(--accent, #e25bff) 40%, transparent);
     border-radius: 999px; padding: 0.15rem 0.6rem;
   }
-  .guide__mins { font-family: var(--font-mono); font-size: 0.72rem; color: #7d7a8a; }
+  .guide__mins, .guide__updated { font-family: var(--font-mono); font-size: 0.72rem; color: #7d7a8a; }
   .guide__title {
     font-family: var(--font-display); font-size: clamp(2.1rem, 5vw, 3.2rem);
     line-height: 1.05; margin: 0;
