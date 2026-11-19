@@ -1206,7 +1206,13 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   sitemap checks), `git diff --check`, local preview startup, and in-app
   browser screenshot/DOM checks across the hero, mid-page guide content, setup
   map, and setup cards. The canonical dirty checkout was not modified.
-- Current state: local visual refresh is ready to commit and publish from the
-  isolated checkout `C:\Users\Diggy\projects\maxxtopia-seo-20261117`.
-  After publication, verify the live route and keep the Google recrawl/search
-  analytics gate separate from visual acceptance.
+- Published as commit `bdad870` from isolated checkout
+  `C:\Users\Diggy\projects\maxxtopia-seo-20261117` via Pages workflow
+  `44617014769`; the workflow completed successfully. Production GETs for the
+  refreshed guide returned 200 and served the new session-desk marker, UI-map
+  disclaimer, setup-path marker, read-only boundary, and mobile link. The
+  canonical dirty checkout was not modified.
+- Current state: visual acceptance and publication are complete. Keep the
+  Google recrawl/search analytics gate separate from visual acceptance; the
+  next useful SEO action remains reviewing Search Console and Cloudflare
+  analytics after the existing 7-14 day recrawl window.
