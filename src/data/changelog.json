@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-11-19",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.155",
+    "title": "This maintenance release hardens startup recovery after a transient Discord navigation delay.",
+    "items": [
+      "Automatically retry startup when Discord has not rendered within the initial",
+      "Ignore stale navigation failures from an earlier attempt so a late error",
+      "Record each timeout, retry, and successful recovery in `startup.log` for"
+    ]
+  },
+  {
     "date": "2026-11-18",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
