@@ -1124,7 +1124,7 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   switching from All regions to NAW and confirming both Next up and Recently
   completed cards change.
 
-## Search-focused guide expansion -- 2026-11-19 (local before publish)
+## Search-focused guide expansion -- 2026-11-19
 
 - Expanded the existing guide system with two new, search-intent-led guides:
   `/guides/set-up-stream-alerts-obs/` for Streammaxxing and
@@ -1138,18 +1138,20 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   visual system or external assets were introduced. Claims are tied to the
   existing Streammaxxing and Playlistmaxxing product copy and state honest
   limits where playback or provider behavior can vary.
-- Local verification passed before publication: `npm run build` (32 Astro
-  pages, release-truth and sitemap checks), `git diff --check`, local GETs for
-  the guide hub, Discord guide, both new guides, and sitemap, plus in-app
-  browser visual/DOM checks confirming the shared aesthetic, headings, related
-  links, CTAs, canonical metadata, and generated sitemap entries.
-- Release state at this checkpoint: source is built locally in isolated
-  checkout `C:\Users\Diggy\projects\maxxtopia-seo-20261117` on
-  `codex/seo-maxxtopia-20261117`, still uncommitted and not pushed or deployed.
-  The currently known live release remains `734c007`; the canonical dirty
-  checkout was not modified. No Google ranking or traffic improvement is
-  claimed until Search Console has time to recrawl the new URLs.
-- Best next action: stage only the two new guide files, the existing guide data,
-  guide hub, Discord guide, and this continuity entry; commit, push the
-  authorized SEO release to `origin/main`, wait for the Pages workflow, and
-  verify the live guide routes and sitemap.
+- Verification passed: `npm run build` (32 Astro pages, release-truth and
+  sitemap checks), `git diff --check`, generated HTML contract checks for one
+  H1 plus canonical/Article/Breadcrumb metadata, local GETs, and in-app browser
+  visual/DOM checks confirming the shared aesthetic, headings, related links,
+  CTAs, canonical metadata, and sitemap entries. Metadata descriptions were
+  tightened to 144-159 characters for the three affected guides.
+- Published as commit `4ead62d` from isolated checkout
+  `C:\Users\Diggy\projects\maxxtopia-seo-20261117` via GitHub Actions run
+  `44606524356`; the Cloudflare Pages deployment succeeded. Production GETs
+  returned 200 for the guide hub, Discord guide, both new guides, and
+  `sitemap-0.xml`; live content and both new sitemap URLs were confirmed. The
+  canonical dirty checkout was not modified.
+- Search performance is intentionally unclaimed until Google recrawls the new
+  URLs. No Diggy-owed product or device test remains for this content-only
+  release; the next useful action is to watch Search Console and Cloudflare
+  analytics after 7-14 days and compare impressions, clicks, queries, and
+  guide-to-product paths against the existing baseline.
