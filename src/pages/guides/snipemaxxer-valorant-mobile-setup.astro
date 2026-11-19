@@ -3,8 +3,8 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 ---
 
 <GuideLayout slug="snipemaxxer-valorant-mobile-setup">
-  <div class="gx-guide">
-    <div class="gx-hero">
+  <div class="gx-guide smx-guide-refresh">
+    <div class="gx-hero smx-hero">
       <p class="gx-hero__kicker">The Valorant setup guide</p>
       <p class="gx-hero__line">
         Read rank, RR, teammates, and skins when the right Riot source returns them — then choose
@@ -15,6 +15,44 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
         <span class="gx-chip"><span class="gx-chip__i">◆</span> Rank + RR</span>
         <span class="gx-chip"><span class="gx-chip__i">◌</span> Teammates + skins</span>
         <span class="gx-chip"><span class="gx-chip__i">▣</span> 1 PC / 2 PC / phone</span>
+      </div>
+
+      <div class="smx-signal-row" aria-label="Valorant guide status">
+        <span class="smx-signal-row__led" aria-hidden="true"></span>
+        <span class="smx-signal-row__key">Session desk</span>
+        <span class="smx-signal-row__sep" aria-hidden="true">/</span>
+        <span>Read-only Riot path</span>
+        <span class="smx-signal-row__sep" aria-hidden="true">/</span>
+        <span>Freshness labeled</span>
+      </div>
+
+      <div class="smx-lobby-card" aria-label="Visual map of the Valorant session desk">
+        <div class="smx-lobby-card__top">
+          <span class="smx-terminal-label">Valorant / session desk</span>
+          <span class="smx-lobby-card__badge">UI MAP · NOT LIVE DATA</span>
+        </div>
+        <div class="smx-lobby-card__grid">
+          <div class="smx-lobby-card__cell">
+            <span>Lobby context</span>
+            <strong>Phase / teams / players</strong>
+            <small>Appears when Riot returns the fields.</small>
+          </div>
+          <div class="smx-lobby-card__cell">
+            <span>Competitive</span>
+            <strong>Rank + RR</strong>
+            <small>Live, delayed, or cached status stays visible.</small>
+          </div>
+          <div class="smx-lobby-card__cell">
+            <span>Match desk</span>
+            <strong>Reports + vault</strong>
+            <small>History, crosshairs, watchlists, and alerts.</small>
+          </div>
+        </div>
+        <div class="smx-lobby-card__foot">
+          <span class="smx-lobby-card__pulse" aria-hidden="true"></span>
+          <span>Source: signed-in Riot Client on the gaming PC</span>
+          <strong>READ-ONLY</strong>
+        </div>
       </div>
     </div>
 
@@ -52,7 +90,33 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     </div>
 
     <h2>Choose your setup</h2>
-    <div class="gx-steps">
+    <div class="smx-route-map" aria-label="Snipemaxxer Valorant setup path">
+      <div class="smx-route-map__head">
+        <span class="smx-route-map__label">The path</span>
+        <span class="smx-route-map__note">One source · three ways to view it</span>
+      </div>
+      <div class="smx-route-map__track">
+        <div class="smx-route-node smx-route-node--source">
+          <span class="smx-route-node__tag">01 / SOURCE</span>
+          <h3>Riot Client</h3>
+          <p>Signed in on the gaming PC where the session lives.</p>
+        </div>
+        <div class="smx-route-arrow" aria-hidden="true"><span>read-only context</span></div>
+        <div class="smx-route-node smx-route-node--desk">
+          <span class="smx-route-node__tag">02 / DESK</span>
+          <h3>Snipemaxxer</h3>
+          <p>Labels what is live, delayed, cached, offline, or unavailable.</p>
+        </div>
+        <div class="smx-route-arrow" aria-hidden="true"><span>choose a surface</span></div>
+        <div class="smx-route-node smx-route-node--view">
+          <span class="smx-route-node__tag">03 / VIEW</span>
+          <h3>PC · PC · phone</h3>
+          <p>Keep the complete desk or take a quick lobby check with you.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="gx-steps smx-setup-steps">
       <div class="gx-step">
         <div class="gx-step__num">1</div>
         <div class="gx-step__body">
@@ -122,4 +186,399 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
       source stays on the gaming PC, the Riot path stays read-only, and unavailable data stays unavailable.
     </p>
   </div>
+
+  <style>
+    .smx-guide-refresh {
+      --smx-amber: #ffb547;
+      --smx-oxide: #ff3f69;
+      --smx-cyan: #00d4ff;
+    }
+
+    .smx-guide-refresh .smx-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 1.65rem;
+      border-color: color-mix(in srgb, var(--smx-amber) 68%, transparent);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--smx-amber) 12%, transparent), transparent 43%),
+        radial-gradient(100% 120% at 100% 0%, color-mix(in srgb, var(--smx-oxide) 13%, transparent), transparent 62%),
+        #ffffff05;
+      box-shadow: 0 1.25rem 4rem #0000002e, 0 0 0 1px #ffb5470b;
+    }
+
+    .smx-guide-refresh .smx-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 8%;
+      width: 42%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--smx-amber), var(--smx-oxide), transparent);
+      opacity: 0.85;
+    }
+
+    .smx-guide-refresh .smx-hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .smx-guide-refresh .gx-hero__kicker {
+      color: var(--smx-amber);
+      letter-spacing: 0.18em;
+    }
+
+    .smx-guide-refresh .gx-hero__line strong {
+      color: #ffd58e;
+      text-shadow: 0 0 1.25rem #ffb54730;
+    }
+
+    .smx-guide-refresh .gx-chip {
+      border-color: #ffb54738;
+      background: linear-gradient(180deg, #ffb54714, #ffffff06);
+    }
+
+    .smx-guide-refresh .gx-chip__i {
+      color: var(--smx-amber);
+    }
+
+    .smx-signal-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      margin-top: 1.2rem;
+      color: #aaa6b7;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.67rem;
+      letter-spacing: 0.1em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .smx-signal-row__led {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: var(--smx-oxide);
+      box-shadow: 0 0 0 4px #ff3f691c, 0 0 1rem #ff3f6980;
+    }
+
+    .smx-signal-row__key {
+      color: #f3f1f8;
+      font-weight: 700;
+    }
+
+    .smx-signal-row__sep {
+      color: #5b566a;
+    }
+
+    .smx-lobby-card {
+      margin-top: 1.35rem;
+      overflow: hidden;
+      border: 1px solid #ffb54738;
+      border-radius: 1rem;
+      background: linear-gradient(180deg, #ffffff0b, #ffffff03), #05030ecc;
+      box-shadow: inset 0 1px #ffffff0a, 0 1rem 2.5rem #00000026;
+    }
+
+    .smx-lobby-card__top,
+    .smx-lobby-card__foot {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0.95rem;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .smx-lobby-card__top {
+      justify-content: space-between;
+      border-bottom: 1px solid #ffffff12;
+    }
+
+    .smx-terminal-label {
+      color: #f3f1f8;
+      font-weight: 700;
+    }
+
+    .smx-lobby-card__badge {
+      color: var(--smx-amber);
+      white-space: nowrap;
+    }
+
+    .smx-lobby-card__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .smx-lobby-card__cell {
+      min-height: 7.25rem;
+      padding: 1rem;
+      border-right: 1px solid #ffffff12;
+    }
+
+    .smx-lobby-card__cell:last-child {
+      border-right: 0;
+    }
+
+    .smx-lobby-card__cell > span,
+    .smx-route-node__tag {
+      color: #a39eaf;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .smx-lobby-card__cell strong {
+      display: block;
+      margin-top: 0.5rem;
+      color: #fff;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .smx-lobby-card__cell small {
+      display: block;
+      margin-top: 0.45rem;
+      color: #9894a6;
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .smx-lobby-card__foot {
+      border-top: 1px solid #ffffff12;
+      color: #aaa6b7;
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+
+    .smx-lobby-card__pulse {
+      width: 0.42rem;
+      height: 0.42rem;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--smx-cyan);
+      box-shadow: 0 0 0 4px #00d4ff14, 0 0 0.9rem #00d4ff80;
+    }
+
+    .smx-lobby-card__foot strong {
+      margin-left: auto;
+      color: var(--smx-cyan);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+    }
+
+    .smx-route-map {
+      margin: 1.4rem 0 1.9rem;
+      padding: 1rem;
+      border: 1px solid #00d4ff2e;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, #00d4ff0d, #ffffff04 48%, #ff3f6908);
+    }
+
+    .smx-route-map__head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.6rem;
+      padding: 0 0.2rem;
+    }
+
+    .smx-route-map__label {
+      color: var(--smx-cyan);
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .smx-route-map__note {
+      color: #928ea0;
+      font-size: 0.82rem;
+    }
+
+    .smx-route-map__track {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: 0.65rem;
+      margin-top: 0.9rem;
+    }
+
+    .smx-route-node {
+      min-height: 8.4rem;
+      padding: 0.95rem;
+      border: 1px solid #ffffff18;
+      border-radius: 0.8rem;
+      background: #05030eb8;
+    }
+
+    .smx-route-node--source {
+      border-color: #ffb54750;
+    }
+
+    .smx-route-node--source .smx-route-node__tag {
+      color: var(--smx-amber);
+    }
+
+    .smx-route-node--desk {
+      border-color: #00d4ff50;
+    }
+
+    .smx-route-node--desk .smx-route-node__tag {
+      color: var(--smx-cyan);
+    }
+
+    .smx-route-node--view {
+      border-color: #ff3f6950;
+    }
+
+    .smx-route-node--view .smx-route-node__tag {
+      color: #ff8ca4;
+    }
+
+    .smx-route-node h3 {
+      margin: 0.55rem 0 0.35rem;
+      color: #fff;
+      font-size: 1.04rem;
+    }
+
+    .smx-route-node p {
+      margin: 0;
+      color: #aaa6b7;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .smx-route-arrow {
+      display: flex;
+      position: relative;
+      min-width: 4.9rem;
+      align-items: center;
+      justify-content: center;
+      color: #8d899c;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.58rem;
+      letter-spacing: 0.05em;
+      line-height: 1.35;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .smx-route-arrow::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, #ffb54780, #00d4ff80, #ff3f6980);
+    }
+
+    .smx-route-arrow span {
+      position: relative;
+      padding: 0 0.25rem;
+      background: #0a0612;
+    }
+
+    .smx-guide-refresh .smx-setup-steps .gx-step {
+      position: relative;
+      overflow: hidden;
+      border-color: #ffb54724;
+      background: linear-gradient(110deg, #ffb5470a, #ffffff03 45%);
+    }
+
+    .smx-guide-refresh .smx-setup-steps .gx-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--smx-amber), var(--smx-oxide));
+    }
+
+    .smx-guide-refresh .smx-setup-steps .gx-step:nth-child(2)::before {
+      background: linear-gradient(180deg, var(--smx-cyan), #6f7cff);
+    }
+
+    .smx-guide-refresh .smx-setup-steps .gx-step:nth-child(3)::before {
+      background: linear-gradient(180deg, #ff8ca4, var(--smx-oxide));
+    }
+
+    .smx-guide-refresh .smx-setup-steps .gx-step:nth-child(4)::before {
+      background: linear-gradient(180deg, #b38cff, var(--smx-cyan));
+    }
+
+    .smx-guide-refresh .smx-setup-steps .gx-step__num {
+      background: var(--smx-amber);
+      box-shadow: 0 0 1.25rem #ffb54742;
+      color: #140d05;
+    }
+
+    .smx-guide-refresh .gx-spec {
+      border-color: #ffb54724;
+      background: linear-gradient(180deg, #ffb5470d, #ffffff04);
+    }
+
+    .smx-guide-refresh .gx-spec__v {
+      color: #ffd58e;
+    }
+
+    @media (max-width: 720px) {
+      .smx-guide-refresh .smx-hero {
+        padding: 1.25rem;
+      }
+
+      .smx-lobby-card__top,
+      .smx-lobby-card__foot {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .smx-lobby-card__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .smx-lobby-card__cell {
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid #ffffff12;
+      }
+
+      .smx-lobby-card__cell:last-child {
+        border-bottom: 0;
+      }
+
+      .smx-lobby-card__foot strong {
+        margin-left: 0;
+      }
+
+      .smx-route-map__track {
+        grid-template-columns: 1fr;
+      }
+
+      .smx-route-arrow {
+        min-width: 0;
+        min-height: 1.2rem;
+        justify-content: flex-start;
+        padding-left: 0.75rem;
+        text-align: left;
+      }
+
+      .smx-route-arrow::before {
+        position: static;
+        flex: 0 0 auto;
+        width: 1px;
+        height: 1rem;
+        margin-right: 0.6rem;
+        background: linear-gradient(180deg, #00d4ff80, #ff3f6980);
+      }
+    }
+  </style>
 </GuideLayout>

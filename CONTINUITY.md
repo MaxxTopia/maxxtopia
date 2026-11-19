@@ -1189,3 +1189,24 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   unclaimed. No Diggy-owed product or device test remains for this
   content-only release. Watch Search Console and Cloudflare analytics after
   7-14 days for impressions, clicks, queries, and guide-to-product paths.
+
+## Snipemaxxer guide visual refresh -- 2026-11-19 (local checkpoint)
+
+- Refreshed only `src/pages/guides/snipemaxxer-valorant-mobile-setup.astro`.
+  The guide keeps the shared `GuideLayout` and `gx-*` system, but now has a
+  Snipemaxxer-specific amber/oxide hero treatment, a clearly labeled session
+  desk UI map, a Riot Client -> Snipemaxxer -> PC/phone setup path, and more
+  distinctive setup cards. The visual data panel is explicitly marked as a
+  UI map and not live data so it cannot be mistaken for a player result.
+- No SEO metadata, product boundaries, homepage content, or other guides were
+  changed. The page still states read-only Riot context, labeled freshness,
+  conditional skins, the companion requirement for phone view, and no Riot
+  password or login automation.
+- Verification passed: `npm run build` (34 Astro pages, release-truth and
+  sitemap checks), `git diff --check`, local preview startup, and in-app
+  browser screenshot/DOM checks across the hero, mid-page guide content, setup
+  map, and setup cards. The canonical dirty checkout was not modified.
+- Current state: local visual refresh is ready to commit and publish from the
+  isolated checkout `C:\Users\Diggy\projects\maxxtopia-seo-20261117`.
+  After publication, verify the live route and keep the Google recrawl/search
+  analytics gate separate from visual acceptance.
