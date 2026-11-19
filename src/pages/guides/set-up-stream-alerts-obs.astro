@@ -1,0 +1,122 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+---
+
+<GuideLayout slug="set-up-stream-alerts-obs">
+  <div class="gx-guide">
+    <div class="gx-hero">
+      <p class="gx-hero__kicker">One setup, every stream</p>
+      <p class="gx-hero__line">
+        Stop copy-pasting alert URLs into a dozen browser sources. <strong>Connect OBS once</strong>, add
+        the overlays you want, and keep Twitch, Kick, YouTube, and TikTok chat in one place.
+      </p>
+      <div class="gx-glance">
+        <span class="gx-chip"><span class="gx-chip__i">⚡</span> Local alerts</span>
+        <span class="gx-chip"><span class="gx-chip__i">🎛</span> 1-click OBS setup</span>
+        <span class="gx-chip"><span class="gx-chip__i">💬</span> 4 chat sources</span>
+        <span class="gx-chip"><span class="gx-chip__i">💵</span> Free Windows app</span>
+      </div>
+    </div>
+
+    <p class="gx-intro">
+      Stream alerts are supposed to make the stream feel immediate, not turn setup into a second job.
+      <a href="/streammaxxing/">Streammaxxing</a> keeps the alert connection on your PC, adds overlays to
+      OBS in one click, and merges your supported chats into one readable widget. This is the practical
+      setup path.
+    </p>
+
+    <div class="gx-callout">
+      <p class="gx-callout__tag">⚡ The short answer</p>
+      <p>
+        Download Streammaxxing, connect OBS from the Command Center, choose the overlays you want, and
+        select <strong>Add selected to OBS</strong>. Then connect the chat sources you use and fire a test
+        alert before going live. Your existing Botrix or StreamElements alerts can come with you instead
+        of being rebuilt from scratch.
+      </p>
+    </div>
+
+    <h2>🧰 What you need before you start</h2>
+    <ul class="gx-checks">
+      <li><strong>OBS Studio</strong> already installed and ready to open.</li>
+      <li><strong>Streammaxxing for Windows</strong>, downloaded from the <a href="/streammaxxing/">official product page</a>.</li>
+      <li><strong>The platforms you actually use</strong> — Twitch, Kick, YouTube, or TikTok. You do not need to connect all four.</li>
+      <li><strong>Your existing alert pack</strong> if you want to import Botrix or StreamElements instead of starting over.</li>
+    </ul>
+
+    <h2>🛠 Set up Streammaxxing with OBS</h2>
+    <div class="gx-steps">
+      <div class="gx-step">
+        <div class="gx-step__num">1</div>
+        <div class="gx-step__body">
+          <h3>Open the Command Center</h3>
+          <p>Launch Streammaxxing and start from the Command Center. The point of this screen is to keep the stream setup in one local app instead of scattering it across browser dashboards.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">2</div>
+        <div class="gx-step__body">
+          <h3>Connect OBS once</h3>
+          <p>Use the OBS setup flow, then choose <strong>Set up OBS for me</strong> when it appears. Streammaxxing can add an overlay as a named, sized browser source instead of making you copy URLs and position every source yourself.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">3</div>
+        <div class="gx-step__body">
+          <h3>Add the overlays you actually need</h3>
+          <p>Choose individual overlays or use the Essentials option, preview them, and select <strong>Add selected to OBS</strong>. Start with alerts, chat, and one scene before filling the canvas with widgets you will not read.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">4</div>
+        <div class="gx-step__body">
+          <h3>Bring over existing alerts</h3>
+          <p>If your alerts already live in Botrix or StreamElements, import them. Streammaxxing downloads the media locally, so you keep the look you already made without rebuilding every follow, sub, or donation alert.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">5</div>
+        <div class="gx-step__body">
+          <h3>Merge the chat you want to read</h3>
+          <p>Connect Twitch, Kick, YouTube, and TikTok as needed. The unified widget labels the source of each message, and you can put it on the stream or pop it out as an always-on-top window while you play.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">6</div>
+        <div class="gx-step__body">
+          <h3>Test before you go live</h3>
+          <p>Fire a test alert, send a test chat message, and check the scene in OBS at the same resolution you stream. Fix sizing and loudness while nobody is waiting for the show to start.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="gx-specs">
+      <div class="gx-spec"><div class="gx-spec__v">Local</div><div class="gx-spec__l">Alert connection</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">1 click</div><div class="gx-spec__l">OBS import</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">4</div><div class="gx-spec__l">Chat sources</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">$0</div><div class="gx-spec__l">Cost</div></div>
+    </div>
+
+    <h2>🔊 Make every alert the same loudness</h2>
+    <p>
+      Imported alert packs often have one sound that blasts and another that disappears under the game.
+      Streammaxxing can normalize the set to a consistent broadcast level of <strong>−16 LUFS</strong>.
+      It keeps the originals and makes the change reversible, so you can compare the result instead of
+      permanently overwriting your media.
+    </p>
+
+    <div class="gx-callout gx-callout--cyan">
+      <p class="gx-callout__tag">🛡 Keep the setup understandable</p>
+      <ul class="gx-mini">
+        <li><strong>Start small:</strong> alerts, chat, and one scene are enough for the first test.</li>
+        <li><strong>Label the source:</strong> platform tags make merged chat easier to moderate.</li>
+        <li><strong>Keep consent explicit:</strong> voice-cloned donation read-outs are consent-gated and synthesized locally on your GPU.</li>
+      </ul>
+    </div>
+
+    <p class="gx-outro">
+      <strong>Bottom line:</strong> connect OBS once, import the alerts you already trust, add only the
+      overlays you will actually use, and test the whole path before you go live. Streammaxxing is useful
+      when it removes setup work — not when it gives you another dashboard to babysit.
+    </p>
+  </div>
+</GuideLayout>

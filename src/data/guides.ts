@@ -33,16 +33,42 @@ export const guides: Guide[] = [
   },
   {
     slug: 'reduce-discord-ram-usage',
-    title: "How to Reduce Discord's RAM Usage on Windows (2026)",
+    title: 'Lightweight Discord Client on Windows: How to Cut RAM Use (2026)',
     description:
-      'Seven practical ways to cut Discord memory on Windows, including installing Discordmaxxer and turning on Tournament Mode for game sessions.',
+      'Lightweight Discord client on Windows? Cut RAM with settings, cache cleanup, and Discordmaxxer Tournament Mode for game sessions while you play.',
     date: '2026-06-17',
     updated: '2026-11-19',
     product: 'discordmaxxer',
     excerpt:
-      'Start with quick settings, then install Discordmaxxer and turn on Tournament Mode when you need Discord lighter while you play.',
+      'Make Discord lighter on Windows with quick settings, then use Discordmaxxer and Tournament Mode when you need less background load while you play.',
     readMins: 5,
     related: ['do-windows-gaming-tweaks-boost-fps', 'reduce-input-lag-pc-gaming'],
+  },
+  {
+    slug: 'set-up-stream-alerts-obs',
+    title: 'How to Set Up Stream Alerts and Multi-Platform Chat in OBS (2026)',
+    description:
+      'Set up free stream alerts and multi-platform chat in OBS with Streammaxxing. Connect OBS once, import alerts, and merge Twitch, Kick, YouTube, and TikTok chat.',
+    date: '2026-11-19',
+    updated: '2026-11-19',
+    product: 'streammaxxing',
+    excerpt:
+      'Connect OBS once, import the alerts you already use, and put Twitch, Kick, YouTube, and TikTok chat in one stream overlay.',
+    readMins: 6,
+    related: ['reduce-discord-ram-usage', 'reduce-input-lag-pc-gaming'],
+  },
+  {
+    slug: 'combine-music-library',
+    title: 'How to Combine Spotify, SoundCloud, and YouTube in One Music Library (2026)',
+    description:
+      'Combine Spotify, SoundCloud, and YouTube in one browser library. Paste playlists into Playlistmaxxing, fix unmatched songs, and play without an account.',
+    date: '2026-11-19',
+    updated: '2026-11-19',
+    product: 'playlistmaxxing',
+    excerpt:
+      'Keep Spotify, SoundCloud, and YouTube together, paste in what you already use, and keep unresolved matches visible instead of losing them.',
+    readMins: 5,
+    related: ['block-youtube-ads-free', 'viewmaxxing-on-pc'],
   },
   {
     slug: 'do-windows-gaming-tweaks-boost-fps',
@@ -68,7 +94,7 @@ export const guides: Guide[] = [
     excerpt:
       'Download AdBlock-Maxxer, load it into your browser, turn on the right toggles, and handle server-side YouTube ad-walls honestly.',
     readMins: 5,
-    related: ['viewmaxxing-on-pc', 'reduce-discord-ram-usage'],
+    related: ['viewmaxxing-on-pc', 'combine-music-library'],
   },
   {
     slug: 'best-fortnite-landing-spots',

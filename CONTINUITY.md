@@ -1123,3 +1123,33 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   was preserved. Best next move: publish, then verify the live event desk by
   switching from All regions to NAW and confirming both Next up and Recently
   completed cards change.
+
+## Search-focused guide expansion -- 2026-11-19 (local before publish)
+
+- Expanded the existing guide system with two new, search-intent-led guides:
+  `/guides/set-up-stream-alerts-obs/` for Streammaxxing and
+  `/guides/combine-music-library/` for Playlistmaxxing. Updated the Discord
+  guide title, metadata, and opening copy to target lightweight Discord use on
+  Windows, and refreshed the guide hub copy for players, streamers, and
+  listeners.
+- Kept the established guide architecture and visual language: `GuideLayout`,
+  shared gx hero/card/callout styles, product accent colors, breadcrumbs,
+  Article and Breadcrumb JSON-LD, related guides, and product CTAs. No new
+  visual system or external assets were introduced. Claims are tied to the
+  existing Streammaxxing and Playlistmaxxing product copy and state honest
+  limits where playback or provider behavior can vary.
+- Local verification passed before publication: `npm run build` (32 Astro
+  pages, release-truth and sitemap checks), `git diff --check`, local GETs for
+  the guide hub, Discord guide, both new guides, and sitemap, plus in-app
+  browser visual/DOM checks confirming the shared aesthetic, headings, related
+  links, CTAs, canonical metadata, and generated sitemap entries.
+- Release state at this checkpoint: source is built locally in isolated
+  checkout `C:\Users\Diggy\projects\maxxtopia-seo-20261117` on
+  `codex/seo-maxxtopia-20261117`, still uncommitted and not pushed or deployed.
+  The currently known live release remains `734c007`; the canonical dirty
+  checkout was not modified. No Google ranking or traffic improvement is
+  claimed until Search Console has time to recrawl the new URLs.
+- Best next action: stage only the two new guide files, the existing guide data,
+  guide hub, Discord guide, and this continuity entry; commit, push the
+  authorized SEO release to `origin/main`, wait for the Pages workflow, and
+  verify the live guide routes and sitemap.
