@@ -3,6 +3,18 @@
     "date": "2026-11-19",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.156",
+    "title": "This maintenance release fixes full-screen image viewing when Tournament Mode is enabled.",
+    "items": [
+      "Keep Discord's native media-viewer entrance animation running in Tournament",
+      "Preserve the existing Tournament Mode performance safeguards for the rest of",
+      "Add a release-time regression check that keeps per-account rank badges tied"
+    ]
+  },
+  {
+    "date": "2026-11-19",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.155",
     "title": "This maintenance release hardens startup recovery after a transient Discord navigation delay.",
     "items": [
