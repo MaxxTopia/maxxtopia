@@ -49,4 +49,4 @@ jobs:
           # Omitting --branch promotes the build to the Pages production
           # deployment. A branch-specific deploy creates a healthy preview
           # URL but leaves the custom domain on the previous deployment.
-          command: pages deploy dist --project-name=maxxtopia
+          command: pages deploy dist --project-name=maxxtopia --commit-dirty=true
