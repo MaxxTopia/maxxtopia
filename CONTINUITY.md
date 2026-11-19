@@ -1177,8 +1177,15 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   canonical checks, local preview GETs, and in-app browser DOM/screenshot
   checks for both guide pages and the cleaned homepage. The canonical dirty
   checkout was not modified.
-- Release state: changes are local in the isolated checkout and not yet
-  committed, pushed, or production-verified. Next action: commit the scoped
-  files, push `main`, wait for the Pages workflow, then verify the three live
-  routes plus the new sitemap entries. Search performance remains unclaimed
-  until Google recrawls the URLs.
+- Published as commit `1be23ad` from isolated checkout
+  `C:\Users\Diggy\projects\maxxtopia-seo-20261117` via Pages workflow
+  `44610034447`; the workflow completed successfully in 54 seconds.
+  Production GETs with a release query returned 200 for the homepage, guide
+  hub, both new guides, and `sitemap-0.xml`. Live checks confirmed the removed
+  homepage copy is absent, both new guide titles are served, the mobile
+  companion link is present, and both new guide URLs are in the sitemap. The
+  canonical dirty checkout was not modified.
+- Remaining state: Google recrawl and search performance are intentionally
+  unclaimed. No Diggy-owed product or device test remains for this
+  content-only release. Watch Search Console and Cloudflare analytics after
+  7-14 days for impressions, clicks, queries, and guide-to-product paths.
