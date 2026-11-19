@@ -9,6 +9,9 @@ const { slug } = Astro.props;
 const guide = getGuide(slug);
 if (!guide) throw new Error(`GuideLayout: no guide found for slug "${slug}"`);
 const product = guide.product ? getProduct(guide.product) : undefined;
+const relatedGuides = (guide.related ?? [])
+  .map((relatedSlug) => getGuide(relatedSlug))
+  .filter((related): related is NonNullable<typeof related> => Boolean(related));
 const guideDate = guide.updated ?? guide.date;
 const guideDateLabel = new Intl.DateTimeFormat('en-US', {
   month: 'short',
@@ -78,6 +81,24 @@ const breadcrumbSchema = {
     <article class="guide-prose">
       <slot />
     </article>
+
+    {relatedGuides.length > 0 && (
+      <section class="guide__related" aria-labelledby="guide-related-title">
+        <div class="guide__related-head">
+          <p class="guide__related-eyebrow">Keep going</p>
+          <h2 id="guide-related-title">More from the guide desk</h2>
+        </div>
+        <div class="guide__related-grid">
+          {relatedGuides.map((relatedGuide) => (
+            <a class="guide__related-card" href={`/guides/${relatedGuide.slug}/`}>
+              <span class="guide__related-title">{relatedGuide.title}</span>
+              <span class="guide__related-excerpt">{relatedGuide.excerpt}</span>
+              <span class="guide__related-meta">{relatedGuide.readMins} min read →</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     {product && (
       <aside class="guide__cta" aria-label="Related tool">
@@ -160,6 +181,29 @@ const breadcrumbSchema = {
     background: var(--accent, #e25bff); color: #0a0612; font-weight: 700;
     padding: 0.7rem 1.1rem; border-radius: 0.6rem; text-decoration: none;
   }
+  .guide__related { margin-top: 3.5rem; }
+  .guide__related-head { margin-bottom: 1rem; }
+  .guide__related-eyebrow {
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent, #e25bff); margin: 0 0 0.35rem; font-weight: 700;
+  }
+  .guide__related h2 { font-size: 1.45rem; line-height: 1.25; margin: 0; color: #f3f1f8; }
+  .guide__related-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; }
+  .guide__related-card {
+    display: flex; flex-direction: column; gap: 0.5rem; min-width: 0;
+    padding: 1rem; border: 1px solid #ffffff16; border-radius: 0.8rem;
+    background: #ffffff06; color: #cbc8d6; text-decoration: none;
+    transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+  }
+  .guide__related-card:hover, .guide__related-card:focus-visible {
+    border-color: color-mix(in srgb, var(--accent, #e25bff) 55%, transparent);
+    background: color-mix(in srgb, var(--accent, #e25bff) 8%, transparent);
+    transform: translateY(-1px);
+  }
+  .guide__related-title { color: #f3f1f8; font-weight: 700; line-height: 1.3; }
+  .guide__related-excerpt { font-size: 0.91rem; line-height: 1.45; color: #aaa7b8; }
+  .guide__related-meta { margin-top: auto; color: var(--accent, #e25bff); font-family: var(--font-mono); font-size: 0.72rem; }
+  @media (max-width: 560px) { .guide__related-grid { grid-template-columns: 1fr; } }
 </style>
 
 <!-- Shared "scannable guide" visual system (gx-*). Accent-driven: each guide

@@ -55,19 +55,41 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
 
     <h2>🪂 Getting there first: the part nobody calculates</h2>
     <p>
-      Whoever lands first wins the fight before it starts. In the current glider-cut meta, that comes down
-      to exactly where you jump and where you cut the glider — not holding forward and hoping. The solver
-      uses the published movement constants for the current route:
+      Whoever lands first wins the fight before it starts. The useful part is still the same — where you jump,
+      where you cut the glider, and when you start the final glide — but the exact line is sensitive to the
+      current map, mode, bus path, and movement rules. That is why a single hard-coded speed, altitude, or
+      auto-deploy number is a poor universal promise. Check the current in-game behavior and plan the actual
+      route instead:
     </p>
-    <div class="gx-specs">
-      <div class="gx-spec"><div class="gx-spec__v">~75 m/s</div><div class="gx-spec__l">Bus speed</div></div>
-      <div class="gx-spec"><div class="gx-spec__v">832 m</div><div class="gx-spec__l">Bus altitude</div></div>
-      <div class="gx-spec"><div class="gx-spec__v">100 m</div><div class="gx-spec__l">Glider auto-deploys</div></div>
+    <div class="gx-steps">
+      <div class="gx-step">
+        <div class="gx-step__num">1</div>
+        <div class="gx-step__body">
+          <h3>Set Bus</h3>
+          <p>Trace the bus path for the match you are actually playing. Do not reuse a line from a different route or season.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">2</div>
+        <div class="gx-step__body">
+          <h3>Set Target</h3>
+          <p>Choose the POI, a high-ground landing point, and one safe fallback. A fast line is only useful if the first building and the exit plan are clear.</p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">3</div>
+        <div class="gx-step__body">
+          <h3>Validate the first drop</h3>
+          <p>Use the plan as a starting line, then adjust after one real match. If the current Battle Bus or redeploy rules change, your observed timing beats an old constant.</p>
+        </div>
+      </div>
     </div>
     <p>
       The fastest line: <strong>cut the glider</strong>, nosedive, and only glide at the very end. The cut
       point sits somewhere between the bus and your target — never right on top of either. Eyeballing it is
-      guesswork, and being half a second late loses the fight.
+      guesswork, so use the current plan and tune it from the first landing. For rule changes, check
+      <a href="https://dev.epicgames.com/documentation/en-us/fortnite/battle-bus" target="_blank" rel="noopener">Epic's Battle Bus documentation</a>
+      before trusting an old movement constant.
     </p>
 
     <div class="gx-callout">
