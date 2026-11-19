@@ -122,6 +122,32 @@ export const guides: Guide[] = [
     readMins: 6,
     related: ['do-windows-gaming-tweaks-boost-fps', 'reduce-discord-ram-usage'],
   },
+  {
+    slug: 'snipemaxxer-valorant-mobile-setup',
+    title: 'How to Use Snipemaxxer for Valorant: RR, Teammates, Skins, and Mobile Setup (2026)',
+    description:
+      'Use Snipemaxxer for Valorant to read rank and RR, review teammates and skins, and choose a single-PC, two-PC, or mobile setup with read-only Riot context.',
+    date: '2026-11-19',
+    updated: '2026-11-19',
+    product: 'snipemaxxer',
+    excerpt:
+      'See what Snipemaxxer can read from Riot Client, then choose the single-PC, two-PC, or phone setup that puts the lobby on the right screen.',
+    readMins: 7,
+    related: ['reduce-input-lag-pc-gaming', 'best-fortnite-landing-spots'],
+  },
+  {
+    slug: 'use-aimmaxxer-aim-trainer',
+    title: 'How to Use Aimmaxxer as a Game-Specific Aim Trainer (2026)',
+    description:
+      'Use Aimmaxxer’s short local aim read to check flicking, tracking, and switching, then copy a focused KovaaK’s routine for your game without an account.',
+    date: '2026-11-19',
+    updated: '2026-11-19',
+    product: 'aimmaxxer',
+    excerpt:
+      'Run the local read, keep only signals with enough evidence, copy the game-specific KovaaK’s routine, and retest after a focused ten-minute block.',
+    readMins: 5,
+    related: ['reduce-input-lag-pc-gaming', 'do-windows-gaming-tweaks-boost-fps'],
+  },
 ];
 
 export function getGuide(slug: string) {

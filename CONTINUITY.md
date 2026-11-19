@@ -1155,3 +1155,30 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   release; the next useful action is to watch Search Console and Cloudflare
   analytics after 7-14 days and compare impressions, clicks, queries, and
   guide-to-product paths against the existing baseline.
+
+## Valorant and Aimmaxxer guide release -- 2026-11-19 (local checkpoint)
+
+- Added two focused guides to the existing `GuideLayout`/`gx-*` system:
+  `/guides/snipemaxxer-valorant-mobile-setup/` covers Valorant rank/RR,
+  teammate intel, conditional skins, reports, and the single-PC, two-PC, and
+  companion-backed phone routes. `/guides/use-aimmaxxer-aim-trainer/` covers
+  the current local read, flicking/tracking/switching evidence, the focused
+  KovaaK's block, retest loop, and the fact that V2 adaptive training remains
+  in development.
+- Removed the homepage-only `Find your fix` / `Start with the problem` block
+  from `src/pages/index.astro`. The dedicated `/guides/` hub remains and now
+  lists both new guides through `src/data/guides.ts`.
+- Kept claims within current product evidence: Snipemaxxer remains read-only,
+  phone view requires Maxxtopia Companion on the Riot Client PC, and missing
+  Riot identities/skins stay unavailable. No Riot password, login automation,
+  session-token exposure, or guaranteed aim improvement is promised.
+- Local verification passed: `npm run build` (34 Astro pages, release-truth
+  and sitemap checks), `git diff --check`, generated title/description/
+  canonical checks, local preview GETs, and in-app browser DOM/screenshot
+  checks for both guide pages and the cleaned homepage. The canonical dirty
+  checkout was not modified.
+- Release state: changes are local in the isolated checkout and not yet
+  committed, pushed, or production-verified. Next action: commit the scoped
+  files, push `main`, wait for the Pages workflow, then verify the three live
+  routes plus the new sitemap entries. Search performance remains unclaimed
+  until Google recrawls the URLs.

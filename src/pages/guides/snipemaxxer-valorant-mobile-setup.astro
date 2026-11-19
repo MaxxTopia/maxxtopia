@@ -1,0 +1,125 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+---
+
+<GuideLayout slug="snipemaxxer-valorant-mobile-setup">
+  <div class="gx-guide">
+    <div class="gx-hero">
+      <p class="gx-hero__kicker">The Valorant setup guide</p>
+      <p class="gx-hero__line">
+        Read rank, RR, teammates, and skins when the right Riot source returns them — then choose
+        <strong>one PC, two PCs, or your phone</strong>.
+      </p>
+      <div class="gx-glance">
+        <span class="gx-chip"><span class="gx-chip__i">⌖</span> Read-only Riot context</span>
+        <span class="gx-chip"><span class="gx-chip__i">◆</span> Rank + RR</span>
+        <span class="gx-chip"><span class="gx-chip__i">◌</span> Teammates + skins</span>
+        <span class="gx-chip"><span class="gx-chip__i">▣</span> 1 PC / 2 PC / phone</span>
+      </div>
+    </div>
+
+    <p class="gx-intro">
+      Snipemaxxer’s Valorant side is a <strong>read-only session desk</strong>. It can combine provider-backed
+      rank and match history with Riot Client context from the gaming PC, while labeling live, delayed, cached,
+      offline, and unavailable states instead of pretending everything is real time.
+    </p>
+
+    <div class="gx-callout gx-callout--cyan">
+      <p class="gx-callout__tag">⚡ Quick answer</p>
+      <ul class="gx-mini">
+        <li><strong>Single PC:</strong> run Riot Client, Valorant, and Snipemaxxer together on the gaming PC. No phone or second PC is required.</li>
+        <li><strong>Two PCs:</strong> keep Riot Client and Valorant on the gaming PC, then use Snipemaxxer’s one-time gaming-PC link for the other screen.</li>
+        <li><strong>Phone:</strong> install the PC companion where Riot Client is running, then open the phone view it creates and use its one-time Phone link.</li>
+      </ul>
+    </div>
+
+    <h2>What the Valorant side can show</h2>
+    <ul class="gx-checks">
+      <li><strong>Rank, RR, and peak:</strong> see your competitive context and completed-match history. Provider-backed values can be delayed or cached.</li>
+      <li><strong>Current lobby context:</strong> read the current phase, full lobby, team split, and teammate intel when Riot returns those fields.</li>
+      <li><strong>Teammate skins:</strong> skin data is conditional. If Riot hides an identity or does not return a skin, Snipemaxxer keeps it unavailable instead of guessing.</li>
+      <li><strong>Reports:</strong> completed matches can include map, agent, K/D/A, score, headshots, and additional round fields when the provider includes them.</li>
+      <li><strong>Desk tools:</strong> keep friends, personal offers, a local crosshair vault, watchlists, and alerts in the same focused window.</li>
+    </ul>
+
+    <div class="gx-callout gx-callout--cyan">
+      <p class="gx-callout__tag">📡 Read the status before the number</p>
+      <p>
+        “Live” means the current session path answered. “Delayed” or “cached” means the value is useful context,
+        not a promise that it changed this second. “Unavailable” is an honest boundary — it is not a reason to
+        enter a password or force a lookup.
+      </p>
+    </div>
+
+    <h2>Choose your setup</h2>
+    <div class="gx-steps">
+      <div class="gx-step">
+        <div class="gx-step__num">1</div>
+        <div class="gx-step__body">
+          <h3>Single PC: the simplest route</h3>
+          <p>
+            Download Snipemaxxer from the <a href="/snipemaxxer/">product page</a>, then open Riot Client and
+            Valorant on the same gaming PC. Launch Snipemaxxer and use its local, read-only Valorant path. This
+            keeps the full lobby, reports, crosshair vault, and alerts at one desk.
+          </p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">2</div>
+        <div class="gx-step__body">
+          <h3>Two PCs: put the viewer where you want it</h3>
+          <p>
+            Keep Valorant and Riot Client on the gaming PC. Use the one-time gaming-PC link shown by Snipemaxxer
+            so its other-PC view can receive the same read-only session context. The second PC is a viewer; it
+            does not need your Riot password, and the gaming PC remains the source of the session data.
+          </p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">3</div>
+        <div class="gx-step__body">
+          <h3>Phone: use the companion route</h3>
+          <p>
+            On the PC where Riot Client is running, open the <a href="/snipemaxxer/">Snipemaxxer product page</a>
+            and download Maxxtopia Companion. Open it once, use its one-time Phone link, then open the resulting
+            mobile view on your phone at <a href="https://mobile.maxxtopia.com/" target="_blank" rel="noopener">mobile.maxxtopia.com</a>.
+            Keep the source PC and Riot Client running for fresh data. The phone is a quick lobby check, not a
+            replacement for the full Windows reports desk.
+          </p>
+        </div>
+      </div>
+      <div class="gx-step">
+        <div class="gx-step__num">4</div>
+        <div class="gx-step__body">
+          <h3>Use the right surface for the question</h3>
+          <p>
+            Check the lobby view for phase, team split, teammate context, and returned skins. Open Reports for
+            completed-match detail. If the live source is unavailable, use the labeled provider history instead
+            of treating an old RR, skin, or lobby value as current.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="gx-specs">
+      <div class="gx-spec"><div class="gx-spec__v">1 PC</div><div class="gx-spec__l">Lowest setup</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">2 PCs</div><div class="gx-spec__l">Separate viewer</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">Phone</div><div class="gx-spec__l">Companion view</div></div>
+      <div class="gx-spec"><div class="gx-spec__v">Read-only</div><div class="gx-spec__l">Riot path</div></div>
+    </div>
+
+    <h2>What not to do</h2>
+    <ul class="gx-nope">
+      <li><strong>Do not enter your Riot password</strong> into Snipemaxxer, the companion, or a phone page. Pairing is not a Riot sign-in.</li>
+      <li><strong>Do not expect phone-only discovery.</strong> The phone view needs the companion on the PC where Riot Client is running.</li>
+      <li><strong>Do not treat missing skins or names as a bug by default.</strong> Riot may hide or omit those fields, and the guide should stay honest about that.</li>
+      <li><strong>Do not call delayed data live.</strong> Read the freshness label before using RR, match, or lobby information for a decision.</li>
+    </ul>
+
+    <p class="gx-outro">
+      <strong>Bottom line:</strong> use one PC when you want the complete desk, two PCs when you want the viewer
+      away from the gaming screen, and the phone companion when you want a quick lobby check in your hand. The
+      source stays on the gaming PC, the Riot path stays read-only, and unavailable data stays unavailable.
+    </p>
+  </div>
+</GuideLayout>
