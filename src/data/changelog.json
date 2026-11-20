@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-11-20",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
+    "version": "v0.7.157",
+    "title": "This maintenance release hardens image and video attachments in DM composers. It also shortens the startup failure window and begins readiness checks at navigation commit, so a usable Discord surface is not held behind a slow page resource or left on the remote \"Opening Discord App\" shell.",
+    "items": [
+      "Keep a pending image or video preview visible while Discord replaces the",
+      "Show a named, actionable fallback when media preview decoding or object-URL",
+      "Restore view/lightbox and remove actions for pending attachments, with remove",
+      "Support current and legacy Discord upload-store return shapes.",
+      "Start the renderer readiness probe at navigation commit and require a visible"
+    ]
+  },
+  {
     "date": "2026-11-19",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
