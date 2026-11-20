@@ -3,6 +3,18 @@
     "date": "2026-11-20",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.160",
+    "title": "This maintenance release improves Discord renderer startup responsiveness and prevents normal route transitions from being mistaken for a stalled client.",
+    "items": [
+      "Keep Chromium responsive during the bounded startup window while leaving the",
+      "Treat the first visible Discord application shell as valid startup/liveness",
+      "Defer optional visual and UI plugin startup work until the Discord DOM is"
+    ]
+  },
+  {
+    "date": "2026-11-20",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.159",
     "title": "This maintenance release restores the normal Discord image and video attachment composer when VideoBackground or the DMEmoji button is enabled.",
     "items": [
