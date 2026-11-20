@@ -1217,7 +1217,7 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   next useful SEO action remains reviewing Search Console and Cloudflare
   analytics after the existing 7-14 day recrawl window.
 
-## Homepage brand-focused stats -- 2026-11-19 (local checkpoint)
+## Homepage brand-focused stats -- 2026-11-19 (released)
 
 - Updated only `src/components/Hero.astro` to replace mixed product metrics with
   a suite-level brand message: Tweaks available, Apps live now, Guides to start,
@@ -1228,8 +1228,16 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   not overstate the count as 100+ before the catalog actually exceeds 100.
 - Verification passed: `npm run build` (34 Astro pages, release-truth and
   sitemap checks), `git diff --check`, and local preview visual/DOM checks.
-- Current state: local only, not committed, pushed, or deployed. The canonical
-  dirty checkout was not modified. The only intended code change is the
-  homepage hero stat strip; this continuity entry is the accompanying note.
-- Next action: publish only after Diggy explicitly asks for this homepage
-  version to go live, then verify the production homepage separately.
+- Published as commit `2c1706c` from isolated checkout
+  `C:\Users\Diggy\projects\maxxtopia-seo-20261117` via Pages workflow
+  `44649235737`; the workflow completed successfully. Production homepage
+  verification passed at `https://maxxtopia.com/?codex=2c1706c`: browser DOM and
+  visual checks showed 100 tweaks, 5 live apps, 10 guides, and Win, while the
+  retired Discord RAM / tuner installer / subscriptions claims were absent.
+  The Snipemaxxer route returned 200. The canonical dirty checkout was not
+  modified.
+- Current state: visual acceptance and publication are complete. Keep the
+  exact `100` value until the source catalog exceeds 100; the component is
+  data-driven and will update automatically when that happens. The next useful
+  SEO action remains reviewing Search Console and Cloudflare analytics after
+  the existing 7-14 day recrawl window.
