@@ -3,6 +3,18 @@
     "date": "2026-11-20",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.159",
+    "title": "This maintenance release restores the normal Discord image and video attachment composer when VideoBackground or the DMEmoji button is enabled.",
+    "items": [
+      "Keep VideoBackground from clearing background images that Discord uses for",
+      "Leave Discord's React-owned composer untouched until the upload store reports",
+      "Extend the build-integrity checks so both regressions fail before packaging."
+    ]
+  },
+  {
+    "date": "2026-11-20",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.158",
     "title": "This maintenance release restores native image and video attachment previews when a Discordmaxxer background is active.",
     "items": [
