@@ -1216,3 +1216,20 @@ For future Betmaxxing source updates, rebuild its `dist`, replace only `public/b
   Google recrawl/search analytics gate separate from visual acceptance; the
   next useful SEO action remains reviewing Search Console and Cloudflare
   analytics after the existing 7-14 day recrawl window.
+
+## Homepage brand-focused stats -- 2026-11-19 (local checkpoint)
+
+- Updated only `src/components/Hero.astro` to replace mixed product metrics with
+  a suite-level brand message: Tweaks available, Apps live now, Guides to start,
+  and Our mission / Win.
+- The app and guide cards are data-driven from the existing product and guide
+  registries. The tweaks card is data-driven from `omTotalTweaks`; it currently
+  renders 100 exactly because the catalog source says 100, so the homepage does
+  not overstate the count as 100+ before the catalog actually exceeds 100.
+- Verification passed: `npm run build` (34 Astro pages, release-truth and
+  sitemap checks), `git diff --check`, and local preview visual/DOM checks.
+- Current state: local only, not committed, pushed, or deployed. The canonical
+  dirty checkout was not modified. The only intended code change is the
+  homepage hero stat strip; this continuity entry is the accompanying note.
+- Next action: publish only after Diggy explicitly asks for this homepage
+  version to go live, then verify the production homepage separately.
