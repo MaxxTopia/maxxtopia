@@ -3,6 +3,18 @@
     "date": "2026-11-20",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
+    "version": "v0.7.158",
+    "title": "This maintenance release restores native image and video attachment previews when a Discordmaxxer background is active.",
+    "items": [
+      "Keep VideoBackground's transparent clearing limited to Discord's app-frame",
+      "Preserve Discord's native pending attachment thumbnail, preview, and remove",
+      "Add a build-integrity regression guard for the unsafe descendant-wide CSS"
+    ]
+  },
+  {
+    "date": "2026-11-20",
+    "product": "Discordmaxxer",
+    "productSlug": "discordmaxxer",
     "version": "v0.7.157",
     "title": "This maintenance release hardens image and video attachments in DM composers. It also shortens the startup failure window and begins readiness checks at navigation commit, so a usable Discord surface is not held behind a slow page resource or left on the remote \"Opening Discord App\" shell.",
     "items": [
