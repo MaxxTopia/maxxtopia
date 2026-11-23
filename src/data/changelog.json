@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-11-22",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.31",
+    "title": "AdBlock-Maxxer removes Twitch display ads.",
+    "body": "The Twitch cosmetic layer now catches Twitch's native Stream Display Ad frame while preserving the existing video-swap path; YouTube Live Reclaim keeps its bounded pause recovery.",
+    "items": [
+      "Hides the labeled Twitch Stream Display Ad frame that appears in the right rail.",
+      "Keeps Twitch video-swap and quality recovery unchanged.",
+      "Includes the existing YouTube Live Reclaim pause recovery in the v1.6.31 build."
+    ]
+  },
+  {
+    "date": "2026-11-22",
     "product": "Discordmaxxer",
     "productSlug": "discordmaxxer",
     "version": "v0.7.161",
