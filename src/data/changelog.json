@@ -3,6 +3,19 @@
     "date": "2026-11-23",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.35",
+    "title": "AdBlock-Maxxer restores Twitch playback after display ads.",
+    "body": "A Twitch display-ad selector regression that could hide the primary player is fixed; the live stream now remains the protected player while the guard targets only the ad carrier.",
+    "items": [
+      "Stops the display-ad guard from matching Twitch's primary player container.",
+      "Restores the primary Twitch player after an ad instead of leaving a black screen.",
+      "Keeps Twitch VOD blocking, live video-swap, and YouTube Live Reclaim enabled."
+    ]
+  },
+  {
+    "date": "2026-11-23",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.34",
     "title": "AdBlock-Maxxer catches Twitch side-rail ads more reliably.",
     "body": "The Twitch display-ad guard now covers dynamically labeled frames and unlabeled side-rail carriers while leaving the primary stream video untouched.",
