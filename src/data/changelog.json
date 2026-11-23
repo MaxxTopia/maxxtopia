@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-23",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.32",
+    "title": "AdBlock-Maxxer blocks Twitch VOD ad breaks.",
+    "body": "Twitch VODs now block the client-side ad decision before playback while the existing live video-swap and display-ad fixes remain in place.",
+    "items": [
+      "Blocks VOD ad-decision requests in both fetch and XHR on Twitch video pages.",
+      "Adds a narrow overlay backstop for Twitch's Ad N of M break label.",
+      "Leaves live HLS video-swap, quality recovery, and YouTube Reclaim paths unchanged."
+    ]
+  },
+  {
     "date": "2026-11-22",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
