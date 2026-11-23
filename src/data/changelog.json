@@ -3,6 +3,19 @@
     "date": "2026-11-23",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.33",
+    "title": "AdBlock-Maxxer removes Twitch side display ads.",
+    "body": "The Twitch guard now removes the newer side-display creative without interrupting the primary stream, while VOD ad breaks, live video-swap, and YouTube Live Reclaim stay enabled.",
+    "items": [
+      "Hides Twitch's newer stream-display side creative and restores the player layout.",
+      "Pauses only the secondary ad video, leaving the primary stream untouched.",
+      "Keeps Twitch VOD blocking, live video-swap, and YouTube Live Reclaim intact."
+    ]
+  },
+  {
+    "date": "2026-11-23",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.32",
     "title": "AdBlock-Maxxer blocks Twitch VOD ad breaks.",
     "body": "Twitch VODs now block the client-side ad decision before playback while the existing live video-swap and display-ad fixes remain in place.",
