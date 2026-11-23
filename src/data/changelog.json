@@ -3,6 +3,19 @@
     "date": "2026-11-23",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
+    "version": "v1.6.34",
+    "title": "AdBlock-Maxxer catches Twitch side-rail ads more reliably.",
+    "body": "The Twitch display-ad guard now covers dynamically labeled frames and unlabeled side-rail carriers while leaving the primary stream video untouched.",
+    "items": [
+      "Catches Twitch display-ad containers, ad frames, and rotated carrier classes.",
+      "Adds a narrow side-rail fallback without hiding the primary blob/MSE stream.",
+      "Keeps Twitch VOD blocking, live video-swap, and YouTube Live Reclaim enabled."
+    ]
+  },
+  {
+    "date": "2026-11-23",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
     "version": "v1.6.33",
     "title": "AdBlock-Maxxer removes Twitch side display ads.",
     "body": "The Twitch guard now removes the newer side-display creative without interrupting the primary stream, while VOD ad breaks, live video-swap, and YouTube Live Reclaim stay enabled.",
