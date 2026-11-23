@@ -229,6 +229,138 @@ const standingsApi = '/api';
 </style>
 
 <style is:global>
+  .standings-page .sp-game-breakdown-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 6px 9px;
+    border: 1px solid rgba(105, 255, 173, .42);
+    border-radius: 6px;
+    color: #9dffc5;
+    background: rgba(105, 255, 173, .08);
+    cursor: pointer;
+    font: 700 10px/1 var(--font-mono);
+    letter-spacing: .06em;
+    white-space: nowrap;
+  }
+
+  .standings-page .sp-game-breakdown-button:hover,
+  .standings-page .sp-game-breakdown-button:focus-visible {
+    border-color: #69ffad;
+    background: rgba(105, 255, 173, .17);
+    outline: none;
+  }
+
+  .standings-page .sp-game-breakdown-button:disabled {
+    border-color: rgba(255, 255, 255, .12);
+    color: #77738b;
+    background: rgba(255, 255, 255, .04);
+    cursor: default;
+  }
+
+  .standings-page .sp-game-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+
+  .standings-page .sp-game-dialog[hidden] { display: none; }
+
+  .standings-page .sp-game-dialog-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 4, 10, .78);
+    backdrop-filter: blur(5px);
+  }
+
+  .standings-page .sp-game-dialog-panel {
+    position: relative;
+    z-index: 1;
+    width: min(560px, 100%);
+    max-height: min(720px, calc(100vh - 48px));
+    overflow: auto;
+    padding: 24px;
+    border: 1px solid rgba(107, 220, 255, .52);
+    border-radius: 14px;
+    background: #0d1b2b;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .62), 0 0 0 1px rgba(36, 221, 255, .08);
+  }
+
+  .standings-page .sp-game-dialog-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .standings-page .sp-game-dialog-kicker {
+    margin: 0 0 7px;
+    color: #69ffad;
+    font: 700 10px/1.2 var(--font-mono);
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+
+  .standings-page .sp-game-dialog-panel h2 { margin: 0; color: #f1fbff; font-size: 28px; letter-spacing: -.035em; }
+  .standings-page .sp-game-dialog-meta { margin: 7px 0 0; color: #b9cde2; font-size: 13px; }
+
+  .standings-page .sp-game-dialog-close {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 7px;
+    color: #d8faff;
+    background: rgba(255, 255, 255, .07);
+    cursor: pointer;
+    font: 500 24px/1 var(--font-sans);
+  }
+
+  .standings-page .sp-game-dialog-close:hover,
+  .standings-page .sp-game-dialog-close:focus-visible { border-color: #7ceaff; background: rgba(36, 221, 255, .16); outline: none; }
+
+  .standings-page .sp-game-dialog-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 9px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .standings-page .sp-game-dialog-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 58px;
+    padding: 11px 12px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 8px;
+    background: #111f35;
+  }
+
+  .standings-page .sp-game-dialog-game { color: #b9cde2; font: 600 12px/1.2 var(--font-sans); }
+  .standings-page .sp-game-dialog-score { color: #fff0bd; font: 700 18px/1.1 var(--font-sans); }
+  .standings-page .sp-game-dialog-score.is-pending { color: #a8a4b5; font-size: 12px; }
+  .standings-page .sp-game-dialog-empty { padding: 14px; border: 1px dashed rgba(255, 255, 255, .16); border-radius: 8px; color: #b9cde2; font-size: 13px; }
+  .standings-page .sp-game-dialog-note { margin: 16px 0 0; color: #9fb2c8; font: 500 12px/1.5 var(--font-sans); }
+
+  @media (max-width: 520px) {
+    .standings-page .sp-game-dialog { padding: 12px; }
+    .standings-page .sp-game-dialog-panel { padding: 19px; }
+    .standings-page .sp-game-dialog-panel h2 { font-size: 24px; }
+    .standings-page .sp-game-dialog-list { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<style is:global>
   .standings-page .sp-rules {
     margin: 0 29px 24px;
     overflow: hidden;
@@ -760,7 +892,23 @@ const standingsApi = '/api';
 
         <div class="sp-footnote">
           <span class="sp-footnote-mark">i</span>
-          <p><strong>What this board shows.</strong> Epic replay and session processing can trail a live event by several minutes. Finals pages load up to 100 provider-ranked players; the overlay stays focused on the Top 5 or Top 10 and can compute a cumulative day total only after every required day board is complete.</p>
+          <p><strong>What this board shows.</strong> Epic replay and session processing can trail a live event by several minutes. Finals pages load up to 100 provider-ranked players; the overlay stays focused on the Top 5 or Top 10 and can compute a cumulative day total only after every required day board is complete. On Finals boards, choose <strong>View game pts</strong> on a row to inspect each processed game.</p>
+        </div>
+
+        <div class="sp-game-dialog" id="sp-game-dialog" hidden>
+          <div class="sp-game-dialog-scrim" data-game-dialog-close></div>
+          <section class="sp-game-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="sp-game-dialog-title">
+            <div class="sp-game-dialog-head">
+              <div>
+                <p class="sp-game-dialog-kicker">Finals round · game breakdown</p>
+                <h2 id="sp-game-dialog-title">Game points</h2>
+                <p class="sp-game-dialog-meta" id="sp-game-dialog-meta"></p>
+              </div>
+              <button class="sp-game-dialog-close" id="sp-game-dialog-close" type="button" data-game-dialog-close aria-label="Close game points">×</button>
+            </div>
+            <ol class="sp-game-dialog-list" id="sp-game-dialog-list"></ol>
+            <p class="sp-game-dialog-note" id="sp-game-dialog-note"></p>
+          </section>
         </div>
       </section>
 
@@ -811,6 +959,7 @@ const standingsApi = '/api';
     catalogController: null,
     hasRows: false,
     rows: [],
+    standingsData: null,
     totalPlayers: null,
     fieldView: '',
     fieldLimit: 100,
@@ -829,6 +978,7 @@ const standingsApi = '/api';
     overlay: false,
     cumulativeMode: false,
     collapsed: false,
+    gameDialogPreviousFocus: null,
   };
 
   function setStatus(message, tone = 'idle') {
@@ -1091,6 +1241,77 @@ const standingsApi = '/api';
 
   function selectedWindow() {
     return state.windows.find((item) => item.eventId === state.eventId && item.windowId === state.windowId) || state.selectedWindow || null;
+  }
+
+  function isFinalsBoard(data = state.standingsData || {}) {
+    const phase = formatPhase(selectedWindow() || {}, data);
+    return /\bfinals?\b/i.test(phase) && !/\bsemi[- ]?finals?\b/i.test(phase);
+  }
+
+  function gamePointsForRow(row) {
+    const source = Array.isArray(row?.gamePoints) ? row.gamePoints : [];
+    return source.map((entry, index) => {
+      const objectEntry = entry && typeof entry === 'object' ? entry : null;
+      const gameValue = objectEntry ? objectEntry.game ?? objectEntry.gameNumber : index + 1;
+      const rawPoints = objectEntry ? objectEntry.points ?? objectEntry.pointsEarned ?? objectEntry.score : entry;
+      const game = Number(gameValue);
+      const points = rawPoints === null || rawPoints === undefined || rawPoints === '' ? null : Number(rawPoints);
+      return {
+        game: Number.isFinite(game) ? game : index + 1,
+        points: Number.isFinite(points) ? points : null,
+      };
+    });
+  }
+
+  function closeGameBreakdown() {
+    const dialog = $('sp-game-dialog');
+    if (!dialog || dialog.hidden) return;
+    dialog.hidden = true;
+    document.body.classList.remove('sp-game-dialog-open');
+    const previousFocus = state.gameDialogPreviousFocus;
+    state.gameDialogPreviousFocus = null;
+    if (previousFocus && document.contains(previousFocus)) previousFocus.focus();
+  }
+
+  function openGameBreakdown(row, trigger) {
+    const dialog = $('sp-game-dialog');
+    if (!dialog || !isFinalsBoard()) return;
+    const gamePoints = gamePointsForRow(row);
+    const list = $('sp-game-dialog-list');
+    const title = $('sp-game-dialog-title');
+    const meta = $('sp-game-dialog-meta');
+    const note = $('sp-game-dialog-note');
+    const rank = Number(row.rank);
+    title.textContent = row.name || 'Player unavailable';
+    meta.textContent = `Rank #${Number.isFinite(rank) ? rank : '—'} · ${formatNullableNumber(row.points)} total points`;
+    list.replaceChildren();
+    if (!gamePoints.length) {
+      const empty = document.createElement('li');
+      empty.className = 'sp-game-dialog-empty';
+      empty.textContent = 'Per-game points were not published for this snapshot.';
+      list.append(empty);
+    } else {
+      gamePoints.forEach((item) => {
+        const game = document.createElement('li');
+        game.className = 'sp-game-dialog-item';
+        const label = document.createElement('span');
+        label.className = 'sp-game-dialog-game';
+        label.textContent = `Game ${item.game}`;
+        const score = document.createElement('strong');
+        score.className = item.points === null ? 'sp-game-dialog-score is-pending' : 'sp-game-dialog-score';
+        score.textContent = item.points === null ? 'Processing' : `${formatSigned(item.points)} pts`;
+        game.append(label, score);
+        list.append(game);
+      });
+    }
+    const pending = gamePoints.some((item) => item.points === null);
+    note.textContent = pending
+      ? 'A game still processing is shown as unavailable until the provider publishes its session points.'
+      : 'Provider-reported points for each processed game in this Finals snapshot.';
+    state.gameDialogPreviousFocus = trigger || document.activeElement;
+    dialog.hidden = false;
+    document.body.classList.add('sp-game-dialog-open');
+    $('sp-game-dialog-close').focus();
   }
 
   function renderEventContext(item = null, data = {}) {
@@ -1482,9 +1703,11 @@ const standingsApi = '/api';
   function chooseWindow(eventId, windowId) {
     const item = state.windows.find((candidate) => candidate.eventId === eventId && candidate.windowId === windowId);
     if (!item) return;
+    closeGameBreakdown();
     state.eventId = item.eventId || '';
     state.windowId = item.windowId || '';
     state.selectedWindow = item;
+    state.standingsData = null;
     state.cumulativeMode = false;
     $('sp-window-search').value = '';
     state.windowSearch = '';
@@ -1982,7 +2205,21 @@ const standingsApi = '/api';
       last.textContent = lastKnown ? formatSigned(row.lastGamePoints) + ' points · last game' : 'LAST GAME —';
       last.title = lastKnown ? formatSigned(row.lastGamePoints) + ' points scored in the last game' : 'Last-game points unavailable';
       last.setAttribute('aria-label', last.title);
-      math.append(gap, last);
+      if (isFinalsBoard()) {
+        const gamePoints = gamePointsForRow(row);
+        const breakdown = document.createElement('button');
+        breakdown.type = 'button';
+        breakdown.className = 'sp-game-breakdown-button';
+        breakdown.textContent = gamePoints.length ? 'VIEW GAME PTS' : 'GAME PTS —';
+        breakdown.disabled = gamePoints.length === 0;
+        breakdown.setAttribute('aria-label', gamePoints.length
+          ? `View ${row.name || 'player'} points by game`
+          : 'Per-game points unavailable');
+        if (gamePoints.length) breakdown.addEventListener('click', () => openGameBreakdown(row, breakdown));
+        math.append(gap, breakdown);
+      } else {
+        math.append(gap, last);
+      }
 
       article.append(move, identity, points, wins, prize, math);
       container.append(article);
@@ -2014,9 +2251,11 @@ const standingsApi = '/api';
     abortStandings();
     if (!state.eventId || !state.windowId) {
       state.rows = [];
+      state.standingsData = null;
       state.playerSearchQuery = '';
       state.fetchedAt = '';
       state.snapshotState = 'waiting';
+      closeGameBreakdown();
       resetStandingsMetadata();
       renderRows([]);
       renderEmptyState('no-selection');
@@ -2029,9 +2268,11 @@ const standingsApi = '/api';
     }
     if (reset) {
       state.rows = [];
+      state.standingsData = null;
       state.playerSearchQuery = state.windowSearch || '';
       state.fetchedAt = '';
       state.snapshotState = 'waiting';
+      closeGameBreakdown();
       resetStandingsMetadata();
       renderRows([]);
       renderEmptyState('loading');
@@ -2061,6 +2302,7 @@ const standingsApi = '/api';
       if (state.overlay || state.cumulativeMode) url.searchParams.set('cumulative', '1');
       const data = await readJson(url, controller.signal);
       if (requestId !== state.request) return;
+      state.standingsData = data;
       state.rows = Array.isArray(data.rows) ? data.rows : [];
       state.totalPlayers = Number.isFinite(Number(data.totalPlayers)) ? Number(data.totalPlayers) : null;
       state.fieldView = String(data.fieldView || '');
@@ -2136,10 +2378,12 @@ const standingsApi = '/api';
     abortStandings();
     window.clearTimeout(state.timer);
     state.rows = [];
+    state.standingsData = null;
     state.playerSearchQuery = state.windowSearch || '';
     state.fetchedAt = '';
     state.snapshotState = 'waiting';
     resetStandingsMetadata();
+    closeGameBreakdown();
     renderRows([]);
     renderEmptyState('loading');
     setStatus(`Loading ${state.region === 'ALL' ? 'all regions' : state.region} tournaments…`, 'loading');
@@ -2174,9 +2418,11 @@ const standingsApi = '/api';
       if (error.name === 'AbortError' && !timedOut) return;
       state.windows = [];
       state.rows = [];
+      state.standingsData = null;
       state.playerSearchQuery = '';
       state.snapshotState = 'error';
       resetStandingsMetadata();
+      closeGameBreakdown();
       renderWindows();
       renderRows([]);
       renderEmptyState('catalog-error');
@@ -2219,6 +2465,8 @@ const standingsApi = '/api';
     state.windowSearch = '';
     state.playerSearchQuery = '';
     state.rows = [];
+    state.standingsData = null;
+    closeGameBreakdown();
     $('sp-window-search').value = '';
     abortStandings();
     window.clearTimeout(state.timer);
@@ -2287,6 +2535,12 @@ const standingsApi = '/api';
     } catch {
       setStatus('The board is ready to share from the address bar.', 'idle');
     }
+  });
+  $('sp-game-dialog').addEventListener('click', (event) => {
+    if (event.target.closest('[data-game-dialog-close]')) closeGameBreakdown();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeGameBreakdown();
   });
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && state.eventId) loadStandings({ quiet: true });
