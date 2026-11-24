@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-24",
+    "product": "AdBlock-Maxxer",
+    "productSlug": "adblockmaxxer",
+    "version": "v1.6.36",
+    "title": "AdBlock-Maxxer catches Twitch's remaining side creatives.",
+    "body": "Twitch's visible side-rail creative can arrive in a generic container instead of the named ad frame. The guard now uses Twitch's ad countdown marker and side-rail geometry to hide that carrier without hiding the primary stream.",
+    "items": [
+      "Catches generic Twitch side-rail containers that escaped the named ad selectors.",
+      "Keeps the primary player visible during the ad and restores the rail when the marker ends.",
+      "Keeps Twitch VOD blocking, live video-swap, and YouTube Live Reclaim enabled."
+    ]
+  },
+  {
     "date": "2026-11-23",
     "product": "AdBlock-Maxxer",
     "productSlug": "adblockmaxxer",
